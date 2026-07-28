@@ -66,9 +66,9 @@
   const storyScreen = $('#storyScreen');
   const storyItems = $$('.story-list li');
   const storyData = [
-    { src: 'assets/screens/meeting.png', alt: 'Power TBM 공종 선택 및 회의 진행 화면' },
-    { src: 'assets/screens/ai.png', alt: 'Power TBM AI 상세검토 화면' },
-    { src: 'assets/screens/sign.png', alt: 'Power TBM 전자서명 및 PDF 화면' }
+    { src: 'assets/screens/meeting.png', alt: 'Power TBM 공종 선택 및 회의 진행 화면', width: 1200, height: 1600 },
+    { src: 'assets/screens/ai.png', alt: 'Power TBM AI 상세검토 화면', width: 1200, height: 1403 },
+    { src: 'assets/screens/sign.png', alt: 'Power TBM 전자서명 및 PDF 화면', width: 1200, height: 1600 }
   ];
   let storyIndex = 0;
   let storyTimer = null;
@@ -79,6 +79,8 @@
     storyScreen.style.opacity = '0';
     storyScreen.style.transform = 'scale(.985)';
     window.setTimeout(() => {
+      storyScreen.setAttribute('width', String(storyData[index].width));
+      storyScreen.setAttribute('height', String(storyData[index].height));
       storyScreen.src = storyData[index].src;
       storyScreen.alt = storyData[index].alt;
       storyScreen.style.opacity = '1';
@@ -99,30 +101,40 @@
   const screenData = [
     {
       src: 'assets/screens/home.png',
+      width: 1200,
+      height: 1600,
       title: '현장 중심 홈',
       desc: '날씨·기상특보와 핵심 메뉴를 한눈에 확인합니다.',
       alt: 'Power TBM 홈 화면'
     },
     {
       src: 'assets/screens/meeting.png',
+      width: 1200,
+      height: 1600,
       title: '회의 진행',
       desc: '기본정보와 복수 공종, 보호구 및 핵심 확인사항을 순서대로 진행합니다.',
       alt: 'Power TBM 회의 진행 화면'
     },
     {
       src: 'assets/screens/ai.png',
+      width: 1200,
+      height: 1403,
       title: 'AI 상세검토',
       desc: '중점·주의·확인 항목과 안전대책을 검토하고 필요한 내용만 회의록에 반영합니다.',
       alt: 'Power TBM AI 상세검토 화면'
     },
     {
       src: 'assets/screens/sign.png',
+      width: 1200,
+      height: 1600,
       title: '원격전자서명',
       desc: '시공관리책임자와 작업자의 서명 상태를 확인하고 PDF 원본을 확정합니다.',
       alt: 'Power TBM 전자서명 화면'
     },
     {
       src: 'assets/screens/calendar.png',
+      width: 1200,
+      height: 1600,
       title: '회의록 캘린더',
       desc: '날짜별 원본 PDF를 다시 열고 필요한 기간을 ZIP으로 묶어 관리합니다.',
       alt: 'Power TBM 회의록 캘린더 화면'
@@ -146,6 +158,8 @@
     window.setTimeout(() => {
       currentScreen = index;
       const data = screenData[index];
+      galleryImage.setAttribute('width', String(data.width));
+      galleryImage.setAttribute('height', String(data.height));
       galleryImage.src = data.src;
       galleryImage.alt = data.alt;
       if (galleryIndex) galleryIndex.textContent = `${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
