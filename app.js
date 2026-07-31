@@ -214,6 +214,7 @@
   const demoReplay = $('#demoReplay');
   const weatherDemoPage = $('#weatherDemoPage');
   const meetingDemoPage = $('#meetingDemoPage');
+  const supportDemoPage = $('#supportDemoPage');
   let currentGuide = 0;
   let guideChanging = false;
   let demoPaused = false;
@@ -228,15 +229,18 @@
   const updateDemoPageButtons = () => {
     const weatherSelected = demoPage === 'weather';
     const meetingSelected = demoPage === 'meeting';
+    const supportSelected = demoPage === 'support';
     weatherDemoPage?.classList.toggle('active', weatherSelected);
     weatherDemoPage?.setAttribute('aria-selected', String(weatherSelected));
     meetingDemoPage?.classList.toggle('active', meetingSelected);
     meetingDemoPage?.setAttribute('aria-selected', String(meetingSelected));
+    supportDemoPage?.classList.toggle('active', supportSelected);
+    supportDemoPage?.setAttribute('aria-selected', String(supportSelected));
   };
 
   const stopAllDemos = () => {
-    guidePhone?.classList.remove('demo-active', 'meeting-demo-active', 'is-paused');
-    guideStage?.classList.remove('meeting-page');
+    guidePhone?.classList.remove('demo-active', 'meeting-demo-active', 'support-demo-active', 'is-paused');
+    guideStage?.classList.remove('meeting-page', 'support-page');
     demoControls?.classList.remove('active');
     demoPaused = false;
     updateDemoButton();
@@ -268,7 +272,24 @@
     guideStage?.classList.add('meeting-page');
     guidePhone.classList.add('meeting-demo-active');
     demoControls?.classList.add('active');
-    if (guideIndex) guideIndex.textContent = '02 / 02';
+    if (guideIndex) guideIndex.textContent = '02 / 03';
+    updateDemoButton();
+  };
+
+  const startSupportDemo = ({ restart = false } = {}) => {
+    if (!guidePhone || demoPage !== 'support') return;
+    demoPaused = false;
+    guidePhone.classList.remove('is-paused', 'demo-active', 'meeting-demo-active');
+    if (restart) {
+      guidePhone.classList.remove('support-demo-active');
+      guideStage?.classList.remove('support-page');
+      void guidePhone.offsetWidth;
+      if (guideStage) void guideStage.offsetWidth;
+    }
+    guideStage?.classList.add('support-page');
+    guidePhone.classList.add('support-demo-active');
+    demoControls?.classList.add('active');
+    if (guideIndex) guideIndex.textContent = '03 / 03';
     updateDemoButton();
   };
 
@@ -287,7 +308,7 @@
       guideImage.alt = item.alt;
       if (guideIndex) {
         guideIndex.textContent = (demoPage === 'weather' && index === 0)
-          ? '01 / 02'
+          ? '01 / 03'
           : `${String(index + 1).padStart(2, '0')} / ${String(guideData.length).padStart(2, '0')}`;
       }
       if (guideCategory) guideCategory.textContent = item.category;
@@ -314,7 +335,7 @@
     demoPage = 'weather';
     updateDemoPageButtons();
     updateGuide(0);
-    if (guideIndex) guideIndex.textContent = '01 / 02';
+    if (guideIndex) guideIndex.textContent = '01 / 03';
   };
 
   const activateMeetingPage = () => {
@@ -326,47 +347,66 @@
       tab.classList.remove('active');
       tab.setAttribute('aria-selected', 'false');
     });
-    if (guideIndex) guideIndex.textContent = '02 / 02';
+    if (guideIndex) guideIndex.textContent = '02 / 03';
     window.setTimeout(() => startMeetingDemo({ restart: true }), reduceMotion ? 0 : 120);
+  };
+
+  const activateSupportPage = () => {
+    if (!guidePhone || guideChanging) return;
+    stopAllDemos();
+    demoPage = 'support';
+    updateDemoPageButtons();
+    guideTabs.forEach((tab) => {
+      tab.classList.remove('active');
+      tab.setAttribute('aria-selected', 'false');
+    });
+    if (guideIndex) guideIndex.textContent = '03 / 03';
+    window.setTimeout(() => startSupportDemo({ restart: true }), reduceMotion ? 0 : 120);
   };
 
   weatherDemoPage?.addEventListener('click', activateWeatherPage);
   meetingDemoPage?.addEventListener('click', activateMeetingPage);
+  supportDemoPage?.addEventListener('click', activateSupportPage);
   guideTabs.forEach((tab, index) => tab.addEventListener('click', () => {
     demoPage = index === 0 ? 'weather' : 'manual';
     updateDemoPageButtons();
     updateGuide(index);
   }));
   $('#guidePrev')?.addEventListener('click', () => {
-    if (demoPage === 'meeting') activateWeatherPage();
-    else if (demoPage === 'weather') activateMeetingPage();
+    if (demoPage === 'support') activateMeetingPage();
+    else if (demoPage === 'meeting') activateWeatherPage();
+    else if (demoPage === 'weather') activateSupportPage();
     else updateGuide(currentGuide - 1);
   });
   $('#guideNext')?.addEventListener('click', () => {
     if (demoPage === 'weather') activateMeetingPage();
-    else if (demoPage === 'meeting') activateWeatherPage();
+    else if (demoPage === 'meeting') activateSupportPage();
+    else if (demoPage === 'support') activateWeatherPage();
     else updateGuide(currentGuide + 1);
   });
   guideStage?.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') {
-      if (demoPage === 'meeting') activateWeatherPage();
-      else if (demoPage === 'weather') activateMeetingPage();
+      if (demoPage === 'support') activateMeetingPage();
+      else if (demoPage === 'meeting') activateWeatherPage();
+      else if (demoPage === 'weather') activateSupportPage();
       else updateGuide(currentGuide - 1);
     }
     if (event.key === 'ArrowRight') {
       if (demoPage === 'weather') activateMeetingPage();
-      else if (demoPage === 'meeting') activateWeatherPage();
+      else if (demoPage === 'meeting') activateSupportPage();
+      else if (demoPage === 'support') activateWeatherPage();
       else updateGuide(currentGuide + 1);
     }
   });
   demoToggle?.addEventListener('click', () => {
-    if (!guidePhone || (demoPage !== 'meeting' && currentGuide !== 0)) return;
+    if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
     guidePhone.classList.toggle('is-paused', demoPaused);
     updateDemoButton();
   });
   demoReplay?.addEventListener('click', () => {
     if (demoPage === 'meeting') startMeetingDemo({ restart: true });
+    else if (demoPage === 'support') startSupportDemo({ restart: true });
     else startWeatherDemo({ restart: true });
   });
 
@@ -375,6 +415,7 @@
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         if (demoPage === 'meeting') startMeetingDemo({ restart: true });
+        else if (demoPage === 'support') startSupportDemo({ restart: true });
         else if (currentGuide === 0) startWeatherDemo({ restart: true });
       });
     }, { threshold: .35 });
@@ -383,7 +424,7 @@
     startWeatherDemo();
   }
   document.addEventListener('visibilitychange', () => {
-    if (!guidePhone || (demoPage !== 'meeting' && currentGuide !== 0)) return;
+    if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && currentGuide !== 0)) return;
     guidePhone.classList.toggle('is-paused', document.hidden || demoPaused);
   });
   updateDemoPageButtons();

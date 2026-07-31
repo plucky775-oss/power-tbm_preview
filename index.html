@@ -14,8 +14,8 @@
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
   <link rel="apple-touch-icon" href="assets/brand/power-tbm-icon.png">
   <link rel="preload" as="image" href="assets/screens/guide/home-alert-expanded-v8.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260731-promo-focused-v14">
-  <script src="app.js?v=20260731-promo-focused-v14" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260731-stage3-v15">
+  <script src="app.js?v=20260731-stage3-v15" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -206,15 +206,18 @@
         <div class="tour-heading reveal">
           <span class="eyebrow eyebrow-light">REAL SCREEN GUIDE</span>
           <h2>실제 화면을 보며<br><em>기능을 익혀보세요.</em></h2>
-          <p>1페이지는 기상정보, 2페이지는 TBM 회의록 작성 전 과정을 실제 사용 순서대로 자동 시연합니다.</p>
+          <p>기상정보, TBM 회의록, 안전가이드·현장도구를 실제 사용 순서에 따라 3단계로 자동 시연합니다.</p>
         </div>
 
         <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
           <button class="active" id="weatherDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
-            <span>1페이지</span><b>기상정보 시연</b><small>특보·날씨·전문자료</small>
+            <span>1단계</span><b>기상정보 시연</b><small>특보·날씨·전문자료</small>
           </button>
           <button id="meetingDemoPage" type="button" role="tab" aria-selected="false" aria-controls="tourStage">
-            <span>2페이지</span><b>TBM 회의록 시연</b><small>작성·서명·PDF·캘린더</small>
+            <span>2단계</span><b>TBM 회의록 시연</b><small>작성·서명·PDF·캘린더</small>
+          </button>
+          <button id="supportDemoPage" type="button" role="tab" aria-selected="false" aria-controls="tourStage">
+            <span>3단계</span><b>안전·현장도구 시연</b><small>안전대책·골든룰스·응급시설</small>
           </button>
         </div>
 
@@ -376,11 +379,45 @@
                     <span class="meeting-caption-calendar">캘린더에서 저장된 원본을 확인합니다</span>
                   </div>
                 </div>
+
+                <div class="support-demo" id="supportDemo" role="img" aria-label="안전가이드에서 위험요인과 안전대책, 골든룰스11을 확인하고 현장도구에서 가까운 응급의료시설을 조회하는 자동 시연">
+                  <img class="support-slide support-slide-home-safety" src="assets/screens/guide/home.webp" alt="" width="709" height="1536">
+                  <img class="support-slide support-slide-safety" src="assets/screens/guide/stage3-safety-guide.png" alt="" width="1179" height="2556">
+                  <img class="support-slide support-slide-risk" src="assets/screens/guide/stage3-risk-safety.png" alt="" width="1179" height="2556">
+                  <img class="support-slide support-slide-safety-return" src="assets/screens/guide/stage3-safety-guide.png" alt="" width="1179" height="2556">
+                  <img class="support-slide support-slide-golden" src="assets/screens/guide/stage3-golden-rules.jpeg" alt="" width="709" height="1536">
+                  <img class="support-slide support-slide-home-tools" src="assets/screens/guide/home.webp" alt="" width="709" height="1536">
+                  <img class="support-slide support-slide-tools" src="assets/screens/guide/stage3-field-tools.png" alt="" width="1179" height="2556">
+                  <img class="support-slide support-slide-emergency" src="assets/screens/guide/stage3-emergency.png" alt="" width="1179" height="2556">
+
+                  <span class="support-hand support-hand-safety" aria-hidden="true">👆🏻</span>
+                  <span class="support-hand support-hand-risk" aria-hidden="true">👆🏻</span>
+                  <span class="support-hand support-hand-back" aria-hidden="true">👆🏻</span>
+                  <span class="support-hand support-hand-golden" aria-hidden="true">👆🏻</span>
+                  <span class="support-hand support-hand-tools" aria-hidden="true">👆🏻</span>
+                  <span class="support-hand support-hand-emergency" aria-hidden="true">👆🏻</span>
+                  <span class="support-ripple support-ripple-safety" aria-hidden="true"></span>
+                  <span class="support-ripple support-ripple-risk" aria-hidden="true"></span>
+                  <span class="support-ripple support-ripple-back" aria-hidden="true"></span>
+                  <span class="support-ripple support-ripple-golden" aria-hidden="true"></span>
+                  <span class="support-ripple support-ripple-tools" aria-hidden="true"></span>
+                  <span class="support-ripple support-ripple-emergency" aria-hidden="true"></span>
+
+                  <div class="support-caption" aria-hidden="true">
+                    <span class="support-caption-home-safety">홈에서 안전가이드를 선택합니다</span>
+                    <span class="support-caption-safety">위험요인 및 안전대책을 눌러 확인합니다</span>
+                    <span class="support-caption-risk">공종별 위험요인과 확인 포인트를 살펴봅니다</span>
+                    <span class="support-caption-golden">골든룰스11 안전영상을 선택해 재생합니다</span>
+                    <span class="support-caption-home-tools">이어서 현장도구로 이동합니다</span>
+                    <span class="support-caption-tools">응급의료시설을 선택합니다</span>
+                    <span class="support-caption-emergency">현재 위치에서 가까운 병원과 경로를 확인합니다</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="tour-controls">
               <button id="guidePrev" type="button" aria-label="이전 화면">←</button>
-              <span id="guideIndex">01 / 02</span>
+              <span id="guideIndex">01 / 03</span>
               <button id="guideNext" type="button" aria-label="다음 화면">→</button>
             </div>
             <div class="demo-controls" id="demoControls">
@@ -476,6 +513,32 @@
                 <h3>PDF를 확정하면<br><em>캘린더에 자동 저장</em></h3>
                 <p>서명과 회의내용을 PDF로 저장하고, 회의록 캘린더에서 날짜별 원본을 열거나 공유·기기저장할 수 있습니다.</p>
                 <div class="demo-explain-points"><b>PDF 원본</b><b>날짜별 보관</b><b>기간 ZIP</b></div>
+              </article>
+            </aside>
+
+            <aside class="support-explanations" aria-label="안전가이드와 현장도구 기능 설명">
+              <article class="support-explain support-explain-safety">
+                <span><i></i> 1 / 4 · 안전가이드</span>
+                <h3>작업 전 필요한<br><em>안전정보를 한곳에서</em></h3>
+                <p>안전가이드에서 공종별 위험요인과 안전대책, 골든룰스11 안전영상을 빠르게 확인합니다.</p>
+              </article>
+              <article class="support-explain support-explain-risk">
+                <span><i></i> 2 / 4 · 위험요인·안전대책</span>
+                <h3>공종별 위험과<br><em>확인 포인트를 조회</em></h3>
+                <p>가공·지중·내선 공종을 열어 중점·주의·일반 위험요인과 현장 확인사항을 작업 전에 점검합니다.</p>
+                <div class="demo-explain-points"><b>감전</b><b>추락</b><b>작업별 대책</b></div>
+              </article>
+              <article class="support-explain support-explain-golden">
+                <span><i></i> 3 / 4 · 골든룰스11</span>
+                <h3>핵심 안전수칙을<br><em>짧은 영상으로 확인</em></h3>
+                <p>골든룰스11 영상을 재생해 작업 전 안전수칙을 공유합니다. 그 밖에도 최근 사고사례, TBM 가이드, 중대재해처벌법 관련 안전자료를 제공합니다.</p>
+                <div class="demo-explain-points"><b>최근 사고사례</b><b>TBM 가이드</b><b>안전교육 영상</b></div>
+              </article>
+              <article class="support-explain support-explain-tools">
+                <span><i></i> 4 / 4 · 현장도구</span>
+                <h3>가까운 응급의료시설을<br><em>위치기반으로 즉시 조회</em></h3>
+                <p>현재 위치에서 가까운 병원의 거리·전화번호·경로를 확인합니다. 공지사항, 음성메모(STT), 거리뷰, 비상연락망 기능도 함께 제공합니다.</p>
+                <div class="demo-explain-points"><b>병원 길찾기</b><b>119 전화</b><b>음성메모·연락망</b></div>
               </article>
             </aside>
 
