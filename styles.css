@@ -577,7 +577,7 @@ button { color: inherit; }
   will-change: opacity, transform;
 }
 .demo-hand-alert { left: 31%; top: 39%; }
-.demo-hand-tap { left: 31%; top: 11%; }
+.demo-hand-tap { left: 31%; top: 18%; }
 .demo-hand-swipe { left: 43%; top: 67%; font-size: 116px; }
 .demo-hand-links {
   left: 2%;
@@ -596,7 +596,7 @@ button { color: inherit; }
   box-shadow: 0 0 0 7px rgba(255, 211, 72, .22);
 }
 .demo-ripple-alert { left: 52%; top: 40.6%; }
-.demo-ripple-weather { left: 52%; top: 20%; }
+.demo-ripple-weather { left: 52%; top: 27%; }
 .demo-link-ripple {
   position: absolute;
   z-index: 6;
