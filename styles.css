@@ -3482,11 +3482,15 @@ button { color: inherit; }
   inset: 0;
   z-index: 60;
   border-radius: inherit;
-  background: linear-gradient(145deg, rgba(11, 38, 55, .88), rgba(24, 66, 89, .82));
+  background:
+    radial-gradient(circle at 50% 42%, rgba(39, 91, 117, .99) 0%, rgba(16, 54, 74, .99) 48%, rgba(7, 25, 35, 1) 100%);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity .17s ease, visibility 0s linear .17s;
+  will-change: opacity;
+  transition:
+    opacity .7s cubic-bezier(.4, 0, .2, 1),
+    visibility 0s linear .7s;
 }
 
 .guide-phone.stage-transitioning .guide-media::after {
@@ -3496,12 +3500,15 @@ button { color: inherit; }
 }
 
 .tour-detail {
-  transition: opacity .17s ease, transform .17s ease;
+  will-change: opacity, transform;
+  transition:
+    opacity .58s cubic-bezier(.4, 0, .2, 1),
+    transform .7s cubic-bezier(.2, .7, .2, 1);
 }
 
 .tour-stage.stage-transitioning .tour-detail {
-  opacity: .18;
-  transform: translateY(4px);
+  opacity: 0;
+  transform: translateY(10px);
 }
 
 /* The sequence controller owns repetition. Each CSS timeline runs once and
@@ -4164,7 +4171,12 @@ body { background: #fff; }
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity .25s ease, visibility 0s linear .25s;
+  transform: scale(1);
+  will-change: opacity, transform;
+  transition:
+    opacity .65s cubic-bezier(.4, 0, .2, 1),
+    transform .9s cubic-bezier(.2, .7, .2, 1),
+    visibility 0s linear .65s;
 }
 
 .guide-phone.opening-demo-active .guide-media > #guideImage,
@@ -4179,6 +4191,10 @@ body { background: #fff; }
   opacity: 1;
   visibility: visible;
   transition-delay: 0s;
+}
+
+.guide-phone.opening-demo-active.stage-transitioning .opening-demo-video {
+  transform: scale(1.012);
 }
 
 .opening-explanation {

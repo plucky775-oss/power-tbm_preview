@@ -221,6 +221,11 @@
   const meetingDemo = $('#meetingDemo');
   const supportDemo = $('#supportDemo');
   const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000 };
+  // A complete stage change fades to the Power TBM navy, swaps while fully
+  // covered, then gently reveals the next scene. Keeping the swap and reveal
+  // as separate moments prevents the opening video from cutting straight to
+  // the home screen.
+  const stageTransitionTiming = { fadeOut: 700, coveredHold: 120 };
   // Each stage advances while its final scene is still fully visible.
   // The weather timeline begins fading its last comparison earlier than the
   // other stages, so it intentionally has a different end ratio.
@@ -470,8 +475,14 @@
         tab.setAttribute('aria-selected', 'false');
       });
     }
-    if (page === 'intro') syncOpeningVideoPlayback({ restart: true });
-    else openingDemoVideo?.pause();
+    if (page === 'intro') {
+      if (stageTransitioning) {
+        openingDemoVideo?.pause();
+        try { openingDemoVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+      } else {
+        syncOpeningVideoPlayback({ restart: true });
+      }
+    } else openingDemoVideo?.pause();
     updateDemoPageButtons();
     updateDemoButton();
     if (!stageTransitioning) scheduleSequenceAdvance();
@@ -501,14 +512,15 @@
 
     const swapTimer = window.setTimeout(() => {
       applyDemoStage(page);
-    }, 170);
+    }, stageTransitionTiming.fadeOut);
     const revealTimer = window.setTimeout(() => {
       guidePhone.classList.remove('stage-transitioning');
       guideStage?.classList.remove('stage-transitioning');
       stageTransitioning = false;
       stageTransitionTimers = [];
+      if (demoPage === 'intro') syncOpeningVideoPlayback();
       scheduleSequenceAdvance();
-    }, 215);
+    }, stageTransitionTiming.fadeOut + stageTransitionTiming.coveredHold);
     stageTransitionTimers = [swapTimer, revealTimer];
   };
 
