@@ -14,8 +14,8 @@
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
   <link rel="apple-touch-icon" href="assets/brand/power-tbm-icon.png">
   <link rel="preload" as="image" href="assets/screens/guide/home-alert-expanded-v8.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260731-meeting-guide-v2">
-  <script src="app.js?v=20260731-meeting-guide-v2" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260731-meeting-guide-v3">
+  <script src="app.js?v=20260731-meeting-guide-v3" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -334,7 +334,7 @@
           <button type="button" role="tab" aria-selected="false" data-guide="11">위치 동의</button>
         </div>
 
-        <div class="tour-stage reveal" data-delay="80">
+        <div class="tour-stage reveal" id="tourStage" data-delay="80">
           <div class="tour-device">
             <div class="phone-frame guide-phone">
               <div class="guide-media">
@@ -399,24 +399,56 @@
                   <img class="meeting-slide meeting-slide-focus" src="assets/screens/guide/meeting-focus-v2.png" alt="" width="1179" height="2556">
                   <img class="meeting-slide meeting-slide-sign" src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
                   <img class="meeting-slide meeting-slide-sign-pad" src="assets/screens/guide/meeting-sign-pad-v2.png" alt="" width="1179" height="2556">
+                  <img class="meeting-slide meeting-slide-sign-complete" src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
                   <img class="meeting-slide meeting-slide-pdf" src="assets/screens/guide/meeting-pdf-v2.jpeg" alt="" width="709" height="1536">
 
                   <img class="meeting-slide meeting-slide-calendar" src="assets/screens/guide/meeting-calendar-v1.png" alt="" width="1200" height="1600">
+
+                  <div class="meeting-state-layer" aria-hidden="true">
+                    <span class="meeting-worker-field meeting-worker-name"><b>김일용</b></span>
+                    <span class="meeting-worker-field meeting-worker-role"><b>신호수</b></span>
+                    <span class="meeting-worker-saved-mask"></span>
+                    <span class="meeting-worker-toast">일용원 카드가 명단에 추가되었습니다</span>
+
+                    <span class="meeting-choice meeting-choice-trade-1"></span>
+                    <span class="meeting-choice meeting-choice-trade-2"></span>
+                    <span class="meeting-choice meeting-choice-health meeting-choice-health-ok"></span>
+                    <span class="meeting-choice meeting-choice-health meeting-choice-helmet"></span>
+                    <span class="meeting-choice meeting-choice-health meeting-choice-shoes"></span>
+                    <span class="meeting-choice meeting-choice-risk"></span>
+                    <span class="meeting-choice meeting-choice-focus"></span>
+                    <span class="meeting-count meeting-risk-count">회의록 반영: 3개 선택</span>
+                    <span class="meeting-count meeting-focus-count">선택: 0개</span>
+
+                    <span class="meeting-ai-loading">
+                      <i></i>
+                      <b>AI 안전검토 중</b>
+                      <small>유사사고와 안전대책을 분석하고 있습니다</small>
+                    </span>
+
+                    <span class="meeting-sign-status">서명 0/2명 · 서명 전</span>
+                    <span class="meeting-sign-status meeting-sign-status-complete">서명 1/2명 · 작업자 대기</span>
+                    <span class="meeting-sign-blank meeting-sign-blank-manager"></span>
+                    <span class="meeting-sign-blank meeting-sign-blank-worker"></span>
+                    <span class="meeting-signature-pad-mask"></span>
+                    <span class="meeting-sign-complete-toast">서명이 저장되어 회의록에 반영되었습니다</span>
+                  </div>
 
                   <span class="meeting-touch-ripple" aria-hidden="true"></span>
                   <span class="meeting-hand" aria-hidden="true">👆🏻</span>
                   <div class="meeting-caption" aria-hidden="true">
                     <span class="meeting-caption-home">홈에서 TBM 회의록을 선택합니다</span>
                     <span class="meeting-caption-menu">새 회의록 작성을 시작합니다</span>
-                    <span class="meeting-caption-basic">공사명·장소·책임자 정보를 입력합니다</span>
-                    <span class="meeting-caption-workers">작업자 명단과 일용원 임무를 확인합니다</span>
-                    <span class="meeting-caption-trade">당일 수행하는 공종을 선택합니다</span>
-                    <span class="meeting-caption-health">건강상태와 보호구를 하나씩 확인합니다</span>
-                    <span class="meeting-caption-risk">위험요인과 현장조치를 함께 선택합니다</span>
-                    <span class="meeting-caption-ai">AI 유사사고와 대책을 검토합니다</span>
-                    <span class="meeting-caption-focus">오늘의 중점 위험을 최종 선택합니다</span>
-                    <span class="meeting-caption-sign">책임자와 작업자가 서명합니다</span>
-                    <span class="meeting-caption-sign-pad">손가락으로 직접 서명하고 저장합니다</span>
+                    <span class="meeting-caption-basic">공사명·장소·책임자 정보를 차례로 입력합니다</span>
+                    <span class="meeting-caption-workers">일용원 이름과 임무를 입력해 명단에 추가합니다</span>
+                    <span class="meeting-caption-trade">누른 공종에 체크가 표시됩니다</span>
+                    <span class="meeting-caption-health">건강상태와 보호구를 하나씩 체크합니다</span>
+                    <span class="meeting-caption-risk">위험요인을 선택하면 체크가 표시됩니다</span>
+                    <span class="meeting-caption-ai">AI가 유사사고와 안전대책을 검토합니다</span>
+                    <span class="meeting-caption-focus">오늘의 중점 위험을 체크해 확정합니다</span>
+                    <span class="meeting-caption-sign">빈 서명란을 눌러 직접 서명합니다</span>
+                    <span class="meeting-caption-sign-pad">손가락으로 사인한 뒤 저장합니다</span>
+                    <span class="meeting-caption-sign-complete">저장한 사인이 서명란에 바로 반영됩니다</span>
                     <span class="meeting-caption-pdf">완성된 PDF 원본을 출력합니다</span>
                     <span class="meeting-caption-calendar">캘린더에서 저장된 원본을 확인합니다</span>
                   </div>
@@ -483,13 +515,13 @@
               <article class="meeting-explain meeting-explain-basic">
                 <span><i></i> 2 / 8 · 기본정보·명단</span>
                 <h3>공사·장소·책임자를<br><em>직접 입력</em></h3>
-                <p>공사명과 작업장소, 시공관리책임자를 입력하고 당일 참여 작업자를 확인합니다.</p>
+                <p>공사명과 작업장소, 시공관리책임자를 차례로 입력하고 일용원 이름과 임무를 입력해 당일 명단에 추가합니다.</p>
                 <div class="demo-explain-points"><b>공사명</b><b>작업장소</b><b>참석자</b></div>
               </article>
               <article class="meeting-explain meeting-explain-trade">
                 <span><i></i> 3 / 8 · 공종선택</span>
                 <h3>실제 작업 공종을<br><em>복수 선택</em></h3>
-                <p>가공·지중·내선에서 당일 수행하는 공종만 고르면 관련 위험요인과 안전대책이 자동으로 구성됩니다.</p>
+                <p>가공·지중·내선에서 당일 수행하는 공종을 누르면 체크가 즉시 표시되고, 관련 위험요인과 안전대책이 자동으로 구성됩니다.</p>
                 <div class="demo-explain-points"><b>가공</b><b>지중</b><b>내선</b></div>
               </article>
               <article class="meeting-explain meeting-explain-check">
@@ -513,7 +545,7 @@
               <article class="meeting-explain meeting-explain-sign">
                 <span><i></i> 7 / 8 · 전자서명</span>
                 <h3>책임자와 작업자의<br><em>참석 서명</em></h3>
-                <p>책임자는 화면에서 직접 서명하고, 작업자는 직접·QR·카카오톡 링크 방식으로 참여할 수 있습니다.</p>
+                <p>비어 있는 서명란을 누르면 서명패드가 열리고, 손가락으로 사인해 저장하면 회의록 서명란에 바로 반영됩니다.</p>
                 <div class="demo-explain-points"><b>직접서명</b><b>QR</b><b>원격서명</b></div>
               </article>
               <article class="meeting-explain meeting-explain-save">

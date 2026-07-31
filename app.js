@@ -256,14 +256,16 @@
   };
 
   const startMeetingDemo = ({ restart = false } = {}) => {
-    if (!guidePhone || reduceMotion || demoPage !== 'meeting') return;
+    if (!guidePhone || demoPage !== 'meeting') return;
     demoPaused = false;
     guidePhone.classList.remove('is-paused', 'demo-active');
-    guideStage?.classList.add('meeting-page');
     if (restart) {
       guidePhone.classList.remove('meeting-demo-active');
+      guideStage?.classList.remove('meeting-page');
       void guidePhone.offsetWidth;
+      if (guideStage) void guideStage.offsetWidth;
     }
+    guideStage?.classList.add('meeting-page');
     guidePhone.classList.add('meeting-demo-active');
     demoControls?.classList.add('active');
     if (guideIndex) guideIndex.textContent = '02 / 02';
