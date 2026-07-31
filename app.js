@@ -216,10 +216,20 @@
   const weatherDemoPage = $('#weatherDemoPage');
   const meetingDemoPage = $('#meetingDemoPage');
   const supportDemoPage = $('#supportDemoPage');
-  // Advance just before each CSS timeline loops back to its first frame.
-  // This keeps the final scene visible until the next stage is ready and
-  // prevents a brief first-frame flash between stages in sequence mode.
-  const demoDurations = { weather: 39600, meeting: 95500, support: 49700 };
+  const weatherDemo = $('#weatherDemo');
+  const meetingDemo = $('#meetingDemo');
+  const supportDemo = $('#supportDemo');
+  const demoDurationFallbacks = { weather: 40000, meeting: 96000, support: 50000 };
+  // Each stage advances while its final scene is still fully visible.
+  // The weather timeline begins fading its last comparison earlier than the
+  // other stages, so it intentionally has a different end ratio.
+  const demoEndRatios = { weather: .91, meeting: .989, support: .98 };
+  const stageActiveClasses = ['demo-active', 'meeting-demo-active', 'support-demo-active'];
+  const stageClassByPage = {
+    weather: 'demo-active',
+    meeting: 'meeting-demo-active',
+    support: 'support-demo-active'
+  };
   let currentGuide = 0;
   let guideChanging = false;
   let demoPaused = false;
@@ -227,7 +237,31 @@
   let demoMode = 'sequence';
   let sequenceTimer = null;
   let sequenceStartedAt = 0;
-  let sequenceRemaining = demoDurations.weather;
+  let sequenceRemaining = demoDurationFallbacks.weather * demoEndRatios.weather;
+  let stageTransitioning = false;
+  let stageTransitionTimers = [];
+
+  const parseCssTime = (value) => {
+    const time = String(value || '').trim();
+    if (!time) return 0;
+    if (time.endsWith('ms')) return Number.parseFloat(time) || 0;
+    if (time.endsWith('s')) return (Number.parseFloat(time) || 0) * 1000;
+    return Number.parseFloat(time) || 0;
+  };
+
+  const getStageRunDuration = (page) => {
+    const roots = { weather: weatherDemo, meeting: meetingDemo, support: supportDemo };
+    const variables = { weather: '--demo-duration', meeting: '--meeting-duration', support: '--support-duration' };
+    const root = roots[page];
+    const cssDuration = root ? parseCssTime(getComputedStyle(root).getPropertyValue(variables[page])) : 0;
+    const fullDuration = cssDuration || demoDurationFallbacks[page] || demoDurationFallbacks.weather;
+    return Math.round(fullDuration * (demoEndRatios[page] || .98));
+  };
+
+  const clearStageTransitionTimers = () => {
+    stageTransitionTimers.forEach((timer) => window.clearTimeout(timer));
+    stageTransitionTimers = [];
+  };
 
   const clearSequenceTimer = ({ preserve = false } = {}) => {
     if (sequenceTimer && preserve) {
@@ -247,8 +281,8 @@
 
   const scheduleSequenceAdvance = ({ reset = true } = {}) => {
     clearSequenceTimer();
-    if (reset) sequenceRemaining = demoDurations[demoPage] || demoDurations.weather;
-    if (demoMode !== 'sequence' || demoPaused || document.hidden || reduceMotion) return;
+    if (reset) sequenceRemaining = getStageRunDuration(demoPage);
+    if (demoMode !== 'sequence' || demoPaused || document.hidden || reduceMotion || stageTransitioning) return;
     sequenceStartedAt = performance.now();
     sequenceTimer = window.setTimeout(advanceSequence, Math.max(80, sequenceRemaining));
   };
@@ -267,6 +301,8 @@
     const supportSelected = demoPage === 'support';
     allDemoPage?.classList.toggle('active', sequenceSelected);
     allDemoPage?.setAttribute('aria-selected', String(sequenceSelected));
+    guidePhone?.classList.toggle('sequence-mode', sequenceSelected);
+    guideStage?.classList.toggle('sequence-mode', sequenceSelected);
     [
       [weatherDemoPage, weatherSelected],
       [meetingDemoPage, meetingSelected],
@@ -282,8 +318,10 @@
 
   const stopAllDemos = () => {
     clearSequenceTimer();
-    guidePhone?.classList.remove('demo-active', 'meeting-demo-active', 'support-demo-active', 'is-paused');
-    guideStage?.classList.remove('meeting-page', 'support-page');
+    clearStageTransitionTimers();
+    stageTransitioning = false;
+    guidePhone?.classList.remove('demo-active', 'meeting-demo-active', 'support-demo-active', 'is-paused', 'stage-transitioning');
+    guideStage?.classList.remove('meeting-page', 'support-page', 'stage-transitioning');
     demoControls?.classList.remove('active');
     demoPaused = false;
     updateDemoButton();
@@ -299,7 +337,7 @@
     guidePhone.classList.toggle('is-paused', demoPaused || document.hidden);
     demoControls?.classList.add('active');
     updateDemoButton();
-    scheduleSequenceAdvance();
+    if (!stageTransitioning) scheduleSequenceAdvance();
   };
 
   const startMeetingDemo = ({ restart = false } = {}) => {
@@ -317,7 +355,7 @@
     demoControls?.classList.add('active');
     if (guideIndex) guideIndex.textContent = '02 / 03';
     updateDemoButton();
-    scheduleSequenceAdvance();
+    if (!stageTransitioning) scheduleSequenceAdvance();
   };
 
   const startSupportDemo = ({ restart = false } = {}) => {
@@ -335,7 +373,96 @@
     demoControls?.classList.add('active');
     if (guideIndex) guideIndex.textContent = '03 / 03';
     updateDemoButton();
-    scheduleSequenceAdvance();
+    if (!stageTransitioning) scheduleSequenceAdvance();
+  };
+
+  const syncWeatherGuide = () => {
+    const item = guideData[0];
+    currentGuide = 0;
+    if (guideImage) {
+      guideImage.src = item.src;
+      guideImage.width = item.width;
+      guideImage.height = item.height;
+      guideImage.alt = item.alt;
+    }
+    if (guideCategory) guideCategory.textContent = item.category;
+    if (guideTitle) guideTitle.textContent = item.title;
+    if (guideDesc) guideDesc.textContent = item.desc;
+    if (guideCheck) guideCheck.textContent = item.check;
+    if (guideWhen) guideWhen.textContent = item.when;
+    if (guideTip) guideTip.textContent = item.tip;
+    guideTabs.forEach((tab, tabIndex) => {
+      const selected = tabIndex === 0;
+      tab.classList.toggle('active', selected);
+      tab.setAttribute('aria-selected', String(selected));
+    });
+  };
+
+  const applyDemoStage = (page) => {
+    if (!guidePhone || !stageClassByPage[page]) return;
+    clearSequenceTimer();
+    demoPage = page;
+    if (page === 'weather') syncWeatherGuide();
+
+    stageActiveClasses.forEach((className) => guidePhone.classList.remove(className));
+    guideStage?.classList.remove('meeting-page', 'support-page');
+    // Force a clean animation start while the transition veil is opaque.
+    void guidePhone.offsetWidth;
+    if (guideStage) void guideStage.offsetWidth;
+
+    if (page === 'meeting') guideStage?.classList.add('meeting-page');
+    if (page === 'support') guideStage?.classList.add('support-page');
+    guidePhone.classList.add(stageClassByPage[page]);
+    guidePhone.classList.toggle('is-paused', demoPaused || document.hidden);
+    demoControls?.classList.add('active');
+
+    if (guideIndex) {
+      guideIndex.textContent = page === 'weather' ? '01 / 03' : page === 'meeting' ? '02 / 03' : '03 / 03';
+    }
+    if (page !== 'weather') {
+      guideTabs.forEach((tab) => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+      });
+    }
+    updateDemoPageButtons();
+    updateDemoButton();
+    if (!stageTransitioning) scheduleSequenceAdvance();
+  };
+
+  const switchDemoStage = (page, { keepMode = false, forceRestart = false, immediate = false } = {}) => {
+    if (!guidePhone || !stageClassByPage[page] || guideChanging || stageTransitioning) return;
+    if (!keepMode) demoMode = 'single';
+    const activeClass = stageClassByPage[page];
+    const alreadyActive = demoPage === page && guidePhone.classList.contains(activeClass);
+    if (alreadyActive && !forceRestart) {
+      updateDemoPageButtons();
+      return;
+    }
+
+    clearSequenceTimer();
+    updateDemoPageButtons();
+    const hasVisibleStage = stageActiveClasses.some((className) => guidePhone.classList.contains(className));
+    if (immediate || reduceMotion || !hasVisibleStage) {
+      applyDemoStage(page);
+      return;
+    }
+
+    stageTransitioning = true;
+    guidePhone.classList.add('stage-transitioning');
+    guideStage?.classList.add('stage-transitioning');
+
+    const swapTimer = window.setTimeout(() => {
+      applyDemoStage(page);
+    }, 170);
+    const revealTimer = window.setTimeout(() => {
+      guidePhone.classList.remove('stage-transitioning');
+      guideStage?.classList.remove('stage-transitioning');
+      stageTransitioning = false;
+      stageTransitionTimers = [];
+      scheduleSequenceAdvance();
+    }, 215);
+    stageTransitionTimers = [swapTimer, revealTimer];
   };
 
   const updateGuide = (nextIndex) => {
@@ -376,40 +503,15 @@
   };
 
   const activateWeatherPage = ({ keepMode = false } = {}) => {
-    if (guideChanging) return;
-    if (!keepMode) demoMode = 'single';
-    demoPage = 'weather';
-    updateDemoPageButtons();
-    updateGuide(0);
-    if (guideIndex) guideIndex.textContent = '01 / 03';
+    switchDemoStage('weather', { keepMode, forceRestart: true });
   };
 
   const activateMeetingPage = ({ keepMode = false } = {}) => {
-    if (!guidePhone || guideChanging) return;
-    stopAllDemos();
-    if (!keepMode) demoMode = 'single';
-    demoPage = 'meeting';
-    updateDemoPageButtons();
-    guideTabs.forEach((tab) => {
-      tab.classList.remove('active');
-      tab.setAttribute('aria-selected', 'false');
-    });
-    if (guideIndex) guideIndex.textContent = '02 / 03';
-    window.setTimeout(() => startMeetingDemo({ restart: true }), reduceMotion ? 0 : 120);
+    switchDemoStage('meeting', { keepMode, forceRestart: true });
   };
 
   const activateSupportPage = ({ keepMode = false } = {}) => {
-    if (!guidePhone || guideChanging) return;
-    stopAllDemos();
-    if (!keepMode) demoMode = 'single';
-    demoPage = 'support';
-    updateDemoPageButtons();
-    guideTabs.forEach((tab) => {
-      tab.classList.remove('active');
-      tab.setAttribute('aria-selected', 'false');
-    });
-    if (guideIndex) guideIndex.textContent = '03 / 03';
-    window.setTimeout(() => startSupportDemo({ restart: true }), reduceMotion ? 0 : 120);
+    switchDemoStage('support', { keepMode, forceRestart: true });
   };
 
   const activateSequence = () => {
@@ -419,7 +521,7 @@
     }
     demoMode = 'sequence';
     demoPaused = false;
-    activateWeatherPage({ keepMode: true });
+    switchDemoStage('weather', { keepMode: true, forceRestart: true });
   };
 
   allDemoPage?.addEventListener('click', activateSequence);

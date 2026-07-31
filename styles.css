@@ -710,7 +710,7 @@ button { color: inherit; }
 @keyframes demo-home {
   0%, 6.6% { opacity: 1; transform: scale(1); }
   7.8%, 96% { opacity: 0; transform: scale(1.008); }
-  100% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.008); }
 }
 @keyframes demo-alert {
   0%, 6.6% { opacity: 0; transform: scale(1.008); }
@@ -720,13 +720,13 @@ button { color: inherit; }
 @keyframes demo-page {
   0%, 14.1% { opacity: 0; }
   15.4%, 96% { opacity: 1; }
-  100% { opacity: 0; }
+  100% { opacity: 1; }
 }
 @keyframes demo-scroll {
   0%, 22.5% { transform: translateY(0); }
   29%, 33.5% { transform: translateY(-35.6%); }
   40%, 96% { transform: translateY(-58.7%); }
-  100% { transform: translateY(0); }
+  100% { transform: translateY(-58.7%); }
 }
 @keyframes demo-hand-alert {
   0%, 1.5% { opacity: 0; transform: translate(-145%, 260%) rotate(-30deg) scale(1.14); }
@@ -853,8 +853,7 @@ button { color: inherit; }
 }
 @keyframes demo-caption-done {
   0%, 49% { opacity: 0; transform: translateY(8px); }
-  49.7%, 92.5% { opacity: 1; transform: translateY(0); }
-  94%, 100% { opacity: 0; transform: translateY(-8px); }
+  49.7%, 100% { opacity: 1; transform: translateY(0); }
 }
 .tour-controls { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 10px; margin-top: 18px; }
 .tour-controls button { width: 44px; height: 44px; border: 1px solid rgba(255, 255, 255, .18); border-radius: 14px; color: #fff; background: rgba(255, 255, 255, .08); cursor: pointer; }
@@ -1149,8 +1148,7 @@ button { color: inherit; }
 }
 @keyframes compare-panel {
   0%, 52% { opacity: 0; transform: translateX(24px) scale(.975); }
-  53.4%, 92.5% { opacity: 1; transform: translateX(0) scale(1); }
-  94%, 100% { opacity: 0; transform: translateX(20px) scale(.985); }
+  53.4%, 100% { opacity: 1; transform: translateX(0) scale(1); }
 }
 @keyframes compare-kma {
   0%, 52% { opacity: 0; transform: translateX(18px) scale(.985); }
@@ -1174,8 +1172,7 @@ button { color: inherit; }
 }
 @keyframes compare-alert {
   0%, 84% { opacity: 0; transform: translateX(18px) scale(.985); }
-  85.4%, 91.7% { opacity: 1; transform: translateX(0) scale(1); }
-  93.5%, 100% { opacity: 0; transform: translateX(-14px) scale(.995); }
+  85.4%, 100% { opacity: 1; transform: translateX(0) scale(1); }
 }
 @keyframes compare-progress-1 {
   0%, 53.4% { transform: scaleX(0); }
@@ -2286,16 +2283,51 @@ button { color: inherit; }
   background: #2d7698;
   opacity: 0;
 }
-.meeting-worker-saved-mask {
+.meeting-worker-empty-state {
   position: absolute;
   left: 6.4%;
   top: 69.8%;
   z-index: 2;
   width: 87.2%;
-  height: 17.5%;
-  border-radius: 0;
-  background: #fff;
+  height: 12.6%;
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  column-gap: 8px;
+  padding: 10px 14px;
+  color: #668197;
+  border: 1.5px dashed #b8cfdb;
+  border-radius: 16px;
+  background: #f3f8fb;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .92);
   opacity: 0;
+}
+.meeting-worker-empty-state i {
+  grid-row: 1 / 3;
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  color: #fff;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 900;
+  border-radius: 50%;
+  background: #76a7be;
+}
+.meeting-worker-empty-state b {
+  align-self: end;
+  font-size: 8.5px;
+  line-height: 1.2;
+}
+.meeting-worker-empty-state small {
+  align-self: start;
+  margin-top: 2px;
+  color: #8297a8;
+  font-size: 6.2px;
+  font-weight: 750;
+  line-height: 1.25;
 }
 .meeting-worker-toast,
 .meeting-sign-complete-toast {
@@ -2453,7 +2485,7 @@ button { color: inherit; }
 }
 .meeting-sign-blank-manager { top: 57.8%; }
 .meeting-sign-blank-worker { top: 66.6%; }
-.meeting-signature-pad-mask {
+.meeting-signature-canvas {
   position: absolute;
   left: 7.8%;
   top: 38.2%;
@@ -2462,9 +2494,23 @@ button { color: inherit; }
   height: 22.3%;
   border-radius: 12px;
   background: #fff;
-  opacity: 0;
-  clip-path: inset(0 0 0 0);
-  transform-origin: right center;
+  box-shadow: inset 0 0 0 1px #d4e0e7;
+  overflow: hidden;
+}
+.meeting-signature-canvas svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 7% 6%;
+}
+.meeting-signature-stroke {
+  fill: none;
+  stroke: #071321;
+  stroke-width: 17;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
 }
 
 .meeting-basic-screen .meeting-field {
@@ -2505,7 +2551,7 @@ button { color: inherit; }
 .guide-phone.meeting-demo-active .meeting-worker-role b { animation: meeting-worker-type-role var(--meeting-duration) steps(3, end) infinite; }
 .guide-phone.meeting-demo-active .meeting-worker-name::after { animation: meeting-worker-caret-name var(--meeting-duration) steps(1, end) infinite; }
 .guide-phone.meeting-demo-active .meeting-worker-role::after { animation: meeting-worker-caret-role var(--meeting-duration) steps(1, end) infinite; }
-.guide-phone.meeting-demo-active .meeting-worker-saved-mask { animation: meeting-worker-saved-mask-v3 var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-worker-empty-state { animation: meeting-worker-empty-state-v19 var(--meeting-duration) ease infinite; }
 .guide-phone.meeting-demo-active .meeting-worker-toast { animation: meeting-worker-toast-v3 var(--meeting-duration) ease infinite; }
 
 .guide-phone.meeting-demo-active .meeting-choice-trade-1 { animation: meeting-choice-trade-1 var(--meeting-duration) ease infinite; }
@@ -2529,7 +2575,8 @@ button { color: inherit; }
 .guide-phone.meeting-demo-active .meeting-sign-status-complete { animation: meeting-sign-status-complete-v3 var(--meeting-duration) ease infinite; }
 .guide-phone.meeting-demo-active .meeting-sign-blank-manager { animation: meeting-sign-blank-manager var(--meeting-duration) ease infinite; }
 .guide-phone.meeting-demo-active .meeting-sign-blank-worker { animation: meeting-sign-blank-worker var(--meeting-duration) ease infinite; }
-.guide-phone.meeting-demo-active .meeting-signature-pad-mask { animation: meeting-signature-pad-reveal var(--meeting-duration) linear infinite; }
+.guide-phone.meeting-demo-active .meeting-signature-stroke-a { animation: meeting-signature-stroke-a-v19 var(--meeting-duration) linear infinite; }
+.guide-phone.meeting-demo-active .meeting-signature-stroke-b { animation: meeting-signature-stroke-b-v19 var(--meeting-duration) linear infinite; }
 .guide-phone.meeting-demo-active .meeting-sign-complete-toast { animation: meeting-sign-complete-toast-v3 var(--meeting-duration) ease infinite; }
 
 .guide-phone.meeting-demo-active .meeting-caption-home { animation: meeting-cap-home var(--meeting-duration) ease infinite; }
@@ -2568,7 +2615,7 @@ button { color: inherit; }
 @keyframes meeting-slide-sign-pad-v3 { 0%, 80.5% { opacity: 0; } 81.1%, 87.5% { opacity: 1; } 88.1%, 100% { opacity: 0; } }
 @keyframes meeting-slide-sign-complete-v3 { 0%, 87.5% { opacity: 0; } 88.1%, 91.5% { opacity: 1; } 92.1%, 100% { opacity: 0; } }
 @keyframes meeting-slide-pdf-v3 { 0%, 91.5% { opacity: 0; } 92.1%, 96% { opacity: 1; } 96.6%, 100% { opacity: 0; } }
-@keyframes meeting-slide-calendar { 0%, 96% { opacity: 0; } 96.6%, 99.5% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes meeting-slide-calendar { 0%, 96% { opacity: 0; } 96.6%, 100% { opacity: 1; } }
 
 @keyframes meeting-type-project {
   0%, 14.05% { clip-path: inset(0 100% 0 0); border-right-color: transparent; }
@@ -2601,7 +2648,11 @@ button { color: inherit; }
 @keyframes meeting-worker-type-role { 0%, 25.45% { clip-path: inset(0 100% 0 0); } 26.35%, 99.7% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 100% 0 0); } }
 @keyframes meeting-worker-caret-name { 0%, 23.1% { opacity: 0; } 23.15%, 23.5% { opacity: 1; } 23.51%, 23.85% { opacity: 0; } 23.86%, 24.2% { opacity: 1; } 24.21%, 100% { opacity: 0; } }
 @keyframes meeting-worker-caret-role { 0%, 25.45% { opacity: 0; } 25.5%, 25.8% { opacity: 1; } 25.81%, 26.1% { opacity: 0; } 26.11%, 26.35% { opacity: 1; } 26.36%, 100% { opacity: 0; } }
-@keyframes meeting-worker-saved-mask-v3 { 0%, 21.5% { opacity: 0; } 21.6%, 27.8% { opacity: 1; } 28.1%, 30% { opacity: 0; } 30.3%, 100% { opacity: 0; } }
+@keyframes meeting-worker-empty-state-v19 {
+  0%, 21.5% { opacity: 0; transform: scale(.985); }
+  21.6%, 27.75% { opacity: 1; transform: scale(1); }
+  28.1%, 100% { opacity: 0; transform: scale(.985); }
+}
 @keyframes meeting-worker-toast-v3 { 0%, 27.8% { opacity: 0; transform: translate(-50%, 8px); } 28.1%, 29.4% { opacity: 1; transform: translate(-50%, 0); } 29.9%, 100% { opacity: 0; transform: translate(-50%, -7px); } }
 
 @keyframes meeting-choice-trade-1 {
@@ -2676,12 +2727,13 @@ button { color: inherit; }
   88.1%, 91.5% { opacity: 1; }
   92%, 100% { opacity: 0; }
 }
-@keyframes meeting-signature-pad-reveal {
-  0%, 81% { opacity: 0; clip-path: inset(0 0 0 0); }
-  81.1%, 82.1% { opacity: 1; clip-path: inset(0 0 0 0); }
-  86.2% { opacity: 1; clip-path: inset(0 0 0 100%); }
-  87.5% { opacity: 1; clip-path: inset(0 0 0 100%); }
-  88%, 100% { opacity: 0; clip-path: inset(0 0 0 100%); }
+@keyframes meeting-signature-stroke-a-v19 {
+  0%, 81.95% { stroke-dashoffset: 1; }
+  84.15%, 100% { stroke-dashoffset: 0; }
+}
+@keyframes meeting-signature-stroke-b-v19 {
+  0%, 83.6% { stroke-dashoffset: 1; }
+  86.2%, 100% { stroke-dashoffset: 0; }
 }
 @keyframes meeting-sign-complete-toast-v3 { 0%, 88% { opacity: 0; transform: translate(-50%, 8px); } 88.4%, 91.2% { opacity: 1; transform: translate(-50%, 0); } 91.6%, 100% { opacity: 0; transform: translate(-50%, -7px); } }
 
@@ -2857,7 +2909,7 @@ button { color: inherit; }
 @keyframes meeting-cap-sign-pad-v3 { 0%, 81% { opacity: 0; } 81.5%, 87.5% { opacity: 1; } 88%, 100% { opacity: 0; } }
 @keyframes meeting-cap-sign-complete-v3 { 0%, 88% { opacity: 0; } 88.5%, 91.5% { opacity: 1; } 92%, 100% { opacity: 0; } }
 @keyframes meeting-cap-pdf { 0%, 92% { opacity: 0; } 92.5%, 96% { opacity: 1; } 96.5%, 100% { opacity: 0; } }
-@keyframes meeting-cap-calendar { 0%, 96.5% { opacity: 0; } 97%, 99.5% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes meeting-cap-calendar { 0%, 96.5% { opacity: 0; } 97%, 100% { opacity: 1; } }
 
 @keyframes meeting-explain-entry { 0%, 1% { opacity: 0; transform: translateY(18px); } 1.5%, 11.9% { opacity: 1; transform: translateY(0); } 12.5%, 100% { opacity: 0; transform: translateY(-12px); } }
 @keyframes meeting-explain-basic { 0%, 11.9% { opacity: 0; transform: translateY(18px); } 12.5%, 30% { opacity: 1; transform: translateY(0); } 30.6%, 100% { opacity: 0; transform: translateY(-12px); } }
@@ -2866,7 +2918,7 @@ button { color: inherit; }
 @keyframes meeting-explain-ai { 0%, 48.1% { opacity: 0; transform: translateY(18px); } 48.7%, 65.5% { opacity: 1; transform: translateY(0); } 66.1%, 100% { opacity: 0; transform: translateY(-12px); } }
 @keyframes meeting-explain-focus-v2 { 0%, 65.5% { opacity: 0; transform: translateY(18px); } 66.1%, 73% { opacity: 1; transform: translateY(0); } 73.6%, 100% { opacity: 0; transform: translateY(-12px); } }
 @keyframes meeting-explain-sign { 0%, 73% { opacity: 0; transform: translateY(18px); } 73.6%, 91.5% { opacity: 1; transform: translateY(0); } 92.1%, 100% { opacity: 0; transform: translateY(-12px); } }
-@keyframes meeting-explain-save { 0%, 91.5% { opacity: 0; transform: translateY(18px); } 92.1%, 99.5% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-12px); } }
+@keyframes meeting-explain-save { 0%, 91.5% { opacity: 0; transform: translateY(18px); } 92.1%, 100% { opacity: 1; transform: translateY(0); } }
 
 @media (prefers-reduced-motion: reduce) {
   .guide-phone.meeting-demo-active .meeting-slide {
@@ -3072,7 +3124,7 @@ button { color: inherit; }
 @keyframes support-slide-golden { 0%, 51.2% { opacity: 0; } 51.9%, 65.2% { opacity: 1; } 65.9%, 100% { opacity: 0; } }
 @keyframes support-slide-home-tools { 0%, 65.2% { opacity: 0; } 65.9%, 72.2% { opacity: 1; } 72.9%, 100% { opacity: 0; } }
 @keyframes support-slide-tools { 0%, 72.2% { opacity: 0; } 72.9%, 84.2% { opacity: 1; } 84.9%, 100% { opacity: 0; } }
-@keyframes support-slide-emergency { 0%, 84.2% { opacity: 0; } 84.9%, 99.5% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes support-slide-emergency { 0%, 84.2% { opacity: 0; } 84.9%, 100% { opacity: 1; } }
 
 @keyframes support-hand-safety { 0%, 5.8% { opacity: 0; } 6.4%, 9.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 10.1% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 10.8%, 100% { opacity: 0; } }
 @keyframes support-hand-risk { 0%, 17.7% { opacity: 0; } 18.3%, 21.4% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 21.9% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 22.6%, 100% { opacity: 0; } }
@@ -3094,7 +3146,7 @@ button { color: inherit; }
 @keyframes support-caption-golden { 0%, 39.7% { opacity: 0; } 40.4%, 65% { opacity: 1; } 65.7%, 100% { opacity: 0; } }
 @keyframes support-caption-home-tools { 0%, 65.7% { opacity: 0; } 66.4%, 72% { opacity: 1; } 72.7%, 100% { opacity: 0; } }
 @keyframes support-caption-tools { 0%, 72.7% { opacity: 0; } 73.4%, 84% { opacity: 1; } 84.7%, 100% { opacity: 0; } }
-@keyframes support-caption-emergency { 0%, 84.7% { opacity: 0; } 85.4%, 99.4% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes support-caption-emergency { 0%, 84.7% { opacity: 0; } 85.4%, 100% { opacity: 1; } }
 
 .support-explanations {
   --support-duration: 50s;
@@ -3163,7 +3215,7 @@ button { color: inherit; }
 @keyframes support-explain-safety { 0%, 1% { opacity: 0; transform: translateY(18px); } 2%, 23% { opacity: 1; transform: translateY(0); } 23.8%, 100% { opacity: 0; transform: translateY(-12px); } }
 @keyframes support-explain-risk { 0%, 23% { opacity: 0; transform: translateY(18px); } 24%, 39% { opacity: 1; transform: translateY(0); } 39.8%, 100% { opacity: 0; transform: translateY(-12px); } }
 @keyframes support-explain-golden { 0%, 39% { opacity: 0; transform: translateY(18px); } 40%, 72% { opacity: 1; transform: translateY(0); } 72.8%, 100% { opacity: 0; transform: translateY(-12px); } }
-@keyframes support-explain-tools { 0%, 72% { opacity: 0; transform: translateY(18px); } 73%, 99.4% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-12px); } }
+@keyframes support-explain-tools { 0%, 72% { opacity: 0; transform: translateY(18px); } 73%, 100% { opacity: 1; transform: translateY(0); } }
 
 .guide-phone.support-demo-active.is-paused .support-slide,
 .guide-phone.support-demo-active.is-paused .support-hand,
@@ -3232,13 +3284,6 @@ button { color: inherit; }
 .guide-phone.meeting-demo-active.is-paused .meeting-scene-state *,
 .guide-phone.meeting-demo-active.is-paused .meeting-scene-state *::after {
   animation-play-state: paused;
-}
-
-/* 작업자 화면이 나타나는 첫 프레임부터 기존 저장 카드를 가린 뒤,
-   입력·저장 동작이 끝난 시점에만 실제 카드가 보입니다. */
-@keyframes meeting-worker-saved-mask-v3 {
-  0%, 27.8% { opacity: 1; }
-  28.1%, 100% { opacity: 0; }
 }
 
 /* 공종 화면은 빈 체크박스로 시작하고 터치 직후에만 체크됩니다. */
@@ -3430,19 +3475,77 @@ button { color: inherit; }
   0%, 100% { opacity: 1; }
 }
 
-/* 서명패드의 완성된 사인을 첫 프레임부터 가린 뒤,
-   손가락 이동 방향에 맞춰 가림막을 걷어 사인이 그려지게 합니다. */
-@keyframes meeting-signature-pad-reveal {
-  0%, 82.1% {
-    opacity: 1;
-    clip-path: inset(0 0 0 0);
-  }
-  86.2%, 87.5% {
-    opacity: 1;
-    clip-path: inset(0 0 0 100%);
-  }
-  88%, 100% {
-    opacity: 0;
-    clip-path: inset(0 0 0 100%);
+/* ===== v19 · SEAMLESS STAGE CHANGE + NATIVE INPUT STATES ===== */
+.guide-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  border-radius: inherit;
+  background: linear-gradient(145deg, rgba(11, 38, 55, .88), rgba(24, 66, 89, .82));
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .17s ease, visibility 0s linear .17s;
+}
+
+.guide-phone.stage-transitioning .guide-media::after {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.tour-detail {
+  transition: opacity .17s ease, transform .17s ease;
+}
+
+.tour-stage.stage-transitioning .tour-detail {
+  opacity: .18;
+  transform: translateY(4px);
+}
+
+/* The sequence controller owns repetition. Each CSS timeline runs once and
+   holds its last frame, so a throttled timer can never expose frame one. */
+.guide-phone.sequence-mode .weather-demo *,
+.guide-phone.sequence-mode .weather-demo *::before,
+.guide-phone.sequence-mode .weather-demo *::after,
+.guide-phone.sequence-mode .meeting-demo *,
+.guide-phone.sequence-mode .meeting-demo *::before,
+.guide-phone.sequence-mode .meeting-demo *::after,
+.guide-phone.sequence-mode .support-demo *,
+.guide-phone.sequence-mode .support-demo *::before,
+.guide-phone.sequence-mode .support-demo *::after,
+.tour-stage.sequence-mode .demo-explanations *,
+.tour-stage.sequence-mode .meeting-explanations *,
+.tour-stage.sequence-mode .support-explanations *,
+.tour-stage.sequence-mode .typhoon-compare,
+.tour-stage.sequence-mode .typhoon-compare *,
+.tour-stage.sequence-mode .typhoon-compare *::before,
+.tour-stage.sequence-mode .typhoon-compare *::after {
+  animation-iteration-count: 1 !important;
+  animation-fill-mode: both !important;
+}
+
+.guide-phone.sequence-mode .meeting-ai-loading i {
+  animation-iteration-count: infinite !important;
+  animation-fill-mode: none !important;
+}
+
+/* Freeze the outgoing final frame while the blue transition veil is up. */
+.guide-phone.stage-transitioning .weather-demo *,
+.guide-phone.stage-transitioning .meeting-demo *,
+.guide-phone.stage-transitioning .support-demo *,
+.tour-stage.stage-transitioning .demo-explanations *,
+.tour-stage.stage-transitioning .meeting-explanations *,
+.tour-stage.stage-transitioning .support-explanations *,
+.tour-stage.stage-transitioning .typhoon-compare,
+.tour-stage.stage-transitioning .typhoon-compare * {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-media::after,
+  .tour-detail {
+    transition: none;
   }
 }
