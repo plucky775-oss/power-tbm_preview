@@ -212,9 +212,12 @@
   const demoControls = $('#demoControls');
   const demoToggle = $('#demoToggle');
   const demoReplay = $('#demoReplay');
+  const weatherDemoPage = $('#weatherDemoPage');
+  const meetingDemoPage = $('#meetingDemoPage');
   let currentGuide = 0;
   let guideChanging = false;
   let demoPaused = false;
+  let demoPage = 'weather';
 
   const updateDemoButton = () => {
     if (!demoToggle) return;
@@ -222,15 +225,25 @@
     demoToggle.innerHTML = `<span aria-hidden="true">${demoPaused ? '▶' : 'Ⅱ'}</span> ${demoPaused ? '계속 재생' : '자동 시연'}`;
   };
 
-  const stopWeatherDemo = () => {
-    guidePhone?.classList.remove('demo-active', 'is-paused');
+  const updateDemoPageButtons = () => {
+    const weatherSelected = demoPage === 'weather';
+    const meetingSelected = demoPage === 'meeting';
+    weatherDemoPage?.classList.toggle('active', weatherSelected);
+    weatherDemoPage?.setAttribute('aria-selected', String(weatherSelected));
+    meetingDemoPage?.classList.toggle('active', meetingSelected);
+    meetingDemoPage?.setAttribute('aria-selected', String(meetingSelected));
+  };
+
+  const stopAllDemos = () => {
+    guidePhone?.classList.remove('demo-active', 'meeting-demo-active', 'is-paused');
+    guideStage?.classList.remove('meeting-page');
     demoControls?.classList.remove('active');
     demoPaused = false;
     updateDemoButton();
   };
 
   const startWeatherDemo = ({ restart = false } = {}) => {
-    if (!guidePhone || reduceMotion || currentGuide !== 0) return;
+    if (!guidePhone || reduceMotion || currentGuide !== 0 || demoPage !== 'weather') return;
     demoPaused = false;
     guidePhone.classList.remove('is-paused');
     if (restart) {
@@ -242,10 +255,25 @@
     updateDemoButton();
   };
 
+  const startMeetingDemo = ({ restart = false } = {}) => {
+    if (!guidePhone || reduceMotion || demoPage !== 'meeting') return;
+    demoPaused = false;
+    guidePhone.classList.remove('is-paused', 'demo-active');
+    guideStage?.classList.add('meeting-page');
+    if (restart) {
+      guidePhone.classList.remove('meeting-demo-active');
+      void guidePhone.offsetWidth;
+    }
+    guidePhone.classList.add('meeting-demo-active');
+    demoControls?.classList.add('active');
+    if (guideIndex) guideIndex.textContent = '02 / 02';
+    updateDemoButton();
+  };
+
   const updateGuide = (nextIndex) => {
     if (!guideImage || guideChanging) return;
     const index = (nextIndex + guideData.length) % guideData.length;
-    stopWeatherDemo();
+    stopAllDemos();
     guideChanging = true;
     guidePhone?.classList.add('changing');
     const apply = () => {
@@ -255,7 +283,11 @@
       guideImage.width = item.width;
       guideImage.height = item.height;
       guideImage.alt = item.alt;
-      if (guideIndex) guideIndex.textContent = `${String(index + 1).padStart(2, '0')} / ${String(guideData.length).padStart(2, '0')}`;
+      if (guideIndex) {
+        guideIndex.textContent = (demoPage === 'weather' && index === 0)
+          ? '01 / 02'
+          : `${String(index + 1).padStart(2, '0')} / ${String(guideData.length).padStart(2, '0')}`;
+      }
       if (guideCategory) guideCategory.textContent = item.category;
       if (guideTitle) guideTitle.textContent = item.title;
       if (guideDesc) guideDesc.textContent = item.desc;
@@ -275,25 +307,73 @@
     window.setTimeout(apply, reduceMotion ? 0 : 150);
   };
 
-  guideTabs.forEach((tab, index) => tab.addEventListener('click', () => updateGuide(index)));
-  $('#guidePrev')?.addEventListener('click', () => updateGuide(currentGuide - 1));
-  $('#guideNext')?.addEventListener('click', () => updateGuide(currentGuide + 1));
+  const activateWeatherPage = () => {
+    if (guideChanging) return;
+    demoPage = 'weather';
+    updateDemoPageButtons();
+    updateGuide(0);
+    if (guideIndex) guideIndex.textContent = '01 / 02';
+  };
+
+  const activateMeetingPage = () => {
+    if (!guidePhone || guideChanging) return;
+    stopAllDemos();
+    demoPage = 'meeting';
+    updateDemoPageButtons();
+    guideTabs.forEach((tab) => {
+      tab.classList.remove('active');
+      tab.setAttribute('aria-selected', 'false');
+    });
+    if (guideIndex) guideIndex.textContent = '02 / 02';
+    window.setTimeout(() => startMeetingDemo({ restart: true }), reduceMotion ? 0 : 120);
+  };
+
+  weatherDemoPage?.addEventListener('click', activateWeatherPage);
+  meetingDemoPage?.addEventListener('click', activateMeetingPage);
+  guideTabs.forEach((tab, index) => tab.addEventListener('click', () => {
+    demoPage = index === 0 ? 'weather' : 'manual';
+    updateDemoPageButtons();
+    updateGuide(index);
+  }));
+  $('#guidePrev')?.addEventListener('click', () => {
+    if (demoPage === 'meeting') activateWeatherPage();
+    else if (demoPage === 'weather') activateMeetingPage();
+    else updateGuide(currentGuide - 1);
+  });
+  $('#guideNext')?.addEventListener('click', () => {
+    if (demoPage === 'weather') activateMeetingPage();
+    else if (demoPage === 'meeting') activateWeatherPage();
+    else updateGuide(currentGuide + 1);
+  });
   guideStage?.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft') updateGuide(currentGuide - 1);
-    if (event.key === 'ArrowRight') updateGuide(currentGuide + 1);
+    if (event.key === 'ArrowLeft') {
+      if (demoPage === 'meeting') activateWeatherPage();
+      else if (demoPage === 'weather') activateMeetingPage();
+      else updateGuide(currentGuide - 1);
+    }
+    if (event.key === 'ArrowRight') {
+      if (demoPage === 'weather') activateMeetingPage();
+      else if (demoPage === 'meeting') activateWeatherPage();
+      else updateGuide(currentGuide + 1);
+    }
   });
   demoToggle?.addEventListener('click', () => {
-    if (!guidePhone || currentGuide !== 0) return;
+    if (!guidePhone || (demoPage !== 'meeting' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
     guidePhone.classList.toggle('is-paused', demoPaused);
     updateDemoButton();
   });
-  demoReplay?.addEventListener('click', () => startWeatherDemo({ restart: true }));
+  demoReplay?.addEventListener('click', () => {
+    if (demoPage === 'meeting') startMeetingDemo({ restart: true });
+    else startWeatherDemo({ restart: true });
+  });
 
   if (guideStage && !reduceMotion && 'IntersectionObserver' in window) {
     const demoObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && currentGuide === 0) startWeatherDemo({ restart: true });
+        if (!entry.isIntersecting) return;
+        if (demoPage === 'meeting') startMeetingDemo({ restart: true });
+        else if (currentGuide === 0) startWeatherDemo({ restart: true });
       });
     }, { threshold: .35 });
     demoObserver.observe(guideStage);
@@ -301,9 +381,10 @@
     startWeatherDemo();
   }
   document.addEventListener('visibilitychange', () => {
-    if (!guidePhone || currentGuide !== 0) return;
+    if (!guidePhone || (demoPage !== 'meeting' && currentGuide !== 0)) return;
     guidePhone.classList.toggle('is-paused', document.hidden || demoPaused);
   });
+  updateDemoPageButtons();
   updateDemoButton();
 
   const video = $('#promoVideo');
