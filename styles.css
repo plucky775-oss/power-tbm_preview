@@ -3826,40 +3826,6 @@ body { background: #fff; }
 .tour-copy dl div { border-radius: 14px; background: rgba(255, 255, 255, .035); }
 .tour-tip { border-radius: 14px; }
 
-/* Replace playful emoji hands with a restrained product-demo pointer. */
-.demo-hand,
-.meeting-hand,
-.support-hand {
-  width: 42px !important;
-  height: 42px !important;
-  border: 2px solid rgba(255, 255, 255, .92);
-  border-radius: 50%;
-  background: rgba(16, 54, 74, .76);
-  box-shadow: 0 0 0 7px rgba(255, 255, 255, .16), 0 12px 28px rgba(0, 0, 0, .32);
-  filter: none !important;
-  font-size: 0 !important;
-  transform-origin: center !important;
-}
-.meeting-hand,
-.support-hand { margin: -13px 0 0 -3px; }
-.demo-hand::before,
-.meeting-hand::before,
-.support-hand::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--yellow);
-  transform: translate(-50%, -50%);
-}
-.demo-hand-alert { left: calc(52% - 21px); top: calc(40.6% - 21px); }
-.demo-hand-tap { left: calc(52% - 21px); top: calc(27% - 21px); }
-.demo-hand-swipe { left: calc(52% - 21px); top: 64%; }
-.demo-hand-links { left: calc(16.7% - 21px); top: calc(76.5% - 21px); }
-
 .product-stories { padding: 148px 24px; background: #fff; }
 .product-stories .section-heading { margin-bottom: 76px; }
 .product-stories .section-heading h2 { font-size: clamp(48px, 5.4vw, 72px); }
