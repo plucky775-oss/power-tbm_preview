@@ -8,13 +8,13 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Power TBM | 현장 안전회의를 한 흐름으로">
   <meta property="og:description" content="무엇을 확인하고 어떻게 기록하는지, 실제 화면과 6단계 사용법으로 쉽게 알아보세요.">
-  <meta property="og:image" content="assets/screens/guide/home-alert.webp">
+  <meta property="og:image" content="assets/screens/guide/home-alert-expanded-v8.jpeg">
   <meta property="og:image:alt" content="Power TBM 홈 화면">
   <title>Power TBM | 기능과 사용방법</title>
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
   <link rel="apple-touch-icon" href="assets/brand/power-tbm-icon.png">
-  <link rel="preload" as="image" href="assets/screens/guide/home-alert.webp">
-  <link rel="stylesheet" href="styles.css?v=20260731-weather-guide-v6">
+  <link rel="preload" as="image" href="assets/screens/guide/home-alert-expanded-v8.jpeg">
+  <link rel="stylesheet" href="styles.css?v=20260731-weather-guide-v8">
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -74,7 +74,7 @@
 
         <div class="hero-visual reveal" data-delay="100" role="group" aria-label="Power TBM 실제 홈 화면과 이용 안내">
           <div class="hero-phone phone-frame">
-            <img src="assets/screens/guide/home-alert.webp" alt="날씨, 기상특보와 TBM 회의록 메뉴를 보여주는 Power TBM 홈 화면" width="709" height="1536">
+            <img src="assets/screens/guide/home-alert-expanded-v8.jpeg" alt="날씨, 펼쳐진 기상특보와 TBM 회의록 메뉴를 보여주는 Power TBM 홈 화면" width="709" height="1536">
           </div>
           <aside class="today-card" aria-label="현장 도착 후 확인 순서">
             <span class="today-label">현장 도착 후 먼저 확인</span>
@@ -330,14 +330,17 @@
             <div class="phone-frame guide-phone">
               <div class="guide-media">
                 <img id="guideImage" src="assets/screens/guide/home.webp" alt="Power TBM 홈 화면" width="709" height="1536">
-                <div class="weather-demo" id="weatherDemo" role="img" aria-label="홈 화면의 날씨 카드를 누르고 날씨 화면을 위로 스크롤한 뒤 태풍정보 다섯 개를 차례로 비교하는 자동 시연">
+                <div class="weather-demo" id="weatherDemo" role="img" aria-label="홈 화면의 기상특보를 먼저 펼쳐 조치사항을 확인하고 날씨 화면으로 들어간 뒤 태풍정보 다섯 개를 차례로 비교하는 자동 시연">
                   <img class="weather-demo-home" src="assets/screens/guide/home.webp" alt="" width="709" height="1536">
+                  <img class="weather-demo-alert" src="assets/screens/guide/home-alert-expanded-v8.jpeg" alt="" width="709" height="1536">
                   <div class="weather-demo-page" aria-hidden="true">
                     <div class="weather-demo-track">
                       <img src="assets/screens/guide/weather-scroll-v3.webp" alt="" width="1179" height="6181">
                     </div>
                   </div>
-                  <span class="demo-ripple" aria-hidden="true"></span>
+                  <span class="demo-ripple demo-ripple-alert" aria-hidden="true"></span>
+                  <span class="demo-ripple demo-ripple-weather" aria-hidden="true"></span>
+                  <span class="demo-hand demo-hand-alert" aria-hidden="true">👆🏻</span>
                   <span class="demo-hand demo-hand-tap" aria-hidden="true">👆🏻</span>
                   <span class="demo-hand demo-hand-swipe" aria-hidden="true">👆🏻</span>
                   <span class="demo-focus demo-focus-now" aria-hidden="true"></span>
@@ -348,7 +351,9 @@
                   <span class="demo-link-ripple" aria-hidden="true"></span>
                   <span class="demo-hand demo-hand-links" aria-hidden="true">👆🏻</span>
                   <div class="demo-caption" aria-hidden="true">
-                    <span class="demo-caption-tap">날씨 카드를 누릅니다</span>
+                    <span class="demo-caption-alert">기상특보를 먼저 눌러 펼칩니다</span>
+                    <span class="demo-caption-alert-open">산업분야 조치사항을 확인합니다</span>
+                    <span class="demo-caption-tap">이어서 날씨 카드로 들어갑니다</span>
                     <span class="demo-caption-now">체감온도와 시간별 날씨를 제공합니다</span>
                     <span class="demo-caption-swipe">한 번 올려 미세먼지를 확인합니다</span>
                     <span class="demo-caption-air">미세먼지·초미세먼지를 함께 확인합니다</span>
@@ -383,9 +388,9 @@
 
             <aside class="demo-explanations" aria-label="현재 강조된 날씨 기능 설명">
               <article class="demo-explain demo-explain-enter">
-                <span><i></i> 날씨 기능 시작</span>
-                <h3>홈의 날씨 카드를<br><em>한 번 누릅니다.</em></h3>
-                <p>현재 위치를 기준으로 작업 전 확인해야 할 실시간 기상정보 화면으로 이동합니다.</p>
+                <span><i></i> 작업 전 첫 확인</span>
+                <h3>기상특보를 펼쳐<br><em>조치사항부터 확인</em></h3>
+                <p>현재 위치의 특보와 산업분야 조치사항을 먼저 확인한 다음, 날씨 카드로 들어가 상세 기상정보를 살펴봅니다.</p>
               </article>
 
               <article class="demo-explain demo-explain-now">
