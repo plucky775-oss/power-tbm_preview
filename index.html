@@ -14,8 +14,8 @@
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
   <link rel="apple-touch-icon" href="assets/brand/power-tbm-icon.png">
   <link rel="preload" as="image" href="assets/screens/guide/home-alert-expanded-v8.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260801-finger-v21">
-  <script src="app.js?v=20260801-premium-v20" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260801-opening-v22">
+  <script src="app.js?v=20260801-opening-v22" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -97,13 +97,13 @@
       <div class="tour-shell">
         <div class="tour-heading reveal">
           <span class="eyebrow eyebrow-light">PRODUCT WALKTHROUGH</span>
-          <h2>3단계 시연으로<br><em>전체 흐름을 확인하세요.</em></h2>
-          <p>기상정보 확인부터 TBM 회의록 작성, 안전가이드와 현장도구까지 실제 앱 화면이 1→2→3단계로 자동 재생됩니다.</p>
+          <h2>오프닝부터 3단계까지<br><em>전체 흐름을 확인하세요.</em></h2>
+          <p>Power TBM 오프닝에 이어 기상정보, TBM 회의록, 안전가이드와 현장도구가 실제 앱 화면으로 자동 재생됩니다.</p>
         </div>
 
         <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
           <button class="active demo-all-button" id="allDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
-            <span>ALL</span><b>전체 자동시연</b><small>1→2→3 연속 재생</small>
+            <span>ALL</span><b>전체 자동시연</b><small>오프닝→1→2→3 연속 재생</small>
           </button>
           <button class="current" id="weatherDemoPage" type="button" role="tab" aria-selected="false" aria-current="step" aria-controls="tourStage">
             <span>01</span><b>기상정보</b><small>특보·날씨·전문자료</small>
@@ -121,6 +121,17 @@
             <div class="phone-frame guide-phone">
               <div class="guide-media">
                 <img id="guideImage" src="assets/screens/guide/home.webp" alt="Power TBM 홈 화면" width="709" height="1536">
+                <video
+                  class="opening-demo-video"
+                  id="openingDemoVideo"
+                  muted
+                  playsinline
+                  preload="metadata"
+                  poster="assets/video/power-tbm-opening-v22-poster.jpg"
+                  aria-hidden="true"
+                >
+                  <source src="assets/video/power-tbm-opening-v22.mp4" type="video/mp4">
+                </video>
                 <div class="weather-demo" id="weatherDemo" role="img" aria-label="홈 화면의 기상특보를 먼저 펼쳐 조치사항을 확인하고 날씨 화면으로 들어간 뒤 태풍정보 다섯 개를 차례로 비교하는 자동 시연">
                   <img class="weather-demo-home" src="assets/screens/guide/home.webp" alt="" width="709" height="1536">
                   <img class="weather-demo-alert" src="assets/screens/guide/home-alert-expanded-v8.jpeg" alt="" width="709" height="1536">
@@ -330,6 +341,15 @@
             </div>
           </div>
           <div class="tour-detail">
+            <aside class="opening-explanation" aria-label="Power TBM 오프닝 내레이션">
+              <span><i></i> OPENING · 8 SEC</span>
+              <h3>현장 안전회의의<br><em>새로운 기준</em></h3>
+              <p class="opening-narration-label">오프닝 내레이션</p>
+              <blockquote>“기상 확인부터 AI 안전검토와 서명·기록까지, 현장 안전회의의 새로운 기준, 파워 티비엠입니다.”</blockquote>
+              <div class="opening-flow" aria-label="전체 자동시연 순서">
+                <b>오프닝</b><i>→</i><b>기상정보</b><i>→</i><b>TBM 회의록</b><i>→</i><b>안전·현장도구</b>
+              </div>
+            </aside>
             <article class="tour-copy" aria-live="polite">
               <span id="guideCategory">시작 화면</span>
               <h3 id="guideTitle">홈에서 오늘의 현장을 확인합니다</h3>

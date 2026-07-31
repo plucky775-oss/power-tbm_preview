@@ -216,16 +216,18 @@
   const weatherDemoPage = $('#weatherDemoPage');
   const meetingDemoPage = $('#meetingDemoPage');
   const supportDemoPage = $('#supportDemoPage');
+  const openingDemoVideo = $('#openingDemoVideo');
   const weatherDemo = $('#weatherDemo');
   const meetingDemo = $('#meetingDemo');
   const supportDemo = $('#supportDemo');
-  const demoDurationFallbacks = { weather: 40000, meeting: 96000, support: 50000 };
+  const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000 };
   // Each stage advances while its final scene is still fully visible.
   // The weather timeline begins fading its last comparison earlier than the
   // other stages, so it intentionally has a different end ratio.
-  const demoEndRatios = { weather: .91, meeting: .989, support: .98 };
-  const stageActiveClasses = ['demo-active', 'meeting-demo-active', 'support-demo-active'];
+  const demoEndRatios = { intro: 1, weather: .91, meeting: .989, support: .98 };
+  const stageActiveClasses = ['opening-demo-active', 'demo-active', 'meeting-demo-active', 'support-demo-active'];
   const stageClassByPage = {
+    intro: 'opening-demo-active',
     weather: 'demo-active',
     meeting: 'meeting-demo-active',
     support: 'support-demo-active'
@@ -233,11 +235,11 @@
   let currentGuide = 0;
   let guideChanging = false;
   let demoPaused = false;
-  let demoPage = 'weather';
+  let demoPage = 'intro';
   let demoMode = 'sequence';
   let sequenceTimer = null;
   let sequenceStartedAt = 0;
-  let sequenceRemaining = demoDurationFallbacks.weather * demoEndRatios.weather;
+  let sequenceRemaining = demoDurationFallbacks.intro;
   let stageTransitioning = false;
   let stageTransitionTimers = [];
 
@@ -250,6 +252,12 @@
   };
 
   const getStageRunDuration = (page) => {
+    if (page === 'intro') {
+      const videoDuration = Number(openingDemoVideo?.duration);
+      return Number.isFinite(videoDuration) && videoDuration > 0
+        ? Math.round(videoDuration * 1000 + 350)
+        : demoDurationFallbacks.intro;
+    }
     const roots = { weather: weatherDemo, meeting: meetingDemo, support: supportDemo };
     const variables = { weather: '--demo-duration', meeting: '--meeting-duration', support: '--support-duration' };
     const root = roots[page];
@@ -274,9 +282,10 @@
 
   const advanceSequence = () => {
     if (demoMode !== 'sequence') return;
-    if (demoPage === 'weather') activateMeetingPage({ keepMode: true });
+    if (demoPage === 'intro') activateWeatherPage({ keepMode: true });
+    else if (demoPage === 'weather') activateMeetingPage({ keepMode: true });
     else if (demoPage === 'meeting') activateSupportPage({ keepMode: true });
-    else activateWeatherPage({ keepMode: true });
+    else activateIntroPage({ keepMode: true });
   };
 
   const scheduleSequenceAdvance = ({ reset = true } = {}) => {
@@ -320,15 +329,47 @@
     clearSequenceTimer();
     clearStageTransitionTimers();
     stageTransitioning = false;
-    guidePhone?.classList.remove('demo-active', 'meeting-demo-active', 'support-demo-active', 'is-paused', 'stage-transitioning');
-    guideStage?.classList.remove('meeting-page', 'support-page', 'stage-transitioning');
+    guidePhone?.classList.remove('opening-demo-active', 'demo-active', 'meeting-demo-active', 'support-demo-active', 'is-paused', 'stage-transitioning');
+    guideStage?.classList.remove('intro-page', 'meeting-page', 'support-page', 'stage-transitioning');
+    openingDemoVideo?.pause();
     demoControls?.classList.remove('active');
     demoPaused = false;
     updateDemoButton();
   };
 
+  const syncOpeningVideoPlayback = ({ restart = false } = {}) => {
+    if (!openingDemoVideo) return;
+    openingDemoVideo.muted = true;
+    if (restart) {
+      try { openingDemoVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+    }
+    if (demoPaused || document.hidden || reduceMotion || demoPage !== 'intro') {
+      openingDemoVideo.pause();
+      return;
+    }
+    openingDemoVideo.play().catch(() => {
+      // The sequence timer remains as a fallback if a browser blocks playback.
+    });
+  };
+
+  const startIntroDemo = ({ restart = false } = {}) => {
+    if (!guidePhone || reduceMotion || demoPage !== 'intro') return;
+    stageActiveClasses.forEach((className) => guidePhone.classList.remove(className));
+    guideStage?.classList.remove('meeting-page', 'support-page');
+    guideStage?.classList.add('intro-page');
+    guidePhone.classList.add('opening-demo-active');
+    guidePhone.classList.toggle('is-paused', demoPaused || document.hidden);
+    demoControls?.classList.add('active');
+    if (guideIndex) guideIndex.textContent = 'OPENING';
+    syncOpeningVideoPlayback({ restart });
+    updateDemoPageButtons();
+    updateDemoButton();
+    if (!stageTransitioning) scheduleSequenceAdvance();
+  };
+
   const startWeatherDemo = ({ restart = false } = {}) => {
     if (!guidePhone || reduceMotion || currentGuide !== 0 || demoPage !== 'weather') return;
+    openingDemoVideo?.pause();
     if (restart) {
       guidePhone.classList.remove('demo-active');
       void guidePhone.offsetWidth;
@@ -342,6 +383,7 @@
 
   const startMeetingDemo = ({ restart = false } = {}) => {
     if (!guidePhone || demoPage !== 'meeting') return;
+    openingDemoVideo?.pause();
     guidePhone.classList.remove('demo-active');
     if (restart) {
       guidePhone.classList.remove('meeting-demo-active');
@@ -360,6 +402,7 @@
 
   const startSupportDemo = ({ restart = false } = {}) => {
     if (!guidePhone || demoPage !== 'support') return;
+    openingDemoVideo?.pause();
     guidePhone.classList.remove('demo-active', 'meeting-demo-active');
     if (restart) {
       guidePhone.classList.remove('support-demo-active');
@@ -401,15 +444,17 @@
   const applyDemoStage = (page) => {
     if (!guidePhone || !stageClassByPage[page]) return;
     clearSequenceTimer();
+    if (demoPage === 'intro' && page !== 'intro') openingDemoVideo?.pause();
     demoPage = page;
     if (page === 'weather') syncWeatherGuide();
 
     stageActiveClasses.forEach((className) => guidePhone.classList.remove(className));
-    guideStage?.classList.remove('meeting-page', 'support-page');
+    guideStage?.classList.remove('intro-page', 'meeting-page', 'support-page');
     // Force a clean animation start while the transition veil is opaque.
     void guidePhone.offsetWidth;
     if (guideStage) void guideStage.offsetWidth;
 
+    if (page === 'intro') guideStage?.classList.add('intro-page');
     if (page === 'meeting') guideStage?.classList.add('meeting-page');
     if (page === 'support') guideStage?.classList.add('support-page');
     guidePhone.classList.add(stageClassByPage[page]);
@@ -417,7 +462,7 @@
     demoControls?.classList.add('active');
 
     if (guideIndex) {
-      guideIndex.textContent = page === 'weather' ? '01 / 03' : page === 'meeting' ? '02 / 03' : '03 / 03';
+      guideIndex.textContent = page === 'intro' ? 'OPENING' : page === 'weather' ? '01 / 03' : page === 'meeting' ? '02 / 03' : '03 / 03';
     }
     if (page !== 'weather') {
       guideTabs.forEach((tab) => {
@@ -425,6 +470,8 @@
         tab.setAttribute('aria-selected', 'false');
       });
     }
+    if (page === 'intro') syncOpeningVideoPlayback({ restart: true });
+    else openingDemoVideo?.pause();
     updateDemoPageButtons();
     updateDemoButton();
     if (!stageTransitioning) scheduleSequenceAdvance();
@@ -506,6 +553,10 @@
     switchDemoStage('weather', { keepMode, forceRestart: true });
   };
 
+  const activateIntroPage = ({ keepMode = false } = {}) => {
+    switchDemoStage('intro', { keepMode, forceRestart: true });
+  };
+
   const activateMeetingPage = ({ keepMode = false } = {}) => {
     switchDemoStage('meeting', { keepMode, forceRestart: true });
   };
@@ -521,7 +572,7 @@
     }
     demoMode = 'sequence';
     demoPaused = false;
-    switchDemoStage('weather', { keepMode: true, forceRestart: true });
+    switchDemoStage('intro', { keepMode: true, forceRestart: true });
   };
 
   allDemoPage?.addEventListener('click', activateSequence);
@@ -535,26 +586,30 @@
     updateGuide(index);
   }));
   $('#guidePrev')?.addEventListener('click', () => {
-    if (demoPage === 'support') activateMeetingPage();
+    if (demoPage === 'intro') activateSupportPage();
+    else if (demoPage === 'support') activateMeetingPage();
     else if (demoPage === 'meeting') activateWeatherPage();
     else if (demoPage === 'weather') activateSupportPage();
     else updateGuide(currentGuide - 1);
   });
   $('#guideNext')?.addEventListener('click', () => {
-    if (demoPage === 'weather') activateMeetingPage();
+    if (demoPage === 'intro') activateWeatherPage();
+    else if (demoPage === 'weather') activateMeetingPage();
     else if (demoPage === 'meeting') activateSupportPage();
     else if (demoPage === 'support') activateWeatherPage();
     else updateGuide(currentGuide + 1);
   });
   guideStage?.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') {
-      if (demoPage === 'support') activateMeetingPage();
+      if (demoPage === 'intro') activateSupportPage();
+      else if (demoPage === 'support') activateMeetingPage();
       else if (demoPage === 'meeting') activateWeatherPage();
       else if (demoPage === 'weather') activateSupportPage();
       else updateGuide(currentGuide - 1);
     }
     if (event.key === 'ArrowRight') {
-      if (demoPage === 'weather') activateMeetingPage();
+      if (demoPage === 'intro') activateWeatherPage();
+      else if (demoPage === 'weather') activateMeetingPage();
       else if (demoPage === 'meeting') activateSupportPage();
       else if (demoPage === 'support') activateWeatherPage();
       else updateGuide(currentGuide + 1);
@@ -564,6 +619,7 @@
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
     guidePhone.classList.toggle('is-paused', demoPaused);
+    if (demoPage === 'intro') syncOpeningVideoPlayback();
     if (demoMode === 'sequence') {
       if (demoPaused) clearSequenceTimer({ preserve: true });
       else scheduleSequenceAdvance({ reset: false });
@@ -585,18 +641,21 @@
     const demoObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
-        if (demoPage === 'meeting') startMeetingDemo({ restart: true });
+        if (demoPage === 'intro') startIntroDemo({ restart: true });
+        else if (demoPage === 'meeting') startMeetingDemo({ restart: true });
         else if (demoPage === 'support') startSupportDemo({ restart: true });
         else if (currentGuide === 0) startWeatherDemo({ restart: true });
       });
     }, { threshold: .35 });
     demoObserver.observe(guideStage);
   } else if (!reduceMotion) {
-    startWeatherDemo();
+    if (demoPage === 'intro') startIntroDemo();
+    else startWeatherDemo();
   }
   document.addEventListener('visibilitychange', () => {
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && currentGuide !== 0)) return;
     guidePhone.classList.toggle('is-paused', document.hidden || demoPaused);
+    if (demoPage === 'intro') syncOpeningVideoPlayback();
     if (demoMode === 'sequence' && !demoPaused) {
       if (document.hidden) clearSequenceTimer({ preserve: true });
       else scheduleSequenceAdvance({ reset: false });
@@ -604,6 +663,12 @@
   });
   updateDemoPageButtons();
   updateDemoButton();
+
+  openingDemoVideo?.addEventListener('ended', () => {
+    if (demoMode !== 'sequence' || demoPage !== 'intro' || demoPaused || document.hidden) return;
+    clearSequenceTimer();
+    advanceSequence();
+  });
 
   const video = $('#promoVideo');
   const videoToggle = $('#videoToggle');
