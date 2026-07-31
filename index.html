@@ -14,8 +14,8 @@
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
   <link rel="apple-touch-icon" href="assets/brand/power-tbm-icon.png">
   <link rel="preload" as="image" href="assets/screens/guide/home-alert-expanded-v8.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260731-meeting-guide-v3">
-  <script src="app.js?v=20260731-meeting-guide-v3" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260731-meeting-guide-v4-timing">
+  <script src="app.js?v=20260731-meeting-guide-v4-timing" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -391,48 +391,87 @@
                     </div>
                   </section>
 
-                  <img class="meeting-slide meeting-slide-workers" src="assets/screens/guide/meeting-workers-v2.png" alt="" width="1179" height="2556">
-                  <img class="meeting-slide meeting-slide-trade" src="assets/screens/guide/meeting-trade-v2.png" alt="" width="1179" height="2556">
-                  <img class="meeting-slide meeting-slide-health" src="assets/screens/guide/meeting-health-v2.png" alt="" width="1179" height="2556">
-                  <img class="meeting-slide meeting-slide-risk" src="assets/screens/guide/meeting-risk-v2.png" alt="" width="1179" height="2556">
-                  <img class="meeting-slide meeting-slide-ai" src="assets/screens/guide/meeting-ai-v2.png" alt="" width="1179" height="2556">
-                  <img class="meeting-slide meeting-slide-focus" src="assets/screens/guide/meeting-focus-v2.png" alt="" width="1179" height="2556">
-                  <img class="meeting-slide meeting-slide-sign" src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
-                  <img class="meeting-slide meeting-slide-sign-pad" src="assets/screens/guide/meeting-sign-pad-v2.png" alt="" width="1179" height="2556">
-                  <img class="meeting-slide meeting-slide-sign-complete" src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
+                  <div class="meeting-slide meeting-scene meeting-slide-workers" aria-hidden="true">
+                    <img src="assets/screens/guide/meeting-workers-v2.png" alt="" width="1179" height="2556">
+                    <div class="meeting-scene-state">
+                      <span class="meeting-worker-field meeting-worker-name"><b>김일용</b></span>
+                      <span class="meeting-worker-field meeting-worker-role"><b>신호수</b></span>
+                      <span class="meeting-worker-saved-mask"></span>
+                      <span class="meeting-worker-toast">일용원 카드가 명단에 추가되었습니다</span>
+                    </div>
+                  </div>
+
+                  <div class="meeting-slide meeting-scene meeting-slide-trade" aria-hidden="true">
+                    <img src="assets/screens/guide/meeting-trade-v2.png" alt="" width="1179" height="2556">
+                    <div class="meeting-scene-state">
+                      <span class="meeting-choice meeting-choice-trade-1"></span>
+                      <span class="meeting-choice meeting-choice-trade-2"></span>
+                    </div>
+                  </div>
+
+                  <div class="meeting-slide meeting-scene meeting-slide-health" aria-hidden="true">
+                    <img src="assets/screens/guide/meeting-health-v2.png" alt="" width="1179" height="2556">
+                    <div class="meeting-scene-state">
+                      <span class="meeting-choice meeting-choice-health meeting-choice-health-ok"></span>
+                      <span class="meeting-choice meeting-choice-health meeting-choice-helmet"></span>
+                      <span class="meeting-choice meeting-choice-health meeting-choice-shoes"></span>
+                    </div>
+                  </div>
+
+                  <div class="meeting-slide meeting-scene meeting-slide-risk" aria-hidden="true">
+                    <img src="assets/screens/guide/meeting-risk-v2.png" alt="" width="1179" height="2556">
+                    <div class="meeting-scene-state">
+                      <span class="meeting-choice meeting-choice-risk"></span>
+                      <span class="meeting-count meeting-risk-count">회의록 반영: 3개 선택</span>
+                    </div>
+                  </div>
+
+                  <div class="meeting-slide meeting-scene meeting-slide-ai" aria-hidden="true">
+                    <img src="assets/screens/guide/meeting-ai-v2.png" alt="" width="1179" height="2556">
+                    <div class="meeting-scene-state">
+                      <span class="meeting-ai-loading">
+                        <i></i>
+                        <b>AI 안전검토 중</b>
+                        <small>유사사고와 안전대책을 분석하고 있습니다</small>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="meeting-slide meeting-scene meeting-slide-focus" aria-hidden="true">
+                    <img src="assets/screens/guide/meeting-focus-v2.png" alt="" width="1179" height="2556">
+                    <div class="meeting-scene-state">
+                      <span class="meeting-choice meeting-choice-focus"></span>
+                      <span class="meeting-count meeting-focus-count">선택: 0개</span>
+                    </div>
+                  </div>
+
+                  <div class="meeting-slide meeting-scene meeting-slide-sign" aria-hidden="true">
+                    <img src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
+                    <div class="meeting-scene-state">
+                      <span class="meeting-sign-status">서명 0/2명 · 서명 전</span>
+                      <span class="meeting-sign-blank meeting-sign-blank-manager"></span>
+                      <span class="meeting-sign-blank meeting-sign-blank-worker"></span>
+                    </div>
+                  </div>
+
+                  <div class="meeting-slide meeting-scene meeting-slide-sign-pad" aria-hidden="true">
+                    <img src="assets/screens/guide/meeting-sign-pad-v2.png" alt="" width="1179" height="2556">
+                    <div class="meeting-scene-state">
+                      <span class="meeting-signature-pad-mask"></span>
+                    </div>
+                  </div>
+
+                  <div class="meeting-slide meeting-scene meeting-slide-sign-complete" aria-hidden="true">
+                    <img src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
+                    <div class="meeting-scene-state">
+                      <span class="meeting-sign-status meeting-sign-status-complete">서명 1/2명 · 작업자 대기</span>
+                      <span class="meeting-sign-blank meeting-sign-blank-worker"></span>
+                      <span class="meeting-sign-complete-toast">서명이 저장되어 회의록에 반영되었습니다</span>
+                    </div>
+                  </div>
                   <img class="meeting-slide meeting-slide-pdf" src="assets/screens/guide/meeting-pdf-v2.jpeg" alt="" width="709" height="1536">
 
                   <img class="meeting-slide meeting-slide-calendar" src="assets/screens/guide/meeting-calendar-v1.png" alt="" width="1200" height="1600">
-
-                  <div class="meeting-state-layer" aria-hidden="true">
-                    <span class="meeting-worker-field meeting-worker-name"><b>김일용</b></span>
-                    <span class="meeting-worker-field meeting-worker-role"><b>신호수</b></span>
-                    <span class="meeting-worker-saved-mask"></span>
-                    <span class="meeting-worker-toast">일용원 카드가 명단에 추가되었습니다</span>
-
-                    <span class="meeting-choice meeting-choice-trade-1"></span>
-                    <span class="meeting-choice meeting-choice-trade-2"></span>
-                    <span class="meeting-choice meeting-choice-health meeting-choice-health-ok"></span>
-                    <span class="meeting-choice meeting-choice-health meeting-choice-helmet"></span>
-                    <span class="meeting-choice meeting-choice-health meeting-choice-shoes"></span>
-                    <span class="meeting-choice meeting-choice-risk"></span>
-                    <span class="meeting-choice meeting-choice-focus"></span>
-                    <span class="meeting-count meeting-risk-count">회의록 반영: 3개 선택</span>
-                    <span class="meeting-count meeting-focus-count">선택: 0개</span>
-
-                    <span class="meeting-ai-loading">
-                      <i></i>
-                      <b>AI 안전검토 중</b>
-                      <small>유사사고와 안전대책을 분석하고 있습니다</small>
-                    </span>
-
-                    <span class="meeting-sign-status">서명 0/2명 · 서명 전</span>
-                    <span class="meeting-sign-status meeting-sign-status-complete">서명 1/2명 · 작업자 대기</span>
-                    <span class="meeting-sign-blank meeting-sign-blank-manager"></span>
-                    <span class="meeting-sign-blank meeting-sign-blank-worker"></span>
-                    <span class="meeting-signature-pad-mask"></span>
-                    <span class="meeting-sign-complete-toast">서명이 저장되어 회의록에 반영되었습니다</span>
-                  </div>
 
                   <span class="meeting-touch-ripple" aria-hidden="true"></span>
                   <span class="meeting-hand" aria-hidden="true">👆🏻</span>
