@@ -517,7 +517,7 @@ button { color: inherit; }
 }
 .guide-phone.changing .guide-media > #guideImage { opacity: 0; transform: scale(.99); }
 .weather-demo {
-  --demo-duration: 13s;
+  --demo-duration: 15s;
   position: absolute;
   inset: 0;
   z-index: 2;
@@ -628,56 +628,56 @@ button { color: inherit; }
 .guide-phone.demo-active.is-paused .demo-ripple,
 .guide-phone.demo-active.is-paused .demo-caption span { animation-play-state: paused; }
 @keyframes demo-home {
-  0%, 25% { opacity: 1; transform: scale(1); }
-  29%, 96% { opacity: 0; transform: scale(1.01); }
+  0%, 23% { opacity: 1; transform: scale(1); }
+  27%, 96% { opacity: 0; transform: scale(1.01); }
   100% { opacity: 1; transform: scale(1); }
 }
 @keyframes demo-page {
-  0%, 25% { opacity: 0; }
-  29%, 96% { opacity: 1; }
+  0%, 23% { opacity: 0; }
+  27%, 96% { opacity: 1; }
   100% { opacity: 0; }
 }
 @keyframes demo-scroll {
-  0%, 39% { transform: translateY(0); }
-  56%, 60% { transform: translateY(-23.5%); }
-  77%, 96% { transform: translateY(-45.45%); }
+  0%, 36% { transform: translateY(0); }
+  53%, 58% { transform: translateY(-35.6%); }
+  76%, 96% { transform: translateY(-58.7%); }
   100% { transform: translateY(0); }
 }
 @keyframes demo-hand-tap {
   0%, 4% { opacity: 0; transform: translate(-145%, 260%) rotate(-30deg) scale(1.14); }
   7% { opacity: .76; }
-  20% { opacity: .76; transform: translate(0, 0) rotate(-11deg) scale(1); }
-  23% { opacity: .88; transform: translate(2%, 2%) rotate(-8deg) scale(.88); }
-  27%, 100% { opacity: 0; transform: translate(2%, 2%) rotate(-8deg) scale(.96); }
+  18% { opacity: .76; transform: translate(0, 0) rotate(-11deg) scale(1); }
+  21% { opacity: .88; transform: translate(2%, 2%) rotate(-8deg) scale(.88); }
+  25%, 100% { opacity: 0; transform: translate(2%, 2%) rotate(-8deg) scale(.96); }
 }
 @keyframes demo-hand-swipe {
-  0%, 39% { opacity: 0; transform: translate(0, 20%) rotate(-8deg) scale(1); }
-  42% { opacity: .78; transform: translate(0, 20%) rotate(-8deg) scale(1); }
-  55% { opacity: .78; transform: translate(-5%, -315%) rotate(-8deg) scale(1); }
-  58%, 60% { opacity: 0; transform: translate(-5%, -335%) rotate(-8deg) scale(1); }
-  61% { opacity: 0; transform: translate(0, 20%) rotate(-8deg) scale(1); }
-  64% { opacity: .78; transform: translate(0, 20%) rotate(-8deg) scale(1); }
-  76% { opacity: .78; transform: translate(-5%, -315%) rotate(-8deg) scale(1); }
-  79%, 100% { opacity: 0; transform: translate(-5%, -335%) rotate(-8deg) scale(1); }
+  0%, 36% { opacity: 0; transform: translate(0, 20%) rotate(-8deg) scale(1); }
+  39% { opacity: .78; transform: translate(0, 20%) rotate(-8deg) scale(1); }
+  52% { opacity: .78; transform: translate(-5%, -315%) rotate(-8deg) scale(1); }
+  55%, 58% { opacity: 0; transform: translate(-5%, -335%) rotate(-8deg) scale(1); }
+  59% { opacity: 0; transform: translate(0, 20%) rotate(-8deg) scale(1); }
+  62% { opacity: .78; transform: translate(0, 20%) rotate(-8deg) scale(1); }
+  75% { opacity: .78; transform: translate(-5%, -315%) rotate(-8deg) scale(1); }
+  78%, 100% { opacity: 0; transform: translate(-5%, -335%) rotate(-8deg) scale(1); }
 }
 @keyframes demo-ripple {
-  0%, 21% { opacity: 0; transform: scale(.35); }
-  23% { opacity: 1; transform: scale(.45); }
-  28%, 100% { opacity: 0; transform: scale(2.6); }
+  0%, 19% { opacity: 0; transform: scale(.35); }
+  21% { opacity: 1; transform: scale(.45); }
+  26%, 100% { opacity: 0; transform: scale(2.6); }
 }
 @keyframes demo-caption-tap {
   0%, 3% { opacity: 0; transform: translateY(8px); }
-  7%, 25% { opacity: 1; transform: translateY(0); }
-  29%, 100% { opacity: 0; transform: translateY(-8px); }
+  7%, 23% { opacity: 1; transform: translateY(0); }
+  27%, 100% { opacity: 0; transform: translateY(-8px); }
 }
 @keyframes demo-caption-swipe {
-  0%, 38% { opacity: 0; transform: translateY(8px); }
-  42%, 57% { opacity: 1; transform: translateY(0); }
-  60%, 100% { opacity: 0; transform: translateY(-8px); }
+  0%, 35% { opacity: 0; transform: translateY(8px); }
+  39%, 54% { opacity: 1; transform: translateY(0); }
+  58%, 100% { opacity: 0; transform: translateY(-8px); }
 }
 @keyframes demo-caption-continue {
-  0%, 59% { opacity: 0; transform: translateY(8px); }
-  63%, 78% { opacity: 1; transform: translateY(0); }
+  0%, 58% { opacity: 0; transform: translateY(8px); }
+  62%, 77% { opacity: 1; transform: translateY(0); }
   81%, 100% { opacity: 0; transform: translateY(-8px); }
 }
 @keyframes demo-caption-done {
