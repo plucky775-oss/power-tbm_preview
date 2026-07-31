@@ -2957,7 +2957,7 @@ button { color: inherit; }
 }
 
 .support-hand-safety,
-.support-ripple-safety { left: 52%; top: 54%; }
+.support-ripple-safety { left: 52%; top: 55%; }
 .support-hand-risk,
 .support-ripple-risk { left: 78%; top: 47%; }
 .support-hand-back,
@@ -2965,7 +2965,7 @@ button { color: inherit; }
 .support-hand-golden,
 .support-ripple-golden { left: 78%; top: 60%; }
 .support-hand-tools,
-.support-ripple-tools { left: 52%; top: 69%; }
+.support-ripple-tools { left: 52%; top: 71.5%; }
 .support-hand-emergency,
 .support-ripple-emergency { left: 78%; top: 66%; }
 
