@@ -208,12 +208,44 @@
   const guideWhen = $('#guideWhen');
   const guideTip = $('#guideTip');
   const guideTabs = $$('.tour-tabs [data-guide]');
+  const guideStage = $('.tour-stage');
+  const demoControls = $('#demoControls');
+  const demoToggle = $('#demoToggle');
+  const demoReplay = $('#demoReplay');
   let currentGuide = 0;
   let guideChanging = false;
+  let demoPaused = false;
+
+  const updateDemoButton = () => {
+    if (!demoToggle) return;
+    demoToggle.setAttribute('aria-pressed', String(demoPaused));
+    demoToggle.innerHTML = `<span aria-hidden="true">${demoPaused ? '▶' : 'Ⅱ'}</span> ${demoPaused ? '계속 재생' : '자동 시연'}`;
+  };
+
+  const stopWeatherDemo = () => {
+    guidePhone?.classList.remove('demo-active', 'is-paused');
+    demoControls?.classList.remove('active');
+    demoPaused = false;
+    updateDemoButton();
+  };
+
+  const startWeatherDemo = ({ restart = false } = {}) => {
+    if (!guidePhone || reduceMotion || currentGuide !== 0) return;
+    demoPaused = false;
+    guidePhone.classList.remove('is-paused');
+    if (restart) {
+      guidePhone.classList.remove('demo-active');
+      void guidePhone.offsetWidth;
+    }
+    guidePhone.classList.add('demo-active');
+    demoControls?.classList.add('active');
+    updateDemoButton();
+  };
 
   const updateGuide = (nextIndex) => {
     if (!guideImage || guideChanging) return;
     const index = (nextIndex + guideData.length) % guideData.length;
+    stopWeatherDemo();
     guideChanging = true;
     guidePhone?.classList.add('changing');
     const apply = () => {
@@ -237,6 +269,7 @@
         if (selected) tab.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest', inline: 'nearest' });
       });
       requestAnimationFrame(() => guidePhone?.classList.remove('changing'));
+      if (index === 0) window.setTimeout(() => startWeatherDemo({ restart: true }), reduceMotion ? 0 : 260);
       window.setTimeout(() => { guideChanging = false; }, reduceMotion ? 0 : 240);
     };
     window.setTimeout(apply, reduceMotion ? 0 : 150);
@@ -245,10 +278,33 @@
   guideTabs.forEach((tab, index) => tab.addEventListener('click', () => updateGuide(index)));
   $('#guidePrev')?.addEventListener('click', () => updateGuide(currentGuide - 1));
   $('#guideNext')?.addEventListener('click', () => updateGuide(currentGuide + 1));
-  $('.tour-stage')?.addEventListener('keydown', (event) => {
+  guideStage?.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') updateGuide(currentGuide - 1);
     if (event.key === 'ArrowRight') updateGuide(currentGuide + 1);
   });
+  demoToggle?.addEventListener('click', () => {
+    if (!guidePhone || currentGuide !== 0) return;
+    demoPaused = !demoPaused;
+    guidePhone.classList.toggle('is-paused', demoPaused);
+    updateDemoButton();
+  });
+  demoReplay?.addEventListener('click', () => startWeatherDemo({ restart: true }));
+
+  if (guideStage && !reduceMotion && 'IntersectionObserver' in window) {
+    const demoObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && currentGuide === 0) startWeatherDemo({ restart: true });
+      });
+    }, { threshold: .35 });
+    demoObserver.observe(guideStage);
+  } else if (!reduceMotion) {
+    startWeatherDemo();
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (!guidePhone || currentGuide !== 0) return;
+    guidePhone.classList.toggle('is-paused', document.hidden || demoPaused);
+  });
+  updateDemoButton();
 
   const video = $('#promoVideo');
   const videoToggle = $('#videoToggle');

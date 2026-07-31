@@ -328,12 +328,35 @@
         <div class="tour-stage reveal" data-delay="80">
           <div class="tour-device">
             <div class="phone-frame guide-phone">
-              <img id="guideImage" src="assets/screens/guide/home.webp" alt="Power TBM 홈 화면" width="709" height="1536">
+              <div class="guide-media">
+                <img id="guideImage" src="assets/screens/guide/home.webp" alt="Power TBM 홈 화면" width="709" height="1536">
+                <div class="weather-demo" id="weatherDemo" role="img" aria-label="홈 화면의 날씨 카드를 누르고 날씨 화면을 위로 스크롤하는 자동 시연">
+                  <img class="weather-demo-home" src="assets/screens/guide/home.webp" alt="" width="709" height="1536">
+                  <div class="weather-demo-page" aria-hidden="true">
+                    <div class="weather-demo-track">
+                      <img src="assets/screens/guide/weather-now.webp" alt="" width="1179" height="2556">
+                      <img src="assets/screens/guide/weather-week.webp" alt="" width="1179" height="2556">
+                    </div>
+                  </div>
+                  <span class="demo-ripple" aria-hidden="true"></span>
+                  <span class="demo-hand demo-hand-tap" aria-hidden="true">☝🏻</span>
+                  <span class="demo-hand demo-hand-swipe" aria-hidden="true">☝🏻</span>
+                  <div class="demo-caption" aria-hidden="true">
+                    <span class="demo-caption-tap">날씨 카드를 누릅니다</span>
+                    <span class="demo-caption-swipe">손가락으로 위로 올립니다</span>
+                    <span class="demo-caption-done">주간 날씨·태풍정보까지 확인</span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="tour-controls">
               <button id="guidePrev" type="button" aria-label="이전 화면">←</button>
               <span id="guideIndex">01 / 12</span>
               <button id="guideNext" type="button" aria-label="다음 화면">→</button>
+            </div>
+            <div class="demo-controls" id="demoControls">
+              <button id="demoToggle" type="button" aria-pressed="false"><span aria-hidden="true">Ⅱ</span> 자동 시연</button>
+              <button id="demoReplay" type="button"><span aria-hidden="true">↻</span> 다시보기</button>
             </div>
           </div>
           <article class="tour-copy" aria-live="polite">
