@@ -517,7 +517,7 @@ button { color: inherit; }
 }
 .guide-phone.changing .guide-media > #guideImage { opacity: 0; transform: scale(.99); }
 .weather-demo {
-  --demo-duration: 9s;
+  --demo-duration: 13s;
   position: absolute;
   inset: 0;
   z-index: 2;
@@ -550,6 +550,7 @@ button { color: inherit; }
 }
 .weather-demo-track {
   width: 100%;
+  line-height: 0;
   will-change: transform;
 }
 .weather-demo-track img {
@@ -562,22 +563,23 @@ button { color: inherit; }
   z-index: 7;
   display: block;
   opacity: 0;
-  font-size: 56px;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 124px;
   line-height: 1;
-  filter: drop-shadow(0 10px 14px rgba(5, 25, 39, .38));
-  transform-origin: 55% 18%;
+  filter: drop-shadow(0 14px 18px rgba(5, 25, 39, .42));
+  transform-origin: 52% 12%;
   will-change: opacity, transform;
 }
-.demo-hand-tap { left: 48%; top: 24%; }
-.demo-hand-swipe { left: 65%; top: 71%; }
+.demo-hand-tap { left: 31%; top: 17%; }
+.demo-hand-swipe { left: 43%; top: 67%; font-size: 116px; }
 .demo-ripple {
   position: absolute;
   z-index: 6;
   left: 52%;
-  top: 27%;
-  width: 24px;
-  height: 24px;
-  margin: -12px 0 0 -12px;
+  top: 25%;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
   opacity: 0;
   border: 3px solid rgba(255, 211, 72, .92);
   border-radius: 50%;
@@ -617,6 +619,7 @@ button { color: inherit; }
 .guide-phone.demo-active .demo-ripple { animation: demo-ripple var(--demo-duration) ease-out infinite; }
 .guide-phone.demo-active .demo-caption-tap { animation: demo-caption-tap var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-caption-swipe { animation: demo-caption-swipe var(--demo-duration) ease infinite; }
+.guide-phone.demo-active .demo-caption-continue { animation: demo-caption-continue var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-caption-done { animation: demo-caption-done var(--demo-duration) ease infinite; }
 .guide-phone.demo-active.is-paused .weather-demo-home,
 .guide-phone.demo-active.is-paused .weather-demo-page,
@@ -625,51 +628,61 @@ button { color: inherit; }
 .guide-phone.demo-active.is-paused .demo-ripple,
 .guide-phone.demo-active.is-paused .demo-caption span { animation-play-state: paused; }
 @keyframes demo-home {
-  0%, 27% { opacity: 1; transform: scale(1); }
-  31%, 96% { opacity: 0; transform: scale(1.01); }
+  0%, 25% { opacity: 1; transform: scale(1); }
+  29%, 96% { opacity: 0; transform: scale(1.01); }
   100% { opacity: 1; transform: scale(1); }
 }
 @keyframes demo-page {
-  0%, 27% { opacity: 0; }
-  31%, 96% { opacity: 1; }
+  0%, 25% { opacity: 0; }
+  29%, 96% { opacity: 1; }
   100% { opacity: 0; }
 }
 @keyframes demo-scroll {
-  0%, 49% { transform: translateY(0); }
-  72%, 96% { transform: translateY(-50%); }
+  0%, 39% { transform: translateY(0); }
+  56%, 60% { transform: translateY(-23.5%); }
+  77%, 96% { transform: translateY(-45.45%); }
   100% { transform: translateY(0); }
 }
 @keyframes demo-hand-tap {
-  0%, 5% { opacity: 0; transform: translate(-190%, 245%) rotate(-24deg) scale(1.04); }
-  8% { opacity: .58; }
-  22% { opacity: .58; transform: translate(-10%, 5%) rotate(-11deg) scale(1); }
-  25% { opacity: .68; transform: translate(-6%, 2%) rotate(-9deg) scale(.88); }
-  29%, 100% { opacity: 0; transform: translate(-6%, 2%) rotate(-9deg) scale(.96); }
+  0%, 4% { opacity: 0; transform: translate(-145%, 260%) rotate(-30deg) scale(1.14); }
+  7% { opacity: .76; }
+  20% { opacity: .76; transform: translate(0, 0) rotate(-11deg) scale(1); }
+  23% { opacity: .88; transform: translate(2%, 2%) rotate(-8deg) scale(.88); }
+  27%, 100% { opacity: 0; transform: translate(2%, 2%) rotate(-8deg) scale(.96); }
 }
 @keyframes demo-hand-swipe {
-  0%, 45% { opacity: 0; transform: translate(0, 15%) rotate(-8deg); }
-  49% { opacity: .58; }
-  69% { opacity: .58; transform: translate(0, -430%) rotate(-8deg); }
-  73%, 100% { opacity: 0; transform: translate(0, -450%) rotate(-8deg); }
+  0%, 39% { opacity: 0; transform: translate(0, 20%) rotate(-8deg) scale(1); }
+  42% { opacity: .78; transform: translate(0, 20%) rotate(-8deg) scale(1); }
+  55% { opacity: .78; transform: translate(-5%, -315%) rotate(-8deg) scale(1); }
+  58%, 60% { opacity: 0; transform: translate(-5%, -335%) rotate(-8deg) scale(1); }
+  61% { opacity: 0; transform: translate(0, 20%) rotate(-8deg) scale(1); }
+  64% { opacity: .78; transform: translate(0, 20%) rotate(-8deg) scale(1); }
+  76% { opacity: .78; transform: translate(-5%, -315%) rotate(-8deg) scale(1); }
+  79%, 100% { opacity: 0; transform: translate(-5%, -335%) rotate(-8deg) scale(1); }
 }
 @keyframes demo-ripple {
-  0%, 23% { opacity: 0; transform: scale(.35); }
-  25% { opacity: 1; transform: scale(.45); }
-  30%, 100% { opacity: 0; transform: scale(2.4); }
+  0%, 21% { opacity: 0; transform: scale(.35); }
+  23% { opacity: 1; transform: scale(.45); }
+  28%, 100% { opacity: 0; transform: scale(2.6); }
 }
 @keyframes demo-caption-tap {
-  0%, 4% { opacity: 0; transform: translateY(8px); }
-  8%, 26% { opacity: 1; transform: translateY(0); }
-  31%, 100% { opacity: 0; transform: translateY(-8px); }
+  0%, 3% { opacity: 0; transform: translateY(8px); }
+  7%, 25% { opacity: 1; transform: translateY(0); }
+  29%, 100% { opacity: 0; transform: translateY(-8px); }
 }
 @keyframes demo-caption-swipe {
-  0%, 43% { opacity: 0; transform: translateY(8px); }
-  48%, 71% { opacity: 1; transform: translateY(0); }
-  76%, 100% { opacity: 0; transform: translateY(-8px); }
+  0%, 38% { opacity: 0; transform: translateY(8px); }
+  42%, 57% { opacity: 1; transform: translateY(0); }
+  60%, 100% { opacity: 0; transform: translateY(-8px); }
+}
+@keyframes demo-caption-continue {
+  0%, 59% { opacity: 0; transform: translateY(8px); }
+  63%, 78% { opacity: 1; transform: translateY(0); }
+  81%, 100% { opacity: 0; transform: translateY(-8px); }
 }
 @keyframes demo-caption-done {
-  0%, 73% { opacity: 0; transform: translateY(8px); }
-  78%, 94% { opacity: 1; transform: translateY(0); }
+  0%, 80% { opacity: 0; transform: translateY(8px); }
+  84%, 95% { opacity: 1; transform: translateY(0); }
   98%, 100% { opacity: 0; transform: translateY(-8px); }
 }
 .tour-controls { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 10px; margin-top: 18px; }
