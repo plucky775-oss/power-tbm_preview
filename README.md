@@ -19,17 +19,31 @@ python3 -m http.server 8000
 3. Framework Preset은 `Other`, Build Command는 비워 두고 배포합니다.
 4. 자체 도메인이 있으면 Vercel의 Domains 메뉴에서 연결합니다.
 
+## 홈페이지 구성
+
+처음 방문한 사용자가 기능과 순서를 함께 이해할 수 있도록 다음 흐름으로 구성했습니다.
+
+1. Power TBM의 목적과 핵심 가치
+2. 처음 사용하는 사람을 위한 6단계 사용법
+3. 업무 목적별 핵심 기능
+4. TBM 회의록의 4개 작성 구간
+5. 실제 앱 화면 12종을 이용한 기능 안내
+6. AI·작업중지권·위치정보·기록 관리 원칙
+7. 자주 묻는 질문과 앱 실행 안내
+
 ## 실제 앱 화면으로 교체하기
 
-현재 화면은 Power TBM 126번 소스의 디자인·기능·이미지 자산을 바탕으로 제작한 고해상도 홍보용 화면입니다. 최신 실제 캡처로 바꾸려면 파일명과 크기 비율을 유지한 채 아래 파일만 덮어쓰면 됩니다.
+실제 화면 안내는 `assets/screens/guide/`의 WebP 이미지를 사용합니다. 최신 캡처로 바꿀 때는 파일명을 유지한 채 해당 이미지를 교체하고, 화면 내용이 달라졌다면 `app.js`의 `guideData` 설명도 함께 수정합니다.
 
-- `assets/screens/home.png` — 홈
-- `assets/screens/meeting.png` — 회의 진행
-- `assets/screens/ai.png` — AI 상세검토
-- `assets/screens/sign.png` — 서명/PDF
-- `assets/screens/calendar.png` — 회의록 캘린더
+- `home.webp`, `home-alert.webp` — 홈과 기상특보
+- `meeting-menu.webp`, `trade-select.webp` — 회의록 메뉴와 공종 선택
+- `weather-now.webp`, `weather-week.webp` — 현재·주간 날씨
+- `incidents.webp` — 최근 안전사고 사례
+- `voice-memo.webp`, `notices.webp`, `contacts.webp` — 현장도구
+- `settings.webp`, `location-consent.webp` — 설정과 위치정보 동의
+- `checklist-original.webp` — 작업안전 체크리스트 원문 예시
 
-권장 비율은 스마트폰 화면과 같은 `390:844`이며, 현재 파일은 고해상도 `780×1688`입니다.
+화면은 원본 비율을 유지해 표시하므로 임의로 자르지 않는 것이 좋습니다. 새 이미지는 웹 성능을 위해 메타데이터를 제거한 WebP 형식을 권장합니다.
 
 ## 앱 주소 변경
 
@@ -47,7 +61,7 @@ QR코드도 바뀐 주소에 맞게 다시 생성해야 합니다.
 - `styles.css` — 전체 디자인과 반응형 레이아웃
 - `app.js` — 스크롤 효과, 화면 갤러리, 모바일 메뉴, 영상 제어
 - `assets/video/` — 인트로 영상 및 포스터
-- `assets/screens/` — 앱 화면 이미지
+- `assets/screens/guide/` — 기능별 실제 앱 화면 이미지
 - `assets/brand/` — 로고, 앱 아이콘, QR코드
 
 ## 운영 참고
@@ -56,7 +70,9 @@ QR코드도 바뀐 주소에 맞게 다시 생성해야 합니다.
 - 화면 크기와 사용자 설정에 따라 애니메이션을 자동 축소하며, `prefers-reduced-motion` 접근성 설정을 지원합니다.
 - 본 페이지는 Power TBM 프로젝트 소개용입니다. 한국전력공사의 공식 서비스로 오인될 수 있는 표현이나 별도 승인 없는 공식 로고 사용 범위는 실제 공개 전에 내부 기준을 확인해 주세요.
 
-## 실제 앱 스크린샷
+## 운영 점검
 
-홈페이지의 기기 화면은 `assets/screens/`의 실제 Power TBM 스크린샷을 사용합니다.
-동일한 파일명(`home.png`, `meeting.png`, `ai.png`, `sign.png`, `calendar.png`)으로 교체하면 사이트 전체에 자동 반영됩니다. 권장 비율은 iPad 세로형 3:4입니다.
+- 앱 주소와 QR코드가 같은 목적지인지 확인합니다.
+- 실제 화면 이미지가 잘리지 않고 원본 비율로 표시되는지 모바일·PC에서 확인합니다.
+- 화면 안내를 추가하거나 순서를 바꾸면 `index.html`의 탭과 `app.js`의 `guideData` 순서를 동일하게 유지합니다.
+- 기능 변경 시 사용방법, 자주 묻는 질문, 이용 원칙의 설명도 함께 갱신합니다.
