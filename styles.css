@@ -319,9 +319,9 @@ button { color: inherit; }
   gap: 26px;
   align-items: start;
 }
-.quick-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.quick-steps { display: grid; grid-template-columns: 1fr; gap: 16px; }
 .quick-step {
-  min-height: 218px;
+  min-height: 170px;
   padding: 26px;
   display: grid;
   grid-template-columns: 46px 1fr;
