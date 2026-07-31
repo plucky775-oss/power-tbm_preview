@@ -14,7 +14,7 @@
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
   <link rel="apple-touch-icon" href="assets/brand/power-tbm-icon.png">
   <link rel="preload" as="image" href="assets/screens/guide/home-alert.webp">
-  <link rel="stylesheet" href="styles.css?v=20260731-typhoon-icons-v3">
+  <link rel="stylesheet" href="styles.css?v=20260731-typhoon-compare-v4">
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -330,7 +330,7 @@
             <div class="phone-frame guide-phone">
               <div class="guide-media">
                 <img id="guideImage" src="assets/screens/guide/home.webp" alt="Power TBM 홈 화면" width="709" height="1536">
-                <div class="weather-demo" id="weatherDemo" role="img" aria-label="홈 화면의 날씨 카드를 누르고 날씨 화면을 위로 스크롤하는 자동 시연">
+                <div class="weather-demo" id="weatherDemo" role="img" aria-label="홈 화면의 날씨 카드를 누르고 날씨 화면을 위로 스크롤한 뒤 태풍정보 다섯 개를 차례로 비교하는 자동 시연">
                   <img class="weather-demo-home" src="assets/screens/guide/home.webp" alt="" width="709" height="1536">
                   <div class="weather-demo-page" aria-hidden="true">
                     <div class="weather-demo-track">
@@ -340,11 +340,13 @@
                   <span class="demo-ripple" aria-hidden="true"></span>
                   <span class="demo-hand demo-hand-tap" aria-hidden="true">👆🏻</span>
                   <span class="demo-hand demo-hand-swipe" aria-hidden="true">👆🏻</span>
+                  <span class="demo-link-ripple" aria-hidden="true"></span>
+                  <span class="demo-hand demo-hand-links" aria-hidden="true">👆🏻</span>
                   <div class="demo-caption" aria-hidden="true">
                     <span class="demo-caption-tap">날씨 카드를 누릅니다</span>
                     <span class="demo-caption-swipe">큰 손으로 올려 미세먼지를 확인합니다</span>
                     <span class="demo-caption-continue">한 번 더 올려 주간예보를 확인합니다</span>
-                    <span class="demo-caption-done">태풍정보까지 한 화면에서 확인</span>
+                    <span class="demo-caption-done">5개 기상자료를 3초씩 비교합니다</span>
                   </div>
                 </div>
               </div>
@@ -359,16 +361,54 @@
               <button id="demoReplay" type="button"><span aria-hidden="true">↻</span> 다시보기</button>
             </div>
           </div>
-          <article class="tour-copy" aria-live="polite">
-            <span id="guideCategory">시작 화면</span>
-            <h3 id="guideTitle">홈에서 오늘의 현장을 확인합니다</h3>
-            <p id="guideDesc">현재 날씨와 기상특보를 먼저 확인한 뒤 TBM 회의록, 안전가이드, 현장도구로 이동합니다.</p>
-            <dl>
-              <div><dt>무엇을 확인하나요?</dt><dd id="guideCheck">현재 기온·특보, 작업중지권, 주요 메뉴</dd></div>
-              <div><dt>언제 사용하나요?</dt><dd id="guideWhen">현장 도착 직후와 회의 시작 전</dd></div>
-            </dl>
-            <div class="tour-tip"><b>사용 팁</b><p id="guideTip">특보 카드의 펼치기 버튼을 누르면 산업분야 조치사항을 바로 볼 수 있습니다.</p></div>
-          </article>
+          <div class="tour-detail">
+            <article class="tour-copy" aria-live="polite">
+              <span id="guideCategory">시작 화면</span>
+              <h3 id="guideTitle">홈에서 오늘의 현장을 확인합니다</h3>
+              <p id="guideDesc">현재 날씨와 기상특보를 먼저 확인한 뒤 TBM 회의록, 안전가이드, 현장도구로 이동합니다.</p>
+              <dl>
+                <div><dt>무엇을 확인하나요?</dt><dd id="guideCheck">현재 기온·특보, 작업중지권, 주요 메뉴</dd></div>
+                <div><dt>언제 사용하나요?</dt><dd id="guideWhen">현장 도착 직후와 회의 시작 전</dd></div>
+              </dl>
+              <div class="tour-tip"><b>사용 팁</b><p id="guideTip">특보 카드의 펼치기 버튼을 누르면 산업분야 조치사항을 바로 볼 수 있습니다.</p></div>
+            </article>
+
+            <aside class="typhoon-compare" aria-label="태풍과 기상자료 5개 비교 화면">
+              <div class="compare-heading">
+                <div>
+                  <span>LIVE COMPARISON</span>
+                  <h3>기관별 기상자료 비교</h3>
+                </div>
+                <b>각 3초</b>
+              </div>
+              <div class="compare-viewport">
+                <figure class="compare-slide compare-slide-kma">
+                  <img src="assets/screens/guide/compare-kma-v4.webp" alt="한국 태풍정보 연결 화면" width="1200" height="899">
+                  <figcaption><span>01 / 05</span><b>한국 · KMA 태풍정보</b></figcaption>
+                </figure>
+                <figure class="compare-slide compare-slide-jtwc">
+                  <img src="assets/screens/guide/compare-jtwc-v4.webp" alt="미국 합동태풍경보센터 태풍 예상 경로" width="928" height="786">
+                  <figcaption><span>02 / 05</span><b>미국 · JTWC 태풍정보</b></figcaption>
+                </figure>
+                <figure class="compare-slide compare-slide-jma">
+                  <img src="assets/screens/guide/compare-jma-v4.webp" alt="일본 기상청 태풍 예상 경로" width="936" height="1184">
+                  <figcaption><span>03 / 05</span><b>일본 · JMA 태풍정보</b></figcaption>
+                </figure>
+                <figure class="compare-slide compare-slide-radar">
+                  <img src="assets/screens/guide/compare-radar-v4.webp" alt="기상청 강수레이더 화면" width="554" height="1200">
+                  <figcaption><span>04 / 05</span><b>강수레이더</b></figcaption>
+                </figure>
+                <figure class="compare-slide compare-slide-alert">
+                  <img src="assets/screens/guide/compare-alert-v4.webp" alt="기상특보 발효현황 화면" width="917" height="971">
+                  <figcaption><span>05 / 05</span><b>기상특보 발효현황</b></figcaption>
+                </figure>
+              </div>
+              <div class="compare-progress" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i>
+              </div>
+              <p>한국·미국·일본 경로와 레이더·특보를 같은 자리에서 차례로 확인합니다.</p>
+            </aside>
+          </div>
         </div>
       </div>
     </section>
