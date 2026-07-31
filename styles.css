@@ -2289,11 +2289,11 @@ button { color: inherit; }
 .meeting-worker-saved-mask {
   position: absolute;
   left: 6.4%;
-  top: 56%;
+  top: 69.8%;
   z-index: 2;
   width: 87.2%;
-  height: 10.8%;
-  border-radius: 12px;
+  height: 17.5%;
+  border-radius: 0;
   background: #fff;
   opacity: 0;
 }
@@ -2714,7 +2714,7 @@ button { color: inherit; }
   27.15%, 27.55% { left: 50%; top: 61.2%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
   27.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
   28.05%, 29% { opacity: 0; }
-  29.1%, 29.55% { left: 74%; top: 72.5%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  29.1%, 29.55% { left: 74%; top: 87.2%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
   29.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
   30.1%, 32.25% { opacity: 0; }
   32.45%, 32.95% { left: 85.1%; top: 24.7%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
@@ -2797,7 +2797,7 @@ button { color: inherit; }
   27.8% { left: 50%; top: 61.2%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
   28.4% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   28.41%, 29.7% { opacity: 0; }
-  29.8% { left: 74%; top: 72.5%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  29.8% { left: 74%; top: 87.2%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
   30.4% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   30.41%, 33.1% { opacity: 0; }
   33.2% { left: 85.1%; top: 24.7%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }

@@ -216,7 +216,10 @@
   const weatherDemoPage = $('#weatherDemoPage');
   const meetingDemoPage = $('#meetingDemoPage');
   const supportDemoPage = $('#supportDemoPage');
-  const demoDurations = { weather: 40000, meeting: 96000, support: 50000 };
+  // Advance just before each CSS timeline loops back to its first frame.
+  // This keeps the final scene visible until the next stage is ready and
+  // prevents a brief first-frame flash between stages in sequence mode.
+  const demoDurations = { weather: 39600, meeting: 95500, support: 49700 };
   let currentGuide = 0;
   let guideChanging = false;
   let demoPaused = false;
