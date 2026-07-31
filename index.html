@@ -14,8 +14,8 @@
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
   <link rel="apple-touch-icon" href="assets/brand/power-tbm-icon.png">
   <link rel="preload" as="image" href="assets/screens/guide/home-alert-expanded-v8.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260731-stage3-v16">
-  <script src="app.js?v=20260731-stage3-v16" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260731-continuous-v17">
+  <script src="app.js?v=20260731-continuous-v17" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -206,11 +206,14 @@
         <div class="tour-heading reveal">
           <span class="eyebrow eyebrow-light">REAL SCREEN GUIDE</span>
           <h2>실제 화면을 보며<br><em>기능을 익혀보세요.</em></h2>
-          <p>기상정보, TBM 회의록, 안전가이드·현장도구를 실제 사용 순서에 따라 3단계로 자동 시연합니다.</p>
+          <p>전체 자동시연을 선택하면 기상정보부터 TBM 회의록, 안전가이드·현장도구까지 1→2→3단계가 계속 이어집니다.</p>
         </div>
 
         <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
-          <button class="active" id="weatherDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
+          <button class="active demo-all-button" id="allDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
+            <span>전체</span><b>1→2→3 전체 자동시연</b><small>세 단계가 끝없이 순환합니다</small>
+          </button>
+          <button class="current" id="weatherDemoPage" type="button" role="tab" aria-selected="false" aria-current="step" aria-controls="tourStage">
             <span>1단계</span><b>기상정보 시연</b><small>특보·날씨·전문자료</small>
           </button>
           <button id="meetingDemoPage" type="button" role="tab" aria-selected="false" aria-controls="tourStage">

@@ -2892,6 +2892,44 @@ button { color: inherit; }
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.demo-page-switch .demo-all-button {
+  grid-column: 1 / -1;
+  min-height: 78px;
+}
+
+.demo-page-switch button.current {
+  color: #fff;
+  border-color: rgba(255, 214, 47, .58);
+  background: rgba(255, 214, 47, .1);
+  box-shadow: inset 0 0 0 1px rgba(255, 214, 47, .12);
+}
+
+.demo-page-switch button.current > span {
+  box-shadow: 0 0 0 5px rgba(255, 214, 47, .13);
+}
+
+@media (max-width: 640px) {
+  .demo-page-switch .demo-all-button {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    min-height: 82px;
+    padding: 12px 14px;
+    text-align: left;
+  }
+
+  .demo-page-switch .demo-all-button > span {
+    grid-row: 1 / 3;
+    align-self: center;
+  }
+
+  .demo-page-switch .demo-all-button b,
+  .demo-page-switch .demo-all-button small {
+    justify-self: start;
+    text-align: left;
+  }
+}
+
 .support-demo {
   --support-duration: 50s;
   position: absolute;
