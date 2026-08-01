@@ -218,6 +218,7 @@
   const supportDemoPage = $('#supportDemoPage');
   const openingDemoVideo = $('#openingDemoVideo');
   const demoNarration = $('#demoNarration');
+  const demoBgm = $('#demoBgm');
   const demoMute = $('#demoMute');
   const weatherDemo = $('#weatherDemo');
   const meetingDemo = $('#meetingDemo');
@@ -233,6 +234,11 @@
   // The weather timeline begins fading its last comparison earlier than the
   // other stages, so it intentionally has a different end ratio.
   const demoEndRatios = { intro: 1, weather: .91, meeting: .989, support: .98, closing: 1 };
+  // The source track is intentionally kept well below the normalized voices.
+  // It rises slightly for the opening and field-photo ending, then ducks under
+  // every information-heavy narration section.
+  const bgmVolumeByPage = { intro: .12, weather: .065, meeting: .065, support: .065, closing: .13 };
+  const bgmClosingFadeSeconds = 2.35;
   const stageActiveClasses = ['opening-demo-active', 'demo-active', 'meeting-demo-active', 'support-demo-active', 'closing-demo-active'];
   const stageClassByPage = {
     intro: 'opening-demo-active',
@@ -312,6 +318,8 @@
   let narrationSegmentIndex = 0;
   let narrationRunToken = 0;
   let narrationFrame = null;
+  let bgmFrame = null;
+  let bgmFadeToken = 0;
   let syncedAnimations = [];
 
   const parseCssTime = (value) => {
@@ -328,6 +336,7 @@
     guideStage.dataset.demoMode = demoMode;
     guideStage.dataset.narrationState = narrationState;
     guideStage.dataset.narrationMuted = String(narrationMuted);
+    guideStage.dataset.bgmState = demoBgm ? (demoBgm.paused ? 'paused' : 'playing') : 'unavailable';
     const segment = narrationByPage[demoPage]?.[narrationSegmentIndex];
     guideStage.dataset.narrationSegment = narrationRequested && segment ? segment.id.slice(0, 2) : '';
   };
@@ -338,9 +347,9 @@
     demoMute.classList.toggle('needs-start', needsStart);
     allDemoPage?.classList.toggle('narration-start-hint', needsStart);
     demoMute.setAttribute('aria-pressed', String(!needsStart && narrationMuted));
-    if (needsStart) demoMute.innerHTML = '<span aria-hidden="true">🔊</span> 음성 시연 시작';
-    else if (narrationMuted) demoMute.innerHTML = '<span aria-hidden="true">🔇</span> 음성 꺼짐';
-    else demoMute.innerHTML = '<span aria-hidden="true">🔊</span> 음성 켜짐';
+    if (needsStart) demoMute.innerHTML = '<span aria-hidden="true">🔊</span> 소리 시연 시작';
+    else if (narrationMuted) demoMute.innerHTML = '<span aria-hidden="true">🔇</span> 음성·배경음 꺼짐';
+    else demoMute.innerHTML = '<span aria-hidden="true">🔊</span> 음성·배경음 켜짐';
   };
 
   const setNarrationState = (state) => {
@@ -352,6 +361,119 @@
   const cancelNarrationFrame = () => {
     if (narrationFrame) window.cancelAnimationFrame(narrationFrame);
     narrationFrame = null;
+  };
+
+  const cancelBgmFrame = () => {
+    bgmFadeToken += 1;
+    if (bgmFrame) window.cancelAnimationFrame(bgmFrame);
+    bgmFrame = null;
+  };
+
+  const rampDemoBgmVolume = (target, duration = 800, onComplete = null) => {
+    if (!demoBgm) return;
+    cancelBgmFrame();
+    const token = bgmFadeToken;
+    const from = Number.isFinite(demoBgm.volume) ? demoBgm.volume : 0;
+    const to = Math.min(1, Math.max(0, Number(target) || 0));
+    const startedAt = performance.now();
+    const tick = (now) => {
+      if (token !== bgmFadeToken || !demoBgm) return;
+      const ratio = duration <= 0 ? 1 : Math.min(1, Math.max(0, (now - startedAt) / duration));
+      const eased = 1 - Math.pow(1 - ratio, 3);
+      demoBgm.volume = from + ((to - from) * eased);
+      if (ratio < 1) {
+        bgmFrame = window.requestAnimationFrame(tick);
+        return;
+      }
+      bgmFrame = null;
+      onComplete?.();
+      updateDemoStateData();
+    };
+    bgmFrame = window.requestAnimationFrame(tick);
+  };
+
+  const getCurrentBgmTarget = (page = demoPage) => {
+    const base = bgmVolumeByPage[page] || bgmVolumeByPage.weather;
+    if (page !== 'closing' || !demoNarration) return base;
+    const segment = narrationByPage.closing?.[0];
+    const fadeStart = Math.max(0, (segment?.duration || 0) - bgmClosingFadeSeconds);
+    if (demoNarration.currentTime <= fadeStart) return base;
+    const ratio = Math.min(1, (demoNarration.currentTime - fadeStart) / bgmClosingFadeSeconds);
+    return base * (1 - ratio);
+  };
+
+  const startDemoBgmForPage = (page, { restart = false } = {}) => {
+    if (!demoBgm || !narrationRequested) return;
+    cancelBgmFrame();
+    if (restart || demoBgm.ended) {
+      try { demoBgm.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+      demoBgm.volume = 0;
+    }
+    demoBgm.muted = narrationMuted;
+    if (demoPaused || document.hidden) {
+      demoBgm.pause();
+      updateDemoStateData();
+      return;
+    }
+    const playAttempt = demoBgm.play();
+    rampDemoBgmVolume(bgmVolumeByPage[page] || bgmVolumeByPage.weather, page === 'intro' ? 1100 : 750);
+    playAttempt?.catch?.((error) => {
+      // Background music is optional. Narration keeps the authoritative
+      // autoplay/error handling so a blocked BGM never breaks the demo.
+      console.warn('배경음 재생을 시작하지 못했습니다.', error);
+      demoBgm.pause();
+      updateDemoStateData();
+    });
+    updateDemoStateData();
+  };
+
+  const pauseDemoBgm = () => {
+    cancelBgmFrame();
+    demoBgm?.pause();
+    updateDemoStateData();
+  };
+
+  const resumeDemoBgm = () => {
+    if (!demoBgm || !narrationRequested || demoPaused || document.hidden) return;
+    demoBgm.muted = narrationMuted;
+    const playAttempt = demoBgm.play();
+    rampDemoBgmVolume(getCurrentBgmTarget(), 500);
+    playAttempt?.catch?.((error) => {
+      console.warn('배경음 재생을 다시 시작하지 못했습니다.', error);
+      demoBgm.pause();
+      updateDemoStateData();
+    });
+    updateDemoStateData();
+  };
+
+  const fadeOutDemoBgm = ({ duration = 900, reset = false } = {}) => {
+    if (!demoBgm) return;
+    rampDemoBgmVolume(0, duration, () => {
+      demoBgm.pause();
+      if (reset) {
+        try { demoBgm.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+      }
+    });
+  };
+
+  const stopDemoBgm = ({ reset = true } = {}) => {
+    cancelBgmFrame();
+    if (!demoBgm) return;
+    demoBgm.pause();
+    demoBgm.volume = 0;
+    if (reset) {
+      try { demoBgm.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+    }
+    updateDemoStateData();
+  };
+
+  const syncClosingBgmFade = (segment, seconds) => {
+    if (!demoBgm || demoPage !== 'closing' || segment?.id !== '06-closing') return;
+    const fadeStart = Math.max(0, segment.duration - bgmClosingFadeSeconds);
+    if (seconds < fadeStart) return;
+    cancelBgmFrame();
+    const ratio = Math.min(1, Math.max(0, (seconds - fadeStart) / bgmClosingFadeSeconds));
+    demoBgm.volume = bgmVolumeByPage.closing * (1 - ratio);
   };
 
   const releaseSyncedAnimations = ({ resume = false } = {}) => {
@@ -433,6 +555,7 @@
       if (token !== narrationRunToken || !narrationRequested || !demoNarration) return;
       const segment = narrationByPage[demoPage]?.[narrationSegmentIndex];
       applyNarrationVisualTime(segment, demoNarration.currentTime);
+      syncClosingBgmFade(segment, demoNarration.currentTime);
       if (!demoPaused && !document.hidden && !demoNarration.ended) narrationFrame = window.requestAnimationFrame(tick);
     };
     narrationFrame = window.requestAnimationFrame(tick);
@@ -457,6 +580,7 @@
     cancelNarrationFrame();
     releaseSyncedAnimations({ resume: true });
     demoNarration?.pause();
+    stopDemoBgm({ reset: false });
     narrationRequested = false;
     narrationUnlocked = false;
     setNarrationState(error?.name === 'NotAllowedError' ? 'blocked' : 'error');
@@ -512,6 +636,7 @@
     demoPage = page;
     narrationSegmentIndex = 0;
     const token = narrationRunToken;
+    startDemoBgmForPage(page, { restart: page === 'intro' });
     playNarrationSegment({ token, restartVideo });
     return true;
   };
@@ -605,6 +730,7 @@
     clearSequenceTimer();
     clearStageTransitionTimers();
     stopNarrationPlayback({ keepRequested: false });
+    stopDemoBgm();
     stageTransitioning = false;
     guidePhone?.classList.remove('opening-demo-active', 'demo-active', 'meeting-demo-active', 'support-demo-active', 'closing-demo-active', 'is-paused', 'stage-transitioning');
     guideStage?.classList.remove('intro-page', 'meeting-page', 'support-page', 'closing-page', 'stage-transitioning');
@@ -962,11 +1088,13 @@
     if (narrationRequested && demoNarration) {
       if (demoPaused) {
         demoNarration.pause();
+        pauseDemoBgm();
         openingDemoVideo?.pause();
         cancelNarrationFrame();
         setNarrationState('paused');
       } else {
         if (demoPage === 'intro') syncOpeningVideoPlayback();
+        resumeDemoBgm();
         setNarrationState('loading');
         const token = narrationRunToken;
         const playAttempt = demoNarration.play();
@@ -997,6 +1125,7 @@
     }
     narrationMuted = !narrationMuted;
     if (demoNarration) demoNarration.muted = narrationMuted;
+    if (demoBgm) demoBgm.muted = narrationMuted;
     updateDemoStateData();
     updateNarrationButton();
   });
@@ -1024,11 +1153,13 @@
     if (narrationRequested && demoNarration) {
       if (document.hidden) {
         demoNarration.pause();
+        pauseDemoBgm();
         openingDemoVideo?.pause();
         cancelNarrationFrame();
         setNarrationState('paused');
       } else if (!demoPaused && !demoNarration.ended) {
         if (demoPage === 'intro') syncOpeningVideoPlayback();
+        resumeDemoBgm();
         const token = narrationRunToken;
         setNarrationState('loading');
         const playAttempt = demoNarration.play();
@@ -1069,6 +1200,12 @@
     cancelNarrationFrame();
     setNarrationState('complete');
     if (demoMode === 'sequence') advanceSequence();
+    else fadeOutDemoBgm();
+  });
+
+  demoBgm?.addEventListener('error', () => {
+    console.warn('배경음 파일을 불러오지 못했습니다.', demoBgm.error);
+    stopDemoBgm({ reset: false });
   });
 
   demoNarration?.addEventListener('error', () => {

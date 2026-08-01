@@ -10,6 +10,7 @@
   <meta property="og:description" content="복수 공종 선택부터 AI 안전검토, 전자서명과 PDF 보관까지 실제 화면으로 확인하세요.">
   <meta property="og:image" content="assets/screens/guide/home-alert-expanded-v8.jpeg">
   <meta property="og:image:alt" content="Power TBM 홈 화면">
+  <meta name="music-credit" content="Soundtrack From the Starcourt Mall — Bryan Teoh, CC0 1.0 Universal">
   <title>Power TBM | AI 기반 현장 안전회의</title>
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
   <link rel="apple-touch-icon" href="assets/brand/power-tbm-icon.png">
@@ -21,9 +22,10 @@
   <link rel="preload" as="audio" href="assets/audio/04-safety-tools-taehyung.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/05-emergency-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
+  <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
   <link rel="stylesheet" href="styles.css?v=20260801-iphone-v28">
-  <script src="app.js?v=20260801-iphone-v28" defer></script>
+  <script src="app.js?v=20260801-bgm-v29" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -106,12 +108,12 @@
         <div class="tour-heading reveal">
           <span class="eyebrow eyebrow-light">PRODUCT WALKTHROUGH</span>
           <h2>오프닝부터 3단계까지<br><em>전체 흐름을 확인하세요.</em></h2>
-          <p>Power TBM 오프닝에 이어 기상정보, TBM 회의록, 안전가이드와 현장도구가 자동 재생되고 실제 현장 사진으로 마무리됩니다.</p>
+          <p>잔잔한 배경음과 함께 Power TBM 오프닝, 기상정보, TBM 회의록, 안전가이드와 현장도구가 자동 재생되고 실제 현장 사진으로 마무리됩니다.</p>
         </div>
 
         <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
           <button class="active demo-all-button narration-start-hint" id="allDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
-            <span>ALL</span><b>음성 포함 전체 자동시연</b><small>태형·지수 내레이션 · 오프닝→1→2→3→마무리</small>
+            <span>ALL</span><b>음성·배경음 포함 전체 자동시연</b><small>태형·지수 내레이션 · 오프닝→1→2→3→마무리</small>
           </button>
           <button class="current" id="weatherDemoPage" type="button" role="tab" aria-selected="false" aria-current="step" aria-controls="tourStage">
             <span>01</span><b>기상정보</b><small>특보·날씨·전문자료</small>
@@ -142,6 +144,16 @@
                   <source src="assets/video/power-tbm-opening-v22.mp4" type="video/mp4">
                 </video>
                 <audio id="demoNarration" preload="auto" playsinline aria-hidden="true"></audio>
+                <audio
+                  id="demoBgm"
+                  src="assets/audio/bgm-starcourt-mall-cc0.mp3"
+                  preload="auto"
+                  playsinline
+                  data-title="Soundtrack From the Starcourt Mall"
+                  data-artist="Bryan Teoh"
+                  data-license="CC0 1.0 Universal"
+                  aria-hidden="true"
+                ></audio>
                 <div class="weather-demo" id="weatherDemo" role="img" aria-label="홈 화면의 기상특보를 먼저 펼쳐 조치사항을 확인하고 날씨 화면으로 들어간 뒤 태풍정보 다섯 개를 차례로 비교하는 자동 시연">
                   <img class="weather-demo-home" src="assets/screens/guide/home.webp" alt="" width="709" height="1536">
                   <img class="weather-demo-alert" src="assets/screens/guide/home-alert-expanded-v8.jpeg" alt="" width="709" height="1536">
@@ -366,7 +378,7 @@
             <div class="demo-controls" id="demoControls">
               <button id="demoToggle" type="button" aria-pressed="false"><span aria-hidden="true">Ⅱ</span> 자동 시연</button>
               <button id="demoReplay" type="button"><span aria-hidden="true">↻</span> 다시보기</button>
-              <button class="needs-start" id="demoMute" type="button" aria-pressed="false"><span aria-hidden="true">🔊</span> 음성 시연 시작</button>
+              <button class="needs-start" id="demoMute" type="button" aria-pressed="false"><span aria-hidden="true">🔊</span> 소리 시연 시작</button>
             </div>
           </div>
           <div class="tour-detail">
