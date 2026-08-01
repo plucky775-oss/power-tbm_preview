@@ -14,8 +14,14 @@
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
   <link rel="apple-touch-icon" href="assets/brand/power-tbm-icon.png">
   <link rel="preload" as="image" href="assets/screens/guide/home-alert-expanded-v8.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260801-soft-transition-v23">
-  <script src="app.js?v=20260801-soft-transition-v23" defer></script>
+  <link rel="preload" as="audio" href="assets/audio/00-opening-hyunbin.mp3" type="audio/mpeg">
+  <link rel="preload" as="audio" href="assets/audio/01-weather-jisoo.mp3" type="audio/mpeg">
+  <link rel="preload" as="audio" href="assets/audio/02-tbm-basic-hyunbin.mp3" type="audio/mpeg">
+  <link rel="preload" as="audio" href="assets/audio/03-ai-pdf-jisoo.mp3" type="audio/mpeg">
+  <link rel="preload" as="audio" href="assets/audio/04-safety-tools-hyunbin.mp3" type="audio/mpeg">
+  <link rel="preload" as="audio" href="assets/audio/05-emergency-jisoo.mp3" type="audio/mpeg">
+  <link rel="stylesheet" href="styles.css?v=20260801-voice-v25">
+  <script src="app.js?v=20260801-voice-v25" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -102,8 +108,8 @@
         </div>
 
         <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
-          <button class="active demo-all-button" id="allDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
-            <span>ALL</span><b>전체 자동시연</b><small>오프닝→1→2→3 연속 재생</small>
+          <button class="active demo-all-button narration-start-hint" id="allDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
+            <span>ALL</span><b>음성 포함 전체 자동시연</b><small>현빈·지수 내레이션 · 오프닝→1→2→3</small>
           </button>
           <button class="current" id="weatherDemoPage" type="button" role="tab" aria-selected="false" aria-current="step" aria-controls="tourStage">
             <span>01</span><b>기상정보</b><small>특보·날씨·전문자료</small>
@@ -132,6 +138,7 @@
                 >
                   <source src="assets/video/power-tbm-opening-v22.mp4" type="video/mp4">
                 </video>
+                <audio id="demoNarration" preload="auto" playsinline aria-hidden="true"></audio>
                 <div class="weather-demo" id="weatherDemo" role="img" aria-label="홈 화면의 기상특보를 먼저 펼쳐 조치사항을 확인하고 날씨 화면으로 들어간 뒤 태풍정보 다섯 개를 차례로 비교하는 자동 시연">
                   <img class="weather-demo-home" src="assets/screens/guide/home.webp" alt="" width="709" height="1536">
                   <img class="weather-demo-alert" src="assets/screens/guide/home-alert-expanded-v8.jpeg" alt="" width="709" height="1536">
@@ -304,6 +311,7 @@
                   <img class="support-slide support-slide-home-tools" src="assets/screens/guide/stage3-home-main-v16.png" alt="" width="1179" height="2556">
                   <img class="support-slide support-slide-tools" src="assets/screens/guide/stage3-field-tools.png" alt="" width="1179" height="2556">
                   <img class="support-slide support-slide-emergency" src="assets/screens/guide/stage3-emergency.png" alt="" width="1179" height="2556">
+                  <img class="support-slide support-slide-location" src="assets/screens/guide/location-consent.webp" alt="" width="1179" height="2556">
 
                   <span class="support-hand support-hand-safety" aria-hidden="true">👆🏻</span>
                   <span class="support-hand support-hand-risk" aria-hidden="true">👆🏻</span>
@@ -326,6 +334,7 @@
                     <span class="support-caption-home-tools">이어서 현장도구로 이동합니다</span>
                     <span class="support-caption-tools">응급의료시설을 선택합니다</span>
                     <span class="support-caption-emergency">현재 위치에서 가까운 병원과 경로를 확인합니다</span>
+                    <span class="support-caption-location">위치정보는 동의한 경우에만 이용합니다</span>
                   </div>
                 </div>
               </div>
@@ -338,11 +347,12 @@
             <div class="demo-controls" id="demoControls">
               <button id="demoToggle" type="button" aria-pressed="false"><span aria-hidden="true">Ⅱ</span> 자동 시연</button>
               <button id="demoReplay" type="button"><span aria-hidden="true">↻</span> 다시보기</button>
+              <button class="needs-start" id="demoMute" type="button" aria-pressed="false"><span aria-hidden="true">🔊</span> 음성 시연 시작</button>
             </div>
           </div>
           <div class="tour-detail">
             <aside class="opening-explanation" aria-label="Power TBM 오프닝 내레이션">
-              <span><i></i> OPENING · 8 SEC</span>
+              <span><i></i> OPENING · 10 SEC</span>
               <h3>현장 안전회의의<br><em>새로운 기준</em></h3>
               <p class="opening-narration-label">오프닝 내레이션</p>
               <blockquote>“기상 확인부터 AI 안전검토와 서명·기록까지, 현장 안전점검회의의 새로운 기준, 파워 TBM을 소개합니다.”</blockquote>

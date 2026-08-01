@@ -217,6 +217,8 @@
   const meetingDemoPage = $('#meetingDemoPage');
   const supportDemoPage = $('#supportDemoPage');
   const openingDemoVideo = $('#openingDemoVideo');
+  const demoNarration = $('#demoNarration');
+  const demoMute = $('#demoMute');
   const weatherDemo = $('#weatherDemo');
   const meetingDemo = $('#meetingDemo');
   const supportDemo = $('#supportDemo');
@@ -237,6 +239,52 @@
     meeting: 'meeting-demo-active',
     support: 'support-demo-active'
   };
+  const narrationByPage = {
+    intro: [
+      {
+        id: '00-opening',
+        src: 'assets/audio/00-opening-hyunbin.mp3',
+        duration: 9.665306,
+        cues: [[0, 0], [8, 8000], [9.665306, 8000]]
+      }
+    ],
+    weather: [
+      {
+        id: '01-weather',
+        src: 'assets/audio/01-weather-jisoo.mp3',
+        duration: 29.701224,
+        cues: [[0, 0], [5.42, 4000], [10.28, 9200], [16.44, 19600], [27.16, 36400], [29.701224, 36400]]
+      }
+    ],
+    meeting: [
+      {
+        id: '02-tbm-basic',
+        src: 'assets/audio/02-tbm-basic-hyunbin.mp3',
+        duration: 38.008163,
+        cues: [[0, 0], [2.82, 5664], [7.65, 11424], [13.92, 20160], [20.44, 28800], [26.1, 37056], [32.03, 46176], [38.008163, 55296]]
+      },
+      {
+        id: '03-ai-pdf',
+        src: 'assets/audio/03-ai-pdf-jisoo.mp3',
+        duration: 40.646531,
+        cues: [[0, 55296], [12.81, 62880], [22.86, 70080], [27.78, 77280], [31.58, 84000], [36.19, 87840], [38.4, 92736], [40.646531, 94944]]
+      }
+    ],
+    support: [
+      {
+        id: '04-safety-tools',
+        src: 'assets/audio/04-safety-tools-hyunbin.mp3',
+        duration: 36.649796,
+        cues: [[0, 0], [3.95, 5700], [13.73, 19600], [18.78, 25600], [25.76, 32600], [28.55, 36100], [36.649796, 42450]]
+      },
+      {
+        id: '05-emergency',
+        src: 'assets/audio/05-emergency-jisoo.mp3',
+        duration: 21.995102,
+        cues: [[0, 42450], [6.19, 43800], [13.1, 45500], [17.41, 47000], [21.995102, 49000]]
+      }
+    ]
+  };
   let currentGuide = 0;
   let guideChanging = false;
   let demoPaused = false;
@@ -247,6 +295,14 @@
   let sequenceRemaining = demoDurationFallbacks.intro;
   let stageTransitioning = false;
   let stageTransitionTimers = [];
+  let narrationRequested = false;
+  let narrationMuted = false;
+  let narrationUnlocked = false;
+  let narrationState = 'ready';
+  let narrationSegmentIndex = 0;
+  let narrationRunToken = 0;
+  let narrationFrame = null;
+  let syncedAnimations = [];
 
   const parseCssTime = (value) => {
     const time = String(value || '').trim();
@@ -254,6 +310,199 @@
     if (time.endsWith('ms')) return Number.parseFloat(time) || 0;
     if (time.endsWith('s')) return (Number.parseFloat(time) || 0) * 1000;
     return Number.parseFloat(time) || 0;
+  };
+
+  const updateDemoStateData = () => {
+    if (!guideStage) return;
+    guideStage.dataset.demoPage = demoPage;
+    guideStage.dataset.demoMode = demoMode;
+    guideStage.dataset.narrationState = narrationState;
+    guideStage.dataset.narrationMuted = String(narrationMuted);
+    const segment = narrationByPage[demoPage]?.[narrationSegmentIndex];
+    guideStage.dataset.narrationSegment = narrationRequested && segment ? segment.id.slice(0, 2) : '';
+  };
+
+  const updateNarrationButton = () => {
+    if (!demoMute) return;
+    const needsStart = !narrationRequested || narrationState === 'blocked' || narrationState === 'error';
+    demoMute.classList.toggle('needs-start', needsStart);
+    allDemoPage?.classList.toggle('narration-start-hint', needsStart);
+    demoMute.setAttribute('aria-pressed', String(!needsStart && narrationMuted));
+    if (needsStart) demoMute.innerHTML = '<span aria-hidden="true">🔊</span> 음성 시연 시작';
+    else if (narrationMuted) demoMute.innerHTML = '<span aria-hidden="true">🔇</span> 음성 꺼짐';
+    else demoMute.innerHTML = '<span aria-hidden="true">🔊</span> 음성 켜짐';
+  };
+
+  const setNarrationState = (state) => {
+    narrationState = state;
+    updateDemoStateData();
+    updateNarrationButton();
+  };
+
+  const cancelNarrationFrame = () => {
+    if (narrationFrame) window.cancelAnimationFrame(narrationFrame);
+    narrationFrame = null;
+  };
+
+  const releaseSyncedAnimations = ({ resume = false } = {}) => {
+    syncedAnimations.forEach((animation) => {
+      if (!resume) return;
+      try { animation.play(); } catch (_) { /* animation may already be detached */ }
+    });
+    syncedAnimations = [];
+  };
+
+  const getAnimationsForRoot = (root) => {
+    if (!root?.getAnimations) return [];
+    try {
+      return root.getAnimations({ subtree: true });
+    } catch (_) {
+      return [root, ...root.querySelectorAll('*')].flatMap((element) => element.getAnimations?.() || []);
+    }
+  };
+
+  const collectNarrationAnimations = (page) => {
+    const rootsByPage = {
+      weather: [weatherDemo, $('.demo-explanations'), $('.typhoon-compare')],
+      meeting: [meetingDemo, $('.meeting-explanations')],
+      support: [supportDemo, $('.support-explanations')]
+    };
+    const seen = new Set();
+    syncedAnimations = (rootsByPage[page] || [])
+      .filter(Boolean)
+      .flatMap(getAnimationsForRoot)
+      .filter((animation) => {
+        if (!animation || seen.has(animation) || typeof animation.animationName !== 'string') return false;
+        seen.add(animation);
+        return true;
+      });
+    syncedAnimations.forEach((animation) => {
+      try { animation.pause(); } catch (_) { /* keep the fallback timeline available */ }
+    });
+  };
+
+  const mapNarrationTimeToVisual = (segment, seconds) => {
+    const cues = segment?.cues || [[0, 0]];
+    const time = Math.max(0, Number(seconds) || 0);
+    if (time <= cues[0][0]) return cues[0][1];
+    for (let index = 1; index < cues.length; index += 1) {
+      const previous = cues[index - 1];
+      const next = cues[index];
+      if (time > next[0]) continue;
+      const span = Math.max(.001, next[0] - previous[0]);
+      const ratio = Math.min(1, Math.max(0, (time - previous[0]) / span));
+      return previous[1] + ((next[1] - previous[1]) * ratio);
+    }
+    return cues[cues.length - 1][1];
+  };
+
+  const applyNarrationVisualTime = (segment, seconds) => {
+    if (!segment) return;
+    const visualTime = mapNarrationTimeToVisual(segment, seconds);
+    if (demoPage === 'intro') {
+      const videoDuration = Number(openingDemoVideo?.duration) || 8;
+      const target = Math.min(Math.max(0, Number(seconds) || 0), videoDuration);
+      if (openingDemoVideo && target < videoDuration && Math.abs(openingDemoVideo.currentTime - target) > .24) {
+        try { openingDemoVideo.currentTime = target; } catch (_) { /* metadata may still be loading */ }
+      }
+      return;
+    }
+    if (!syncedAnimations.length) collectNarrationAnimations(demoPage);
+    syncedAnimations.forEach((animation) => {
+      try {
+        if (animation.playState !== 'paused') animation.pause();
+        animation.currentTime = visualTime;
+      } catch (_) { /* a scene can detach during a soft transition */ }
+    });
+  };
+
+  const runNarrationVisualClock = (token) => {
+    cancelNarrationFrame();
+    const tick = () => {
+      if (token !== narrationRunToken || !narrationRequested || !demoNarration) return;
+      const segment = narrationByPage[demoPage]?.[narrationSegmentIndex];
+      applyNarrationVisualTime(segment, demoNarration.currentTime);
+      if (!demoPaused && !document.hidden && !demoNarration.ended) narrationFrame = window.requestAnimationFrame(tick);
+    };
+    narrationFrame = window.requestAnimationFrame(tick);
+  };
+
+  const stopNarrationPlayback = ({ reset = true, keepRequested = true } = {}) => {
+    narrationRunToken += 1;
+    cancelNarrationFrame();
+    releaseSyncedAnimations();
+    demoNarration?.pause();
+    if (reset && demoNarration) {
+      try { demoNarration.currentTime = 0; } catch (_) { /* source may be changing */ }
+    }
+    narrationSegmentIndex = 0;
+    if (!keepRequested) narrationRequested = false;
+    updateDemoStateData();
+  };
+
+  const handleNarrationFailure = (error, token) => {
+    if (token !== narrationRunToken) return;
+    console.warn('내레이션 재생을 시작하지 못해 무음 자동시연으로 전환합니다.', error);
+    cancelNarrationFrame();
+    releaseSyncedAnimations({ resume: true });
+    demoNarration?.pause();
+    narrationRequested = false;
+    narrationUnlocked = false;
+    setNarrationState(error?.name === 'NotAllowedError' ? 'blocked' : 'error');
+    scheduleSequenceAdvance();
+  };
+
+  const loadNarrationSegment = (segment, token) => {
+    if (!demoNarration || !segment || token !== narrationRunToken) return;
+    const currentSource = demoNarration.getAttribute('src') || '';
+    if (currentSource !== segment.src) {
+      demoNarration.src = segment.src;
+      demoNarration.load();
+    } else {
+      try { demoNarration.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+    }
+    demoNarration.muted = narrationMuted;
+    demoNarration.dataset.segment = segment.id;
+    demoNarration.dataset.runToken = String(token);
+    updateDemoStateData();
+  };
+
+  const playNarrationSegment = ({ token, restartVideo = false } = {}) => {
+    if (!demoNarration || token !== narrationRunToken || !narrationRequested) return;
+    const segment = narrationByPage[demoPage]?.[narrationSegmentIndex];
+    if (!segment) return;
+    loadNarrationSegment(segment, token);
+    releaseSyncedAnimations();
+    collectNarrationAnimations(demoPage);
+    applyNarrationVisualTime(segment, 0);
+    if (demoPage === 'intro') syncOpeningVideoPlayback({ restart: restartVideo });
+    if (demoPaused || document.hidden) {
+      setNarrationState('paused');
+      return;
+    }
+    setNarrationState('loading');
+    const playAttempt = demoNarration.play();
+    runNarrationVisualClock(token);
+    if (!playAttempt?.then) {
+      narrationUnlocked = true;
+      setNarrationState('playing');
+      return;
+    }
+    playAttempt.then(() => {
+      if (token !== narrationRunToken) return;
+      narrationUnlocked = true;
+      setNarrationState('playing');
+    }).catch((error) => handleNarrationFailure(error, token));
+  };
+
+  const startNarrationForPage = (page, { restartVideo = true } = {}) => {
+    if (!narrationRequested || !narrationByPage[page]) return false;
+    stopNarrationPlayback({ keepRequested: true });
+    demoPage = page;
+    narrationSegmentIndex = 0;
+    const token = narrationRunToken;
+    playNarrationSegment({ token, restartVideo });
+    return true;
   };
 
   const getStageRunDuration = (page) => {
@@ -296,9 +545,18 @@
   const scheduleSequenceAdvance = ({ reset = true } = {}) => {
     clearSequenceTimer();
     if (reset) sequenceRemaining = getStageRunDuration(demoPage);
-    if (demoMode !== 'sequence' || demoPaused || document.hidden || reduceMotion || stageTransitioning) return;
+    if (narrationRequested || demoMode !== 'sequence' || demoPaused || document.hidden || reduceMotion || stageTransitioning) return;
     sequenceStartedAt = performance.now();
     sequenceTimer = window.setTimeout(advanceSequence, Math.max(80, sequenceRemaining));
+  };
+
+  const startCurrentStageClock = ({ restartVideo = true } = {}) => {
+    clearSequenceTimer();
+    if (narrationRequested) {
+      startNarrationForPage(demoPage, { restartVideo });
+      return;
+    }
+    scheduleSequenceAdvance();
   };
 
   const updateDemoButton = () => {
@@ -328,17 +586,20 @@
       if (sequenceSelected && selected) button?.setAttribute('aria-current', 'step');
       else button?.removeAttribute('aria-current');
     });
+    updateDemoStateData();
   };
 
   const stopAllDemos = () => {
     clearSequenceTimer();
     clearStageTransitionTimers();
+    stopNarrationPlayback({ keepRequested: false });
     stageTransitioning = false;
     guidePhone?.classList.remove('opening-demo-active', 'demo-active', 'meeting-demo-active', 'support-demo-active', 'is-paused', 'stage-transitioning');
     guideStage?.classList.remove('intro-page', 'meeting-page', 'support-page', 'stage-transitioning');
     openingDemoVideo?.pause();
     demoControls?.classList.remove('active');
     demoPaused = false;
+    setNarrationState('ready');
     updateDemoButton();
   };
 
@@ -366,10 +627,10 @@
     guidePhone.classList.toggle('is-paused', demoPaused || document.hidden);
     demoControls?.classList.add('active');
     if (guideIndex) guideIndex.textContent = 'OPENING';
-    syncOpeningVideoPlayback({ restart });
+    if (!narrationRequested) syncOpeningVideoPlayback({ restart });
     updateDemoPageButtons();
     updateDemoButton();
-    if (!stageTransitioning) scheduleSequenceAdvance();
+    if (!stageTransitioning) startCurrentStageClock({ restartVideo: restart });
   };
 
   const startWeatherDemo = ({ restart = false } = {}) => {
@@ -383,7 +644,7 @@
     guidePhone.classList.toggle('is-paused', demoPaused || document.hidden);
     demoControls?.classList.add('active');
     updateDemoButton();
-    if (!stageTransitioning) scheduleSequenceAdvance();
+    if (!stageTransitioning) startCurrentStageClock();
   };
 
   const startMeetingDemo = ({ restart = false } = {}) => {
@@ -402,7 +663,7 @@
     demoControls?.classList.add('active');
     if (guideIndex) guideIndex.textContent = '02 / 03';
     updateDemoButton();
-    if (!stageTransitioning) scheduleSequenceAdvance();
+    if (!stageTransitioning) startCurrentStageClock();
   };
 
   const startSupportDemo = ({ restart = false } = {}) => {
@@ -421,7 +682,7 @@
     demoControls?.classList.add('active');
     if (guideIndex) guideIndex.textContent = '03 / 03';
     updateDemoButton();
-    if (!stageTransitioning) scheduleSequenceAdvance();
+    if (!stageTransitioning) startCurrentStageClock();
   };
 
   const syncWeatherGuide = () => {
@@ -479,13 +740,13 @@
       if (stageTransitioning) {
         openingDemoVideo?.pause();
         try { openingDemoVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
-      } else {
+      } else if (!narrationRequested) {
         syncOpeningVideoPlayback({ restart: true });
       }
     } else openingDemoVideo?.pause();
     updateDemoPageButtons();
     updateDemoButton();
-    if (!stageTransitioning) scheduleSequenceAdvance();
+    if (!stageTransitioning) startCurrentStageClock();
   };
 
   const switchDemoStage = (page, { keepMode = false, forceRestart = false, immediate = false } = {}) => {
@@ -499,6 +760,7 @@
     }
 
     clearSequenceTimer();
+    if (narrationRequested) stopNarrationPlayback({ keepRequested: true });
     updateDemoPageButtons();
     const hasVisibleStage = stageActiveClasses.some((className) => guidePhone.classList.contains(className));
     if (immediate || reduceMotion || !hasVisibleStage) {
@@ -518,8 +780,7 @@
       guideStage?.classList.remove('stage-transitioning');
       stageTransitioning = false;
       stageTransitionTimers = [];
-      if (demoPage === 'intro') syncOpeningVideoPlayback();
-      scheduleSequenceAdvance();
+      startCurrentStageClock();
     }, stageTransitionTiming.fadeOut + stageTransitionTiming.coveredHold);
     stageTransitionTimers = [swapTimer, revealTimer];
   };
@@ -561,36 +822,54 @@
     window.setTimeout(apply, reduceMotion ? 0 : 150);
   };
 
-  const activateWeatherPage = ({ keepMode = false } = {}) => {
-    switchDemoStage('weather', { keepMode, forceRestart: true });
+  const enableNarrationFromGesture = () => {
+    if (stageTransitioning) {
+      clearStageTransitionTimers();
+      stageTransitioning = false;
+      guidePhone?.classList.remove('stage-transitioning');
+      guideStage?.classList.remove('stage-transitioning');
+    }
+    if (!narrationUnlocked) narrationMuted = false;
+    narrationRequested = true;
+    demoPaused = false;
+    setNarrationState('ready');
   };
 
-  const activateIntroPage = ({ keepMode = false } = {}) => {
-    switchDemoStage('intro', { keepMode, forceRestart: true });
+  const activateWeatherPage = ({ keepMode = false, userInitiated = false } = {}) => {
+    if (userInitiated) enableNarrationFromGesture();
+    switchDemoStage('weather', { keepMode, forceRestart: true, immediate: userInitiated && !narrationUnlocked });
   };
 
-  const activateMeetingPage = ({ keepMode = false } = {}) => {
-    switchDemoStage('meeting', { keepMode, forceRestart: true });
+  const activateIntroPage = ({ keepMode = false, userInitiated = false } = {}) => {
+    if (userInitiated) enableNarrationFromGesture();
+    switchDemoStage('intro', { keepMode, forceRestart: true, immediate: userInitiated && !narrationUnlocked });
   };
 
-  const activateSupportPage = ({ keepMode = false } = {}) => {
-    switchDemoStage('support', { keepMode, forceRestart: true });
+  const activateMeetingPage = ({ keepMode = false, userInitiated = false } = {}) => {
+    if (userInitiated) enableNarrationFromGesture();
+    switchDemoStage('meeting', { keepMode, forceRestart: true, immediate: userInitiated && !narrationUnlocked });
   };
 
-  const activateSequence = () => {
+  const activateSupportPage = ({ keepMode = false, userInitiated = false } = {}) => {
+    if (userInitiated) enableNarrationFromGesture();
+    switchDemoStage('support', { keepMode, forceRestart: true, immediate: userInitiated && !narrationUnlocked });
+  };
+
+  const activateSequence = ({ userInitiated = false } = {}) => {
     if (guideChanging) {
-      window.setTimeout(activateSequence, reduceMotion ? 0 : 280);
+      window.setTimeout(() => activateSequence({ userInitiated }), reduceMotion ? 0 : 280);
       return;
     }
+    if (userInitiated) enableNarrationFromGesture();
     demoMode = 'sequence';
     demoPaused = false;
-    switchDemoStage('intro', { keepMode: true, forceRestart: true });
+    switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: userInitiated && !narrationUnlocked });
   };
 
-  allDemoPage?.addEventListener('click', activateSequence);
-  weatherDemoPage?.addEventListener('click', () => activateWeatherPage());
-  meetingDemoPage?.addEventListener('click', () => activateMeetingPage());
-  supportDemoPage?.addEventListener('click', () => activateSupportPage());
+  allDemoPage?.addEventListener('click', () => activateSequence({ userInitiated: true }));
+  weatherDemoPage?.addEventListener('click', () => activateWeatherPage({ userInitiated: true }));
+  meetingDemoPage?.addEventListener('click', () => activateMeetingPage({ userInitiated: true }));
+  supportDemoPage?.addEventListener('click', () => activateSupportPage({ userInitiated: true }));
   guideTabs.forEach((tab, index) => tab.addEventListener('click', () => {
     demoMode = 'single';
     demoPage = index === 0 ? 'weather' : 'manual';
@@ -631,28 +910,53 @@
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
     guidePhone.classList.toggle('is-paused', demoPaused);
-    if (demoPage === 'intro') syncOpeningVideoPlayback();
-    if (demoMode === 'sequence') {
+    if (narrationRequested && demoNarration) {
+      if (demoPaused) {
+        demoNarration.pause();
+        openingDemoVideo?.pause();
+        cancelNarrationFrame();
+        setNarrationState('paused');
+      } else {
+        if (demoPage === 'intro') syncOpeningVideoPlayback();
+        setNarrationState('loading');
+        const token = narrationRunToken;
+        const playAttempt = demoNarration.play();
+        runNarrationVisualClock(token);
+        if (playAttempt?.then) {
+          playAttempt.then(() => {
+            if (token === narrationRunToken) setNarrationState('playing');
+          }).catch((error) => handleNarrationFailure(error, token));
+        } else setNarrationState('playing');
+      }
+    } else if (demoPage === 'intro') syncOpeningVideoPlayback();
+    if (!narrationRequested && demoMode === 'sequence') {
       if (demoPaused) clearSequenceTimer({ preserve: true });
       else scheduleSequenceAdvance({ reset: false });
     }
     updateDemoButton();
   });
   demoReplay?.addEventListener('click', () => {
-    if (demoMode === 'sequence') activateSequence();
-    else {
-      demoPaused = false;
-      guidePhone?.classList.remove('is-paused');
-      if (demoPage === 'meeting') startMeetingDemo({ restart: true });
-      else if (demoPage === 'support') startSupportDemo({ restart: true });
-      else startWeatherDemo({ restart: true });
+    if (demoMode === 'sequence') activateSequence({ userInitiated: true });
+    else if (demoPage === 'meeting') activateMeetingPage({ userInitiated: true });
+    else if (demoPage === 'support') activateSupportPage({ userInitiated: true });
+    else activateWeatherPage({ userInitiated: true });
+  });
+  demoMute?.addEventListener('click', () => {
+    if (!narrationRequested || !narrationUnlocked || narrationState === 'blocked' || narrationState === 'error') {
+      activateSequence({ userInitiated: true });
+      return;
     }
+    narrationMuted = !narrationMuted;
+    if (demoNarration) demoNarration.muted = narrationMuted;
+    updateDemoStateData();
+    updateNarrationButton();
   });
 
   if (guideStage && !reduceMotion && 'IntersectionObserver' in window) {
     const demoObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
+        if (narrationRequested && ['loading', 'playing', 'paused'].includes(narrationState)) return;
         if (demoPage === 'intro') startIntroDemo({ restart: true });
         else if (demoPage === 'meeting') startMeetingDemo({ restart: true });
         else if (demoPage === 'support') startSupportDemo({ restart: true });
@@ -667,19 +971,59 @@
   document.addEventListener('visibilitychange', () => {
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && currentGuide !== 0)) return;
     guidePhone.classList.toggle('is-paused', document.hidden || demoPaused);
-    if (demoPage === 'intro') syncOpeningVideoPlayback();
-    if (demoMode === 'sequence' && !demoPaused) {
+    if (narrationRequested && demoNarration) {
+      if (document.hidden) {
+        demoNarration.pause();
+        openingDemoVideo?.pause();
+        cancelNarrationFrame();
+        setNarrationState('paused');
+      } else if (!demoPaused && !demoNarration.ended) {
+        if (demoPage === 'intro') syncOpeningVideoPlayback();
+        const token = narrationRunToken;
+        setNarrationState('loading');
+        const playAttempt = demoNarration.play();
+        runNarrationVisualClock(token);
+        if (playAttempt?.then) {
+          playAttempt.then(() => {
+            if (token === narrationRunToken) setNarrationState('playing');
+          }).catch((error) => handleNarrationFailure(error, token));
+        } else setNarrationState('playing');
+      }
+    } else if (demoPage === 'intro') syncOpeningVideoPlayback();
+    if (!narrationRequested && demoMode === 'sequence' && !demoPaused) {
       if (document.hidden) clearSequenceTimer({ preserve: true });
       else scheduleSequenceAdvance({ reset: false });
     }
   });
   updateDemoPageButtons();
   updateDemoButton();
+  updateNarrationButton();
 
   openingDemoVideo?.addEventListener('ended', () => {
-    if (demoMode !== 'sequence' || demoPage !== 'intro' || demoPaused || document.hidden) return;
-    clearSequenceTimer();
-    advanceSequence();
+    // The narration is intentionally longer than the eight-second video.
+    // Keep the final frame visible until the opening voice track ends.
+  });
+
+  demoNarration?.addEventListener('ended', () => {
+    const token = Number(demoNarration.dataset.runToken);
+    if (!narrationRequested || token !== narrationRunToken || demoPaused || document.hidden) return;
+    if (Number.isFinite(demoNarration.duration) && demoNarration.currentTime < demoNarration.duration - .2) return;
+    const segments = narrationByPage[demoPage] || [];
+    const completed = segments[narrationSegmentIndex];
+    applyNarrationVisualTime(completed, completed?.duration || demoNarration.duration);
+    if (narrationSegmentIndex + 1 < segments.length) {
+      narrationSegmentIndex += 1;
+      playNarrationSegment({ token });
+      return;
+    }
+    cancelNarrationFrame();
+    setNarrationState('complete');
+    if (demoMode === 'sequence') advanceSequence();
+  });
+
+  demoNarration?.addEventListener('error', () => {
+    if (!narrationRequested || !demoNarration.currentSrc) return;
+    handleNarrationFailure(demoNarration.error || new Error('내레이션 파일을 불러오지 못했습니다.'), narrationRunToken);
   });
 
   const video = $('#promoVideo');
