@@ -1,0 +1,28 @@
+Power TBM automatic-demo background music
+=========================================
+
+Track: Soundtrack From the Starcourt Mall
+Composer: Bryan Teoh
+License: Creative Commons Zero 1.0 Universal (CC0 1.0)
+License URL: https://creativecommons.org/publicdomain/zero/1.0/
+
+Verified provenance:
+- Track and license record:
+  https://github.com/cwilliams5/matrix-music-visualizer/blob/main/music/CREDITS.md
+- Public-domain preservation source cited by that record:
+  https://github.com/SoundSafari/CC0-1.0-Music
+- Original catalog: FreePD.com (now closed)
+
+CC0 permits copying, editing, redistribution, and commercial use without
+required attribution. This credit is retained as a professional provenance
+record.
+
+Power TBM edit:
+- Source SHA-256:
+  9199da36aefbe7974a75ad22084768ec77c1a98e14ac14ce36f193ece668b867
+- Output SHA-256:
+  d3c44e69e8ee7ce6eb53d15319d7ddba00a19dac1e42768ad18772315c330fea
+- First 184.03 seconds retained and re-encoded to MP3 at 128 kbps / 44.1 kHz.
+- High-pass (70 Hz), low-pass (12 kHz), and -1.5 dB gain were applied.
+- The website automatically ducks the track under narration and fades it out
+  during the final field-photo message.
