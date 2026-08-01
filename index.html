@@ -22,8 +22,8 @@
   <link rel="preload" as="audio" href="assets/audio/05-emergency-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260801-closing-v27">
-  <script src="app.js?v=20260801-closing-v27" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260801-iphone-v28">
+  <script src="app.js?v=20260801-iphone-v28" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -127,6 +127,7 @@
         <div class="tour-stage reveal" id="tourStage" data-delay="80">
           <div class="tour-device">
             <div class="phone-frame guide-phone">
+              <span class="phone-dynamic-island" aria-hidden="true"></span>
               <div class="guide-media">
                 <img id="guideImage" src="assets/screens/guide/home.webp" alt="Power TBM 홈 화면" width="709" height="1536">
                 <video
@@ -264,10 +265,7 @@
                     <img src="assets/screens/guide/meeting-sign-pad-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
                       <span class="meeting-signature-canvas" aria-hidden="true">
-                        <svg viewBox="0 0 700 400" preserveAspectRatio="none">
-                          <path class="meeting-signature-stroke meeting-signature-stroke-a" pathLength="1" d="M62 128 C108 58 145 58 156 122 C166 181 128 252 93 277 C146 238 208 178 232 98 C241 67 252 70 251 111 L246 287" />
-                          <path class="meeting-signature-stroke meeting-signature-stroke-b" pathLength="1" d="M281 127 C326 74 359 80 366 131 C373 181 342 224 316 246 C353 210 409 105 447 119 C474 129 446 214 430 250 C472 197 515 105 550 119 C574 130 554 194 534 233 C574 188 608 141 637 135 C613 174 589 211 570 254 C594 244 617 238 646 239" />
-                        </svg>
+                        <b class="meeting-signature-name">최재혁</b>
                       </span>
                     </div>
                   </div>
@@ -276,6 +274,7 @@
                     <img src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
                       <span class="meeting-sign-status meeting-sign-status-complete">서명 1/2명 · 작업자 대기</span>
+                      <span class="meeting-saved-signature" aria-hidden="true">최재혁</span>
                       <span class="meeting-sign-blank meeting-sign-blank-worker"></span>
                       <span class="meeting-sign-complete-toast">서명이 저장되어 회의록에 반영되었습니다</span>
                     </div>
