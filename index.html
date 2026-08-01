@@ -4,14 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#173e56">
-  <meta name="description" content="Power TBM은 배전현장의 작업 전 안전회의를 공종 선택, AI 위험성 검토, 기상정보, 전자서명, PDF 보관까지 하나의 흐름으로 연결하는 현장 안전 플랫폼입니다.">
+  <meta name="description" content="Power TBM의 기상정보, TBM 회의록, AI 안전검토, 전자서명과 현장도구를 한 화면에서 자동 시연합니다.">
+  <meta name="author" content="안산지사 최재혁 차장">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Power TBM | 현장 안전회의를 한 흐름으로">
-  <meta property="og:description" content="복수 공종 선택부터 AI 안전검토, 전자서명과 PDF 보관까지 실제 화면으로 확인하세요.">
+  <meta property="og:title" content="Power TBM | 자동 시연">
+  <meta property="og:description" content="Power TBM의 전체 흐름을 실제 앱 화면 기반 자동 시연으로 확인하세요.">
   <meta property="og:image" content="assets/screens/guide/home-alert-expanded-v8.jpeg">
   <meta property="og:image:alt" content="Power TBM 홈 화면">
   <meta name="music-credit" content="Soundtrack From the Starcourt Mall — Bryan Teoh, CC0 1.0 Universal">
-  <title>Power TBM | AI 기반 현장 안전회의</title>
+  <title>Power TBM | 자동 시연</title>
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
   <link rel="apple-touch-icon" href="assets/brand/power-tbm-icon.png">
   <link rel="preload" as="image" href="assets/screens/guide/home-alert-expanded-v8.jpeg">
@@ -24,92 +25,24 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260801-kepco-v30">
-  <script src="app.js?v=20260801-bgm-v29" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260801-demo-only-v31">
+  <script src="app.js?v=20260801-demo-only-v31" defer></script>
 </head>
-<body>
+<body class="demo-only-page">
   <a class="skip-link" href="#main">본문으로 바로가기</a>
-  <div class="scroll-progress" aria-hidden="true"><span></span></div>
-
-  <header class="site-header" id="siteHeader">
-    <div class="nav-shell">
-      <a class="brand" href="#top" aria-label="Power TBM 소개 홈페이지 처음으로">
-        <img src="assets/brand/power-tbm-icon.png" alt="" width="42" height="42">
-        <span><b>Power TBM</b><small>현장 안전회의 플랫폼</small></span>
-      </a>
-      <nav class="desktop-nav" aria-label="주요 메뉴">
-        <a href="#tour">자동 시연</a>
-        <a href="#features">핵심 기능</a>
-        <a href="#principles">운영 원칙</a>
-        <a href="#faq">자주 묻는 질문</a>
-      </nav>
-      <div class="nav-actions">
-        <a class="nav-app-link" href="https://power-tbm.vercel.app/" target="_blank" rel="noopener">앱 실행</a>
-        <button class="menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobileMenu">
-          <span></span><span></span>
-        </button>
-      </div>
+  <header class="demo-only-header">
+    <div class="demo-only-brand">
+      <img src="assets/brand/power-tbm-icon.png" alt="" width="48" height="48">
+      <span><b>Power TBM</b><small>자동 시연</small></span>
     </div>
-    <nav class="mobile-nav" id="mobileMenu" aria-label="모바일 메뉴" hidden>
-      <a href="#tour">자동 시연</a>
-      <a href="#features">핵심 기능</a>
-      <a href="#principles">운영 원칙</a>
-      <a href="#faq">자주 묻는 질문</a>
-      <a class="mobile-app-link" href="https://power-tbm.vercel.app/" target="_blank" rel="noopener">Power TBM 실행</a>
-    </nav>
+    <p class="demo-only-developer">개발자 : 안산지사 최재혁 차장</p>
+    <a class="demo-only-app-link" href="https://power-tbm.vercel.app/" target="_blank" rel="noopener">앱 실행 <span aria-hidden="true">↗</span></a>
   </header>
 
   <main id="main">
-    <section class="hero" id="top">
-      <div class="hero-grid" aria-hidden="true"></div>
-      <div class="hero-orb hero-orb-a" aria-hidden="true"></div>
-      <div class="hero-orb hero-orb-b" aria-hidden="true"></div>
-      <div class="hero-inner">
-        <div class="hero-copy reveal">
-          <div class="eyebrow eyebrow-light"><span></span> POWER TBM · FIELD SAFETY SYSTEM</div>
-          <h1>현장 안전회의,<br><em>한 번에 끝내다.</em></h1>
-          <p>공종 선택부터 AI 안전검토, 전자서명과 PDF 원본 보관까지. 배전현장의 작업 전 안전회의를 하나의 흐름으로 연결합니다.</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#tour">3단계 자동시연 <span aria-hidden="true">↓</span></a>
-            <a class="button button-outline-light" href="https://power-tbm.vercel.app/" target="_blank" rel="noopener">앱 실행 <span aria-hidden="true">↗</span></a>
-          </div>
-          <div class="hero-flow" aria-label="Power TBM 핵심 업무 흐름">
-            <span>공종·기상 확인</span><i aria-hidden="true"></i>
-            <span>AI 안전검토</span><i aria-hidden="true"></i>
-            <span>서명·PDF</span>
-          </div>
-        </div>
-
-        <div class="hero-visual reveal" data-delay="100" role="group" aria-label="Power TBM 실제 홈 화면">
-          <div class="product-aura" aria-hidden="true"></div>
-          <div class="hero-phone phone-frame">
-            <img src="assets/screens/guide/home-alert-expanded-v8.jpeg" alt="날씨, 펼쳐진 기상특보와 TBM 회의록 메뉴를 보여주는 Power TBM 홈 화면" width="709" height="1536">
-          </div>
-          <div class="hero-product-badge hero-badge-weather"><span>LIVE</span><b>현장 기상특보</b></div>
-          <div class="hero-product-badge hero-badge-record"><span>PDF</span><b>서명 원본 보관</b></div>
-        </div>
-      </div>
-      <a class="hero-scroll" href="#tour"><span>SCROLL TO DEMO</span><i aria-hidden="true"></i></a>
-    </section>
-
-    <section class="workflow-strip" aria-label="Power TBM 업무 흐름">
-      <div class="workflow-shell reveal">
-        <div class="workflow-title"><span>ONE CONTINUOUS FLOW</span><b>회의 준비부터 원본 보관까지</b></div>
-        <ol>
-          <li><span>01</span><div><b>공종·기상 확인</b><small>작업조건과 위험요인을 준비합니다</small></div></li>
-          <li><span>02</span><div><b>AI 안전검토</b><small>놓치기 쉬운 사항을 한 번 더 봅니다</small></div></li>
-          <li><span>03</span><div><b>서명·PDF</b><small>확정된 원본을 날짜별로 남깁니다</small></div></li>
-        </ol>
-      </div>
-    </section>
-
     <section class="tour-section" id="tour">
       <div class="tour-shell">
-        <div class="tour-heading reveal">
-          <span class="eyebrow eyebrow-light">PRODUCT WALKTHROUGH</span>
-          <h2>오프닝부터 3단계까지<br><em>전체 흐름을 확인하세요.</em></h2>
-          <p>잔잔한 배경음과 함께 Power TBM 오프닝, 기상정보, TBM 회의록, 안전가이드와 현장도구가 자동 재생되고 실제 현장 사진으로 마무리됩니다.</p>
-        </div>
+        <h1 class="sr-only">Power TBM 자동 시연</h1>
 
         <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
           <button class="active demo-all-button narration-start-hint" id="allDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
@@ -386,7 +319,7 @@
               <h3>현장 안전회의의<br><em>새로운 기준</em></h3>
               <p class="opening-narration-label">오프닝 내레이션</p>
               <blockquote>“기상 확인부터 AI 안전검토와 서명·기록까지, 현장 안전점검회의의 새로운 기준, 파워 TBM을 소개합니다.”</blockquote>
-              <div class="opening-flow" aria-label="전체 자동시연 순서">
+              <div class="opening-flow" role="group" aria-label="전체 자동시연 순서">
                 <b>오프닝</b><i>→</i><b>기상정보</b><i>→</i><b>TBM 회의록</b><i>→</i><b>안전·현장도구</b><i>→</i><b>마무리</b>
               </div>
             </aside>
@@ -555,133 +488,6 @@
       </div>
     </section>
 
-    <section class="section feature-section product-stories" id="features">
-      <div class="section-heading center reveal">
-        <span class="eyebrow">THREE CORE FUNCTIONS</span>
-        <h2>핵심은 세 가지로<br><em>분명합니다.</em></h2>
-        <p>공종을 정확히 선택하고, AI로 한 번 더 검토한 뒤, 서명된 원본을 남깁니다.</p>
-      </div>
-
-      <div class="feature-grid">
-        <article class="feature-card feature-primary story-card reveal">
-          <div class="feature-copy">
-            <span class="feature-kicker">01 · SELECT</span>
-            <h3>복수 공종을 선택하면<br>위험요인이 한 흐름으로.</h3>
-            <p>가공·지중·내선에서 당일 수행하는 공종을 함께 선택하면 관련 위험요인과 안전대책이 하나의 회의록으로 구성됩니다.</p>
-            <ul>
-              <li>실제 작업 공종 복수 선택</li>
-              <li>중점·주의·일반 위험요인 구분</li>
-              <li>중복 없이 하나의 회의 흐름으로 병합</li>
-            </ul>
-          </div>
-          <div class="feature-screens">
-            <img src="assets/screens/guide/meeting-menu.webp" alt="회의록 작성과 캘린더 메뉴" width="1179" height="2556" loading="lazy">
-            <img src="assets/screens/guide/trade-select.webp" alt="가공 배전공사 공종 복수 선택 화면" width="1179" height="2556" loading="lazy">
-          </div>
-        </article>
-
-        <article class="feature-card story-card story-ai reveal">
-          <div class="feature-copy">
-            <span class="feature-kicker">02 · REVIEW</span>
-            <h3>AI가 놓치기 쉬운 위험을<br>한 번 더 확인합니다.</h3>
-            <p>선택 공종에 기상, 유사사고, 작업자 상태를 더해 추가 확인이 필요한 위험요인과 안전대책을 제안합니다.</p>
-            <ul>
-              <li>중복 위험요인 정리</li>
-              <li>현장 반영 여부 직접 선택</li>
-              <li>현장 책임자의 최종 판단 원칙</li>
-            </ul>
-          </div>
-          <div class="story-screen story-screen-ai">
-            <img src="assets/screens/guide/meeting-ai-v2.png" alt="Power TBM AI 안전검토 화면" width="1179" height="2556" loading="lazy">
-          </div>
-        </article>
-
-        <article class="feature-card story-card story-document reveal">
-          <div class="feature-copy">
-            <span class="feature-kicker">03 · RECORD</span>
-            <h3>서명된 PDF 원본을<br>날짜별로 남깁니다.</h3>
-            <p>책임자와 작업자가 직접·QR·원격으로 서명하고, 완성 문서를 PDF 원본으로 확정해 캘린더에서 다시 찾습니다.</p>
-            <ul>
-              <li>직접·QR·원격 전자서명</li>
-              <li>서명된 PDF 원본 출력</li>
-              <li>캘린더 조회와 기간 ZIP</li>
-            </ul>
-          </div>
-          <div class="story-screen-pair">
-            <img src="assets/screens/guide/meeting-sign-v2.png" alt="책임자와 작업자 전자서명 화면" width="1179" height="2556" loading="lazy">
-            <img src="assets/screens/guide/meeting-calendar-v1.png" alt="날짜별 PDF 원본을 보관하는 회의록 캘린더" width="1179" height="2556" loading="lazy">
-          </div>
-        </article>
-      </div>
-
-      <div class="capability-line reveal" aria-label="Power TBM 보조 기능">
-        <span>함께 제공</span>
-        <p><b>기상특보·태풍·레이더</b><b>최근 안전사고 사례</b><b>위험요인·골든룰스11</b><b>응급의료시설 검색</b></p>
-      </div>
-    </section>
-
-    <section class="principle-section principle-band" id="principles">
-      <div class="principle-band-shell">
-        <div class="principle-intro reveal">
-          <span>SAFE &amp; RESPONSIBLE</span>
-          <h2>AI보다 먼저,<br>현장 원칙을 지킵니다.</h2>
-        </div>
-        <div class="principle-grid">
-          <article class="principle-card reveal"><span>01</span><h3>AI는 판단을 지원</h3><p>제안 내용은 자동 확정되지 않으며 현장 책임자가 실제 작업조건과 대조합니다.</p></article>
-          <article class="principle-card reveal" data-delay="40"><span>02</span><h3>작업중지권 우선</h3><p>급박한 위험이나 조건 변화가 있으면 문서보다 작업중지와 안전조치를 먼저 시행합니다.</p></article>
-          <article class="principle-card reveal" data-delay="80"><span>03</span><h3>확정 전 재확인</h3><p>서명자·위험요인·현장조치를 확인한 뒤 PDF 원본을 확정해 보관합니다.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section faq-section" id="faq">
-      <div class="section-heading center reveal">
-        <span class="eyebrow">FAQ</span>
-        <h2>꼭 필요한 내용만<br><em>확인하세요.</em></h2>
-      </div>
-      <div class="faq-list reveal">
-        <details>
-          <summary>AI가 회의 내용을 자동으로 결정하나요?<span aria-hidden="true">+</span></summary>
-          <p>아닙니다. AI는 선택 공종과 현장정보를 바탕으로 추가 위험요인과 안전대책을 제안합니다. 실제 반영 여부와 최종 회의 내용은 현장 책임자가 확인해 결정합니다.</p>
-        </details>
-        <details>
-          <summary>여러 공종을 동시에 선택할 수 있나요?<span aria-hidden="true">+</span></summary>
-          <p>가능합니다. 당일 함께 수행하는 공종을 복수 선택하면 관련 위험요인을 한 회의 흐름으로 모아 확인할 수 있습니다.</p>
-        </details>
-        <details>
-          <summary>작업자는 어떻게 서명하나요?<span aria-hidden="true">+</span></summary>
-          <p>현장에서 직접 서명하거나, 통신이 가능한 경우 카카오톡 링크와 QR을 이용해 원격으로 서명할 수 있습니다. PDF 확정 전 서명 상태를 반드시 확인하세요.</p>
-        </details>
-      </div>
-    </section>
-
-    <section class="final-cta">
-      <div class="final-cta-shell">
-        <div class="cta-copy reveal">
-          <img src="assets/brand/power-tbm-icon.png" alt="" width="76" height="76">
-          <span>POWER TBM</span>
-          <h2>현장 안전회의를<br><em>지금 시작하세요.</em></h2>
-          <p>모바일에서 바로 실행하거나 QR코드로 접속할 수 있습니다.</p>
-          <a class="button button-primary" href="https://power-tbm.vercel.app/" target="_blank" rel="noopener">Power TBM 실행 <span aria-hidden="true">↗</span></a>
-        </div>
-        <div class="qr-card reveal" data-delay="100">
-          <img src="assets/brand/app-qr.png" alt="Power TBM 앱 실행 QR코드" width="220" height="220" loading="lazy">
-          <b>모바일로 바로 열기</b>
-          <span>카메라로 QR코드를 스캔하세요</span>
-        </div>
-      </div>
-    </section>
   </main>
-
-  <footer class="site-footer">
-    <div>
-      <a class="footer-brand" href="#top"><img src="assets/brand/power-tbm-icon.png" alt="" width="34" height="34"><b>Power TBM</b></a>
-      <p>현장 경험에서 시작한 AI 기반 배전현장 안전회의 플랫폼</p>
-    </div>
-    <div class="footer-meta">
-      <span>기획·개발 최재혁 · 한국전력공사 안산지사</span>
-      <span>© <span id="year">2026</span> Power TBM</span>
-    </div>
-  </footer>
 </body>
 </html>
