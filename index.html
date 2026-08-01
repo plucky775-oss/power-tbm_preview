@@ -25,8 +25,8 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260801-demo-only-v31">
-  <script src="app.js?v=20260801-demo-only-v31" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260801-demo-only-v32">
+  <script src="app.js?v=20260801-demo-only-v32" defer></script>
 </head>
 <body class="demo-only-page">
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -35,29 +35,29 @@
       <img src="assets/brand/power-tbm-icon.png" alt="" width="48" height="48">
       <span><b>Power TBM</b><small>자동 시연</small></span>
     </div>
-    <p class="demo-only-developer">개발자 : 안산지사 최재혁 차장</p>
-    <a class="demo-only-app-link" href="https://power-tbm.vercel.app/" target="_blank" rel="noopener">앱 실행 <span aria-hidden="true">↗</span></a>
+    <div class="demo-only-header-stack">
+      <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
+        <button class="active demo-all-button narration-start-hint" id="allDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
+          <span>ALL</span><b>음성·배경음 포함 전체 자동시연</b><small>태형·지수 내레이션 · 오프닝→1→2→3→마무리</small>
+        </button>
+        <button class="current" id="weatherDemoPage" type="button" role="tab" aria-selected="false" aria-current="step" aria-controls="tourStage">
+          <span>01</span><b>기상정보</b><small>특보·날씨·전문자료</small>
+        </button>
+        <button id="meetingDemoPage" type="button" role="tab" aria-selected="false" aria-controls="tourStage">
+          <span>02</span><b>TBM 회의록</b><small>작성·서명·PDF·캘린더</small>
+        </button>
+        <button id="supportDemoPage" type="button" role="tab" aria-selected="false" aria-controls="tourStage">
+          <span>03</span><b>안전·현장도구</b><small>안전대책·골든룰스·응급시설</small>
+        </button>
+      </div>
+      <p class="demo-only-developer">개발자 : 안산지사 최재혁 차장</p>
+    </div>
   </header>
 
   <main id="main">
     <section class="tour-section" id="tour">
       <div class="tour-shell">
         <h1 class="sr-only">Power TBM 자동 시연</h1>
-
-        <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
-          <button class="active demo-all-button narration-start-hint" id="allDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
-            <span>ALL</span><b>음성·배경음 포함 전체 자동시연</b><small>태형·지수 내레이션 · 오프닝→1→2→3→마무리</small>
-          </button>
-          <button class="current" id="weatherDemoPage" type="button" role="tab" aria-selected="false" aria-current="step" aria-controls="tourStage">
-            <span>01</span><b>기상정보</b><small>특보·날씨·전문자료</small>
-          </button>
-          <button id="meetingDemoPage" type="button" role="tab" aria-selected="false" aria-controls="tourStage">
-            <span>02</span><b>TBM 회의록</b><small>작성·서명·PDF·캘린더</small>
-          </button>
-          <button id="supportDemoPage" type="button" role="tab" aria-selected="false" aria-controls="tourStage">
-            <span>03</span><b>안전·현장도구</b><small>안전대책·골든룰스·응급시설</small>
-          </button>
-        </div>
 
         <div class="tour-stage reveal" id="tourStage" data-delay="80">
           <div class="tour-device">
@@ -302,16 +302,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="tour-controls">
-              <button id="guidePrev" type="button" aria-label="이전 화면">←</button>
-              <span id="guideIndex">01 / 03</span>
-              <button id="guideNext" type="button" aria-label="다음 화면">→</button>
-            </div>
-            <div class="demo-controls" id="demoControls">
-              <button id="demoToggle" type="button" aria-pressed="false"><span aria-hidden="true">Ⅱ</span> 자동 시연</button>
-              <button id="demoReplay" type="button"><span aria-hidden="true">↻</span> 다시보기</button>
-              <button class="needs-start" id="demoMute" type="button" aria-pressed="false"><span aria-hidden="true">🔊</span> 소리 시연 시작</button>
             </div>
           </div>
           <div class="tour-detail">
