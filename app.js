@@ -230,10 +230,9 @@
   // as separate moments prevents the opening video from cutting straight to
   // the home screen.
   const stageTransitionTiming = { fadeOut: 700, coveredHold: 120 };
-  // Each stage advances while its final scene is still fully visible.
-  // The weather timeline begins fading its last comparison earlier than the
-  // other stages, so it intentionally has a different end ratio.
-  const demoEndRatios = { intro: 1, weather: .91, meeting: .989, support: .98, closing: 1 };
+  // Keep the final weather-alert comparison visible through the end so its
+  // legend remains readable before the next stage begins.
+  const demoEndRatios = { intro: 1, weather: 1, meeting: .989, support: .98, closing: 1 };
   // The source track is intentionally kept well below the normalized voices.
   // It rises slightly for the opening and field-photo ending, then ducks under
   // every information-heavy narration section.
@@ -261,7 +260,7 @@
         id: '01-weather',
         src: 'assets/audio/01-weather-jisoo.mp3',
         duration: 29.701224,
-        cues: [[0, 0], [5.42, 4000], [10.28, 9200], [16.44, 19600], [27.16, 36400], [29.701224, 36400]]
+        cues: [[0, 0], [5.42, 4000], [10.28, 9200], [16.44, 19600], [27.16, 36400], [29.701224, 40000]]
       }
     ],
     meeting: [
