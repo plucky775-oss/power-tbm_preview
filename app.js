@@ -243,9 +243,9 @@
     intro: [
       {
         id: '00-opening',
-        src: 'assets/audio/00-opening-hyunbin.mp3',
-        duration: 9.665306,
-        cues: [[0, 0], [8, 8000], [9.665306, 8000]]
+        src: 'assets/audio/00-opening-taehyung.mp3',
+        duration: 8.150204,
+        cues: [[0, 0], [8, 8000], [8.150204, 8000]]
       }
     ],
     weather: [
@@ -259,9 +259,9 @@
     meeting: [
       {
         id: '02-tbm-basic',
-        src: 'assets/audio/02-tbm-basic-hyunbin.mp3',
-        duration: 38.008163,
-        cues: [[0, 0], [2.82, 5664], [7.65, 11424], [13.92, 20160], [20.44, 28800], [26.1, 37056], [32.03, 46176], [38.008163, 55296]]
+        src: 'assets/audio/02-tbm-basic-taehyung.mp3',
+        duration: 34.742857,
+        cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [18.27, 28800], [23.77, 37056], [28.98, 46176], [34.742857, 55296]]
       },
       {
         id: '03-ai-pdf',
@@ -273,9 +273,9 @@
     support: [
       {
         id: '04-safety-tools',
-        src: 'assets/audio/04-safety-tools-hyunbin.mp3',
-        duration: 36.649796,
-        cues: [[0, 0], [3.95, 5700], [13.73, 19600], [18.78, 25600], [25.76, 32600], [28.55, 36100], [36.649796, 42450]]
+        src: 'assets/audio/04-safety-tools-taehyung.mp3',
+        duration: 31.216327,
+        cues: [[0, 0], [3.26, 5700], [12.35, 19600], [16.65, 25600], [22.25, 32600], [24.59, 36100], [31.216327, 42450]]
       },
       {
         id: '05-emergency',
