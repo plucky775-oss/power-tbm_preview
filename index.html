@@ -25,29 +25,29 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260802-basic-touch-v35">
-  <script src="app.js?v=20260801-demo-only-v34" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260802-support-sync-v37">
+  <script src="app.js?v=20260802-support-sync-v35" defer></script>
 </head>
 <body class="demo-only-page">
   <a class="skip-link" href="#main">본문으로 바로가기</a>
   <header class="demo-only-header">
     <div class="demo-only-brand">
       <img src="assets/brand/power-tbm-icon.png" alt="" width="48" height="48">
-      <span><b>Power TBM</b><small>자동 시연</small></span>
+      <span><b>Power TBM</b></span>
     </div>
     <div class="demo-only-header-stack">
       <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
         <button class="active demo-all-button narration-start-hint" id="allDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
-          <span>ALL</span><b>음성·배경음 포함 전체 자동시연</b><small>태형·지수 내레이션 · 오프닝→1→2→3→마무리</small>
+          <span>ALL</span><b>음성·배경음 포함 전체 자동시연</b>
         </button>
         <button class="current" id="weatherDemoPage" type="button" role="tab" aria-selected="false" aria-current="step" aria-controls="tourStage">
-          <span>01</span><b>기상정보</b><small>특보·날씨·전문자료</small>
+          <span>01</span><b>기상정보</b>
         </button>
         <button id="meetingDemoPage" type="button" role="tab" aria-selected="false" aria-controls="tourStage">
-          <span>02</span><b>TBM 회의록</b><small>작성·서명·PDF·캘린더</small>
+          <span>02</span><b>TBM 회의록</b>
         </button>
         <button id="supportDemoPage" type="button" role="tab" aria-selected="false" aria-controls="tourStage">
-          <span>03</span><b>안전·현장도구</b><small>안전대책·골든룰스·응급시설</small>
+          <span>03</span><b>안전·현장도구</b>
         </button>
       </div>
       <p class="demo-only-developer">개발자 : 안산지사 최재혁 차장</p>
@@ -259,6 +259,25 @@
                   <img class="support-slide support-slide-emergency" src="assets/screens/guide/stage3-emergency.png" alt="" width="1179" height="2556">
                   <img class="support-slide support-slide-location" src="assets/screens/guide/location-consent.webp" alt="" width="1179" height="2556">
 
+                  <div class="support-focus-layer" aria-hidden="true">
+                    <span class="support-focus support-focus-safety-menu" data-label="위험요인·안전대책"></span>
+                    <span class="support-focus support-focus-risk-card" data-label="감전·아크 / 확인 포인트"></span>
+                    <span class="support-focus support-focus-golden-menu" data-label="골든룰스11"></span>
+                    <span class="support-focus support-focus-golden-video" data-label="안전영상 재생"></span>
+
+                    <span class="support-focus support-focus-tool-notice" data-label="공지사항"></span>
+                    <span class="support-focus support-focus-tool-voice" data-label="음성메모(STT)"></span>
+                    <span class="support-focus support-focus-tool-street" data-label="거리뷰(현장 확인)"></span>
+                    <span class="support-focus support-focus-tool-emergency" data-label="응급의료시설"></span>
+                    <span class="support-focus support-focus-tool-contact" data-label="비상연락망"></span>
+                    <span class="support-focus support-focus-tool-select" data-label="응급의료시설 선택"></span>
+
+                    <span class="support-focus support-focus-emergency-nearby" data-label="가까운 병원 거리순 조회"></span>
+                    <span class="support-focus support-focus-emergency-nav" data-label="내비게이션 실행"></span>
+                    <span class="support-focus support-focus-emergency-call" data-label="병원 전화 연결"></span>
+                    <span class="support-focus support-focus-emergency-119" data-label="긴급 119"></span>
+                  </div>
+
                   <span class="support-hand support-hand-safety" aria-hidden="true">👆🏻</span>
                   <span class="support-hand support-hand-risk" aria-hidden="true">👆🏻</span>
                   <span class="support-hand support-hand-back" aria-hidden="true">👆🏻</span>
@@ -278,8 +297,11 @@
                     <span class="support-caption-risk">공종별 위험요인과 확인 포인트를 살펴봅니다</span>
                     <span class="support-caption-golden">골든룰스11 안전영상을 선택해 재생합니다</span>
                     <span class="support-caption-home-tools">이어서 현장도구로 이동합니다</span>
-                    <span class="support-caption-tools">응급의료시설을 선택합니다</span>
-                    <span class="support-caption-emergency">현재 위치에서 가까운 병원과 경로를 확인합니다</span>
+                    <span class="support-caption-tools">말하는 현장도구를 노란 테두리로 표시합니다</span>
+                    <span class="support-caption-emergency-nearby">현재 위치에서 가까운 병원을 거리순으로 확인합니다</span>
+                    <span class="support-caption-emergency-nav">길찾기를 눌러 내비게이션을 실행합니다</span>
+                    <span class="support-caption-emergency-call">전화 버튼으로 병원에 바로 연결합니다</span>
+                    <span class="support-caption-emergency-119">긴급상황에는 119로 즉시 전화합니다</span>
                     <span class="support-caption-location">위치정보는 동의한 경우에만 이용합니다</span>
                   </div>
                 </div>
@@ -405,27 +427,64 @@
 
             <aside class="support-explanations" aria-label="안전가이드와 현장도구 기능 설명">
               <article class="support-explain support-explain-safety">
-                <span><i></i> 1 / 4 · 안전가이드</span>
+                <span><i></i> 1 / 5 · 안전가이드</span>
                 <h3>작업 전 필요한<br><em>안전정보를 한곳에서</em></h3>
                 <p>안전가이드에서 공종별 위험요인과 안전대책, 골든룰스11 안전영상을 빠르게 확인합니다.</p>
               </article>
               <article class="support-explain support-explain-risk">
-                <span><i></i> 2 / 4 · 위험요인·안전대책</span>
+                <span><i></i> 2 / 5 · 위험요인·안전대책</span>
                 <h3>공종별 위험과<br><em>확인 포인트를 조회</em></h3>
                 <p>가공·지중·내선 공종을 열어 중점·주의·일반 위험요인과 현장 확인사항을 작업 전에 점검합니다.</p>
                 <div class="demo-explain-points"><b>감전</b><b>추락</b><b>작업별 대책</b></div>
               </article>
               <article class="support-explain support-explain-golden">
-                <span><i></i> 3 / 4 · 골든룰스11</span>
+                <span><i></i> 3 / 5 · 골든룰스11</span>
                 <h3>핵심 안전수칙을<br><em>짧은 영상으로 확인</em></h3>
                 <p>골든룰스11 영상을 재생해 작업 전 안전수칙을 공유합니다. 그 밖에도 최근 사고사례, TBM 가이드, 중대재해처벌법 관련 안전자료를 제공합니다.</p>
                 <div class="demo-explain-points"><b>최근 사고사례</b><b>TBM 가이드</b><b>안전교육 영상</b></div>
               </article>
               <article class="support-explain support-explain-tools">
-                <span><i></i> 4 / 4 · 현장도구</span>
+                <span><i></i> 4 / 5 · 현장도구</span>
+                <h3>현장에 필요한 기능을<br><em>말과 함께 순차 강조</em></h3>
+                <p>공지사항부터 비상연락망까지, 현재 설명하는 메뉴를 노란 테두리로 표시해 기능의 위치를 바로 알 수 있습니다.</p>
+                <div class="demo-explain-points support-tool-points" aria-hidden="true">
+                  <b class="support-tool-point support-tool-point-notice">공지사항</b>
+                  <b class="support-tool-point support-tool-point-voice">음성메모</b>
+                  <b class="support-tool-point support-tool-point-street">거리뷰</b>
+                  <b class="support-tool-point support-tool-point-emergency">응급의료</b>
+                  <b class="support-tool-point support-tool-point-contact">비상연락망</b>
+                </div>
+              </article>
+              <article class="support-explain support-explain-emergency">
+                <span><i></i> 5 / 5 · 응급의료시설</span>
                 <h3>가까운 응급의료시설을<br><em>위치기반으로 즉시 조회</em></h3>
-                <p>현재 위치에서 가까운 병원의 거리·전화번호·경로를 확인합니다. 공지사항, 음성메모(STT), 거리뷰, 비상연락망 기능도 함께 제공합니다.</p>
-                <div class="demo-explain-points"><b>병원 길찾기</b><b>119 전화</b><b>음성메모·연락망</b></div>
+                <p>현재 위치에서 가까운 병원을 확인한 뒤 길찾기·병원 전화·119를 상황에 맞게 바로 실행합니다.</p>
+                <div class="support-action-visuals" aria-hidden="true">
+                  <div class="support-action-card support-action-nearby">
+                    <span class="support-action-icon"><img src="assets/menu/emergency.png" alt="" width="256" height="256"></span>
+                    <span><small>응급의료시설</small><strong>가까운 병원부터 확인</strong><em>현재 위치 기준 · 거리순 조회</em></span>
+                  </div>
+                  <div class="support-action-card support-action-nav">
+                    <span class="support-action-icon"><img src="assets/menu/streetview.png" alt="" width="256" height="256"></span>
+                    <span><small>길찾기</small><strong>내비게이션 실행</strong><em>선택한 병원까지 경로 안내</em></span>
+                  </div>
+                  <div class="support-action-card support-action-call">
+                    <span class="support-action-icon support-action-phone-icon">
+                      <svg viewBox="0 0 64 64" role="img" aria-label="전화">
+                        <path d="M18.5 9.5c2-1.2 4.7-.6 5.9 1.4l6.2 10.4c1 1.8.7 4-.8 5.4l-4.4 4.1c3.8 7.1 9.7 13 16.8 16.8l4.1-4.4c1.4-1.5 3.7-1.8 5.4-.8l10.4 6.2c2 1.2 2.6 3.9 1.4 5.9l-3 5c-1.5 2.5-4.5 3.8-7.3 3.1C29.6 56.8 7.2 34.4 1.4 10.8.7 8 2 5 4.5 3.5l5-3Z" transform="translate(0 1) scale(.92)"/>
+                      </svg>
+                    </span>
+                    <span><small>병원 전화</small><strong>전화 앱으로 바로 연결</strong><em>운영 여부를 즉시 확인</em></span>
+                  </div>
+                  <div class="support-action-card support-action-119">
+                    <span class="support-action-icon support-action-119-icon">119</span>
+                    <span><small>긴급상황</small><strong>119 즉시 신고</strong><em>한 번의 터치로 긴급전화</em></span>
+                  </div>
+                  <div class="support-action-card support-action-location">
+                    <span class="support-action-icon support-action-location-icon">✓</span>
+                    <span><small>위치정보 보호</small><strong>동의한 경우에만 사용</strong><em>필요한 위치기반 기능에 한정</em></span>
+                  </div>
+                </div>
               </article>
             </aside>
 

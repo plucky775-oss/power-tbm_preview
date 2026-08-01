@@ -230,9 +230,10 @@
   // as separate moments prevents the opening video from cutting straight to
   // the home screen.
   const stageTransitionTiming = { fadeOut: 700, coveredHold: 120 };
-  // Keep the final weather-alert comparison visible through the end so its
-  // legend remains readable before the next stage begins.
-  const demoEndRatios = { intro: 1, weather: 1, meeting: .989, support: .98, closing: 1 };
+  // Each stage advances while its final scene is still fully visible.
+  // The weather timeline begins fading its last comparison earlier than the
+  // other stages, so it intentionally has a different end ratio.
+  const demoEndRatios = { intro: 1, weather: .91, meeting: .989, support: .98, closing: 1 };
   // The source track is intentionally kept well below the normalized voices.
   // It rises slightly for the opening and field-photo ending, then ducks under
   // every information-heavy narration section.
@@ -260,15 +261,15 @@
         id: '01-weather',
         src: 'assets/audio/01-weather-jisoo.mp3',
         duration: 29.701224,
-        cues: [[0, 0], [5.42, 4000], [10.28, 9200], [16.44, 19600], [27.16, 36400], [29.701224, 40000]]
+        cues: [[0, 0], [5.42, 4000], [10.28, 9200], [16.44, 19600], [27.16, 36400], [29.701224, 36400]]
       }
     ],
     meeting: [
       {
         id: '02-tbm-basic',
         src: 'assets/audio/02-tbm-basic-taehyung.mp3',
-        duration: 34.742857,
-        cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [18.27, 28800], [23.77, 37056], [28.98, 46176], [34.742857, 55296]]
+        duration: 34.29875,
+        cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [18.27, 28800], [23.77, 37056], [28.98, 46176], [34.29875, 55296]]
       },
       {
         id: '03-ai-pdf',
@@ -281,8 +282,8 @@
       {
         id: '04-safety-tools',
         src: 'assets/audio/04-safety-tools-taehyung.mp3',
-        duration: 31.216327,
-        cues: [[0, 0], [3.26, 5700], [12.35, 19600], [16.65, 25600], [22.25, 32600], [24.59, 36100], [31.216327, 42450]]
+        duration: 30.772188,
+        cues: [[0, 0], [3.26, 5700], [12.35, 19600], [16.12, 25950], [22.25, 32600], [24.59, 36100], [30.772188, 42450]]
       },
       {
         id: '05-emergency',
