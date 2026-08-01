@@ -652,7 +652,7 @@ button { color: inherit; }
 .demo-focus-links { left: 3.1%; top: 60.5%; width: 93.8%; height: 32.5%; }
 .demo-focus-link-kma,
 .demo-focus-link-jtwc,
-.demo-focus-link-jma { top: 72.7%; width: 29.8%; height: 10%; --highlight-radius: 10px; }
+.demo-focus-link-jma { top: 70.7%; width: 29.8%; height: 10.3%; --highlight-radius: 10px; }
 .demo-focus-link-kma { left: 5.3%; }
 .demo-focus-link-jtwc { left: 35.1%; }
 .demo-focus-link-jma { left: 64.9%; }
@@ -2327,22 +2327,22 @@ button { color: inherit; }
 
 .meeting-focus-home-card { left: 3.3%; top: 46.2%; width: 93.4%; height: 15.3%; }
 .meeting-focus-menu-write { left: 3.2%; top: 18%; width: 93.6%; height: 13%; }
-.meeting-focus-basic-form { left: 4%; top: 19.8%; width: 92%; height: 34%; }
+.meeting-focus-basic-form { left: 3%; top: 15.8%; width: 94%; height: 38.8%; }
 .meeting-focus-worker-form { left: 6.5%; top: 31%; width: 87%; height: 35.2%; }
 .meeting-focus-worker-saved { left: 6.5%; top: 69.7%; width: 87%; height: 13%; }
 .meeting-focus-trade-one { left: 9.1%; top: 20.3%; width: 81.8%; height: 8.7%; }
 .meeting-focus-trade-two { left: 9.1%; top: 30.2%; width: 81.8%; height: 8.7%; }
-.meeting-focus-health { left: 6.7%; top: 16.5%; width: 86.6%; height: 17.1%; }
-.meeting-focus-ppe { left: 6.7%; top: 34.5%; width: 86.6%; height: 31.5%; }
-.meeting-focus-risk { left: 6.7%; top: 32%; width: 86.6%; height: 55.2%; }
-.meeting-focus-ai { left: 6.7%; top: 23.6%; width: 86.6%; height: 59.4%; }
-.meeting-focus-priority { left: 6.7%; top: 22.8%; width: 86.6%; height: 15.6%; }
+.meeting-focus-health { left: 6.7%; top: 20.8%; width: 86.6%; height: 20.6%; }
+.meeting-focus-ppe { left: 6.7%; top: 43%; width: 86.6%; height: 39%; }
+.meeting-focus-risk { left: 6.7%; top: 41.2%; width: 86.6%; height: 40.8%; }
+.meeting-focus-ai { left: 6.7%; top: 22.5%; width: 86.6%; height: 59.5%; }
+.meeting-focus-priority { left: 6.7%; top: 29.3%; width: 86.6%; height: 6.5%; }
 .meeting-focus-signature,
 .meeting-focus-sign-saved { left: 53.3%; top: 57%; width: 27.8%; height: 6.5%; --highlight-radius: 11px; }
 .meeting-focus-sign-pad { left: 6.5%; top: 37.4%; width: 87%; height: 24.2%; }
 .meeting-focus-pdf { left: 2.4%; top: 11.7%; width: 95.2%; height: 59.7%; }
-.meeting-focus-calendar-day { left: 69.5%; top: 57.4%; width: 11.8%; height: 7.2%; --highlight-radius: 11px; }
-.meeting-focus-calendar-record { left: 5.7%; top: 64.1%; width: 88.6%; height: 25.2%; }
+.meeting-focus-calendar-day { left: 69.55%; top: 59.15%; width: 12.05%; height: 5.75%; --highlight-radius: 11px; }
+.meeting-focus-calendar-record { left: 5.7%; top: 73.2%; width: 88.6%; height: 23.5%; }
 
 .guide-phone.meeting-demo-active .meeting-focus-home-card { animation: meeting-focus-home-card var(--meeting-duration) ease infinite; }
 .guide-phone.meeting-demo-active .meeting-focus-menu-write { animation: meeting-focus-menu-write var(--meeting-duration) ease infinite; }
@@ -3180,7 +3180,7 @@ button { color: inherit; }
 
 .support-focus-home-safety { left: 3.2%; top: 47.4%; width: 93.6%; height: 15.2%; }
 .support-focus-safety-menu { left: 3.2%; top: 40.8%; width: 93.6%; height: 12.5%; }
-.support-focus-risk-card { left: 12.5%; top: 35.2%; width: 75%; height: 30.4%; }
+.support-focus-risk-card { left: 12.5%; top: 44.1%; width: 75%; height: 38.2%; }
 .support-focus-golden-menu { left: 3.2%; top: 54.5%; width: 93.6%; height: 13.2%; }
 .support-focus-golden-video { left: 6.3%; top: 25.1%; width: 87.4%; height: 23.1%; }
 .support-focus-home-tools { left: 3.2%; top: 63.8%; width: 93.6%; height: 15.4%; }
