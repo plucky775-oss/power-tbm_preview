@@ -25,7 +25,7 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260802-support-sync-v37">
+  <link rel="stylesheet" href="styles.css?v=20260802-unified-focus-v38">
   <script src="app.js?v=20260802-support-sync-v35" defer></script>
 </head>
 <body class="demo-only-page">
@@ -100,11 +100,19 @@
                   <span class="demo-hand demo-hand-alert" aria-hidden="true">👆🏻</span>
                   <span class="demo-hand demo-hand-tap" aria-hidden="true">👆🏻</span>
                   <span class="demo-hand demo-hand-swipe" aria-hidden="true">👆🏻</span>
-                  <span class="demo-focus demo-focus-now" aria-hidden="true"></span>
-                  <span class="demo-focus demo-focus-hourly" aria-hidden="true"></span>
-                  <span class="demo-focus demo-focus-air" aria-hidden="true"></span>
-                  <span class="demo-focus demo-focus-forecast" aria-hidden="true"></span>
-                  <span class="demo-focus demo-focus-links" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-highlight-critical demo-focus-alert-summary" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-highlight-critical demo-focus-alert-detail" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-focus-weather-card" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-focus-now" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-focus-hourly" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-focus-air" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-focus-forecast" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-focus-links" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-focus-link-kma" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-focus-link-jtwc" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-focus-link-jma" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-focus-link-radar" aria-hidden="true"></span>
+                  <span class="demo-focus demo-highlight-box demo-highlight-critical demo-focus-link-alert" aria-hidden="true"></span>
                   <span class="demo-link-ripple" aria-hidden="true"></span>
                   <span class="demo-hand demo-hand-links" aria-hidden="true">👆🏻</span>
                   <div class="demo-caption" aria-hidden="true">
@@ -228,6 +236,27 @@
 
                   <img class="meeting-slide meeting-slide-calendar" src="assets/screens/guide/meeting-calendar-v1.png" alt="" width="1179" height="2556">
 
+                  <div class="meeting-focus-layer" aria-hidden="true">
+                    <span class="meeting-focus demo-highlight-box meeting-focus-home-card"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-menu-write"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-basic-form"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-worker-form"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-worker-saved"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-trade-one"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-trade-two"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-health"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-ppe"></span>
+                    <span class="meeting-focus demo-highlight-box demo-highlight-critical meeting-focus-risk"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-ai"></span>
+                    <span class="meeting-focus demo-highlight-box demo-highlight-critical meeting-focus-priority"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-signature"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-sign-pad"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-sign-saved"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-pdf"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-calendar-day"></span>
+                    <span class="meeting-focus demo-highlight-box meeting-focus-calendar-record"></span>
+                  </div>
+
                   <span class="meeting-touch-ripple" aria-hidden="true"></span>
                   <span class="meeting-hand" aria-hidden="true">👆🏻</span>
                   <div class="meeting-caption" aria-hidden="true">
@@ -260,22 +289,25 @@
                   <img class="support-slide support-slide-location" src="assets/screens/guide/location-consent.webp" alt="" width="1179" height="2556">
 
                   <div class="support-focus-layer" aria-hidden="true">
-                    <span class="support-focus support-focus-safety-menu" data-label="위험요인·안전대책"></span>
-                    <span class="support-focus support-focus-risk-card" data-label="감전·아크 / 확인 포인트"></span>
-                    <span class="support-focus support-focus-golden-menu" data-label="골든룰스11"></span>
-                    <span class="support-focus support-focus-golden-video" data-label="안전영상 재생"></span>
+                    <span class="support-focus demo-highlight-box support-focus-home-safety"></span>
+                    <span class="support-focus demo-highlight-box support-focus-safety-menu"></span>
+                    <span class="support-focus demo-highlight-box demo-highlight-critical support-focus-risk-card"></span>
+                    <span class="support-focus demo-highlight-box support-focus-golden-menu"></span>
+                    <span class="support-focus demo-highlight-box support-focus-golden-video"></span>
+                    <span class="support-focus demo-highlight-box support-focus-home-tools"></span>
 
-                    <span class="support-focus support-focus-tool-notice" data-label="공지사항"></span>
-                    <span class="support-focus support-focus-tool-voice" data-label="음성메모(STT)"></span>
-                    <span class="support-focus support-focus-tool-street" data-label="거리뷰(현장 확인)"></span>
-                    <span class="support-focus support-focus-tool-emergency" data-label="응급의료시설"></span>
-                    <span class="support-focus support-focus-tool-contact" data-label="비상연락망"></span>
-                    <span class="support-focus support-focus-tool-select" data-label="응급의료시설 선택"></span>
+                    <span class="support-focus demo-highlight-box support-focus-tool-notice"></span>
+                    <span class="support-focus demo-highlight-box support-focus-tool-voice"></span>
+                    <span class="support-focus demo-highlight-box support-focus-tool-street"></span>
+                    <span class="support-focus demo-highlight-box support-focus-tool-emergency"></span>
+                    <span class="support-focus demo-highlight-box support-focus-tool-contact"></span>
+                    <span class="support-focus demo-highlight-box support-focus-tool-select"></span>
 
-                    <span class="support-focus support-focus-emergency-nearby" data-label="가까운 병원 거리순 조회"></span>
-                    <span class="support-focus support-focus-emergency-nav" data-label="내비게이션 실행"></span>
-                    <span class="support-focus support-focus-emergency-call" data-label="병원 전화 연결"></span>
-                    <span class="support-focus support-focus-emergency-119" data-label="긴급 119"></span>
+                    <span class="support-focus demo-highlight-box support-focus-emergency-nearby"></span>
+                    <span class="support-focus demo-highlight-box support-focus-emergency-nav"></span>
+                    <span class="support-focus demo-highlight-box support-focus-emergency-call"></span>
+                    <span class="support-focus demo-highlight-box demo-highlight-critical support-focus-emergency-119"></span>
+                    <span class="support-focus demo-highlight-box support-focus-location-consent"></span>
                   </div>
 
                   <span class="support-hand support-hand-safety" aria-hidden="true">👆🏻</span>
@@ -445,8 +477,8 @@
               </article>
               <article class="support-explain support-explain-tools">
                 <span><i></i> 4 / 5 · 현장도구</span>
-                <h3>현장에 필요한 기능을<br><em>말과 함께 순차 강조</em></h3>
-                <p>공지사항부터 비상연락망까지, 현재 설명하는 메뉴를 노란 테두리로 표시해 기능의 위치를 바로 알 수 있습니다.</p>
+                <h3>공지·메모·거리뷰를<br><em>현장에서 바로 활용</em></h3>
+                <p>공지사항, 음성메모(STT), 거리뷰, 응급의료시설, 비상연락망을 한 화면에서 빠르게 찾아 사용합니다.</p>
                 <div class="demo-explain-points support-tool-points" aria-hidden="true">
                   <b class="support-tool-point support-tool-point-notice">공지사항</b>
                   <b class="support-tool-point support-tool-point-voice">음성메모</b>

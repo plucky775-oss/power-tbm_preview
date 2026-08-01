@@ -642,11 +642,24 @@ button { color: inherit; }
     0 0 26px 8px rgba(255, 190, 43, .5);
   pointer-events: none;
 }
-.demo-focus-now { left: 5%; top: 29%; width: 90%; height: 34%; }
-.demo-focus-hourly { left: 5%; top: 67%; width: 90%; height: 27%; }
-.demo-focus-air { left: 5%; top: 12%; width: 90%; height: 38%; }
-.demo-focus-forecast { left: 5%; top: 3%; width: 90%; height: 52%; }
-.demo-focus-links { left: 5%; top: 58%; width: 90%; height: 38%; }
+.demo-focus-alert-summary { left: 3.2%; top: 37.3%; width: 93.6%; height: 7.8%; }
+.demo-focus-alert-detail { left: 7.1%; top: 51.4%; width: 85.8%; height: 13.4%; }
+.demo-focus-weather-card { left: 3.2%; top: 15.5%; width: 93.6%; height: 20.5%; }
+.demo-focus-now { left: 3.1%; top: 34.4%; width: 93.8%; height: 31.2%; }
+.demo-focus-hourly { left: 3.1%; top: 67.2%; width: 93.8%; height: 25.8%; }
+.demo-focus-air { left: 3.1%; top: 10.8%; width: 93.8%; height: 38.8%; }
+.demo-focus-forecast { left: 3.1%; top: 2.5%; width: 93.8%; height: 56.5%; }
+.demo-focus-links { left: 3.1%; top: 60.5%; width: 93.8%; height: 32.5%; }
+.demo-focus-link-kma,
+.demo-focus-link-jtwc,
+.demo-focus-link-jma { top: 72.7%; width: 29.8%; height: 10%; --highlight-radius: 10px; }
+.demo-focus-link-kma { left: 5.3%; }
+.demo-focus-link-jtwc { left: 35.1%; }
+.demo-focus-link-jma { left: 64.9%; }
+.demo-focus-link-radar,
+.demo-focus-link-alert { top: 83%; width: 44.7%; height: 9.7%; --highlight-radius: 10px; }
+.demo-focus-link-radar { left: 5.3%; }
+.demo-focus-link-alert { left: 50%; }
 .demo-caption {
   position: absolute;
   z-index: 8;
@@ -684,11 +697,19 @@ button { color: inherit; }
 .guide-phone.demo-active .demo-ripple-alert { animation: demo-ripple-alert var(--demo-duration) ease-out infinite; }
 .guide-phone.demo-active .demo-ripple-weather { animation: demo-ripple-weather var(--demo-duration) ease-out infinite; }
 .guide-phone.demo-active .demo-link-ripple { animation: demo-link-ripple var(--demo-duration) ease-out infinite; }
+.guide-phone.demo-active .demo-focus-alert-summary { animation: demo-focus-alert-summary var(--demo-duration) ease infinite; }
+.guide-phone.demo-active .demo-focus-alert-detail { animation: demo-focus-alert-detail var(--demo-duration) ease infinite; }
+.guide-phone.demo-active .demo-focus-weather-card { animation: demo-focus-weather-card var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-focus-now,
 .guide-phone.demo-active .demo-focus-hourly { animation: demo-focus-now var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-focus-air { animation: demo-focus-air var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-focus-forecast,
 .guide-phone.demo-active .demo-focus-links { animation: demo-focus-links var(--demo-duration) ease infinite; }
+.guide-phone.demo-active .demo-focus-link-kma { animation: demo-focus-link-kma var(--demo-duration) ease infinite; }
+.guide-phone.demo-active .demo-focus-link-jtwc { animation: demo-focus-link-jtwc var(--demo-duration) ease infinite; }
+.guide-phone.demo-active .demo-focus-link-jma { animation: demo-focus-link-jma var(--demo-duration) ease infinite; }
+.guide-phone.demo-active .demo-focus-link-radar { animation: demo-focus-link-radar var(--demo-duration) ease infinite; }
+.guide-phone.demo-active .demo-focus-link-alert { animation: demo-focus-link-alert var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-caption-alert { animation: demo-caption-alert var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-caption-alert-open { animation: demo-caption-alert-open var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-caption-tap { animation: demo-caption-tap var(--demo-duration) ease infinite; }
@@ -756,6 +777,21 @@ button { color: inherit; }
   15.8%, 22% { opacity: 1; transform: scale(1); }
   23%, 100% { opacity: 0; transform: scale(1.01); }
 }
+@keyframes demo-focus-alert-summary {
+  0%, 1.5% { opacity: 0; transform: scale(.985); }
+  2.2%, 7% { opacity: 1; transform: scale(1); }
+  7.7%, 100% { opacity: 0; transform: scale(1.01); }
+}
+@keyframes demo-focus-alert-detail {
+  0%, 7.4% { opacity: 0; transform: scale(.985); }
+  8%, 10% { opacity: 1; transform: scale(1); }
+  10.5%, 100% { opacity: 0; transform: scale(1.01); }
+}
+@keyframes demo-focus-weather-card {
+  0%, 10.1% { opacity: 0; transform: scale(.985); }
+  10.7%, 14.2% { opacity: 1; transform: scale(1); }
+  15%, 100% { opacity: 0; transform: scale(1.01); }
+}
 @keyframes demo-focus-air {
   0%, 28.8% { opacity: 0; transform: scale(.97); }
   29.5%, 33% { opacity: 1; transform: scale(1); }
@@ -766,6 +802,11 @@ button { color: inherit; }
   40.5%, 49% { opacity: 1; transform: scale(1); }
   50%, 100% { opacity: 0; transform: scale(1.01); }
 }
+@keyframes demo-focus-link-kma { 0%, 49.1% { opacity: 0; transform: scale(.985); } 49.7%, 52.8% { opacity: 1; transform: scale(1); } 53.4%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes demo-focus-link-jtwc { 0%, 57.2% { opacity: 0; transform: scale(.985); } 57.8%, 60.8% { opacity: 1; transform: scale(1); } 61.4%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes demo-focus-link-jma { 0%, 65.2% { opacity: 0; transform: scale(.985); } 65.8%, 68.8% { opacity: 1; transform: scale(1); } 69.4%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes demo-focus-link-radar { 0%, 73.2% { opacity: 0; transform: scale(.985); } 73.8%, 76.8% { opacity: 1; transform: scale(1); } 77.4%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes demo-focus-link-alert { 0%, 81.2% { opacity: 0; transform: scale(.985); } 81.8%, 84.8% { opacity: 1; transform: scale(1); } 85.4%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes demo-ripple-alert {
   0%, 6.2% { opacity: 0; transform: scale(.35); }
   6.5% { opacity: 1; transform: scale(.48); }
@@ -2267,6 +2308,79 @@ button { color: inherit; }
   pointer-events: none;
 }
 
+.meeting-focus-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.meeting-focus {
+  position: absolute;
+  display: block;
+  opacity: 0;
+  transform: scale(.985);
+  transform-origin: center;
+  will-change: opacity, transform;
+}
+
+.meeting-focus-home-card { left: 3.3%; top: 46.2%; width: 93.4%; height: 15.3%; }
+.meeting-focus-menu-write { left: 3.2%; top: 18%; width: 93.6%; height: 13%; }
+.meeting-focus-basic-form { left: 4%; top: 19.8%; width: 92%; height: 34%; }
+.meeting-focus-worker-form { left: 6.5%; top: 31%; width: 87%; height: 35.2%; }
+.meeting-focus-worker-saved { left: 6.5%; top: 69.7%; width: 87%; height: 13%; }
+.meeting-focus-trade-one { left: 9.1%; top: 20.3%; width: 81.8%; height: 8.7%; }
+.meeting-focus-trade-two { left: 9.1%; top: 30.2%; width: 81.8%; height: 8.7%; }
+.meeting-focus-health { left: 6.7%; top: 16.5%; width: 86.6%; height: 17.1%; }
+.meeting-focus-ppe { left: 6.7%; top: 34.5%; width: 86.6%; height: 31.5%; }
+.meeting-focus-risk { left: 6.7%; top: 32%; width: 86.6%; height: 55.2%; }
+.meeting-focus-ai { left: 6.7%; top: 23.6%; width: 86.6%; height: 59.4%; }
+.meeting-focus-priority { left: 6.7%; top: 22.8%; width: 86.6%; height: 15.6%; }
+.meeting-focus-signature,
+.meeting-focus-sign-saved { left: 53.3%; top: 57%; width: 27.8%; height: 6.5%; --highlight-radius: 11px; }
+.meeting-focus-sign-pad { left: 6.5%; top: 37.4%; width: 87%; height: 24.2%; }
+.meeting-focus-pdf { left: 2.4%; top: 11.7%; width: 95.2%; height: 59.7%; }
+.meeting-focus-calendar-day { left: 69.5%; top: 57.4%; width: 11.8%; height: 7.2%; --highlight-radius: 11px; }
+.meeting-focus-calendar-record { left: 5.7%; top: 64.1%; width: 88.6%; height: 25.2%; }
+
+.guide-phone.meeting-demo-active .meeting-focus-home-card { animation: meeting-focus-home-card var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-menu-write { animation: meeting-focus-menu-write var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-basic-form { animation: meeting-focus-basic-form var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-worker-form { animation: meeting-focus-worker-form var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-worker-saved { animation: meeting-focus-worker-saved var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-trade-one { animation: meeting-focus-trade-one var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-trade-two { animation: meeting-focus-trade-two var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-health { animation: meeting-focus-health var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-ppe { animation: meeting-focus-ppe var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-risk { animation: meeting-focus-risk var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-ai { animation: meeting-focus-ai var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-priority { animation: meeting-focus-priority var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-signature { animation: meeting-focus-signature var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-sign-pad { animation: meeting-focus-sign-pad var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-sign-saved { animation: meeting-focus-sign-saved var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-pdf { animation: meeting-focus-pdf var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-calendar-day,
+.guide-phone.meeting-demo-active .meeting-focus-calendar-record { animation: meeting-focus-calendar var(--meeting-duration) ease infinite; }
+
+@keyframes meeting-focus-home-card { 0%, 1.2% { opacity: 0; transform: scale(.985); } 1.6%, 5.8% { opacity: 1; transform: scale(1); } 6.3%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-menu-write { 0%, 6.2% { opacity: 0; transform: scale(.985); } 6.6%, 11.8% { opacity: 1; transform: scale(1); } 12.3%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-basic-form { 0%, 12.1% { opacity: 0; transform: scale(.985); } 12.6%, 21% { opacity: 1; transform: scale(1); } 21.5%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-worker-form { 0%, 21.2% { opacity: 0; transform: scale(.985); } 21.7%, 27.7% { opacity: 1; transform: scale(1); } 28.1%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-worker-saved { 0%, 27.8% { opacity: 0; transform: scale(.985); } 28.2%, 30% { opacity: 1; transform: scale(1); } 30.5%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-trade-one { 0%, 30.2% { opacity: 0; transform: scale(.985); } 30.7%, 34.6% { opacity: 1; transform: scale(1); } 35.1%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-trade-two { 0%, 34.8% { opacity: 0; transform: scale(.985); } 35.3%, 38.6% { opacity: 1; transform: scale(1); } 39.1%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-health { 0%, 38.8% { opacity: 0; transform: scale(.985); } 39.3%, 43.2% { opacity: 1; transform: scale(1); } 43.7%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-ppe { 0%, 43.2% { opacity: 0; transform: scale(.985); } 43.7%, 48.1% { opacity: 1; transform: scale(1); } 48.6%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-risk { 0%, 48.3% { opacity: 0; transform: scale(.985); } 48.8%, 57% { opacity: 1; transform: scale(1); } 57.5%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-ai { 0%, 60.3% { opacity: 0; transform: scale(.985); } 60.8%, 65.5% { opacity: 1; transform: scale(1); } 66%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-priority { 0%, 65.7% { opacity: 0; transform: scale(.985); } 66.2%, 73% { opacity: 1; transform: scale(1); } 73.5%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-signature { 0%, 73.1% { opacity: 0; transform: scale(.985); } 73.7%, 80.5% { opacity: 1; transform: scale(1); } 81%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-sign-pad { 0%, 80.6% { opacity: 0; transform: scale(.985); } 81.2%, 87.5% { opacity: 1; transform: scale(1); } 88%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-sign-saved { 0%, 87.6% { opacity: 0; transform: scale(.985); } 88.2%, 91.5% { opacity: 1; transform: scale(1); } 92%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-pdf { 0%, 91.6% { opacity: 0; transform: scale(.985); } 92.2%, 96% { opacity: 1; transform: scale(1); } 96.5%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-calendar { 0%, 96.1% { opacity: 0; transform: scale(.985); } 96.7%, 100% { opacity: 1; transform: scale(1); } }
+
 .meeting-worker-field {
   position: absolute;
   left: 11.4%;
@@ -2613,6 +2727,7 @@ button { color: inherit; }
 
 .guide-phone.meeting-demo-active.is-paused .meeting-state-layer *,
 .guide-phone.meeting-demo-active.is-paused .meeting-state-layer *::after,
+.guide-phone.meeting-demo-active.is-paused .meeting-focus,
 .guide-phone.meeting-demo-active.is-paused .meeting-basic-screen .meeting-field {
   animation-play-state: paused;
 }
@@ -2759,20 +2874,20 @@ button { color: inherit; }
   3.8%, 4.7% { left: 55%; top: 58%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
   4.95% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
   5.4%, 8.8% { opacity: 0; }
-  9.2%, 10.1% { left: 55%; top: 31%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  10.35% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  9.2%, 10.1% { left: 55%; top: 24.5%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  10.35% { left: 55%; top: 24.5%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
   10.8%, 12.8% { opacity: 0; }
-  13.05%, 13.65% { left: 54%; top: 29%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  13.9% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  13.05%, 13.65% { left: 54%; top: 22%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  13.9% { left: 54%; top: 22%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
   14.2%, 15.4% { opacity: 0; }
-  15.65%, 16.2% { left: 54%; top: 39%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  16.45% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  15.65%, 16.2% { left: 54%; top: 29%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  16.45% { left: 54%; top: 29%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
   16.75%, 17.9% { opacity: 0; }
-  18.15%, 18.7% { left: 54%; top: 49%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  18.95% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  18.15%, 18.7% { left: 54%; top: 36%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  18.95% { left: 54%; top: 36%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
   19.25%, 20.2% { opacity: 0; }
-  20.45%, 20.9% { left: 55%; top: 88%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  21.1% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  20.45%, 20.9% { left: 55%; top: 51%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  21.1% { left: 55%; top: 51%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
   21.35%, 22% { opacity: 0; }
   22.15%, 22.7% { left: 30%; top: 43.8%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
   22.95% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
@@ -2842,20 +2957,20 @@ button { color: inherit; }
   4.95% { left: 55%; top: 58%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
   5.55% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   5.56%, 10.25% { opacity: 0; }
-  10.35% { left: 55%; top: 31%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  10.95% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  10.35% { left: 55%; top: 24.5%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  10.95% { left: 55%; top: 24.5%; opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   10.96%, 13.8% { opacity: 0; }
-  13.9% { left: 54%; top: 29%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  14.5% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  13.9% { left: 54%; top: 22%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  14.5% { left: 54%; top: 22%; opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   14.51%, 16.35% { opacity: 0; }
-  16.45% { left: 54%; top: 39%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  17.05% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  16.45% { left: 54%; top: 29%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  17.05% { left: 54%; top: 29%; opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   17.06%, 18.85% { opacity: 0; }
-  18.95% { left: 54%; top: 49%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  19.55% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  18.95% { left: 54%; top: 36%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  19.55% { left: 54%; top: 36%; opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   19.56%, 21% { opacity: 0; }
-  21.1% { left: 55%; top: 88%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  21.7% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  21.1% { left: 55%; top: 51%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  21.7% { left: 55%; top: 51%; opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   21.71%, 22.85% { opacity: 0; }
   22.95% { left: 30%; top: 43.8%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
   23.55% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
@@ -2945,7 +3060,8 @@ button { color: inherit; }
   .guide-phone.meeting-demo-active .meeting-slide-home { opacity: 1 !important; }
   .guide-phone.meeting-demo-active .meeting-hand,
   .guide-phone.meeting-demo-active .meeting-touch-ripple,
-  .guide-phone.meeting-demo-active .meeting-state-layer { display: none !important; }
+  .guide-phone.meeting-demo-active .meeting-state-layer,
+  .guide-phone.meeting-demo-active .meeting-focus-layer { display: none !important; }
   .tour-stage.meeting-page .meeting-explain {
     opacity: 0 !important;
     animation: none !important;
@@ -3062,30 +3178,12 @@ button { color: inherit; }
   will-change: opacity, transform;
 }
 
-.support-focus::after {
-  content: "현재 설명 중 · " attr(data-label);
-  position: absolute;
-  top: -14px;
-  left: 12px;
-  max-width: calc(100% - 24px);
-  padding: 6px 10px 7px;
-  overflow: hidden;
-  color: #071f31;
-  font-size: 11px;
-  font-weight: 950;
-  line-height: 1;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  border: 1px solid rgba(255, 255, 255, .94);
-  border-radius: 999px;
-  background: #ffd52a;
-  box-shadow: 0 6px 14px rgba(7, 31, 47, .2);
-}
-
-.support-focus-safety-menu { left: 3.4%; top: 40.4%; width: 93.2%; height: 12.5%; }
+.support-focus-home-safety { left: 3.2%; top: 47.4%; width: 93.6%; height: 15.2%; }
+.support-focus-safety-menu { left: 3.2%; top: 40.8%; width: 93.6%; height: 12.5%; }
 .support-focus-risk-card { left: 12.5%; top: 35.2%; width: 75%; height: 30.4%; }
-.support-focus-golden-menu { left: 3.4%; top: 54.6%; width: 93.2%; height: 12.5%; }
+.support-focus-golden-menu { left: 3.2%; top: 54.5%; width: 93.6%; height: 13.2%; }
 .support-focus-golden-video { left: 6.3%; top: 25.1%; width: 87.4%; height: 23.1%; }
+.support-focus-home-tools { left: 3.2%; top: 63.8%; width: 93.6%; height: 15.4%; }
 
 .support-focus-tool-notice,
 .support-focus-tool-voice,
@@ -3093,23 +3191,25 @@ button { color: inherit; }
 .support-focus-tool-emergency,
 .support-focus-tool-contact,
 .support-focus-tool-select { left: 3.3%; width: 93.4%; height: 12.5%; }
-.support-focus-tool-notice { top: 17.1%; }
-.support-focus-tool-voice { top: 31.3%; }
-.support-focus-tool-street { top: 45.5%; }
+.support-focus-tool-notice { top: 17.8%; }
+.support-focus-tool-voice { top: 31.9%; }
+.support-focus-tool-street { top: 46.1%; }
 .support-focus-tool-emergency,
-.support-focus-tool-select { top: 59.7%; }
-.support-focus-tool-contact { top: 73.9%; }
+.support-focus-tool-select { top: 60.3%; }
+.support-focus-tool-contact { top: 74.5%; }
 
-.support-focus-emergency-nearby { left: 4%; top: 25.3%; width: 92%; height: 26.2%; }
-.support-focus-emergency-nav { left: 7%; top: 43.6%; width: 20.8%; height: 6.5%; border-radius: 10px; }
-.support-focus-emergency-call { left: 29%; top: 43.6%; width: 15.5%; height: 6.5%; border-radius: 10px; }
+.support-focus-emergency-nearby { left: 6.5%; top: 37.2%; width: 87%; height: 15.4%; }
+.support-focus-emergency-nav { left: 9.8%; top: 45.3%; width: 18.3%; height: 5.8%; --highlight-radius: 10px; }
+.support-focus-emergency-call { left: 28%; top: 45.3%; width: 14.3%; height: 5.8%; --highlight-radius: 10px; }
 .support-focus-emergency-119 { left: 30.4%; top: 23.7%; width: 22.7%; height: 5.8%; border-color: #ff4148; background: rgba(255, 48, 58, .1); box-shadow: 0 0 0 2px #fff, 0 0 0 9px rgba(255, 48, 58, .24), 0 13px 30px rgba(86, 7, 13, .25); }
-.support-focus-emergency-119::after { color: #fff; background: #ef2632; }
+.support-focus-location-consent { left: 6.5%; top: 73.2%; width: 43.5%; height: 10.7%; }
 
+.guide-phone.support-demo-active .support-focus-home-safety { animation: support-focus-home-safety var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-safety-menu { animation: support-focus-safety-menu var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-risk-card { animation: support-focus-risk-card var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-golden-menu { animation: support-focus-golden-menu var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-golden-video { animation: support-focus-golden-video var(--support-duration) ease infinite; }
+.guide-phone.support-demo-active .support-focus-home-tools { animation: support-focus-home-tools var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-tool-notice { animation: support-focus-tool-notice var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-tool-voice { animation: support-focus-tool-voice var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-tool-street { animation: support-focus-tool-street var(--support-duration) ease infinite; }
@@ -3120,11 +3220,14 @@ button { color: inherit; }
 .guide-phone.support-demo-active .support-focus-emergency-nav { animation: support-focus-emergency-nav var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-emergency-call { animation: support-focus-emergency-call var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-emergency-119 { animation: support-focus-emergency-119 var(--support-duration) ease infinite; }
+.guide-phone.support-demo-active .support-focus-location-consent { animation: support-focus-location-consent var(--support-duration) ease infinite; }
 
+@keyframes support-focus-home-safety { 0%, 1.4% { opacity: 0; transform: scale(.985); } 2%, 11.2% { opacity: 1; transform: scale(1); } 11.8%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-safety-menu { 0%, 12% { opacity: 0; transform: scale(.985); } 12.5%, 22.8% { opacity: 1; transform: scale(1); } 23.4%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-risk-card { 0%, 23.8% { opacity: 0; transform: scale(.985); } 24.4%, 38.8% { opacity: 1; transform: scale(1); } 39.4%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-golden-menu { 0%, 40% { opacity: 0; transform: scale(.985); } 40.6%, 50.8% { opacity: 1; transform: scale(1); } 51.4%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-golden-video { 0%, 52% { opacity: 0; transform: scale(.985); } 52.6%, 64.6% { opacity: 1; transform: scale(1); } 65.2%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes support-focus-home-tools { 0%, 65.8% { opacity: 0; transform: scale(.985); } 66.4%, 72% { opacity: 1; transform: scale(1); } 72.6%, 100% { opacity: 0; transform: scale(1.01); } }
 
 @keyframes support-focus-tool-notice { 0%, 72.8% { opacity: 0; transform: scale(.985); } 73.2%, 74.8% { opacity: 1; transform: scale(1); } 75.2%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-tool-voice { 0%, 74.8% { opacity: 0; transform: scale(.985); } 75.2%, 76.8% { opacity: 1; transform: scale(1); } 77.2%, 100% { opacity: 0; transform: scale(1.01); } }
@@ -3137,6 +3240,7 @@ button { color: inherit; }
 @keyframes support-focus-emergency-nav { 0%, 87.4% { opacity: 0; transform: scale(.985); } 87.8%, 89.1% { opacity: 1; transform: scale(1); } 89.5%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-emergency-call { 0%, 89.1% { opacity: 0; transform: scale(.985); } 89.5%, 90.8% { opacity: 1; transform: scale(1); } 91.2%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-emergency-119 { 0%, 90.8% { opacity: 0; transform: scale(.985); } 91.2%, 93.6% { opacity: 1; transform: scale(1); } 94%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes support-focus-location-consent { 0%, 93.5% { opacity: 0; transform: scale(.985); } 94%, 100% { opacity: 1; transform: scale(1); } }
 
 .support-hand {
   position: absolute;
@@ -3170,7 +3274,7 @@ button { color: inherit; }
 .support-hand-back,
 .support-ripple-back { left: 8%; top: 11%; }
 .support-hand-golden,
-.support-ripple-golden { left: 78%; top: 60%; }
+.support-ripple-golden { left: 78%; top: 61%; }
 .support-hand-tools,
 .support-ripple-tools { left: 52%; top: 71.5%; }
 .support-hand-emergency,
@@ -5284,4 +5388,26 @@ body { background: #fff; }
   .demo-only-page .demo-page-switch button,
   .demo-only-page .demo-page-switch .demo-all-button { min-height: 34px; }
   .demo-only-page .tour-device { width: min(260px, calc((100dvh - 92px) * .44), calc(100vw - 30px)); min-width: 170px; }
+}
+
+/* 자동시연 전 구간 공통 강조 박스: 일반 안내는 노랑, 긴급·위험만 빨강 */
+.demo-highlight-box {
+  box-sizing: border-box;
+  border: 3px solid #ffd52a;
+  border-radius: var(--highlight-radius, 15px);
+  background: rgba(255, 213, 42, .075);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, .94),
+    0 0 0 8px rgba(255, 213, 42, .24),
+    0 13px 30px rgba(7, 31, 47, .26);
+  pointer-events: none;
+}
+
+.demo-highlight-box.demo-highlight-critical {
+  border-color: #ff4148;
+  background: rgba(255, 48, 58, .09);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, .98),
+    0 0 0 9px rgba(255, 48, 58, .24),
+    0 13px 30px rgba(86, 7, 13, .25);
 }
