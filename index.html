@@ -20,8 +20,10 @@
   <link rel="preload" as="audio" href="assets/audio/03-ai-pdf-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/04-safety-tools-taehyung.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/05-emergency-jisoo.mp3" type="audio/mpeg">
-  <link rel="stylesheet" href="styles.css?v=20260801-voice-v26">
-  <script src="app.js?v=20260801-voice-v26" defer></script>
+  <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
+  <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
+  <link rel="stylesheet" href="styles.css?v=20260801-closing-v27">
+  <script src="app.js?v=20260801-closing-v27" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -104,12 +106,12 @@
         <div class="tour-heading reveal">
           <span class="eyebrow eyebrow-light">PRODUCT WALKTHROUGH</span>
           <h2>오프닝부터 3단계까지<br><em>전체 흐름을 확인하세요.</em></h2>
-          <p>Power TBM 오프닝에 이어 기상정보, TBM 회의록, 안전가이드와 현장도구가 실제 앱 화면으로 자동 재생됩니다.</p>
+          <p>Power TBM 오프닝에 이어 기상정보, TBM 회의록, 안전가이드와 현장도구가 자동 재생되고 실제 현장 사진으로 마무리됩니다.</p>
         </div>
 
         <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
           <button class="active demo-all-button narration-start-hint" id="allDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
-            <span>ALL</span><b>음성 포함 전체 자동시연</b><small>태형·지수 내레이션 · 오프닝→1→2→3</small>
+            <span>ALL</span><b>음성 포함 전체 자동시연</b><small>태형·지수 내레이션 · 오프닝→1→2→3→마무리</small>
           </button>
           <button class="current" id="weatherDemoPage" type="button" role="tab" aria-selected="false" aria-current="step" aria-controls="tourStage">
             <span>01</span><b>기상정보</b><small>특보·날씨·전문자료</small>
@@ -337,6 +339,24 @@
                     <span class="support-caption-location">위치정보는 동의한 경우에만 이용합니다</span>
                   </div>
                 </div>
+
+                <div class="closing-demo" id="closingDemo" role="img" aria-label="작업자들이 태블릿으로 Power TBM 안전점검회의를 진행하는 실제 현장과 마무리 메시지">
+                  <img class="closing-photo" src="assets/closing/power-tbm-field-tbm.jpeg" alt="" width="1122" height="1402">
+                  <span class="closing-photo-shade" aria-hidden="true"></span>
+                  <div class="closing-brand" aria-hidden="true">
+                    <img src="assets/brand/power-tbm-icon.png" alt="" width="512" height="512">
+                    <span><b>POWER TBM</b><small>현장 안전점검회의</small></span>
+                  </div>
+                  <div class="closing-screen-copy" aria-hidden="true">
+                    <p class="closing-screen-intro">지금까지 Power TBM을 소개해드렸습니다.</p>
+                    <h3>
+                      <span class="closing-screen-line-one">더 안전한 현장</span>
+                      <span class="closing-screen-line-two">더 스마트한 안전점검회의</span>
+                    </h3>
+                    <strong>Power TBM이 함께하겠습니다.</strong>
+                    <small>감사합니다.</small>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="tour-controls">
@@ -357,7 +377,7 @@
               <p class="opening-narration-label">오프닝 내레이션</p>
               <blockquote>“기상 확인부터 AI 안전검토와 서명·기록까지, 현장 안전점검회의의 새로운 기준, 파워 TBM을 소개합니다.”</blockquote>
               <div class="opening-flow" aria-label="전체 자동시연 순서">
-                <b>오프닝</b><i>→</i><b>기상정보</b><i>→</i><b>TBM 회의록</b><i>→</i><b>안전·현장도구</b>
+                <b>오프닝</b><i>→</i><b>기상정보</b><i>→</i><b>TBM 회의록</b><i>→</i><b>안전·현장도구</b><i>→</i><b>마무리</b>
               </div>
             </aside>
             <article class="tour-copy" aria-live="polite">
@@ -474,6 +494,17 @@
                 <p>현재 위치에서 가까운 병원의 거리·전화번호·경로를 확인합니다. 공지사항, 음성메모(STT), 거리뷰, 비상연락망 기능도 함께 제공합니다.</p>
                 <div class="demo-explain-points"><b>병원 길찾기</b><b>119 전화</b><b>음성메모·연락망</b></div>
               </article>
+            </aside>
+
+            <aside class="closing-explanation" aria-label="Power TBM 자동시연 마무리">
+              <span class="closing-detail-kicker"><i></i> ENDING · FIELD IN ACTION</span>
+              <p class="closing-detail-intro">지금까지 Power TBM을 소개해드렸습니다.</p>
+              <h3>
+                <span class="closing-detail-line-one">더 안전한 현장</span>
+                <em class="closing-detail-line-two">더 스마트한 안전점검회의</em>
+              </h3>
+              <p class="closing-detail-promise">Power TBM이 함께하겠습니다.</p>
+              <strong class="closing-detail-thanks">감사합니다.</strong>
             </aside>
 
             <aside class="typhoon-compare" aria-label="태풍과 기상자료 5개 비교 화면">
