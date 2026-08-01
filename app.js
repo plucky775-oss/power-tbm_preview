@@ -224,6 +224,53 @@
   const meetingDemo = $('#meetingDemo');
   const supportDemo = $('#supportDemo');
   const closingDemo = $('#closingDemo');
+
+  // The basic-information form is built with fixed-size DOM controls while the
+  // phone itself scales with the viewport. Resolve every target from its live
+  // box so the highlight, fingertip and ripple stay attached at every size.
+  const syncMeetingBasicTargets = () => {
+    if (!meetingDemo) return;
+    const rootRect = meetingDemo.getBoundingClientRect();
+    if (!rootRect.width || !rootRect.height) return;
+
+    const form = $('.meeting-basic-screen .meeting-form-card', meetingDemo);
+    const fields = $$('.meeting-basic-screen .meeting-field', meetingDemo);
+    const nextButton = $('.meeting-basic-screen .meeting-primary-button', meetingDemo);
+    const setBox = (name, element) => {
+      if (!element) return;
+      const rect = element.getBoundingClientRect();
+      meetingDemo.style.setProperty(`--meeting-basic-${name}-left`, `${rect.left - rootRect.left}px`);
+      meetingDemo.style.setProperty(`--meeting-basic-${name}-top`, `${rect.top - rootRect.top}px`);
+      meetingDemo.style.setProperty(`--meeting-basic-${name}-width`, `${rect.width}px`);
+      meetingDemo.style.setProperty(`--meeting-basic-${name}-height`, `${rect.height}px`);
+    };
+    const setCenter = (name, element) => {
+      if (!element) return;
+      const rect = element.getBoundingClientRect();
+      meetingDemo.style.setProperty(`--meeting-basic-${name}-x`, `${rect.left + rect.width / 2 - rootRect.left}px`);
+      meetingDemo.style.setProperty(`--meeting-basic-${name}-y`, `${rect.top + rect.height / 2 - rootRect.top}px`);
+    };
+
+    setBox('form', form);
+    setCenter('project', fields[0]);
+    setCenter('place', fields[1]);
+    setCenter('manager', fields[2]);
+    setCenter('next', nextButton);
+  };
+  let meetingTargetFrame = 0;
+  const scheduleMeetingBasicTargets = () => {
+    window.cancelAnimationFrame(meetingTargetFrame);
+    meetingTargetFrame = window.requestAnimationFrame(syncMeetingBasicTargets);
+  };
+  scheduleMeetingBasicTargets();
+  window.addEventListener('load', scheduleMeetingBasicTargets, { once: true });
+  window.addEventListener('resize', scheduleMeetingBasicTargets, { passive: true });
+  document.fonts?.ready.then(scheduleMeetingBasicTargets).catch(() => {});
+  if ('ResizeObserver' in window && meetingDemo) {
+    const meetingTargetObserver = new ResizeObserver(scheduleMeetingBasicTargets);
+    meetingTargetObserver.observe(meetingDemo);
+  }
+
   const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000, closing: 11494 };
   // A complete stage change fades to the Power TBM navy, swaps while fully
   // covered, then gently reveals the next scene. Keeping the swap and reveal
