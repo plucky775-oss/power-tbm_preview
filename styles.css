@@ -3259,13 +3259,11 @@ button { color: inherit; }
 .support-focus-tool-voice,
 .support-focus-tool-street,
 .support-focus-tool-emergency,
-.support-focus-tool-contact,
-.support-focus-tool-select { left: 3.3%; width: 93.4%; height: 12.5%; }
+.support-focus-tool-contact { left: 3.3%; width: 93.4%; height: 12.5%; }
 .support-focus-tool-notice { top: 17.8%; }
 .support-focus-tool-voice { top: 31.9%; }
 .support-focus-tool-street { top: 46.1%; }
-.support-focus-tool-emergency,
-.support-focus-tool-select { top: 60.3%; }
+.support-focus-tool-emergency { top: 60.3%; }
 .support-focus-tool-contact { top: 74.5%; }
 
 .support-focus-emergency-nearby { left: 6.5%; top: 37.2%; width: 87%; height: 15.4%; }
@@ -3285,7 +3283,6 @@ button { color: inherit; }
 .guide-phone.support-demo-active .support-focus-tool-street { animation: support-focus-tool-street var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-tool-emergency { animation: support-focus-tool-emergency var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-tool-contact { animation: support-focus-tool-contact var(--support-duration) ease infinite; }
-.guide-phone.support-demo-active .support-focus-tool-select { animation: support-focus-tool-select var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-emergency-nearby { animation: support-focus-emergency-nearby var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-emergency-nav { animation: support-focus-emergency-nav var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-emergency-call { animation: support-focus-emergency-call var(--support-duration) ease infinite; }
@@ -3302,11 +3299,10 @@ button { color: inherit; }
 @keyframes support-focus-tool-notice { 0%, 72.8% { opacity: 0; transform: scale(.985); } 73.2%, 74.8% { opacity: 1; transform: scale(1); } 75.2%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-tool-voice { 0%, 74.8% { opacity: 0; transform: scale(.985); } 75.2%, 76.8% { opacity: 1; transform: scale(1); } 77.2%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-tool-street { 0%, 76.8% { opacity: 0; transform: scale(.985); } 77.2%, 78.8% { opacity: 1; transform: scale(1); } 79.2%, 100% { opacity: 0; transform: scale(1.01); } }
-@keyframes support-focus-tool-emergency { 0%, 78.8% { opacity: 0; transform: scale(.985); } 79.2%, 80.8% { opacity: 1; transform: scale(1); } 81.2%, 100% { opacity: 0; transform: scale(1.01); } }
-@keyframes support-focus-tool-contact { 0%, 80.8% { opacity: 0; transform: scale(.985); } 81.2%, 82.7% { opacity: 1; transform: scale(1); } 83.1%, 100% { opacity: 0; transform: scale(1.01); } }
-@keyframes support-focus-tool-select { 0%, 82.7% { opacity: 0; transform: scale(.985); } 83.1%, 84.5% { opacity: 1; transform: scale(1); } 84.9%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes support-focus-tool-contact { 0%, 78.4% { opacity: 0; transform: scale(.985); } 78.8%, 80.4% { opacity: 1; transform: scale(1); } 80.8%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes support-focus-tool-emergency { 0%, 84.5% { opacity: 0; transform: scale(.985); } 84.9%, 85.5% { opacity: 1; transform: scale(1); } 85.9%, 100% { opacity: 0; transform: scale(1.01); } }
 
-@keyframes support-focus-emergency-nearby { 0%, 84.7% { opacity: 0; transform: scale(.985); } 85.1%, 87.2% { opacity: 1; transform: scale(1); } 87.6%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes support-focus-emergency-nearby { 0%, 85.5% { opacity: 0; transform: scale(.985); } 85.9%, 87.2% { opacity: 1; transform: scale(1); } 87.6%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-emergency-nav { 0%, 87.4% { opacity: 0; transform: scale(.985); } 87.8%, 89.1% { opacity: 1; transform: scale(1); } 89.5%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-emergency-call { 0%, 89.1% { opacity: 0; transform: scale(.985); } 89.5%, 90.8% { opacity: 1; transform: scale(1); } 91.2%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-emergency-119 { 0%, 90.8% { opacity: 0; transform: scale(.985); } 91.2%, 93.6% { opacity: 1; transform: scale(1); } 94%, 100% { opacity: 0; transform: scale(1.01); } }
@@ -3430,8 +3426,8 @@ button { color: inherit; }
   65.2%, 100% { transform: scaleX(.93); }
 }
 @keyframes support-slide-home-tools { 0%, 65.2% { opacity: 0; } 65.9%, 72.2% { opacity: 1; } 72.9%, 100% { opacity: 0; } }
-@keyframes support-slide-tools { 0%, 72.2% { opacity: 0; } 72.9%, 84.2% { opacity: 1; } 84.9%, 100% { opacity: 0; } }
-@keyframes support-slide-emergency { 0%, 84.2% { opacity: 0; } 84.9%, 93.3% { opacity: 1; } 94%, 100% { opacity: 0; } }
+@keyframes support-slide-tools { 0%, 72.2% { opacity: 0; } 72.9%, 85.5% { opacity: 1; } 85.9%, 100% { opacity: 0; } }
+@keyframes support-slide-emergency { 0%, 85.5% { opacity: 0; } 85.9%, 93.3% { opacity: 1; } 94%, 100% { opacity: 0; } }
 @keyframes support-slide-location { 0%, 93.3% { opacity: 0; } 94%, 100% { opacity: 1; } }
 
 @keyframes support-hand-safety { 0%, 5.8% { opacity: 0; } 6.4%, 9.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 10.1% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 10.8%, 100% { opacity: 0; } }
@@ -3439,22 +3435,22 @@ button { color: inherit; }
 @keyframes support-hand-back { 0%, 35.2% { opacity: 0; } 35.8%, 38% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 38.5% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 39.1%, 100% { opacity: 0; } }
 @keyframes support-hand-golden { 0%, 46.2% { opacity: 0; } 46.8%, 49.9% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 50.4% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 51.1%, 100% { opacity: 0; } }
 @keyframes support-hand-tools { 0%, 67.1% { opacity: 0; } 67.7%, 70.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 71.1% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 71.8%, 100% { opacity: 0; } }
-@keyframes support-hand-emergency { 0%, 82.2% { opacity: 0; } 82.7%, 83.1% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 83.3% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 84%, 100% { opacity: 0; } }
+@keyframes support-hand-emergency { 0%, 84.6% { opacity: 0; } 85%, 85.35% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 85.5% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 85.9%, 100% { opacity: 0; } }
 
 @keyframes support-ripple-safety { 0%, 9.7% { opacity: 0; transform: translate(-50%, -50%) scale(.4); } 10.1% { opacity: 1; } 11% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); } 11.1%, 100% { opacity: 0; } }
 @keyframes support-ripple-risk { 0%, 21.5% { opacity: 0; transform: translate(-50%, -50%) scale(.4); } 21.9% { opacity: 1; } 22.8% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); } 22.9%, 100% { opacity: 0; } }
 @keyframes support-ripple-back { 0%, 38.1% { opacity: 0; transform: translate(-50%, -50%) scale(.4); } 38.5% { opacity: 1; } 39.4% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); } 39.5%, 100% { opacity: 0; } }
 @keyframes support-ripple-golden { 0%, 50% { opacity: 0; transform: translate(-50%, -50%) scale(.4); } 50.4% { opacity: 1; } 51.3% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); } 51.4%, 100% { opacity: 0; } }
 @keyframes support-ripple-tools { 0%, 70.7% { opacity: 0; transform: translate(-50%, -50%) scale(.4); } 71.1% { opacity: 1; } 72% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); } 72.1%, 100% { opacity: 0; } }
-@keyframes support-ripple-emergency { 0%, 82.9% { opacity: 0; transform: translate(-50%, -50%) scale(.4); } 83.3% { opacity: 1; } 84.2% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); } 84.3%, 100% { opacity: 0; } }
+@keyframes support-ripple-emergency { 0%, 85.1% { opacity: 0; transform: translate(-50%, -50%) scale(.4); } 85.5% { opacity: 1; } 86.1% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); } 86.2%, 100% { opacity: 0; } }
 
 @keyframes support-caption-home-safety { 0%, 1% { opacity: 0; } 2%, 11.2% { opacity: 1; } 11.9%, 100% { opacity: 0; } }
 @keyframes support-caption-safety { 0%, 11.9% { opacity: 0; } 12.6%, 23% { opacity: 1; } 23.7%, 100% { opacity: 0; } }
 @keyframes support-caption-risk { 0%, 23.7% { opacity: 0; } 24.4%, 39% { opacity: 1; } 39.7%, 100% { opacity: 0; } }
 @keyframes support-caption-golden { 0%, 39.7% { opacity: 0; } 40.4%, 65% { opacity: 1; } 65.7%, 100% { opacity: 0; } }
 @keyframes support-caption-home-tools { 0%, 65.7% { opacity: 0; } 66.4%, 72% { opacity: 1; } 72.7%, 100% { opacity: 0; } }
-@keyframes support-caption-tools { 0%, 72.7% { opacity: 0; } 73.4%, 84% { opacity: 1; } 84.7%, 100% { opacity: 0; } }
-@keyframes support-caption-emergency-nearby { 0%, 84.7% { opacity: 0; } 85.1%, 87.2% { opacity: 1; } 87.6%, 100% { opacity: 0; } }
+@keyframes support-caption-tools { 0%, 72.7% { opacity: 0; } 73.4%, 85.5% { opacity: 1; } 85.9%, 100% { opacity: 0; } }
+@keyframes support-caption-emergency-nearby { 0%, 85.5% { opacity: 0; } 85.9%, 87.2% { opacity: 1; } 87.6%, 100% { opacity: 0; } }
 @keyframes support-caption-emergency-nav { 0%, 87.4% { opacity: 0; } 87.8%, 89.1% { opacity: 1; } 89.5%, 100% { opacity: 0; } }
 @keyframes support-caption-emergency-call { 0%, 89.1% { opacity: 0; } 89.5%, 90.8% { opacity: 1; } 91.2%, 100% { opacity: 0; } }
 @keyframes support-caption-emergency-119 { 0%, 90.8% { opacity: 0; } 91.2%, 93.6% { opacity: 1; } 94%, 100% { opacity: 0; } }
@@ -3534,8 +3530,8 @@ button { color: inherit; }
 @keyframes support-point-notice { 0%, 72.8% { opacity: .42; transform: none; } 73.2%, 74.8% { color: #071f31; border-color: #ffd52a; background: #ffd52a; opacity: 1; transform: translateY(-3px) scale(1.035); } 75.2%, 100% { opacity: .42; transform: none; } }
 @keyframes support-point-voice { 0%, 74.8% { opacity: .42; transform: none; } 75.2%, 76.8% { color: #071f31; border-color: #ffd52a; background: #ffd52a; opacity: 1; transform: translateY(-3px) scale(1.035); } 77.2%, 100% { opacity: .42; transform: none; } }
 @keyframes support-point-street { 0%, 76.8% { opacity: .42; transform: none; } 77.2%, 78.8% { color: #071f31; border-color: #ffd52a; background: #ffd52a; opacity: 1; transform: translateY(-3px) scale(1.035); } 79.2%, 100% { opacity: .42; transform: none; } }
-@keyframes support-point-emergency { 0%, 78.8% { opacity: .42; transform: none; } 79.2%, 80.8%, 83.1%, 84.5% { color: #071f31; border-color: #ffd52a; background: #ffd52a; opacity: 1; transform: translateY(-3px) scale(1.035); } 81.2%, 82.7%, 84.9%, 100% { opacity: .42; transform: none; } }
-@keyframes support-point-contact { 0%, 80.8% { opacity: .42; transform: none; } 81.2%, 82.7% { color: #071f31; border-color: #ffd52a; background: #ffd52a; opacity: 1; transform: translateY(-3px) scale(1.035); } 83.1%, 100% { opacity: .42; transform: none; } }
+@keyframes support-point-contact { 0%, 78.4% { opacity: .42; transform: none; } 78.8%, 80.4% { color: #071f31; border-color: #ffd52a; background: #ffd52a; opacity: 1; transform: translateY(-3px) scale(1.035); } 80.8%, 100% { opacity: .42; transform: none; } }
+@keyframes support-point-emergency { 0%, 84.5% { opacity: .42; transform: none; } 84.9%, 85.5% { color: #071f31; border-color: #ffd52a; background: #ffd52a; opacity: 1; transform: translateY(-3px) scale(1.035); } 85.9%, 100% { opacity: .42; transform: none; } }
 
 .support-action-visuals {
   position: relative;
@@ -3636,7 +3632,7 @@ button { color: inherit; }
 .tour-stage.support-page .support-action-119 { animation: support-action-119 var(--support-duration) ease infinite; }
 .tour-stage.support-page .support-action-location { animation: support-action-location var(--support-duration) ease infinite; }
 
-@keyframes support-action-nearby { 0%, 84.7% { opacity: 0; transform: translateY(14px) scale(.98); } 85.1%, 87.2% { opacity: 1; transform: translateY(0) scale(1); } 87.6%, 100% { opacity: 0; transform: translateY(-10px) scale(.99); } }
+@keyframes support-action-nearby { 0%, 85.5% { opacity: 0; transform: translateY(14px) scale(.98); } 85.9%, 87.2% { opacity: 1; transform: translateY(0) scale(1); } 87.6%, 100% { opacity: 0; transform: translateY(-10px) scale(.99); } }
 @keyframes support-action-nav { 0%, 87.4% { opacity: 0; transform: translateY(14px) scale(.98); } 87.8%, 89.1% { opacity: 1; transform: translateY(0) scale(1); } 89.5%, 100% { opacity: 0; transform: translateY(-10px) scale(.99); } }
 @keyframes support-action-call { 0%, 89.1% { opacity: 0; transform: translateY(14px) scale(.98); } 89.5%, 90.8% { opacity: 1; transform: translateY(0) scale(1); } 91.2%, 100% { opacity: 0; transform: translateY(-10px) scale(.99); } }
 @keyframes support-action-119 { 0%, 90.8% { opacity: 0; transform: translateY(14px) scale(.98); } 91.2%, 93.6% { opacity: 1; transform: translateY(0) scale(1); } 94%, 100% { opacity: 0; transform: translateY(-10px) scale(.99); } }
@@ -3656,8 +3652,8 @@ button { color: inherit; }
 @keyframes support-explain-safety { 0%, 1% { opacity: 0; transform: translateY(18px); } 2%, 23% { opacity: 1; transform: translateY(0); } 23.8%, 100% { opacity: 0; transform: translateY(-12px); } }
 @keyframes support-explain-risk { 0%, 23% { opacity: 0; transform: translateY(18px); } 24%, 39% { opacity: 1; transform: translateY(0); } 39.8%, 100% { opacity: 0; transform: translateY(-12px); } }
 @keyframes support-explain-golden { 0%, 39% { opacity: 0; transform: translateY(18px); } 40%, 72% { opacity: 1; transform: translateY(0); } 72.8%, 100% { opacity: 0; transform: translateY(-12px); } }
-@keyframes support-explain-tools { 0%, 72% { opacity: 0; transform: translateY(18px); } 73%, 84.2% { opacity: 1; transform: translateY(0); } 84.8%, 100% { opacity: 0; transform: translateY(-12px); } }
-@keyframes support-explain-emergency { 0%, 84.2% { opacity: 0; transform: translateY(18px); } 84.9%, 100% { opacity: 1; transform: translateY(0); } }
+@keyframes support-explain-tools { 0%, 72% { opacity: 0; transform: translateY(18px); } 73%, 85.5% { opacity: 1; transform: translateY(0); } 85.9%, 100% { opacity: 0; transform: translateY(-12px); } }
+@keyframes support-explain-emergency { 0%, 85.5% { opacity: 0; transform: translateY(18px); } 85.9%, 100% { opacity: 1; transform: translateY(0); } }
 
 .guide-phone.support-demo-active.is-paused .support-slide,
 .guide-phone.support-demo-active.is-paused .support-golden-video-shell,
