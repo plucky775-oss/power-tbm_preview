@@ -25,16 +25,16 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260802-layout-balance-v42">
-  <script src="app.js?v=20260802-basic-touch-v41" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260802-home-sound-v43">
+  <script src="app.js?v=20260802-home-sound-v43" defer></script>
 </head>
 <body class="demo-only-page">
   <a class="skip-link" href="#main">본문으로 바로가기</a>
   <header class="demo-only-header">
-    <div class="demo-only-brand">
+    <button class="demo-only-brand" id="demoHome" type="button" aria-label="Power TBM 자동 시연 처음으로 돌아가기" aria-controls="tourStage" title="처음으로">
       <img src="assets/brand/power-tbm-icon.png" alt="" width="48" height="48">
       <span><b>Power TBM</b></span>
-    </div>
+    </button>
     <div class="demo-only-header-stack">
       <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
         <button class="active demo-all-button narration-start-hint" id="allDemoPage" type="button" role="tab" aria-selected="true" aria-controls="tourStage">
@@ -52,6 +52,16 @@
       </div>
       <p class="demo-only-developer">개발자 : 안산지사 최재혁 차장</p>
     </div>
+    <button class="demo-sound-toggle needs-start" id="demoMute" type="button" aria-pressed="false" aria-label="사운드 켜기" title="사운드 켜기">
+      <span class="demo-sound-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path class="demo-sound-speaker" d="M4 9.2v5.6h3.6l4.6 3.7v-13L7.6 9.2H4Z"></path>
+          <path class="demo-sound-wave" d="M15 8.2c1 .9 1.5 2.2 1.5 3.8S16 14.9 15 15.8M17.7 5.7c1.7 1.6 2.6 3.7 2.6 6.3s-.9 4.7-2.6 6.3"></path>
+          <path class="demo-sound-slash" d="m15.2 9.2 4.3 5.6m0-5.6-4.3 5.6"></path>
+        </svg>
+      </span>
+      <span class="demo-sound-copy"><span>사운드</span><strong id="demoSoundState">OFF</strong></span>
+    </button>
   </header>
 
   <main id="main">

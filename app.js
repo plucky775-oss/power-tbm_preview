@@ -209,6 +209,7 @@
   const guideTip = $('#guideTip');
   const guideTabs = $$('.tour-tabs [data-guide]');
   const guideStage = $('.tour-stage');
+  const demoHome = $('#demoHome');
   const demoControls = $('#demoControls');
   const demoToggle = $('#demoToggle');
   const demoReplay = $('#demoReplay');
@@ -220,6 +221,7 @@
   const demoNarration = $('#demoNarration');
   const demoBgm = $('#demoBgm');
   const demoMute = $('#demoMute');
+  const demoSoundState = $('#demoSoundState');
   const weatherDemo = $('#weatherDemo');
   const meetingDemo = $('#meetingDemo');
   const supportDemo = $('#supportDemo');
@@ -391,12 +393,19 @@
   const updateNarrationButton = () => {
     if (!demoMute) return;
     const needsStart = !narrationRequested || narrationState === 'blocked' || narrationState === 'error';
+    const soundOn = !needsStart && !narrationMuted;
     demoMute.classList.toggle('needs-start', needsStart);
+    demoMute.classList.toggle('is-on', soundOn);
     allDemoPage?.classList.toggle('narration-start-hint', needsStart);
-    demoMute.setAttribute('aria-pressed', String(!needsStart && narrationMuted));
-    if (needsStart) demoMute.innerHTML = '<span aria-hidden="true">🔊</span> 소리 시연 시작';
-    else if (narrationMuted) demoMute.innerHTML = '<span aria-hidden="true">🔇</span> 음성·배경음 꺼짐';
-    else demoMute.innerHTML = '<span aria-hidden="true">🔊</span> 음성·배경음 켜짐';
+    demoMute.setAttribute('aria-pressed', String(soundOn));
+    const actionLabel = soundOn
+      ? '사운드 끄기'
+      : needsStart
+        ? '사운드 켜기 및 처음부터 재생'
+        : '사운드 켜기';
+    demoMute.setAttribute('aria-label', actionLabel);
+    demoMute.setAttribute('title', actionLabel);
+    if (demoSoundState) demoSoundState.textContent = soundOn ? 'ON' : 'OFF';
   };
 
   const setNarrationState = (state) => {
@@ -1084,6 +1093,21 @@
     switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: userInitiated && !narrationUnlocked });
   };
 
+  const resetDemoToStart = () => {
+    if (!guidePhone) return;
+    clearSequenceTimer();
+    clearStageTransitionTimers();
+    if (narrationRequested) stopNarrationPlayback({ keepRequested: true });
+    stageTransitioning = false;
+    guideChanging = false;
+    guidePhone.classList.remove('stage-transitioning');
+    guideStage?.classList.remove('stage-transitioning');
+    demoMode = 'sequence';
+    demoPaused = false;
+    applyDemoStage('intro');
+  };
+
+  demoHome?.addEventListener('click', resetDemoToStart);
   allDemoPage?.addEventListener('click', () => activateSequence({ userInitiated: true }));
   weatherDemoPage?.addEventListener('click', () => activateWeatherPage({ userInitiated: true }));
   meetingDemoPage?.addEventListener('click', () => activateMeetingPage({ userInitiated: true }));
@@ -1166,7 +1190,7 @@
     else activateWeatherPage({ userInitiated: true });
   });
   demoMute?.addEventListener('click', () => {
-    if (!narrationRequested || !narrationUnlocked || narrationState === 'blocked' || narrationState === 'error') {
+    if (!narrationRequested || narrationState === 'blocked' || narrationState === 'error') {
       activateSequence({ userInitiated: true });
       return;
     }
