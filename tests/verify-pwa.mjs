@@ -110,9 +110,9 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260802-offline-pwa-v44',
-  './app.js?v=20260802-offline-pwa-v44',
-  './pwa.js?v=20260802-offline-pwa-v44'
+  './styles.css?v=20260802-golden-rules-video-v46',
+  './app.js?v=20260802-golden-rules-video-v46',
+  './pwa.js?v=20260802-golden-rules-video-v46'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
 
@@ -138,6 +138,9 @@ const pwaSource = await readFile(path.join(siteRoot, 'pwa.js'), 'utf8');
 assert.match(indexSource, /rel="manifest" href="manifest\.webmanifest"/);
 assert.match(indexSource, /id="homeReset"/);
 assert.match(indexSource, /id="demoMute"/);
+assert.match(indexSource, /id="goldenRulesVideo"/);
+assert.match(indexSource, /golden-rules-11-rule-1-muted\.mp4/);
+assert.match(indexSource, /goldenRulesVideo[\s\S]*?muted[\s\S]*?playsinline/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 
 const server = spawn('python3', ['-m', 'http.server', '8137', '--bind', '127.0.0.1'], {
