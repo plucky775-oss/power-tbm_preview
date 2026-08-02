@@ -2339,7 +2339,13 @@ button { color: inherit; }
 .meeting-focus-health { left: 6.7%; top: 20.8%; width: 86.6%; height: 20.6%; }
 .meeting-focus-ppe { left: 6.7%; top: 43%; width: 86.6%; height: 39%; }
 .meeting-focus-risk { left: 6.7%; top: 41.2%; width: 86.6%; height: 40.8%; }
-.meeting-focus-ai { left: 6.7%; top: 22.5%; width: 86.6%; height: 59.5%; }
+.meeting-focus-ai {
+  left: 6.5%;
+  top: 14.7%;
+  width: 87%;
+  height: 72.7%;
+  --highlight-radius: 14px;
+}
 .meeting-focus-priority { left: 6.7%; top: 29.3%; width: 86.6%; height: 6.5%; }
 .meeting-focus-signature,
 .meeting-focus-sign-saved { left: 53.3%; top: 57%; width: 27.8%; height: 6.5%; --highlight-radius: 11px; }
@@ -2929,7 +2935,7 @@ button { color: inherit; }
   55.2%, 55.7% { left: 74.2%; top: 86.1%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
   55.95% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
   56.2%, 63.4% { opacity: 0; }
-  63.6%, 64.1% { left: 74.2%; top: 86.1%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  63.6%, 64.1% { left: 75.3%; top: 95%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.86); }
   64.35% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
   64.6%, 67.6% { opacity: 0; }
   67.8%, 68.35% { left: 13.6%; top: 32.5%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
@@ -2937,20 +2943,20 @@ button { color: inherit; }
   68.85%, 68.95% { opacity: 0; }
   69.05%, 69.35% { left: 75%; top: 92.5%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
   69.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
-  69.85%, 76.15% { opacity: 0; }
-  76.35%, 76.85% { left: 67%; top: 60.3%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  77.1% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
-  77.35%, 77.75% { opacity: 0; }
-  78%, 78.25% { left: 24%; top: 44%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
-  78.65% { left: 32%; top: 54%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
-  79.05% { left: 43%; top: 45%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
-  79.45% { left: 56%; top: 55%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
-  79.85% { left: 68%; top: 46%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
-  80.25% { left: 80%; top: 56%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
-  80.45%, 80.7% { opacity: 0; }
-  80.85%, 81.05% { left: 86.5%; top: 64.6%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  81.3% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
-  81.45%, 89.65% { opacity: 0; }
+  69.85%, 78.7% { opacity: 0; }
+  78.9%, 79.45% { left: 67%; top: 60.3%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  79.7% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  79.95%, 80.55% { opacity: 0; }
+  80.7%, 81% { left: 24%; top: 44%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
+  81.7% { left: 32%; top: 54%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
+  82.4% { left: 43%; top: 45%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
+  83.1% { left: 56%; top: 55%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
+  83.8% { left: 68%; top: 46%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
+  84.5% { left: 80%; top: 56%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
+  84.9%, 85.05% { opacity: 0; }
+  85.2%, 85.55% { left: 86.5%; top: 64.6%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  85.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  86.05%, 89.65% { opacity: 0; }
   89.85%, 90.35% { left: 75%; top: 89%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
   90.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
   90.85%, 100% { opacity: 0; }
@@ -3012,21 +3018,21 @@ button { color: inherit; }
   55.95% { left: 74.2%; top: 86.1%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
   56.55% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   56.56%, 64.25% { opacity: 0; }
-  64.35% { left: 74.2%; top: 86.1%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  64.95% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  64.35% { left: 75.3%; top: 93.3%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  64.95% { left: 75.3%; top: 93.3%; opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   64.96%, 68.5% { opacity: 0; }
   68.6% { left: 13.6%; top: 32.5%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
   69.2% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   69.21%, 69.5% { opacity: 0; }
   69.6% { left: 75%; top: 92.5%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
   70.2% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
-  70.21%, 77% { opacity: 0; }
-  77.1% { left: 67%; top: 60.3%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  77.7% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
-  77.71%, 81.2% { opacity: 0; }
-  81.3% { left: 86.5%; top: 64.6%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  81.9% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
-  81.91%, 90.5% { opacity: 0; }
+  70.21%, 79.6% { opacity: 0; }
+  79.7% { left: 67%; top: 60.3%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  80.3% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  80.31%, 85.7% { opacity: 0; }
+  85.8% { left: 86.5%; top: 64.6%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  86.4% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  86.41%, 90.5% { opacity: 0; }
   90.6% { left: 75%; top: 89%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
   91.2% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   91.21%, 100% { opacity: 0; }
@@ -6079,7 +6085,154 @@ body { background: #fff; }
   }
 }
 
-/* Final v50 cascade guard: QR follows the completed direct signature. */
+/* ===== v51 · FULL AI FIELD + QR-FIRST SIGNATURE FLOW ===== */
+.meeting-demo { container-type: inline-size; }
+
+.meeting-hand,
+.meeting-ai-swipe-hand {
+  font-size: clamp(62px, 24cqi, 104px);
+}
+
+.meeting-touch-ripple {
+  width: clamp(36px, 13.5cqi, 58px);
+  height: clamp(36px, 13.5cqi, 58px);
+}
+
+/* Keep the fixed AI header and footer out of the scrollable result field. */
+.meeting-ai-scrolled-state > img.meeting-ai-scroll-header {
+  inset: 0 0 auto;
+  width: 100%;
+  height: 14.4%;
+  object-fit: cover;
+  object-position: 50% 0;
+}
+
+.meeting-ai-scrolled-state > img.meeting-ai-scroll-footer {
+  inset: auto 0 0;
+  width: 100%;
+  height: 12.2%;
+  object-fit: cover;
+  object-position: 50% 100%;
+}
+
+.meeting-slide-sign-worker {
+  object-fit: cover;
+  object-position: 50% 0;
+}
+
+.meeting-slide-sign-worker .meeting-sign-status {
+  left: 62%;
+  width: 27%;
+  color: #0c743e;
+}
+
+/* The parent scene owns timing; masks stay stable inside each scene. */
+.meeting-slide-sign .meeting-sign-status,
+.meeting-slide-sign .meeting-sign-blank-manager,
+.meeting-slide-sign .meeting-sign-blank-worker,
+.meeting-slide-sign-worker .meeting-sign-status,
+.meeting-slide-sign-worker .meeting-sign-blank-manager {
+  animation: none !important;
+  opacity: 1;
+}
+
+.guide-phone.meeting-demo-active .meeting-slide-sign {
+  animation: meeting-slide-sign-v51 var(--meeting-duration) ease infinite;
+}
+
 .guide-phone.meeting-demo-active .meeting-slide-qr-signature {
-  animation: meeting-slide-qr-signature-v50 var(--meeting-duration) ease infinite;
+  animation: meeting-slide-qr-signature-v51 var(--meeting-duration) ease infinite;
+}
+
+.guide-phone.meeting-demo-active .meeting-slide-sign-worker {
+  animation: meeting-slide-sign-worker-v51 var(--meeting-duration) ease infinite;
+}
+
+.guide-phone.meeting-demo-active .meeting-slide-sign-pad {
+  animation: meeting-slide-sign-pad-v51 var(--meeting-duration) ease infinite;
+}
+
+.guide-phone.meeting-demo-active .meeting-slide-sign-complete {
+  animation: meeting-slide-sign-complete-v51 var(--meeting-duration) ease infinite;
+}
+
+@keyframes meeting-slide-sign-v51 {
+  0%, 69.875% { opacity: 0; }
+  70.475%, 75.8% { opacity: 1; }
+  76.2%, 100% { opacity: 0; }
+}
+
+@keyframes meeting-slide-qr-signature-v51 {
+  0%, 69.875% { opacity: 0; }
+  70.475%, 75.8% { opacity: 1; }
+  76.2%, 100% { opacity: 0; }
+}
+
+@keyframes meeting-slide-sign-worker-v51 {
+  0%, 75.8% { opacity: 0; }
+  76.2%, 80% { opacity: 1; }
+  80.4%, 100% { opacity: 0; }
+}
+
+@keyframes meeting-slide-sign-pad-v51 {
+  0%, 80% { opacity: 0; }
+  80.4%, 86% { opacity: 1; }
+  86.4%, 100% { opacity: 0; }
+}
+
+@keyframes meeting-slide-sign-complete-v51 {
+  0%, 86% { opacity: 0; }
+  86.4%, 92.1% { opacity: 1; }
+  92.5%, 100% { opacity: 0; }
+}
+
+.guide-phone.meeting-demo-active .meeting-signature-name {
+  animation: meeting-signature-name-v51 var(--meeting-duration) ease-in-out infinite;
+}
+
+@keyframes meeting-signature-name-v51 {
+  0%, 80.75% { clip-path: inset(0 100% 0 0); opacity: 0; }
+  80.8% { clip-path: inset(0 100% 0 0); opacity: 1; }
+  85.6%, 100% { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+
+.guide-phone.meeting-demo-active .meeting-focus-sign-saved {
+  animation: meeting-focus-worker-saved-v51 var(--meeting-duration) ease infinite;
+}
+
+.guide-phone.meeting-demo-active .meeting-focus-signature {
+  animation: meeting-focus-manager-signature-v51 var(--meeting-duration) ease infinite;
+}
+
+.guide-phone.meeting-demo-active .meeting-focus-sign-pad {
+  animation: meeting-focus-sign-pad-v51 var(--meeting-duration) ease infinite;
+}
+
+@keyframes meeting-focus-worker-saved-v51 {
+  0%, 76.15% { opacity: 0; transform: scale(.985); }
+  76.4%, 78.55% { opacity: 1; transform: scale(1); }
+  78.85%, 100% { opacity: 0; transform: scale(1.01); }
+}
+
+@keyframes meeting-focus-manager-signature-v51 {
+  0%, 78.75% { opacity: 0; transform: scale(.985); }
+  79%, 80% { opacity: 1; transform: scale(1); }
+  80.3%, 86.35% { opacity: 0; transform: scale(1.01); }
+  86.6%, 91.5% { opacity: 1; transform: scale(1); }
+  92%, 100% { opacity: 0; transform: scale(1.01); }
+}
+
+@keyframes meeting-focus-sign-pad-v51 {
+  0%, 80.25% { opacity: 0; transform: scale(.985); }
+  80.55%, 86% { opacity: 1; transform: scale(1); }
+  86.3%, 100% { opacity: 0; transform: scale(1.01); }
+}
+
+.guide-phone.meeting-demo-active.is-paused .meeting-slide-sign-worker {
+  animation-play-state: paused;
+}
+
+/* Final v51 cascade guard: QR appears before either responsibility signature. */
+.guide-phone.meeting-demo-active .meeting-slide-qr-signature {
+  animation: meeting-slide-qr-signature-v51 var(--meeting-duration) ease infinite;
 }
