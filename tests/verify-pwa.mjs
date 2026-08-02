@@ -111,9 +111,9 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260802-smooth-playback-v47',
-  './app.js?v=20260802-smooth-playback-v47',
-  './pwa.js?v=20260802-smooth-playback-v47'
+  './styles.css?v=20260802-alignment-signature-v49',
+  './app.js?v=20260802-alignment-signature-v49',
+  './pwa.js?v=20260802-alignment-signature-v49'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
 
@@ -136,6 +136,7 @@ assert.deepEqual(await pngSize('assets/brand/power-tbm-maskable-512.png'), [512,
 
 const indexSource = await readFile(path.join(siteRoot, 'index.html'), 'utf8');
 const appSource = await readFile(path.join(siteRoot, 'app.js'), 'utf8');
+const styleSource = await readFile(path.join(siteRoot, 'styles.css'), 'utf8');
 const pwaSource = await readFile(path.join(siteRoot, 'pwa.js'), 'utf8');
 assert.match(indexSource, /rel="manifest" href="manifest\.webmanifest"/);
 assert.match(indexSource, /id="homeReset"/);
@@ -143,6 +144,30 @@ assert.match(indexSource, /id="demoMute"/);
 assert.match(indexSource, /id="goldenRulesVideo"/);
 assert.match(indexSource, /golden-rules-11-rule-1-muted\.mp4/);
 assert.match(indexSource, /goldenRulesVideo[\s\S]*?muted[\s\S]*?playsinline/);
+assert.match(indexSource, /home-weather-alert-collapsed-v48\.jpeg/);
+assert.match(indexSource, /home-weather-alert-expanded-v48\.jpeg/);
+assert.match(indexSource, /meeting-hub-v48\.png/);
+assert.match(indexSource, /meeting-qr-signature-v48\.png/);
+assert.match(indexSource, /meeting-slide-sign-complete[\s\S]*?meeting-slide-qr-signature[\s\S]*?meeting-slide-pdf/);
+assert.match(indexSource, /meeting-slide-home" src="assets\/screens\/guide\/home-weather-alert-collapsed-v48\.jpeg/);
+assert.doesNotMatch(indexSource, /meeting-slide-home" src="assets\/screens\/guide\/meeting-home-v1\.jpeg/);
+assert.doesNotMatch(indexSource, /demo-focus[^"\n]*demo-focus-links/);
+assert.match(indexSource, /김일용 원격서명이 회의록에 반영되었습니다/);
+assert.match(indexSource, /meeting-pdf-worker-name[\s\S]*?김일용[\s\S]*?meeting-pdf-worker-signature[\s\S]*?김일용/);
+assert.doesNotMatch(indexSource, /서명 1\/2명 · 작업자 대기/);
+assert.doesNotMatch(indexSource, /meeting-menu-v1\.png/);
+assert.match(styleSource, /\.meeting-slide-qr-signature\s*\{[\s\S]*?z-index:\s*31/);
+assert.match(styleSource, /@keyframes meeting-slide-qr-signature-v49\s*\{[\s\S]*?81\.5%[\s\S]*?87\.1%/);
+assert.match(styleSource, /\.meeting-focus-menu-write\s*\{[\s\S]*?top:\s*21\.65%[\s\S]*?height:\s*13%/);
+assert.match(styleSource, /\.demo-focus-now\s*\{[^}]*top:\s*37\.27%/);
+assert.match(styleSource, /\.demo-focus-hourly\s*\{[^}]*top:\s*71\.45%/);
+assert.match(styleSource, /\.demo-focus-air\s*\{[^}]*height:\s*48\.7%/);
+assert.match(styleSource, /\.demo-focus-forecast\s*\{[^}]*top:\s*5\.31%/);
+assert.match(styleSource, /\.meeting-focus-sign-saved\s*\{[\s\S]*?top:\s*65\.9%/);
+assert.match(styleSource, /\.meeting-pdf-worker-name[\s\S]*?left:\s*9\.73%/);
+assert.match(styleSource, /\.meeting-pdf-worker-signature[\s\S]*?left:\s*23\.13%/);
+assert.match(appSource, /\[18\.79,\s*70080\][\s\S]*?\[31\.58,\s*88416\]/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v49-20260802/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
