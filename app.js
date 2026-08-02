@@ -224,6 +224,8 @@
   const weatherDemo = $('#weatherDemo');
   const meetingDemo = $('#meetingDemo');
   const supportDemo = $('#supportDemo');
+  const goldenRulesVideoShell = $('.support-golden-video-shell');
+  const goldenRulesVideo = $('#goldenRulesVideo');
   const closingDemo = $('#closingDemo');
 
   // The basic-information form is built with fixed-size DOM controls while the
@@ -369,6 +371,12 @@
   let bgmFrame = null;
   let bgmFadeToken = 0;
   let syncedAnimations = [];
+  let goldenRulesClockFrame = null;
+  let goldenRulesVideoActive = false;
+  let goldenRulesPlayPending = false;
+  let goldenRulesPlaybackBlocked = false;
+  let goldenRulesRunToken = 0;
+  const goldenRulesTimeline = Object.freeze({ start: 26100, end: 32600 });
 
   const parseCssTime = (value) => {
     const time = String(value || '').trim();
@@ -376,6 +384,125 @@
     if (time.endsWith('ms')) return Number.parseFloat(time) || 0;
     if (time.endsWith('s')) return (Number.parseFloat(time) || 0) * 1000;
     return Number.parseFloat(time) || 0;
+  };
+
+  const enforceGoldenRulesMute = () => {
+    if (!goldenRulesVideo) return;
+    if (!goldenRulesVideo.defaultMuted) goldenRulesVideo.defaultMuted = true;
+    if (!goldenRulesVideo.muted) goldenRulesVideo.muted = true;
+    if (goldenRulesVideo.volume !== 0) goldenRulesVideo.volume = 0;
+    if (!goldenRulesVideo.playsInline) goldenRulesVideo.playsInline = true;
+  };
+
+  const cancelGoldenRulesClock = () => {
+    if (goldenRulesClockFrame) window.cancelAnimationFrame(goldenRulesClockFrame);
+    goldenRulesClockFrame = null;
+  };
+
+  const resetGoldenRulesVideo = () => {
+    if (!goldenRulesVideo) return;
+    goldenRulesRunToken += 1;
+    enforceGoldenRulesMute();
+    goldenRulesVideo.pause();
+    goldenRulesVideoActive = false;
+    goldenRulesPlayPending = false;
+    goldenRulesPlaybackBlocked = false;
+    goldenRulesVideoShell?.removeAttribute('data-playback');
+    if (goldenRulesVideo.currentTime > .02) {
+      try { goldenRulesVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+    }
+  };
+
+  const getGoldenRulesVisualTime = () => {
+    if (!goldenRulesVideoShell?.getAnimations) return Number.NaN;
+    const animations = goldenRulesVideoShell.getAnimations();
+    const animation = animations.find((item) => item.animationName === 'support-golden-video-shell') || animations[0];
+    const currentTime = Number(animation?.currentTime);
+    const computedDuration = Number(animation?.effect?.getComputedTiming?.().duration);
+    const duration = Number.isFinite(computedDuration) && computedDuration > 0
+      ? computedDuration
+      : demoDurationFallbacks.support;
+    if (!Number.isFinite(currentTime)) return Number.NaN;
+    return ((currentTime % duration) + duration) % duration;
+  };
+
+  const syncGoldenRulesVideo = (visualTime) => {
+    if (!goldenRulesVideo) return;
+    enforceGoldenRulesMute();
+    const time = Number(visualTime);
+    const stageIsActive = demoPage === 'support' && guidePhone?.classList.contains('support-demo-active');
+    const inVideoWindow = stageIsActive
+      && Number.isFinite(time)
+      && time >= goldenRulesTimeline.start
+      && time < goldenRulesTimeline.end;
+
+    if (!inVideoWindow) {
+      goldenRulesVideo.pause();
+      if (goldenRulesVideoActive || goldenRulesVideo.currentTime > .08) {
+        try { goldenRulesVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+      }
+      goldenRulesVideoActive = false;
+      goldenRulesVideoShell?.setAttribute('data-playback', 'idle');
+      return;
+    }
+
+    const desiredTime = Math.max(0, (time - goldenRulesTimeline.start) / 1000);
+    if (!goldenRulesVideoActive || Math.abs(goldenRulesVideo.currentTime - desiredTime) > .45) {
+      try { goldenRulesVideo.currentTime = desiredTime; } catch (_) { /* metadata may still be loading */ }
+    }
+    goldenRulesVideoActive = true;
+
+    if (demoPaused || document.hidden || reduceMotion) {
+      goldenRulesVideo.pause();
+      goldenRulesVideoShell?.setAttribute('data-playback', 'paused');
+      return;
+    }
+
+    if (goldenRulesVideo.paused && !goldenRulesPlayPending && !goldenRulesPlaybackBlocked) {
+      goldenRulesPlayPending = true;
+      const playToken = goldenRulesRunToken;
+      const playAttempt = goldenRulesVideo.play();
+      if (playAttempt?.then) {
+        playAttempt.then(() => {
+          if (playToken !== goldenRulesRunToken) {
+            goldenRulesVideo.pause();
+            return;
+          }
+          goldenRulesVideoShell?.setAttribute('data-playback', 'playing');
+        }).catch((error) => {
+          if (playToken !== goldenRulesRunToken) return;
+          goldenRulesPlaybackBlocked = true;
+          goldenRulesVideoShell?.setAttribute('data-playback', 'blocked');
+          console.warn('골든룰스11 무음 영상을 자동재생하지 못했습니다.', error);
+        }).finally(() => {
+          if (playToken === goldenRulesRunToken) goldenRulesPlayPending = false;
+        });
+      } else {
+        goldenRulesPlayPending = false;
+        goldenRulesVideoShell?.setAttribute('data-playback', 'playing');
+      }
+    }
+  };
+
+  const stopGoldenRulesClock = ({ reset = true } = {}) => {
+    cancelGoldenRulesClock();
+    if (reset) resetGoldenRulesVideo();
+    else goldenRulesVideo?.pause();
+  };
+
+  const startGoldenRulesClock = ({ reset = false } = {}) => {
+    cancelGoldenRulesClock();
+    if (reset) resetGoldenRulesVideo();
+    const tick = () => {
+      if (demoPage !== 'support' || !guidePhone?.classList.contains('support-demo-active')) {
+        stopGoldenRulesClock();
+        return;
+      }
+      const visualTime = getGoldenRulesVisualTime();
+      if (Number.isFinite(visualTime)) syncGoldenRulesVideo(visualTime);
+      goldenRulesClockFrame = window.requestAnimationFrame(tick);
+    };
+    goldenRulesClockFrame = window.requestAnimationFrame(tick);
   };
 
   const updateDemoStateData = () => {
@@ -602,6 +729,7 @@
         animation.currentTime = visualTime;
       } catch (_) { /* a scene can detach during a soft transition */ }
     });
+    if (demoPage === 'support') syncGoldenRulesVideo(visualTime);
   };
 
   const runNarrationVisualClock = (token) => {
@@ -784,6 +912,7 @@
   const stopAllDemos = () => {
     clearSequenceTimer();
     clearStageTransitionTimers();
+    stopGoldenRulesClock();
     stopNarrationPlayback({ keepRequested: false });
     stopDemoBgm();
     stageTransitioning = false;
@@ -813,6 +942,7 @@
 
   const startIntroDemo = ({ restart = false } = {}) => {
     if (!guidePhone || reduceMotion || demoPage !== 'intro') return;
+    stopGoldenRulesClock();
     stageActiveClasses.forEach((className) => guidePhone.classList.remove(className));
     guideStage?.classList.remove('meeting-page', 'support-page', 'closing-page');
     guideStage?.classList.add('intro-page');
@@ -828,6 +958,7 @@
 
   const startWeatherDemo = ({ restart = false } = {}) => {
     if (!guidePhone || reduceMotion || currentGuide !== 0 || demoPage !== 'weather') return;
+    stopGoldenRulesClock();
     openingDemoVideo?.pause();
     if (restart) {
       guidePhone.classList.remove('demo-active');
@@ -842,6 +973,7 @@
 
   const startMeetingDemo = ({ restart = false } = {}) => {
     if (!guidePhone || demoPage !== 'meeting') return;
+    stopGoldenRulesClock();
     openingDemoVideo?.pause();
     guidePhone.classList.remove('demo-active');
     if (restart) {
@@ -874,12 +1006,14 @@
     guidePhone.classList.toggle('is-paused', demoPaused || document.hidden);
     demoControls?.classList.add('active');
     if (guideIndex) guideIndex.textContent = '03 / 03';
+    startGoldenRulesClock({ reset: restart });
     updateDemoButton();
     if (!stageTransitioning) startCurrentStageClock();
   };
 
   const startClosingDemo = ({ restart = false } = {}) => {
     if (!guidePhone || demoPage !== 'closing') return;
+    stopGoldenRulesClock();
     openingDemoVideo?.pause();
     guidePhone.classList.remove('demo-active', 'meeting-demo-active', 'support-demo-active');
     if (restart) {
@@ -923,6 +1057,7 @@
   const applyDemoStage = (page) => {
     if (!guidePhone || !stageClassByPage[page]) return;
     clearSequenceTimer();
+    if (page !== 'support') stopGoldenRulesClock();
     if (demoPage === 'intro' && page !== 'intro') openingDemoVideo?.pause();
     demoPage = page;
     if (page === 'weather') syncWeatherGuide();
@@ -938,6 +1073,7 @@
     if (page === 'support') guideStage?.classList.add('support-page');
     if (page === 'closing') guideStage?.classList.add('closing-page');
     guidePhone.classList.add(stageClassByPage[page]);
+    if (page === 'support') startGoldenRulesClock({ reset: true });
     guidePhone.classList.toggle('is-paused', demoPaused || document.hidden);
     demoControls?.classList.add('active');
 
@@ -1149,6 +1285,7 @@
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'closing' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
     guidePhone.classList.toggle('is-paused', demoPaused);
+    if (demoPage === 'support') syncGoldenRulesVideo(getGoldenRulesVisualTime());
     if (narrationRequested && demoNarration) {
       if (demoPaused) {
         demoNarration.pause();
@@ -1214,6 +1351,7 @@
   document.addEventListener('visibilitychange', () => {
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'closing' && currentGuide !== 0)) return;
     guidePhone.classList.toggle('is-paused', document.hidden || demoPaused);
+    if (demoPage === 'support') syncGoldenRulesVideo(getGoldenRulesVisualTime());
     if (narrationRequested && demoNarration) {
       if (document.hidden) {
         demoNarration.pause();
@@ -1243,6 +1381,16 @@
   updateDemoPageButtons();
   updateDemoButton();
   updateNarrationButton();
+
+  if (goldenRulesVideo) {
+    enforceGoldenRulesMute();
+    goldenRulesVideo.addEventListener('volumechange', enforceGoldenRulesMute);
+    goldenRulesVideo.addEventListener('error', () => {
+      goldenRulesPlaybackBlocked = true;
+      goldenRulesVideoShell?.setAttribute('data-playback', 'unavailable');
+      console.warn('골든룰스11 영상을 불러오지 못했습니다.', goldenRulesVideo.error);
+    });
+  }
 
   openingDemoVideo?.addEventListener('ended', () => {
     // The narration is intentionally longer than the eight-second video.

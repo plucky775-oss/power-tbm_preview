@@ -3160,6 +3160,91 @@ button { color: inherit; }
   will-change: opacity;
 }
 
+.support-golden-video-shell {
+  position: absolute;
+  z-index: 16;
+  left: 6.6%;
+  top: 25.45%;
+  width: 86.9%;
+  height: 22.65%;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #07131c;
+  box-shadow: 0 8px 20px rgba(2, 17, 28, .32);
+  opacity: 0;
+  transform: scale(.985);
+  transform-origin: center;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.support-golden-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #07131c;
+}
+
+.support-golden-video-shell::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 28%;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .42));
+  content: '';
+}
+
+.support-golden-playing-badge {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border: 1px solid rgba(255, 255, 255, .32);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(4, 16, 24, .7);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .22);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: -.02em;
+  backdrop-filter: blur(5px);
+}
+
+.support-golden-playing-badge i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #48e28b;
+  box-shadow: 0 0 0 3px rgba(72, 226, 139, .2);
+}
+
+.support-golden-progress {
+  position: absolute;
+  z-index: 2;
+  right: 7px;
+  bottom: 6px;
+  left: 7px;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .34);
+}
+
+.support-golden-progress i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: #ff3348;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
 .support-focus-layer {
   position: absolute;
   inset: 0;
@@ -3232,7 +3317,7 @@ button { color: inherit; }
 @keyframes support-focus-safety-menu { 0%, 12% { opacity: 0; transform: scale(.985); } 12.5%, 22.8% { opacity: 1; transform: scale(1); } 23.4%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-risk-card { 0%, 23.8% { opacity: 0; transform: scale(.985); } 24.4%, 38.8% { opacity: 1; transform: scale(1); } 39.4%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-golden-menu { 0%, 40% { opacity: 0; transform: scale(.985); } 40.6%, 50.8% { opacity: 1; transform: scale(1); } 51.4%, 100% { opacity: 0; transform: scale(1.01); } }
-@keyframes support-focus-golden-video { 0%, 52% { opacity: 0; transform: scale(.985); } 52.6%, 64.6% { opacity: 1; transform: scale(1); } 65.2%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes support-focus-golden-video { 0%, 52% { opacity: 0; transform: scale(.985); } 52.6%, 55.4% { opacity: 1; transform: scale(1); } 56%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes support-focus-home-tools { 0%, 65.8% { opacity: 0; transform: scale(.985); } 66.4%, 72% { opacity: 1; transform: scale(1); } 72.6%, 100% { opacity: 0; transform: scale(1.01); } }
 
 @keyframes support-focus-tool-notice { 0%, 72.8% { opacity: 0; transform: scale(.985); } 73.2%, 74.8% { opacity: 1; transform: scale(1); } 75.2%, 100% { opacity: 0; transform: scale(1.01); } }
@@ -3319,6 +3404,8 @@ button { color: inherit; }
 .guide-phone.support-demo-active .support-slide-risk { animation: support-slide-risk var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-slide-safety-return { animation: support-slide-safety-return var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-slide-golden { animation: support-slide-golden var(--support-duration) ease infinite; }
+.guide-phone.support-demo-active .support-golden-video-shell { animation: support-golden-video-shell var(--support-duration) ease infinite; }
+.guide-phone.support-demo-active .support-golden-progress i { animation: support-golden-progress var(--support-duration) linear infinite; }
 .guide-phone.support-demo-active .support-slide-home-tools { animation: support-slide-home-tools var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-slide-tools { animation: support-slide-tools var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-slide-emergency { animation: support-slide-emergency var(--support-duration) ease infinite; }
@@ -3354,6 +3441,15 @@ button { color: inherit; }
 @keyframes support-slide-risk { 0%, 23.2% { opacity: 0; } 23.9%, 39.2% { opacity: 1; } 39.9%, 100% { opacity: 0; } }
 @keyframes support-slide-safety-return { 0%, 39.2% { opacity: 0; } 39.9%, 51.2% { opacity: 1; } 51.9%, 100% { opacity: 0; } }
 @keyframes support-slide-golden { 0%, 51.2% { opacity: 0; } 51.9%, 65.2% { opacity: 1; } 65.9%, 100% { opacity: 0; } }
+@keyframes support-golden-video-shell {
+  0%, 52% { opacity: 0; transform: scale(.985); }
+  52.6%, 64.8% { opacity: 1; transform: scale(1); }
+  65.4%, 100% { opacity: 0; transform: scale(1.005); }
+}
+@keyframes support-golden-progress {
+  0%, 52.2% { transform: scaleX(0); }
+  65.2%, 100% { transform: scaleX(.118); }
+}
 @keyframes support-slide-home-tools { 0%, 65.2% { opacity: 0; } 65.9%, 72.2% { opacity: 1; } 72.9%, 100% { opacity: 0; } }
 @keyframes support-slide-tools { 0%, 72.2% { opacity: 0; } 72.9%, 84.2% { opacity: 1; } 84.9%, 100% { opacity: 0; } }
 @keyframes support-slide-emergency { 0%, 84.2% { opacity: 0; } 84.9%, 93.3% { opacity: 1; } 94%, 100% { opacity: 0; } }
@@ -3585,6 +3681,8 @@ button { color: inherit; }
 @keyframes support-explain-emergency { 0%, 84.2% { opacity: 0; transform: translateY(18px); } 84.9%, 100% { opacity: 1; transform: translateY(0); } }
 
 .guide-phone.support-demo-active.is-paused .support-slide,
+.guide-phone.support-demo-active.is-paused .support-golden-video-shell,
+.guide-phone.support-demo-active.is-paused .support-golden-progress i,
 .guide-phone.support-demo-active.is-paused .support-hand,
 .guide-phone.support-demo-active.is-paused .support-ripple,
 .guide-phone.support-demo-active.is-paused .support-focus,
