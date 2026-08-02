@@ -14,7 +14,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Power TBM | 자동 시연">
   <meta property="og:description" content="Power TBM의 전체 흐름을 실제 앱 화면 기반 자동 시연으로 확인하세요.">
-  <meta property="og:image" content="assets/screens/guide/home-alert-expanded-v8.jpeg">
+  <meta property="og:image" content="assets/screens/guide/home-weather-alert-expanded-v48.jpeg">
   <meta property="og:image:alt" content="Power TBM 홈 화면">
   <meta name="music-credit" content="Soundtrack From the Starcourt Mall — Bryan Teoh, CC0 1.0 Universal">
   <title>Power TBM | 자동 시연</title>
@@ -22,7 +22,8 @@
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/power-tbm-icon-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/power-tbm-apple-touch-180.png">
-  <link rel="preload" as="image" href="assets/screens/guide/home-alert-expanded-v8.jpeg">
+  <link rel="preload" as="image" href="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg">
+  <link rel="preload" as="image" href="assets/screens/guide/home-weather-alert-expanded-v48.jpeg">
   <link rel="preload" as="audio" href="assets/audio/00-opening-taehyung.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/01-weather-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/02-tbm-basic-taehyung.mp3" type="audio/mpeg">
@@ -32,9 +33,9 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260802-smooth-playback-v47">
-  <script src="app.js?v=20260802-smooth-playback-v47" defer></script>
-  <script src="pwa.js?v=20260802-smooth-playback-v47" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260802-screen-refresh-v48">
+  <script src="app.js?v=20260802-screen-refresh-v48" defer></script>
+  <script src="pwa.js?v=20260802-screen-refresh-v48" defer></script>
 </head>
 <body class="demo-only-page">
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -76,7 +77,7 @@
             <div class="phone-frame guide-phone">
               <span class="phone-dynamic-island" aria-hidden="true"></span>
               <div class="guide-media">
-                <img id="guideImage" src="assets/screens/guide/home.webp" alt="Power TBM 홈 화면" width="709" height="1536">
+                <img id="guideImage" src="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg" alt="Power TBM 홈 화면" width="709" height="1536">
                 <video
                   class="opening-demo-video"
                   id="openingDemoVideo"
@@ -100,8 +101,8 @@
                   aria-hidden="true"
                 ></audio>
                 <div class="weather-demo" id="weatherDemo" role="img" aria-label="홈 화면의 기상특보를 먼저 펼쳐 조치사항을 확인하고 날씨 화면으로 들어간 뒤 태풍정보 다섯 개를 차례로 비교하는 자동 시연">
-                  <img class="weather-demo-home" src="assets/screens/guide/home.webp" alt="" width="709" height="1536">
-                  <img class="weather-demo-alert" src="assets/screens/guide/home-alert-expanded-v8.jpeg" alt="" width="709" height="1536">
+                  <img class="weather-demo-home" src="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg" alt="" width="709" height="1536">
+                  <img class="weather-demo-alert" src="assets/screens/guide/home-weather-alert-expanded-v48.jpeg" alt="" width="709" height="1536">
                   <div class="weather-demo-page" aria-hidden="true">
                     <div class="weather-demo-track">
                       <img src="assets/screens/guide/weather-scroll-v3.webp" alt="" width="1179" height="6181">
@@ -142,7 +143,7 @@
 
                 <div class="meeting-demo" id="meetingDemo" role="img" aria-label="홈에서 TBM 회의록을 열고 기본정보와 공종을 입력한 뒤 회의, AI 검토, 서명, PDF 출력과 캘린더 저장까지 진행하는 자동 시연">
                   <img class="meeting-slide meeting-slide-home" src="assets/screens/guide/meeting-home-v1.jpeg" alt="" width="709" height="1536">
-                  <img class="meeting-slide meeting-slide-menu" src="assets/screens/guide/meeting-menu-v1.png" alt="" width="1179" height="2556">
+                  <img class="meeting-slide meeting-slide-menu" src="assets/screens/guide/meeting-hub-v48.png" alt="" width="1179" height="2556">
 
                   <section class="meeting-slide meeting-basic-screen" aria-hidden="true">
                     <header><span>⬅️</span><i></i><div><b>TBM 회의록</b><small>기본정보 → 공종선택 → 회의진행 → 서명/PDF</small></div></header>
@@ -244,6 +245,7 @@
                       <span class="meeting-sign-complete-toast">서명이 저장되어 회의록에 반영되었습니다</span>
                     </div>
                   </div>
+                  <img class="meeting-slide meeting-slide-qr-signature" src="assets/screens/guide/meeting-qr-signature-v48.png" alt="" width="1179" height="2556" aria-hidden="true">
                   <img class="meeting-slide meeting-slide-pdf" src="assets/screens/guide/meeting-pdf-v2.jpeg" alt="" width="709" height="1536">
                   <span class="meeting-pdf-signature" aria-hidden="true"><b>최재혁</b></span>
 
@@ -477,7 +479,7 @@
               <article class="meeting-explain meeting-explain-sign">
                 <span><i></i> 7 / 8 · 전자서명</span>
                 <h3>책임자와 작업자의<br><em>참석 서명</em></h3>
-                <p>비어 있는 서명란을 누르면 서명패드가 열리고, 손가락으로 사인해 저장하면 회의록 서명란에 바로 반영됩니다.</p>
+                <p>현장에서는 직접 서명하고, 떨어져 있는 작업자는 전용 QR·링크로 원격서명할 수 있습니다. 저장된 서명은 회의록에 바로 반영됩니다.</p>
                 <div class="demo-explain-points"><b>직접서명</b><b>QR</b><b>원격서명</b></div>
               </article>
               <article class="meeting-explain meeting-explain-save">

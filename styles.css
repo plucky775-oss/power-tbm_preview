@@ -5639,6 +5639,31 @@ body { background: #fff; }
   }
 }
 
+/* ===== v48 · LATEST APP SCREENS + REMOTE QR SIGNATURE ===== */
+.meeting-focus-menu-write {
+  left: 3.1%;
+  top: 17.3%;
+  width: 93.8%;
+  height: 10.6%;
+}
+
+.meeting-slide-qr-signature {
+  z-index: 31;
+  object-fit: cover;
+  object-position: 50% 0;
+  will-change: opacity;
+}
+
+.guide-phone.meeting-demo-active .meeting-slide-qr-signature {
+  animation: meeting-slide-qr-signature-v48 var(--meeting-duration) ease infinite;
+}
+
+@keyframes meeting-slide-qr-signature-v48 {
+  0%, 88% { opacity: 0; }
+  88.4%, 90.9% { opacity: 1; }
+  91.3%, 100% { opacity: 0; }
+}
+
 @media (max-width: 760px) {
   .demo-only-header {
     grid-template-columns: auto minmax(0, 1fr) 42px;

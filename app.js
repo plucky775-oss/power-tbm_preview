@@ -54,7 +54,7 @@
 
   const guideData = [
     {
-      src: 'assets/screens/guide/home.webp',
+      src: 'assets/screens/guide/home-weather-alert-collapsed-v48.jpeg',
       width: 709,
       height: 1536,
       alt: 'Power TBM 홈 화면',
@@ -66,7 +66,7 @@
       tip: '특보 카드를 누르면 상세 조치사항을 펼쳐 볼 수 있습니다.'
     },
     {
-      src: 'assets/screens/guide/home-alert.webp',
+      src: 'assets/screens/guide/home-weather-alert-expanded-v48.jpeg',
       width: 709,
       height: 1536,
       alt: 'Power TBM 기상특보 상세 화면',
@@ -78,13 +78,13 @@
       tip: '작업시간 조정, 휴식, 급수 등 조치사항을 TBM 전달내용과 함께 확인하세요.'
     },
     {
-      src: 'assets/screens/guide/meeting-menu.webp',
+      src: 'assets/screens/guide/meeting-hub-v48.png',
       width: 1179,
       height: 2556,
-      alt: 'TBM 회의록 작성과 캘린더 메뉴',
-      category: 'TBM 회의록',
-      title: '작성과 보관 업무를 구분해 시작합니다',
-      desc: '새 회의는 ‘회의록 작성’, 완료 문서 확인은 ‘회의록 캘린더’를 선택합니다.',
+      alt: 'TBM 회의록과 작업안전 체크리스트 통합 메뉴',
+      category: '통합 메뉴',
+      title: '회의록 작성 메뉴로 바로 들어갑니다',
+      desc: 'TBM 회의록·작업안전 체크리스트 통합 메뉴에서 ‘회의록 작성’을 선택합니다.',
       check: '새 회의 작성 또는 기존 원본 조회',
       when: '회의 시작 전 또는 과거 회의록을 찾을 때',
       tip: '회의를 새로 시작할 때는 반드시 ‘회의록 작성’으로 들어가세요.'

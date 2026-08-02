@@ -1,15 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v47-20260802`;
+const CACHE_NAME = `${CACHE_PREFIX}v48-20260802`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260802-smooth-playback-v47',
-  './app.js?v=20260802-smooth-playback-v47',
-  './pwa.js?v=20260802-smooth-playback-v47',
+  './styles.css?v=20260802-screen-refresh-v48',
+  './app.js?v=20260802-screen-refresh-v48',
+  './pwa.js?v=20260802-screen-refresh-v48',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -34,9 +34,8 @@ const PRECACHE_URLS = [
   './assets/screens/guide/compare-kma-typhoon-v12.jpeg',
   './assets/screens/guide/compare-radar-rotation-v13.jpeg',
   './assets/screens/guide/contacts.webp',
-  './assets/screens/guide/home-alert-expanded-v8.jpeg',
-  './assets/screens/guide/home-alert.webp',
-  './assets/screens/guide/home.webp',
+  './assets/screens/guide/home-weather-alert-collapsed-v48.jpeg',
+  './assets/screens/guide/home-weather-alert-expanded-v48.jpeg',
   './assets/screens/guide/incidents.webp',
   './assets/screens/guide/location-consent.webp',
   './assets/screens/guide/meeting-ai-v2.png',
@@ -44,10 +43,10 @@ const PRECACHE_URLS = [
   './assets/screens/guide/meeting-focus-v2.png',
   './assets/screens/guide/meeting-health-v2.png',
   './assets/screens/guide/meeting-home-v1.jpeg',
-  './assets/screens/guide/meeting-menu-v1.png',
-  './assets/screens/guide/meeting-menu.webp',
+  './assets/screens/guide/meeting-hub-v48.png',
   './assets/screens/guide/meeting-pdf-v2.jpeg',
   './assets/screens/guide/meeting-risk-v2.png',
+  './assets/screens/guide/meeting-qr-signature-v48.png',
   './assets/screens/guide/meeting-sign-pad-v2.png',
   './assets/screens/guide/meeting-sign-v2.png',
   './assets/screens/guide/meeting-trade-v2.png',
