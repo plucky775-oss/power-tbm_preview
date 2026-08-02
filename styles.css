@@ -5170,6 +5170,12 @@ body { background: #fff; }
   transform: rotate(-2deg);
 }
 
+.meeting-saved-signature-worker {
+  top: 66.6%;
+  border-color: #18a957;
+  transform: rotate(-1.5deg);
+}
+
 /* PDF 원본의 서명란도 앞 단계에서 저장한 최재혁 서명과 일치시킵니다. */
 .meeting-pdf-signature {
   position: absolute;
@@ -5777,8 +5783,8 @@ body { background: #fff; }
 }
 
 @keyframes meeting-ai-scroll-body-v50 {
-  0%, 61.05% { transform: translateY(-11.5%); }
-  63.25%, 100% { transform: translateY(-24.5%); }
+  0%, 61.4% { transform: translateY(-11.5%); }
+  63.05%, 100% { transform: translateY(-24.5%); }
 }
 
 @keyframes meeting-ai-swipe-hand-v50 {
