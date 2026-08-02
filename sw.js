@@ -1,14 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v46-20260802`;
+const CACHE_NAME = `${CACHE_PREFIX}v47-20260802`;
+const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260802-golden-rules-video-v46',
-  './app.js?v=20260802-golden-rules-video-v46',
-  './pwa.js?v=20260802-golden-rules-video-v46',
+  './styles.css?v=20260802-smooth-playback-v47',
+  './app.js?v=20260802-smooth-playback-v47',
+  './pwa.js?v=20260802-smooth-playback-v47',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -71,15 +72,30 @@ const PRECACHE_URLS = [
 ];
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
+const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js)(?:\?|$)/.test(path) || path === './';
+
+const precacheInSmallBatches = async (cache) => {
+  let nextIndex = 0;
+  const workers = Array.from({ length: Math.min(PRECACHE_CONCURRENCY, PRECACHE_URLS.length) }, async () => {
+    while (nextIndex < PRECACHE_URLS.length) {
+      const path = PRECACHE_URLS[nextIndex];
+      nextIndex += 1;
+      const request = new Request(scopedUrl(path), {
+        cache: isVersionedShellPath(path) ? 'reload' : 'default',
+        credentials: 'same-origin'
+      });
+      const response = await fetch(request);
+      if (!response.ok) throw new Error(`Precache failed: ${request.url} (${response.status})`);
+      await cache.put(request, response);
+    }
+  });
+  await Promise.all(workers);
+};
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
-    const requests = PRECACHE_URLS.map((path) => new Request(scopedUrl(path), {
-      cache: 'reload',
-      credentials: 'same-origin'
-    }));
-    await cache.addAll(requests);
+    await precacheInSmallBatches(cache);
     await self.skipWaiting();
   })());
 });
@@ -103,12 +119,26 @@ const rangeNotSatisfiable = (size) => new Response(null, {
   }
 });
 
+const rangeBufferCache = new Map();
+
+const readRangeBuffer = (request, cachedResponse) => {
+  const cacheKey = new URL(request.url).pathname;
+  if (!rangeBufferCache.has(cacheKey)) {
+    const bufferTask = cachedResponse.arrayBuffer().catch((error) => {
+      rangeBufferCache.delete(cacheKey);
+      throw error;
+    });
+    rangeBufferCache.set(cacheKey, bufferTask);
+  }
+  return rangeBufferCache.get(cacheKey);
+};
+
 const createRangeResponse = async (request, cachedResponse) => {
   const rangeHeader = request.headers.get('range');
   const match = /^bytes=(\d*)-(\d*)$/i.exec(rangeHeader || '');
   if (!match || (!match[1] && !match[2])) return cachedResponse;
 
-  const buffer = await cachedResponse.arrayBuffer();
+  const buffer = await readRangeBuffer(request, cachedResponse);
   const size = buffer.byteLength;
   let start;
   let end;

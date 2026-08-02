@@ -4,6 +4,7 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
 
   const header = $('#siteHeader');
   const progress = $('.scroll-progress span');
@@ -368,6 +369,7 @@
   let narrationSegmentIndex = 0;
   let narrationRunToken = 0;
   let narrationFrame = null;
+  let narrationLastVisualUpdate = 0;
   let bgmFrame = null;
   let bgmFadeToken = 0;
   let syncedAnimations = [];
@@ -376,7 +378,10 @@
   let goldenRulesPlayPending = false;
   let goldenRulesPlaybackBlocked = false;
   let goldenRulesRunToken = 0;
+  let goldenRulesTimelineAnimation = null;
+  let goldenRulesTimelineDuration = demoDurationFallbacks.support;
   const goldenRulesTimeline = Object.freeze({ start: 26100, end: 32600 });
+  const goldenRulesNarrationPlaybackRate = 1.08;
 
   const parseCssTime = (value) => {
     const time = String(value || '').trim();
@@ -394,6 +399,16 @@
     if (!goldenRulesVideo.playsInline) goldenRulesVideo.playsInline = true;
   };
 
+  const setGoldenRulesPlaybackState = (state) => {
+    if (!goldenRulesVideoShell || goldenRulesVideoShell.dataset.playback === state) return;
+    goldenRulesVideoShell.dataset.playback = state;
+  };
+
+  const resetGoldenRulesTimelineAnimation = () => {
+    goldenRulesTimelineAnimation = null;
+    goldenRulesTimelineDuration = demoDurationFallbacks.support;
+  };
+
   const cancelGoldenRulesClock = () => {
     if (goldenRulesClockFrame) window.cancelAnimationFrame(goldenRulesClockFrame);
     goldenRulesClockFrame = null;
@@ -407,7 +422,8 @@
     goldenRulesVideoActive = false;
     goldenRulesPlayPending = false;
     goldenRulesPlaybackBlocked = false;
-    goldenRulesVideoShell?.removeAttribute('data-playback');
+    goldenRulesVideo.playbackRate = 1;
+    setGoldenRulesPlaybackState('idle');
     if (goldenRulesVideo.currentTime > .02) {
       try { goldenRulesVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
     }
@@ -415,15 +431,17 @@
 
   const getGoldenRulesVisualTime = () => {
     if (!goldenRulesVideoShell?.getAnimations) return Number.NaN;
-    const animations = goldenRulesVideoShell.getAnimations();
-    const animation = animations.find((item) => item.animationName === 'support-golden-video-shell') || animations[0];
-    const currentTime = Number(animation?.currentTime);
-    const computedDuration = Number(animation?.effect?.getComputedTiming?.().duration);
-    const duration = Number.isFinite(computedDuration) && computedDuration > 0
-      ? computedDuration
-      : demoDurationFallbacks.support;
+    if (!goldenRulesTimelineAnimation || goldenRulesTimelineAnimation.playState === 'idle') {
+      const animations = goldenRulesVideoShell.getAnimations();
+      goldenRulesTimelineAnimation = animations.find((item) => item.animationName === 'support-golden-video-shell') || animations[0] || null;
+      const computedDuration = Number(goldenRulesTimelineAnimation?.effect?.getComputedTiming?.().duration);
+      goldenRulesTimelineDuration = Number.isFinite(computedDuration) && computedDuration > 0
+        ? computedDuration
+        : demoDurationFallbacks.support;
+    }
+    const currentTime = Number(goldenRulesTimelineAnimation?.currentTime);
     if (!Number.isFinite(currentTime)) return Number.NaN;
-    return ((currentTime % duration) + duration) % duration;
+    return ((currentTime % goldenRulesTimelineDuration) + goldenRulesTimelineDuration) % goldenRulesTimelineDuration;
   };
 
   const syncGoldenRulesVideo = (visualTime) => {
@@ -437,24 +455,37 @@
       && time < goldenRulesTimeline.end;
 
     if (!inVideoWindow) {
-      goldenRulesVideo.pause();
-      if (goldenRulesVideoActive || goldenRulesVideo.currentTime > .08) {
+      if (goldenRulesVideoActive || goldenRulesPlayPending || !goldenRulesVideo.paused) {
+        goldenRulesRunToken += 1;
+        goldenRulesVideo.pause();
         try { goldenRulesVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+        goldenRulesVideoActive = false;
+        goldenRulesPlayPending = false;
+        goldenRulesPlaybackBlocked = false;
+        goldenRulesVideo.playbackRate = 1;
       }
-      goldenRulesVideoActive = false;
-      goldenRulesVideoShell?.setAttribute('data-playback', 'idle');
+      setGoldenRulesPlaybackState('idle');
       return;
     }
 
-    const desiredTime = Math.max(0, (time - goldenRulesTimeline.start) / 1000);
-    if (!goldenRulesVideoActive || Math.abs(goldenRulesVideo.currentTime - desiredTime) > .45) {
-      try { goldenRulesVideo.currentTime = desiredTime; } catch (_) { /* metadata may still be loading */ }
+    if (!goldenRulesVideoActive) {
+      goldenRulesRunToken += 1;
+      goldenRulesVideoActive = true;
+      goldenRulesPlayPending = false;
+      goldenRulesPlaybackBlocked = false;
+      goldenRulesVideo.playbackRate = narrationRequested ? goldenRulesNarrationPlaybackRate : 1;
+      if (goldenRulesVideo.currentTime > .08 || goldenRulesVideo.ended) {
+        try { goldenRulesVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+      }
     }
-    goldenRulesVideoActive = true;
 
     if (demoPaused || document.hidden || reduceMotion) {
+      if (goldenRulesPlayPending) {
+        goldenRulesRunToken += 1;
+        goldenRulesPlayPending = false;
+      }
       goldenRulesVideo.pause();
-      goldenRulesVideoShell?.setAttribute('data-playback', 'paused');
+      setGoldenRulesPlaybackState('paused');
       return;
     }
 
@@ -468,18 +499,18 @@
             goldenRulesVideo.pause();
             return;
           }
-          goldenRulesVideoShell?.setAttribute('data-playback', 'playing');
+          setGoldenRulesPlaybackState('playing');
         }).catch((error) => {
           if (playToken !== goldenRulesRunToken) return;
           goldenRulesPlaybackBlocked = true;
-          goldenRulesVideoShell?.setAttribute('data-playback', 'blocked');
+          setGoldenRulesPlaybackState('blocked');
           console.warn('골든룰스11 무음 영상을 자동재생하지 못했습니다.', error);
         }).finally(() => {
           if (playToken === goldenRulesRunToken) goldenRulesPlayPending = false;
         });
       } else {
         goldenRulesPlayPending = false;
-        goldenRulesVideoShell?.setAttribute('data-playback', 'playing');
+        setGoldenRulesPlaybackState('playing');
       }
     }
   };
@@ -492,14 +523,20 @@
 
   const startGoldenRulesClock = ({ reset = false } = {}) => {
     cancelGoldenRulesClock();
+    resetGoldenRulesTimelineAnimation();
     if (reset) resetGoldenRulesVideo();
-    const tick = () => {
+    if (narrationRequested) return;
+    let lastCheck = 0;
+    const tick = (now) => {
       if (demoPage !== 'support' || !guidePhone?.classList.contains('support-demo-active')) {
         stopGoldenRulesClock();
         return;
       }
-      const visualTime = getGoldenRulesVisualTime();
-      if (Number.isFinite(visualTime)) syncGoldenRulesVideo(visualTime);
+      if (now - lastCheck >= 50) {
+        lastCheck = now;
+        const visualTime = getGoldenRulesVisualTime();
+        if (Number.isFinite(visualTime)) syncGoldenRulesVideo(visualTime);
+      }
       goldenRulesClockFrame = window.requestAnimationFrame(tick);
     };
     goldenRulesClockFrame = window.requestAnimationFrame(tick);
@@ -543,6 +580,7 @@
   const cancelNarrationFrame = () => {
     if (narrationFrame) window.cancelAnimationFrame(narrationFrame);
     narrationFrame = null;
+    narrationLastVisualUpdate = 0;
   };
 
   const cancelBgmFrame = () => {
@@ -713,19 +751,15 @@
 
   const applyNarrationVisualTime = (segment, seconds) => {
     if (!segment) return;
-    const visualTime = mapNarrationTimeToVisual(segment, seconds);
     if (demoPage === 'intro') {
-      const videoDuration = Number(openingDemoVideo?.duration) || 8;
-      const target = Math.min(Math.max(0, Number(seconds) || 0), videoDuration);
-      if (openingDemoVideo && target < videoDuration && Math.abs(openingDemoVideo.currentTime - target) > .24) {
-        try { openingDemoVideo.currentTime = target; } catch (_) { /* metadata may still be loading */ }
-      }
+      // Audio and video start, pause and resume together. Let the hardware
+      // decoder advance naturally instead of seeking on every animation frame.
       return;
     }
+    const visualTime = mapNarrationTimeToVisual(segment, seconds);
     if (!syncedAnimations.length) collectNarrationAnimations(demoPage);
     syncedAnimations.forEach((animation) => {
       try {
-        if (animation.playState !== 'paused') animation.pause();
         animation.currentTime = visualTime;
       } catch (_) { /* a scene can detach during a soft transition */ }
     });
@@ -734,11 +768,15 @@
 
   const runNarrationVisualClock = (token) => {
     cancelNarrationFrame();
-    const tick = () => {
+    const visualFrameInterval = coarsePointer ? 30 : 14;
+    const tick = (now) => {
       if (token !== narrationRunToken || !narrationRequested || !demoNarration) return;
-      const segment = narrationByPage[demoPage]?.[narrationSegmentIndex];
-      applyNarrationVisualTime(segment, demoNarration.currentTime);
-      syncClosingBgmFade(segment, demoNarration.currentTime);
+      if (!narrationLastVisualUpdate || now - narrationLastVisualUpdate >= visualFrameInterval) {
+        narrationLastVisualUpdate = now;
+        const segment = narrationByPage[demoPage]?.[narrationSegmentIndex];
+        applyNarrationVisualTime(segment, demoNarration.currentTime);
+        syncClosingBgmFade(segment, demoNarration.currentTime);
+      }
       if (!demoPaused && !document.hidden && !demoNarration.ended) narrationFrame = window.requestAnimationFrame(tick);
     };
     narrationFrame = window.requestAnimationFrame(tick);
@@ -767,6 +805,7 @@
     narrationRequested = false;
     narrationUnlocked = false;
     setNarrationState(error?.name === 'NotAllowedError' ? 'blocked' : 'error');
+    if (demoPage === 'support') startGoldenRulesClock({ reset: false });
     scheduleSequenceAdvance();
   };
 
@@ -815,6 +854,7 @@
 
   const startNarrationForPage = (page, { restartVideo = true } = {}) => {
     if (!narrationRequested || !narrationByPage[page]) return false;
+    if (page === 'support') stopGoldenRulesClock({ reset: true });
     stopNarrationPlayback({ keepRequested: true });
     demoPage = page;
     narrationSegmentIndex = 0;
@@ -1387,7 +1427,7 @@
     goldenRulesVideo.addEventListener('volumechange', enforceGoldenRulesMute);
     goldenRulesVideo.addEventListener('error', () => {
       goldenRulesPlaybackBlocked = true;
-      goldenRulesVideoShell?.setAttribute('data-playback', 'unavailable');
+      setGoldenRulesPlaybackState('unavailable');
       console.warn('골든룰스11 영상을 불러오지 못했습니다.', goldenRulesVideo.error);
     });
   }
