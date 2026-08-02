@@ -1,15 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v49-20260802`;
+const CACHE_NAME = `${CACHE_PREFIX}v50-20260802`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260802-alignment-signature-v49',
-  './app.js?v=20260802-alignment-signature-v49',
-  './pwa.js?v=20260802-alignment-signature-v49',
+  './styles.css?v=20260802-ai-scroll-signature-v50',
+  './app.js?v=20260802-ai-scroll-signature-v50',
+  './pwa.js?v=20260802-ai-scroll-signature-v50',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -39,6 +39,7 @@ const PRECACHE_URLS = [
   './assets/screens/guide/incidents.webp',
   './assets/screens/guide/location-consent.webp',
   './assets/screens/guide/meeting-ai-v2.png',
+  './assets/screens/guide/meeting-ai-scroll-detail-v50.jpeg',
   './assets/screens/guide/meeting-calendar-v1.png',
   './assets/screens/guide/meeting-focus-v2.png',
   './assets/screens/guide/meeting-health-v2.png',

@@ -33,9 +33,9 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260802-alignment-signature-v49">
-  <script src="app.js?v=20260802-alignment-signature-v49" defer></script>
-  <script src="pwa.js?v=20260802-alignment-signature-v49" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260802-ai-scroll-signature-v50">
+  <script src="app.js?v=20260802-ai-scroll-signature-v50" defer></script>
+  <script src="pwa.js?v=20260802-ai-scroll-signature-v50" defer></script>
 </head>
 <body class="demo-only-page">
   <a class="skip-link" href="#main">본문으로 바로가기</a>
@@ -200,6 +200,13 @@
 
                   <div class="meeting-slide meeting-scene meeting-slide-ai" aria-hidden="true">
                     <img src="assets/screens/guide/meeting-ai-v2.png" alt="" width="1179" height="2556">
+                    <div class="meeting-ai-scrolled-state" aria-hidden="true">
+                      <img class="meeting-ai-scroll-header" src="assets/screens/guide/meeting-ai-scroll-detail-v50.jpeg" alt="" width="672" height="1966">
+                      <span class="meeting-ai-scroll-body">
+                        <img src="assets/screens/guide/meeting-ai-scroll-detail-v50.jpeg" alt="" width="672" height="1966">
+                      </span>
+                      <img class="meeting-ai-scroll-footer" src="assets/screens/guide/meeting-ai-scroll-detail-v50.jpeg" alt="" width="672" height="1966">
+                    </div>
                     <div class="meeting-scene-state">
                       <span class="meeting-ai-loading">
                         <i></i>
@@ -235,13 +242,25 @@
                     </div>
                   </div>
 
-                  <div class="meeting-slide meeting-scene meeting-slide-sign-complete" aria-hidden="true">
+                  <div class="meeting-slide meeting-scene meeting-slide-sign-manager" aria-hidden="true">
                     <img src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
-                      <span class="meeting-sign-complete-toast">김일용 원격서명이 회의록에 반영되었습니다</span>
+                      <span class="meeting-sign-status">서명 1/2명 · 작업자 대기</span>
+                      <span class="meeting-saved-signature"><b>최재혁</b></span>
+                      <span class="meeting-sign-blank meeting-sign-blank-worker"></span>
+                      <span class="meeting-sign-manager-remote-count">서명 완료: 0명 / 1명</span>
+                      <span class="meeting-sign-manager-remote-state">대기 · 김일용</span>
                     </div>
                   </div>
                   <img class="meeting-slide meeting-slide-qr-signature" src="assets/screens/guide/meeting-qr-signature-v48.png" alt="" width="1179" height="2556" aria-hidden="true">
+
+                  <div class="meeting-slide meeting-scene meeting-slide-sign-complete" aria-hidden="true">
+                    <img src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
+                    <div class="meeting-scene-state">
+                      <span class="meeting-saved-signature"><b>최재혁</b></span>
+                      <span class="meeting-sign-complete-toast">김일용 원격서명이 회의록에 반영되었습니다</span>
+                    </div>
+                  </div>
                   <img class="meeting-slide meeting-slide-pdf" src="assets/screens/guide/meeting-pdf-v2.jpeg" alt="" width="709" height="1536">
                   <span class="meeting-pdf-signature" aria-hidden="true"><b>최재혁</b></span>
                   <span class="meeting-pdf-worker-name" aria-hidden="true"><b>김일용</b></span>
@@ -272,6 +291,7 @@
 
                   <span class="meeting-touch-ripple" aria-hidden="true"></span>
                   <span class="meeting-hand" aria-hidden="true">👆🏻</span>
+                  <span class="meeting-ai-swipe-hand" aria-hidden="true">👆🏻</span>
                   <div class="meeting-caption" aria-hidden="true">
                     <span class="meeting-caption-home">홈에서 TBM 회의록을 선택합니다</span>
                     <span class="meeting-caption-menu">새 회의록 작성을 시작합니다</span>
