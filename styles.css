@@ -642,24 +642,23 @@ button { color: inherit; }
     0 0 26px 8px rgba(255, 190, 43, .5);
   pointer-events: none;
 }
-.demo-focus-alert-summary { left: 3.2%; top: 37.3%; width: 93.6%; height: 7.8%; }
-.demo-focus-alert-detail { left: 7.1%; top: 51.4%; width: 85.8%; height: 13.4%; }
-.demo-focus-weather-card { left: 3.2%; top: 15.5%; width: 93.6%; height: 20.5%; }
-.demo-focus-now { left: 3.1%; top: 34.4%; width: 93.8%; height: 31.2%; }
-.demo-focus-hourly { left: 3.1%; top: 67.2%; width: 93.8%; height: 25.8%; }
-.demo-focus-air { left: 3.1%; top: 10.8%; width: 93.8%; height: 38.8%; }
-.demo-focus-forecast { left: 3.1%; top: 2.5%; width: 93.8%; height: 56.5%; }
-.demo-focus-links { left: 3.1%; top: 60.5%; width: 93.8%; height: 32.5%; }
+.demo-focus-alert-summary { left: 3.2%; top: 37.24%; width: 93.6%; height: 7.55%; }
+.demo-focus-alert-detail { left: 9.87%; top: 51.95%; width: 80.11%; height: 12.24%; }
+.demo-focus-weather-card { left: 3.2%; top: 16.93%; width: 93.6%; height: 19.14%; }
+.demo-focus-now { left: 3.05%; top: 37.27%; width: 93.89%; height: 31.52%; }
+.demo-focus-hourly { left: 3.05%; top: 71.45%; width: 93.89%; height: 24.9%; }
+.demo-focus-air { left: 3.05%; top: 10.83%; width: 93.89%; height: 48.7%; }
+.demo-focus-forecast { left: 3.05%; top: 5.31%; width: 93.89%; height: 53.87%; }
 .demo-focus-link-kma,
 .demo-focus-link-jtwc,
-.demo-focus-link-jma { top: 70.7%; width: 29.8%; height: 10.3%; --highlight-radius: 10px; }
-.demo-focus-link-kma { left: 5.3%; }
-.demo-focus-link-jtwc { left: 35.1%; }
-.demo-focus-link-jma { left: 64.9%; }
+.demo-focus-link-jma { top: 70.66%; height: 10.61%; --highlight-radius: 10px; }
+.demo-focus-link-kma { left: 7.04%; width: 28.92%; }
+.demo-focus-link-jtwc { left: 35.71%; width: 28.67%; }
+.demo-focus-link-jma { left: 64.12%; width: 28.75%; }
 .demo-focus-link-radar,
-.demo-focus-link-alert { top: 83%; width: 44.7%; height: 9.7%; --highlight-radius: 10px; }
-.demo-focus-link-radar { left: 5.3%; }
-.demo-focus-link-alert { left: 50%; }
+.demo-focus-link-alert { top: 82.4%; height: 10.61%; --highlight-radius: 10px; }
+.demo-focus-link-radar { left: 7.04%; width: 43.17%; }
+.demo-focus-link-alert { left: 49.96%; width: 42.92%; }
 .demo-caption {
   position: absolute;
   z-index: 8;
@@ -703,8 +702,7 @@ button { color: inherit; }
 .guide-phone.demo-active .demo-focus-now,
 .guide-phone.demo-active .demo-focus-hourly { animation: demo-focus-now var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-focus-air { animation: demo-focus-air var(--demo-duration) ease infinite; }
-.guide-phone.demo-active .demo-focus-forecast,
-.guide-phone.demo-active .demo-focus-links { animation: demo-focus-links var(--demo-duration) ease infinite; }
+.guide-phone.demo-active .demo-focus-forecast { animation: demo-focus-links var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-focus-link-kma { animation: demo-focus-link-kma var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-focus-link-jtwc { animation: demo-focus-link-jtwc var(--demo-duration) ease infinite; }
 .guide-phone.demo-active .demo-focus-link-jma { animation: demo-focus-link-jma var(--demo-duration) ease infinite; }
@@ -2751,7 +2749,7 @@ button { color: inherit; }
 @keyframes meeting-slide-focus-v3 { 0%, 65.5% { opacity: 0; } 66.1%, 73% { opacity: 1; } 73.6%, 100% { opacity: 0; } }
 @keyframes meeting-slide-sign-v3 { 0%, 73% { opacity: 0; } 73.6%, 80.5% { opacity: 1; } 81.1%, 100% { opacity: 0; } }
 @keyframes meeting-slide-sign-pad-v3 { 0%, 80.5% { opacity: 0; } 81.1%, 87.5% { opacity: 1; } 88.1%, 100% { opacity: 0; } }
-@keyframes meeting-slide-sign-complete-v3 { 0%, 87.5% { opacity: 0; } 88.1%, 91.5% { opacity: 1; } 92.1%, 100% { opacity: 0; } }
+@keyframes meeting-slide-sign-complete-v3 { 0%, 87.5% { opacity: 0; } 88.1%, 92.1% { opacity: 1; } 92.5%, 100% { opacity: 0; } }
 @keyframes meeting-slide-pdf-v3 { 0%, 91.5% { opacity: 0; } 92.1%, 96% { opacity: 1; } 96.6%, 100% { opacity: 0; } }
 @keyframes meeting-slide-calendar { 0%, 96% { opacity: 0; } 96.6%, 100% { opacity: 1; } }
 
@@ -5639,12 +5637,20 @@ body { background: #fff; }
   }
 }
 
-/* ===== v48 · LATEST APP SCREENS + REMOTE QR SIGNATURE ===== */
+/* ===== v49 · CARD ALIGNMENT + KIM IL-YONG REMOTE SIGNATURE ===== */
 .meeting-focus-menu-write {
   left: 3.1%;
-  top: 17.3%;
+  top: 21.65%;
   width: 93.8%;
-  height: 10.6%;
+  height: 13%;
+}
+
+.meeting-focus-sign-saved {
+  left: 53.3%;
+  top: 65.9%;
+  width: 27.8%;
+  height: 6.5%;
+  --highlight-radius: 11px;
 }
 
 .meeting-slide-qr-signature {
@@ -5655,13 +5661,70 @@ body { background: #fff; }
 }
 
 .guide-phone.meeting-demo-active .meeting-slide-qr-signature {
-  animation: meeting-slide-qr-signature-v48 var(--meeting-duration) ease infinite;
+  animation: meeting-slide-qr-signature-v49 var(--meeting-duration) ease infinite;
 }
 
-@keyframes meeting-slide-qr-signature-v48 {
-  0%, 88% { opacity: 0; }
-  88.4%, 90.9% { opacity: 1; }
-  91.3%, 100% { opacity: 0; }
+@keyframes meeting-slide-qr-signature-v49 {
+  0%, 81.1% { opacity: 0; }
+  81.5%, 87.1% { opacity: 1; }
+  87.5%, 100% { opacity: 0; }
+}
+
+.meeting-pdf-worker-name,
+.meeting-pdf-worker-signature {
+  position: absolute;
+  z-index: 22;
+  top: 72.01%;
+  height: 1.82%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: #071321;
+  background: #fff;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.meeting-pdf-worker-name {
+  left: 9.73%;
+  width: 13.26%;
+  font-family: "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  font-size: clamp(6px, .72vw, 10px);
+  font-weight: 800;
+}
+
+.meeting-pdf-worker-signature {
+  left: 23.13%;
+  width: 13.26%;
+  font-family: "Power TBM Signature", "Apple SD Gothic Neo", sans-serif;
+  font-size: clamp(11px, 1.12vw, 16px);
+  font-weight: 400;
+  letter-spacing: .01em;
+}
+
+.meeting-pdf-worker-name b,
+.meeting-pdf-worker-signature b {
+  display: block;
+  font: inherit;
+}
+
+.meeting-pdf-worker-signature b { transform: rotate(-2deg); }
+
+.guide-phone.meeting-demo-active .meeting-pdf-worker-name,
+.guide-phone.meeting-demo-active .meeting-pdf-worker-signature {
+  animation: meeting-slide-pdf-v3 var(--meeting-duration) ease infinite;
+}
+
+.guide-phone.meeting-demo-active.is-paused .meeting-pdf-worker-name,
+.guide-phone.meeting-demo-active.is-paused .meeting-pdf-worker-signature {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meeting-pdf-worker-name,
+  .meeting-pdf-worker-signature { display: none !important; }
 }
 
 @media (max-width: 760px) {
