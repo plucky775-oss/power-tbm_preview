@@ -1,14 +1,14 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v44-20260802`;
+const CACHE_NAME = `${CACHE_PREFIX}v45-20260802`;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260802-offline-pwa-v44',
-  './app.js?v=20260802-offline-pwa-v44',
-  './pwa.js?v=20260802-offline-pwa-v44',
+  './styles.css?v=20260802-pdf-signature-v45',
+  './app.js?v=20260802-pdf-signature-v45',
+  './pwa.js?v=20260802-pdf-signature-v45',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',

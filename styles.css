@@ -2346,7 +2346,7 @@ button { color: inherit; }
 .meeting-focus-signature,
 .meeting-focus-sign-saved { left: 53.3%; top: 57%; width: 27.8%; height: 6.5%; --highlight-radius: 11px; }
 .meeting-focus-sign-pad { left: 6.5%; top: 37.4%; width: 87%; height: 24.2%; }
-.meeting-focus-pdf { left: 2.4%; top: 11.7%; width: 95.2%; height: 59.7%; }
+.meeting-focus-pdf { left: 2.4%; top: 15.6%; width: 95.2%; height: 62.1%; }
 .meeting-focus-calendar-day { left: 69.55%; top: 59.15%; width: 12.05%; height: 5.75%; --highlight-radius: 11px; }
 .meeting-focus-calendar-record { left: 5.7%; top: 73.2%; width: 88.6%; height: 23.5%; }
 
@@ -5097,6 +5097,45 @@ body { background: #fff; }
   transform: rotate(-2deg);
 }
 
+/* PDF 원본의 서명란도 앞 단계에서 저장한 최재혁 서명과 일치시킵니다. */
+.meeting-pdf-signature {
+  position: absolute;
+  z-index: 21;
+  left: 75.05%;
+  top: 68%;
+  width: 15.15%;
+  height: 2.1%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: #071321;
+  background: #fff;
+  font-family: "Power TBM Signature", "Apple SD Gothic Neo", sans-serif;
+  font-size: clamp(12px, 1.25vw, 18px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.meeting-pdf-signature b {
+  display: block;
+  font: inherit;
+  font-weight: 400;
+  transform: rotate(-2deg);
+}
+
+.guide-phone.meeting-demo-active .meeting-pdf-signature {
+  animation: meeting-slide-pdf-v3 var(--meeting-duration) ease infinite;
+}
+
+.guide-phone.meeting-demo-active.is-paused .meeting-pdf-signature {
+  animation-play-state: paused;
+}
+
 /* 화면 아래 안내막은 제거하고, 터치·체크·저장 피드백은 유지합니다. */
 .guide-phone .demo-caption,
 .guide-phone .meeting-caption,
@@ -5120,6 +5159,7 @@ body { background: #fff; }
     opacity: 1 !important;
     animation: none !important;
   }
+  .meeting-pdf-signature { display: none !important; }
 }
 
 /* ===== DEMO-ONLY SINGLE PAGE ===== */
