@@ -83,6 +83,7 @@ const context = vm.createContext({
   Response,
   Headers,
   URL,
+  fetch,
   console
 });
 
@@ -110,9 +111,9 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260802-golden-rules-video-v46',
-  './app.js?v=20260802-golden-rules-video-v46',
-  './pwa.js?v=20260802-golden-rules-video-v46'
+  './styles.css?v=20260802-smooth-playback-v47',
+  './app.js?v=20260802-smooth-playback-v47',
+  './pwa.js?v=20260802-smooth-playback-v47'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
 
@@ -134,6 +135,7 @@ assert.deepEqual(await pngSize('assets/brand/power-tbm-icon-512.png'), [512, 512
 assert.deepEqual(await pngSize('assets/brand/power-tbm-maskable-512.png'), [512, 512]);
 
 const indexSource = await readFile(path.join(siteRoot, 'index.html'), 'utf8');
+const appSource = await readFile(path.join(siteRoot, 'app.js'), 'utf8');
 const pwaSource = await readFile(path.join(siteRoot, 'pwa.js'), 'utf8');
 assert.match(indexSource, /rel="manifest" href="manifest\.webmanifest"/);
 assert.match(indexSource, /id="homeReset"/);
@@ -142,6 +144,10 @@ assert.match(indexSource, /id="goldenRulesVideo"/);
 assert.match(indexSource, /golden-rules-11-rule-1-muted\.mp4/);
 assert.match(indexSource, /goldenRulesVideo[\s\S]*?muted[\s\S]*?playsinline/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
+assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
+assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
+assert.match(workerSource, /PRECACHE_CONCURRENCY\s*=\s*3/);
+assert.match(workerSource, /rangeBufferCache\s*=\s*new Map\(\)/);
 
 const server = spawn('python3', ['-m', 'http.server', '8137', '--bind', '127.0.0.1'], {
   cwd: siteRoot,
