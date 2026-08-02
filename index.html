@@ -4,6 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#173e56">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Power TBM">
+  <meta name="format-detection" content="telephone=no">
   <meta name="description" content="Power TBM의 기상정보, TBM 회의록, AI 안전검토, 전자서명과 현장도구를 한 화면에서 자동 시연합니다.">
   <meta name="author" content="안산지사 최재혁 차장">
   <meta property="og:type" content="website">
@@ -13,8 +18,10 @@
   <meta property="og:image:alt" content="Power TBM 홈 화면">
   <meta name="music-credit" content="Soundtrack From the Starcourt Mall — Bryan Teoh, CC0 1.0 Universal">
   <title>Power TBM | 자동 시연</title>
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/brand/power-tbm-icon.png">
-  <link rel="apple-touch-icon" href="assets/brand/power-tbm-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/power-tbm-icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/power-tbm-apple-touch-180.png">
   <link rel="preload" as="image" href="assets/screens/guide/home-alert-expanded-v8.jpeg">
   <link rel="preload" as="audio" href="assets/audio/00-opening-taehyung.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/01-weather-jisoo.mp3" type="audio/mpeg">
@@ -25,13 +32,14 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260802-home-sound-v43">
-  <script src="app.js?v=20260802-home-sound-v43" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260802-offline-pwa-v44">
+  <script src="app.js?v=20260802-offline-pwa-v44" defer></script>
+  <script src="pwa.js?v=20260802-offline-pwa-v44" defer></script>
 </head>
 <body class="demo-only-page">
   <a class="skip-link" href="#main">본문으로 바로가기</a>
   <header class="demo-only-header">
-    <button class="demo-only-brand" id="demoHome" type="button" aria-label="Power TBM 자동 시연 처음으로 돌아가기" aria-controls="tourStage" title="처음으로">
+    <button class="demo-only-brand" id="homeReset" type="button" aria-label="처음 화면으로 돌아가기" title="처음 화면으로 돌아가기">
       <img src="assets/brand/power-tbm-icon.png" alt="" width="48" height="48">
       <span><b>Power TBM</b></span>
     </button>
@@ -52,15 +60,9 @@
       </div>
       <p class="demo-only-developer">개발자 : 안산지사 최재혁 차장</p>
     </div>
-    <button class="demo-sound-toggle needs-start" id="demoMute" type="button" aria-pressed="false" aria-label="사운드 켜기" title="사운드 켜기">
-      <span class="demo-sound-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" focusable="false">
-          <path class="demo-sound-speaker" d="M4 9.2v5.6h3.6l4.6 3.7v-13L7.6 9.2H4Z"></path>
-          <path class="demo-sound-wave" d="M15 8.2c1 .9 1.5 2.2 1.5 3.8S16 14.9 15 15.8M17.7 5.7c1.7 1.6 2.6 3.7 2.6 6.3s-.9 4.7-2.6 6.3"></path>
-          <path class="demo-sound-slash" d="m15.2 9.2 4.3 5.6m0-5.6-4.3 5.6"></path>
-        </svg>
-      </span>
-      <span class="demo-sound-copy"><span>사운드</span><strong id="demoSoundState">OFF</strong></span>
+    <button class="demo-sound-toggle needs-start" id="demoMute" type="button" aria-pressed="false" aria-label="음성 및 배경음 재생 시작" title="음성 및 배경음 재생 시작">
+      <span class="demo-sound-icon" aria-hidden="true">🔊</span>
+      <span class="demo-sound-label">소리 시작</span>
     </button>
   </header>
 

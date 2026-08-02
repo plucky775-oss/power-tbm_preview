@@ -1,0 +1,37 @@
+{
+  "id": "./",
+  "name": "Power TBM 자동 시연",
+  "short_name": "Power TBM",
+  "description": "기상정보부터 TBM 회의록, AI 안전검토, 전자서명과 현장도구까지 Power TBM의 전체 흐름을 소리와 함께 시연합니다.",
+  "lang": "ko-KR",
+  "dir": "ltr",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#071720",
+  "theme_color": "#173e56",
+  "categories": ["business", "productivity", "utilities"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "assets/brand/power-tbm-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/brand/power-tbm-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/brand/power-tbm-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
