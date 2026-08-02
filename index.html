@@ -24,6 +24,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/power-tbm-apple-touch-180.png">
   <link rel="preload" as="image" href="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg">
   <link rel="preload" as="image" href="assets/screens/guide/home-weather-alert-expanded-v48.jpeg">
+  <link rel="preload" as="image" href="assets/video/power-tbm-button-click-poster.jpg">
   <link rel="preload" as="audio" href="assets/audio/00-opening-taehyung.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/01-weather-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/02-tbm-basic-taehyung.mp3" type="audio/mpeg">
@@ -33,12 +34,32 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260802-field-tools-order-v53">
-  <script src="app.js?v=20260802-field-tools-order-v53" defer></script>
-  <script src="pwa.js?v=20260802-field-tools-order-v53" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260802-button-launch-v54">
+  <script src="app.js?v=20260802-button-launch-v54" defer></script>
+  <script src="pwa.js?v=20260802-button-launch-v54" defer></script>
+  <noscript>
+    <style>
+      .launch-intro { display: none !important; }
+      .demo-only-page.launch-prelude-active > .demo-only-header,
+      .demo-only-page.launch-prelude-active > #main { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
 </head>
-<body class="demo-only-page">
+<body class="demo-only-page launch-prelude-active">
   <a class="skip-link" href="#main">본문으로 바로가기</a>
+  <div class="launch-intro is-active" id="launchIntro" aria-hidden="true">
+    <video
+      class="launch-intro-video"
+      id="launchIntroVideo"
+      muted
+      playsinline
+      preload="auto"
+      poster="assets/video/power-tbm-button-click-poster.jpg"
+      tabindex="-1"
+    >
+      <source src="assets/video/power-tbm-button-click.mp4" type="video/mp4">
+    </video>
+  </div>
   <header class="demo-only-header">
     <button class="demo-only-brand" id="homeReset" type="button" aria-label="처음 화면으로 돌아가기" title="처음 화면으로 돌아가기">
       <img src="assets/brand/power-tbm-icon.png" alt="" width="48" height="48">

@@ -5500,6 +5500,79 @@ body { background: #fff; }
   .demo-only-page .tour-detail { display: none; }
 }
 
+/* ===== v54 · APP BUTTON LAUNCH PRELUDE ===== */
+.launch-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #02060e;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  contain: strict;
+  will-change: opacity;
+  transition:
+    opacity .7s linear,
+    visibility 0s linear .7s;
+}
+
+.launch-intro.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.launch-intro.is-active.is-revealing {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity .7s linear,
+    visibility 0s linear .7s;
+}
+
+.launch-intro-video {
+  display: block;
+  width: min(100vw, 100vh);
+  height: min(100vw, 100vh);
+  width: min(100vw, 100dvh);
+  height: min(100vw, 100dvh);
+  max-width: none;
+  object-fit: contain;
+  background: #02060e;
+  transform: translateZ(0);
+}
+
+.demo-only-page > .demo-only-header,
+.demo-only-page > #main {
+  transition:
+    opacity .7s cubic-bezier(.25, .7, .25, 1),
+    transform .7s cubic-bezier(.2, .72, .2, 1);
+  will-change: opacity, transform;
+}
+
+.demo-only-page.launch-prelude-active > .demo-only-header,
+.demo-only-page.launch-prelude-active > #main {
+  opacity: 0;
+  transform: scale(.992);
+}
+
+.demo-only-page.launch-prelude-active.launch-prelude-revealing > .demo-only-header,
+.demo-only-page.launch-prelude-active.launch-prelude-revealing > #main {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .launch-intro,
+  .demo-only-page > .demo-only-header,
+  .demo-only-page > #main {
+    transition: none;
+  }
+}
+
 @media (max-width: 760px) and (max-height: 690px) {
   .demo-only-header { min-height: 70px; }
   .demo-only-brand img { width: 34px; height: 34px; }

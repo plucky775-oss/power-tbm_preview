@@ -1,15 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v53-20260802`;
+const CACHE_NAME = `${CACHE_PREFIX}v54-20260802`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260802-field-tools-order-v53',
-  './app.js?v=20260802-field-tools-order-v53',
-  './pwa.js?v=20260802-field-tools-order-v53',
+  './styles.css?v=20260802-button-launch-v54',
+  './app.js?v=20260802-button-launch-v54',
+  './pwa.js?v=20260802-button-launch-v54',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -67,6 +67,8 @@ const PRECACHE_URLS = [
   './assets/screens/guide/weather-week.webp',
   './assets/video/golden-rules-11-rule-1-muted.mp4',
   './assets/video/golden-rules-11-rule-1-poster.jpg',
+  './assets/video/power-tbm-button-click-poster.jpg',
+  './assets/video/power-tbm-button-click.mp4',
   './assets/video/power-tbm-opening-v22-poster.jpg',
   './assets/video/power-tbm-opening-v22.mp4'
 ];

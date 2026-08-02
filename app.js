@@ -218,6 +218,8 @@
   const meetingDemoPage = $('#meetingDemoPage');
   const supportDemoPage = $('#supportDemoPage');
   const homeReset = $('#homeReset');
+  const launchIntro = $('#launchIntro');
+  const launchIntroVideo = $('#launchIntroVideo');
   const openingDemoVideo = $('#openingDemoVideo');
   const demoNarration = $('#demoNarration');
   const demoBgm = $('#demoBgm');
@@ -281,6 +283,11 @@
   // as separate moments prevents the opening video from cutting straight to
   // the home screen.
   const stageTransitionTiming = { fadeOut: 700, coveredHold: 120 };
+  // The supplied button clip begins its own fade at about 2.55 seconds and is
+  // fully dark at 3.5 seconds. Reveal the existing opening across that exact
+  // interval so both scenes read as one continuous app launch.
+  const launchRevealAtSeconds = 2.53;
+  const launchCrossfadeMs = 700;
   // Each stage advances while its final scene is still fully visible.
   // The weather timeline begins fading its last comparison earlier than the
   // other stages, so it intentionally has a different end ratio.
@@ -362,6 +369,13 @@
   let sequenceRemaining = demoDurationFallbacks.intro;
   let stageTransitioning = false;
   let stageTransitionTimers = [];
+  let launchActive = false;
+  let launchRevealStarted = false;
+  let launchContentStarted = false;
+  let launchRunToken = 0;
+  let launchFinishTimer = null;
+  let launchFrameHandle = null;
+  let launchFrameUsesVideoCallback = false;
   let narrationRequested = false;
   let narrationMuted = false;
   let narrationUnlocked = false;
@@ -864,6 +878,155 @@
     return true;
   };
 
+  const clearLaunchFinishTimer = () => {
+    if (launchFinishTimer) window.clearTimeout(launchFinishTimer);
+    launchFinishTimer = null;
+  };
+
+  const cancelLaunchFrame = () => {
+    if (launchFrameHandle === null) return;
+    if (launchFrameUsesVideoCallback && launchIntroVideo?.cancelVideoFrameCallback) {
+      launchIntroVideo.cancelVideoFrameCallback(launchFrameHandle);
+    } else window.cancelAnimationFrame(launchFrameHandle);
+    launchFrameHandle = null;
+    launchFrameUsesVideoCallback = false;
+  };
+
+  const watchLaunchProgress = (token = launchRunToken) => {
+    cancelLaunchFrame();
+    const tick = () => {
+      launchFrameHandle = null;
+      if (token !== launchRunToken || !launchActive || launchRevealStarted || !launchIntroVideo) return;
+      if (launchIntroVideo.currentTime >= launchRevealAtSeconds) {
+        beginLaunchReveal(token);
+        return;
+      }
+      if (launchIntroVideo.paused || demoPaused || document.hidden) return;
+      if (launchIntroVideo.requestVideoFrameCallback) {
+        launchFrameUsesVideoCallback = true;
+        launchFrameHandle = launchIntroVideo.requestVideoFrameCallback(tick);
+      } else {
+        launchFrameUsesVideoCallback = false;
+        launchFrameHandle = window.requestAnimationFrame(tick);
+      }
+    };
+    if (launchIntroVideo?.requestVideoFrameCallback) {
+      launchFrameUsesVideoCallback = true;
+      launchFrameHandle = launchIntroVideo.requestVideoFrameCallback(tick);
+    } else {
+      launchFrameUsesVideoCallback = false;
+      launchFrameHandle = window.requestAnimationFrame(tick);
+    }
+  };
+
+  const updateLaunchStateData = () => {
+    if (!guideStage) return;
+    guideStage.dataset.launchState = launchActive
+      ? launchRevealStarted
+        ? 'revealing'
+        : 'button'
+      : 'complete';
+  };
+
+  const stopLaunchPrelude = ({ reset = true, revealContent = true } = {}) => {
+    launchRunToken += 1;
+    clearLaunchFinishTimer();
+    cancelLaunchFrame();
+    launchActive = false;
+    launchRevealStarted = false;
+    launchContentStarted = false;
+    launchIntroVideo?.pause();
+    if (reset && launchIntroVideo) {
+      try { launchIntroVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+    }
+    launchIntro?.classList.remove('is-active', 'is-revealing');
+    if (revealContent) document.body.classList.remove('launch-prelude-active', 'launch-prelude-revealing');
+    updateLaunchStateData();
+  };
+
+  const completeLaunchPrelude = (token = launchRunToken) => {
+    if (token !== launchRunToken || !launchActive) return;
+    clearLaunchFinishTimer();
+    cancelLaunchFrame();
+    launchActive = false;
+    launchIntroVideo?.pause();
+    launchIntro?.classList.remove('is-active', 'is-revealing');
+    document.body.classList.remove('launch-prelude-active', 'launch-prelude-revealing');
+    updateLaunchStateData();
+  };
+
+  const startIntroContentAfterLaunch = ({ restartVideo = true } = {}) => {
+    if (demoPage !== 'intro' || launchContentStarted || demoPaused || document.hidden) return;
+    launchContentStarted = true;
+    if (narrationRequested) startNarrationForPage('intro', { restartVideo });
+    else {
+      syncOpeningVideoPlayback({ restart: restartVideo });
+      scheduleSequenceAdvance();
+    }
+    updateLaunchStateData();
+  };
+
+  const beginLaunchReveal = (token = launchRunToken) => {
+    if (token !== launchRunToken || !launchActive || launchRevealStarted) return;
+    cancelLaunchFrame();
+    launchRevealStarted = true;
+    launchIntro?.classList.add('is-revealing');
+    document.body.classList.add('launch-prelude-revealing');
+    startIntroContentAfterLaunch({ restartVideo: true });
+    clearLaunchFinishTimer();
+    launchFinishTimer = window.setTimeout(() => completeLaunchPrelude(token), launchCrossfadeMs + 80);
+    updateLaunchStateData();
+  };
+
+  const playLaunchIntroVideo = ({ restart = false, token = launchRunToken } = {}) => {
+    if (!launchIntroVideo || token !== launchRunToken || !launchActive || launchRevealStarted) return;
+    launchIntroVideo.muted = !narrationRequested || narrationMuted;
+    launchIntroVideo.volume = 1;
+    if (restart) {
+      try { launchIntroVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+    }
+    if (demoPaused || document.hidden) return;
+    const retryMuted = () => {
+      if (token !== launchRunToken || !launchActive || launchRevealStarted) return;
+      launchIntroVideo.muted = true;
+      const mutedAttempt = launchIntroVideo.play();
+      watchLaunchProgress(token);
+      mutedAttempt?.catch?.(() => beginLaunchReveal(token));
+    };
+    const playAttempt = launchIntroVideo.play();
+    watchLaunchProgress(token);
+    playAttempt?.catch?.(() => {
+      if (launchIntroVideo.muted) beginLaunchReveal(token);
+      else retryMuted();
+    });
+  };
+
+  const startLaunchPrelude = ({ restart = true } = {}) => {
+    if (demoPage !== 'intro') return;
+    launchRunToken += 1;
+    const token = launchRunToken;
+    clearLaunchFinishTimer();
+    launchActive = true;
+    launchRevealStarted = false;
+    launchContentStarted = false;
+    openingDemoVideo?.pause();
+    if (openingDemoVideo) {
+      try { openingDemoVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+    }
+    pauseDemoBgm();
+    launchIntro?.classList.remove('is-revealing');
+    launchIntro?.classList.add('is-active');
+    document.body.classList.remove('launch-prelude-revealing');
+    document.body.classList.add('launch-prelude-active');
+    updateLaunchStateData();
+    if (!launchIntroVideo || reduceMotion) {
+      beginLaunchReveal(token);
+      completeLaunchPrelude(token);
+      return;
+    }
+    playLaunchIntroVideo({ restart, token });
+  };
+
   const getStageRunDuration = (page) => {
     if (page === 'intro') {
       const videoDuration = Number(openingDemoVideo?.duration);
@@ -912,6 +1075,10 @@
 
   const startCurrentStageClock = ({ restartVideo = true } = {}) => {
     clearSequenceTimer();
+    if (demoPage === 'intro') {
+      startLaunchPrelude({ restart: restartVideo });
+      return;
+    }
     if (narrationRequested) {
       startNarrationForPage(demoPage, { restartVideo });
       return;
@@ -952,6 +1119,7 @@
   const stopAllDemos = () => {
     clearSequenceTimer();
     clearStageTransitionTimers();
+    stopLaunchPrelude();
     stopGoldenRulesClock();
     stopNarrationPlayback({ keepRequested: false });
     stopDemoBgm();
@@ -990,7 +1158,7 @@
     guidePhone.classList.toggle('is-paused', demoPaused || document.hidden);
     demoControls?.classList.add('active');
     if (guideIndex) guideIndex.textContent = 'OPENING';
-    if (!narrationRequested) syncOpeningVideoPlayback({ restart });
+    openingDemoVideo?.pause();
     updateDemoPageButtons();
     updateDemoButton();
     if (!stageTransitioning) startCurrentStageClock({ restartVideo: restart });
@@ -998,6 +1166,7 @@
 
   const startWeatherDemo = ({ restart = false } = {}) => {
     if (!guidePhone || reduceMotion || currentGuide !== 0 || demoPage !== 'weather') return;
+    stopLaunchPrelude();
     stopGoldenRulesClock();
     openingDemoVideo?.pause();
     if (restart) {
@@ -1013,6 +1182,7 @@
 
   const startMeetingDemo = ({ restart = false } = {}) => {
     if (!guidePhone || demoPage !== 'meeting') return;
+    stopLaunchPrelude();
     stopGoldenRulesClock();
     openingDemoVideo?.pause();
     guidePhone.classList.remove('demo-active');
@@ -1033,6 +1203,7 @@
 
   const startSupportDemo = ({ restart = false } = {}) => {
     if (!guidePhone || demoPage !== 'support') return;
+    stopLaunchPrelude();
     openingDemoVideo?.pause();
     guidePhone.classList.remove('demo-active', 'meeting-demo-active');
     if (restart) {
@@ -1053,6 +1224,7 @@
 
   const startClosingDemo = ({ restart = false } = {}) => {
     if (!guidePhone || demoPage !== 'closing') return;
+    stopLaunchPrelude();
     stopGoldenRulesClock();
     openingDemoVideo?.pause();
     guidePhone.classList.remove('demo-active', 'meeting-demo-active', 'support-demo-active');
@@ -1097,6 +1269,7 @@
   const applyDemoStage = (page) => {
     if (!guidePhone || !stageClassByPage[page]) return;
     clearSequenceTimer();
+    stopLaunchPrelude();
     if (page !== 'support') stopGoldenRulesClock();
     if (demoPage === 'intro' && page !== 'intro') openingDemoVideo?.pause();
     demoPage = page;
@@ -1135,12 +1308,8 @@
       });
     }
     if (page === 'intro') {
-      if (stageTransitioning) {
-        openingDemoVideo?.pause();
-        try { openingDemoVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
-      } else if (!narrationRequested) {
-        syncOpeningVideoPlayback({ restart: true });
-      }
+      openingDemoVideo?.pause();
+      try { openingDemoVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
     } else openingDemoVideo?.pause();
     updateDemoPageButtons();
     updateDemoButton();
@@ -1158,6 +1327,7 @@
     }
 
     clearSequenceTimer();
+    if (page !== 'intro' && launchActive) stopLaunchPrelude();
     if (narrationRequested) stopNarrationPlayback({ keepRequested: true });
     updateDemoPageButtons();
     const hasVisibleStage = stageActiveClasses.some((className) => guidePhone.classList.contains(className));
@@ -1265,7 +1435,7 @@
     if (userInitiated) enableNarrationFromGesture();
     demoMode = 'sequence';
     demoPaused = false;
-    switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: userInitiated && !narrationUnlocked });
+    switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: userInitiated });
   };
 
   homeReset?.addEventListener('click', () => {
@@ -1325,6 +1495,22 @@
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'closing' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
     guidePhone.classList.toggle('is-paused', demoPaused);
+    if (launchActive && !launchRevealStarted) {
+      if (demoPaused) {
+        cancelLaunchFrame();
+        launchIntroVideo?.pause();
+      } else playLaunchIntroVideo({ restart: false });
+      updateDemoButton();
+      return;
+    }
+    if (launchActive) {
+      if (demoPaused) launchIntroVideo?.pause();
+      else if (!launchContentStarted) {
+        startIntroContentAfterLaunch({ restartVideo: true });
+        updateDemoButton();
+        return;
+      }
+    }
     if (demoPage === 'support') syncGoldenRulesVideo(getGoldenRulesVisualTime());
     if (narrationRequested && demoNarration) {
       if (demoPaused) {
@@ -1367,9 +1553,27 @@
     narrationMuted = !narrationMuted;
     if (demoNarration) demoNarration.muted = narrationMuted;
     if (demoBgm) demoBgm.muted = narrationMuted;
+    if (launchIntroVideo) launchIntroVideo.muted = !narrationRequested || narrationMuted;
     updateDemoStateData();
     updateNarrationButton();
   });
+
+  if (launchIntroVideo) {
+    launchIntroVideo.addEventListener('timeupdate', () => {
+      if (launchActive && !launchRevealStarted && launchIntroVideo.currentTime >= launchRevealAtSeconds) {
+        beginLaunchReveal(launchRunToken);
+      }
+    });
+    launchIntroVideo.addEventListener('ended', () => {
+      if (!launchActive) return;
+      if (!launchRevealStarted) beginLaunchReveal(launchRunToken);
+    });
+    launchIntroVideo.addEventListener('error', () => {
+      if (!launchActive) return;
+      console.warn('앱 실행 버튼 영상을 불러오지 못해 기존 오프닝으로 전환합니다.', launchIntroVideo.error);
+      beginLaunchReveal(launchRunToken);
+    });
+  }
 
   if (guideStage && !reduceMotion && 'IntersectionObserver' in window) {
     const demoObserver = new IntersectionObserver((entries) => {
@@ -1387,10 +1591,22 @@
   } else if (!reduceMotion) {
     if (demoPage === 'intro') startIntroDemo();
     else startWeatherDemo();
-  }
+  } else stopLaunchPrelude();
   document.addEventListener('visibilitychange', () => {
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'closing' && currentGuide !== 0)) return;
     guidePhone.classList.toggle('is-paused', document.hidden || demoPaused);
+    if (launchActive && document.hidden) {
+      cancelLaunchFrame();
+      launchIntroVideo?.pause();
+    }
+    if (launchActive && !launchRevealStarted) {
+      if (!document.hidden && !demoPaused) playLaunchIntroVideo({ restart: false });
+      return;
+    }
+    if (launchActive && !document.hidden && !demoPaused && !launchContentStarted) {
+      startIntroContentAfterLaunch({ restartVideo: true });
+      return;
+    }
     if (demoPage === 'support') syncGoldenRulesVideo(getGoldenRulesVisualTime());
     if (narrationRequested && demoNarration) {
       if (document.hidden) {
