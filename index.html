@@ -34,9 +34,9 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260816-media-cache-v60">
-  <script src="app.js?v=20260816-media-cache-v60" defer></script>
-  <script src="pwa.js?v=20260816-media-cache-v60" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260816-direct-start-v61">
+  <script src="app.js?v=20260816-direct-start-v61" defer></script>
+  <script src="pwa.js?v=20260816-direct-start-v61" defer></script>
   <noscript>
     <style>
       .launch-intro { display: none !important; }
@@ -63,21 +63,18 @@
       <div class="launch-start-copy">
         <span>POWER TBM · AUTO DEMO</span>
         <strong id="launchStartTitle">자동시연을 시작합니다</strong>
-        <small>시작 버튼을 누른 뒤 사운드 모드를 선택하세요.</small>
+        <small>원하는 재생 모드를 한 번 눌러 시작하세요.</small>
       </div>
-      <button class="launch-start-button" id="launchStartButton" type="button" aria-expanded="false" aria-controls="launchSoundChoices">
-        <span>시작</span><i aria-hidden="true">→</i>
-      </button>
-      <div class="launch-sound-choices" id="launchSoundChoices" aria-label="사운드 모드 선택" hidden>
-        <p>사운드 모드</p>
+      <div class="launch-sound-choices" id="launchSoundChoices" role="group" aria-label="사운드 모드 선택">
+        <p>재생 모드 선택</p>
         <button class="launch-sound-choice launch-sound-on" type="button" data-launch-sound="on">
           <span aria-hidden="true">🔊</span>
-          <b>소리로 시작</b>
+          <b>소리로 재생</b>
           <small>내레이션과 배경음 재생</small>
         </button>
         <button class="launch-sound-choice" type="button" data-launch-sound="off">
           <span aria-hidden="true">🔇</span>
-          <b>무음으로 시작</b>
+          <b>무음으로 재생</b>
           <small>화면 시연만 재생</small>
         </button>
       </div>

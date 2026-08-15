@@ -221,7 +221,6 @@
   const launchIntro = $('#launchIntro');
   const launchIntroVideo = $('#launchIntroVideo');
   const launchStartPanel = $('#launchStartPanel');
-  const launchStartButton = $('#launchStartButton');
   const launchSoundChoices = $('#launchSoundChoices');
   const launchSoundButtons = $$('[data-launch-sound]', launchStartPanel || document);
   const openingDemoVideo = $('#openingDemoVideo');
@@ -968,19 +967,18 @@
     guideStage.dataset.launchState = launchActive
       ? launchRevealStarted
         ? 'revealing'
-        : 'button'
+        : 'choice'
       : launchChoiceMade
         ? 'complete'
         : 'awaiting-start';
   };
 
   const resetLaunchChoiceControls = () => {
-    if (launchStartButton) {
-      launchStartButton.hidden = false;
-      launchStartButton.setAttribute('aria-expanded', 'false');
-    }
-    if (launchSoundChoices) launchSoundChoices.hidden = true;
-    launchStartPanel?.classList.remove('is-choosing-sound');
+    if (launchSoundChoices) launchSoundChoices.hidden = false;
+  };
+
+  const focusLaunchSoundChoice = () => {
+    window.requestAnimationFrame(() => launchSoundButtons[0]?.focus({ preventScroll: true }));
   };
 
   const showLaunchGate = ({ resetVideo = true, focus = true } = {}) => {
@@ -992,9 +990,7 @@
       document.body.classList.remove('launch-prelude-revealing');
       document.body.classList.add('launch-prelude-active');
       updateLaunchStateData();
-      if (focus && launchSoundChoices?.hidden) {
-        window.requestAnimationFrame(() => launchStartButton?.focus({ preventScroll: true }));
-      }
+      if (focus) focusLaunchSoundChoice();
       return;
     }
     launchRunToken += 1;
@@ -1020,7 +1016,7 @@
     document.body.classList.remove('launch-prelude-revealing');
     document.body.classList.add('launch-prelude-active');
     updateLaunchStateData();
-    if (focus) window.requestAnimationFrame(() => launchStartButton?.focus({ preventScroll: true }));
+    if (focus) focusLaunchSoundChoice();
   };
 
   const stopLaunchPrelude = ({ reset = true, revealContent = true } = {}) => {
@@ -1542,31 +1538,16 @@
     switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: userInitiated });
   };
 
-  launchStartButton?.addEventListener('click', () => {
-    launchStartButton.hidden = true;
-    launchStartButton.setAttribute('aria-expanded', 'true');
-    if (launchSoundChoices) launchSoundChoices.hidden = false;
-    launchStartPanel?.classList.add('is-choosing-sound');
-    window.requestAnimationFrame(() => launchSoundButtons[0]?.focus({ preventScroll: true }));
-  });
-
   launchSoundButtons.forEach((button) => button.addEventListener('click', () => {
     const muted = button.dataset.launchSound !== 'on';
     launchChoiceMade = true;
     launchIntro?.classList.remove('is-awaiting-start');
     launchIntro?.classList.add('is-started');
-    launchStartPanel?.classList.remove('is-choosing-sound');
     enableNarrationFromGesture({ muted });
     demoMode = 'sequence';
     demoPaused = false;
     switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: true });
   }));
-
-  launchIntro?.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape' || launchSoundChoices?.hidden) return;
-    resetLaunchChoiceControls();
-    launchStartButton?.focus({ preventScroll: true });
-  });
 
   homeReset?.addEventListener('click', () => {
     clearStageTransitionTimers();
