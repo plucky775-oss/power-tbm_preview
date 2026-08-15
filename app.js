@@ -228,6 +228,8 @@
   const demoNarration = $('#demoNarration');
   const demoBgm = $('#demoBgm');
   const demoMute = $('#demoMute');
+  const cinematicBackdrop = $('#cinematicBackdrop');
+  const cinematicVideos = $$('[data-cinematic-page]', cinematicBackdrop || document);
   const weatherDemo = $('#weatherDemo');
   const meetingDemo = $('#meetingDemo');
   const supportDemo = $('#supportDemo');
@@ -561,6 +563,41 @@
     goldenRulesClockFrame = window.requestAnimationFrame(tick);
   };
 
+  const cinematicPlaybackAllowed = !reduceMotion && !navigator.connection?.saveData;
+
+  const syncCinematicBackdrop = () => {
+    if (!cinematicBackdrop) return;
+    const previousPage = cinematicBackdrop.dataset.demoPage;
+    const pageChanged = previousPage !== demoPage;
+    const playbackPaused = demoPaused || document.hidden;
+    cinematicBackdrop.dataset.demoPage = demoPage;
+    cinematicBackdrop.dataset.demoMode = demoMode;
+    cinematicBackdrop.classList.toggle('is-paused', playbackPaused);
+    cinematicBackdrop.classList.toggle('is-static', !cinematicPlaybackAllowed);
+
+    cinematicVideos.forEach((video) => {
+      const active = video.dataset.cinematicPage === demoPage;
+      video.muted = true;
+      video.defaultMuted = true;
+      if (!active) {
+        video.pause();
+        try { video.currentTime = 0; } catch (_) { /* metadata may not be ready */ }
+        return;
+      }
+      if (pageChanged) {
+        try { video.currentTime = 0; } catch (_) { /* metadata may not be ready */ }
+      }
+      if (!cinematicPlaybackAllowed || playbackPaused) {
+        video.pause();
+        return;
+      }
+      if (!video.paused) return;
+      video.play().catch(() => {
+        // The poster remains visible when a browser or data-saving mode blocks video.
+      });
+    });
+  };
+
   const updateDemoStateData = () => {
     if (!guideStage) return;
     guideStage.dataset.demoPage = demoPage;
@@ -570,6 +607,7 @@
     guideStage.dataset.bgmState = demoBgm ? (demoBgm.paused ? 'paused' : 'playing') : 'unavailable';
     const segment = narrationByPage[demoPage]?.[narrationSegmentIndex];
     guideStage.dataset.narrationSegment = narrationRequested && segment ? segment.id.slice(0, 2) : '';
+    syncCinematicBackdrop();
   };
 
   const updateNarrationButton = () => {
@@ -734,10 +772,10 @@
 
   const collectNarrationAnimations = (page) => {
     const rootsByPage = {
-      weather: [weatherDemo, $('.demo-explanations'), $('.typhoon-compare')],
-      meeting: [meetingDemo, $('.meeting-explanations')],
-      support: [supportDemo, $('.support-explanations')],
-      closing: [closingDemo, $('.closing-explanation')]
+      weather: [weatherDemo, $('.demo-explanations'), $('.typhoon-compare'), cinematicBackdrop],
+      meeting: [meetingDemo, $('.meeting-explanations'), cinematicBackdrop],
+      support: [supportDemo, $('.support-explanations'), cinematicBackdrop],
+      closing: [closingDemo, $('.closing-explanation'), cinematicBackdrop]
     };
     const seen = new Set();
     syncedAnimations = (rootsByPage[page] || [])
@@ -1592,6 +1630,7 @@
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'closing' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
     guidePhone.classList.toggle('is-paused', demoPaused);
+    syncCinematicBackdrop();
     if (launchActive && !launchRevealStarted) {
       if (demoPaused) {
         cancelLaunchFrame();
@@ -1693,6 +1732,7 @@
   document.addEventListener('visibilitychange', () => {
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'closing' && currentGuide !== 0)) return;
     guidePhone.classList.toggle('is-paused', document.hidden || demoPaused);
+    syncCinematicBackdrop();
     if (launchActive && document.hidden) {
       cancelLaunchFrame();
       launchIntroVideo?.pause();

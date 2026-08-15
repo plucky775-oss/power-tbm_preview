@@ -1,15 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v56-20260815`;
+const CACHE_NAME = `${CACHE_PREFIX}v57-20260815`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260815-launch-sound-v56',
-  './app.js?v=20260815-launch-sound-v56',
-  './pwa.js?v=20260815-launch-sound-v56',
+  './styles.css?v=20260815-cinematic-v57',
+  './app.js?v=20260815-cinematic-v57',
+  './pwa.js?v=20260815-cinematic-v57',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -18,6 +18,16 @@ const PRECACHE_URLS = [
   './assets/audio/05-emergency-jisoo.mp3',
   './assets/audio/06-closing-jisoo.mp3',
   './assets/audio/bgm-starcourt-mall-cc0.mp3',
+  './assets/background/emergency-response-poster.jpg',
+  './assets/background/emergency-response.mp4',
+  './assets/background/field-team-poster.jpg',
+  './assets/background/field-team.mp4',
+  './assets/background/safety-briefing-poster.jpg',
+  './assets/background/safety-briefing.mp4',
+  './assets/background/tablet-review-poster.jpg',
+  './assets/background/tablet-review.mp4',
+  './assets/background/weather-powerlines-poster.jpg',
+  './assets/background/weather-powerlines.mp4',
   './assets/brand/kepco-symbol-v30.png',
   './assets/brand/power-tbm-apple-touch-180.png',
   './assets/brand/power-tbm-icon-192.png',

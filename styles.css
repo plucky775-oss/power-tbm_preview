@@ -6355,6 +6355,114 @@ body { background: #fff; }
   animation: meeting-slide-qr-signature-v51 var(--meeting-duration) ease infinite;
 }
 
+/* ===== v57 · CINEMATIC FIELD BACKDROPS ===== */
+.demo-only-page .tour-section {
+  position: relative;
+  isolation: isolate;
+}
+
+.demo-only-page .tour-shell {
+  position: relative;
+  z-index: 2;
+}
+
+.cinematic-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #071720;
+  pointer-events: none;
+  contain: paint;
+}
+
+.cinematic-backdrop-video {
+  position: absolute;
+  inset: -3%;
+  z-index: 0;
+  width: 106%;
+  height: 106%;
+  max-width: none;
+  object-fit: cover;
+  opacity: 0;
+  filter: saturate(.72) contrast(1.08) brightness(.8);
+  transform: scale(1.025);
+  transition: opacity 1.05s ease;
+  will-change: opacity, transform;
+}
+
+.cinematic-backdrop-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(34, 108, 145, .18), transparent 34%),
+    linear-gradient(90deg, rgba(3, 17, 26, .56), rgba(4, 21, 31, .66) 48%, rgba(4, 20, 30, .78)),
+    linear-gradient(180deg, rgba(3, 17, 26, .4), rgba(3, 16, 25, .72));
+}
+
+.cinematic-backdrop[data-demo-page="weather"] .cinematic-backdrop-weather { opacity: .54; }
+.cinematic-backdrop[data-demo-page="meeting"] .cinematic-backdrop-meeting { opacity: .4; }
+.cinematic-backdrop[data-demo-page="closing"] .cinematic-backdrop-closing { opacity: .48; }
+
+.cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-safety {
+  animation: cinematic-support-safety 50s ease infinite both;
+}
+
+.cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-emergency {
+  animation: cinematic-support-emergency 50s ease infinite both;
+}
+
+.cinematic-backdrop[data-demo-mode="sequence"] .cinematic-backdrop-video {
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+
+.cinematic-backdrop.is-paused .cinematic-backdrop-video {
+  animation-play-state: paused !important;
+}
+
+@keyframes cinematic-support-safety {
+  0%, 81% { opacity: .4; }
+  85%, 100% { opacity: 0; }
+}
+
+@keyframes cinematic-support-emergency {
+  0%, 81% { opacity: 0; }
+  85%, 100% { opacity: .48; }
+}
+
+.demo-only-page .tour-stage {
+  border-color: rgba(255, 255, 255, .15);
+  background: rgba(5, 25, 36, .34);
+  box-shadow: 0 34px 90px rgba(0, 0, 0, .34);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-backdrop-video {
+    animation: none !important;
+    transition: none;
+  }
+  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-safety { opacity: .4; }
+  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-emergency { opacity: 0; }
+}
+
+@media (max-width: 760px) {
+  .cinematic-backdrop-video {
+    inset: -2%;
+    width: 104%;
+    height: 104%;
+    filter: saturate(.65) contrast(1.08) brightness(.7);
+  }
+  .cinematic-backdrop-shade {
+    background:
+      linear-gradient(180deg, rgba(3, 17, 26, .5), rgba(3, 16, 25, .78)),
+      linear-gradient(90deg, rgba(3, 17, 26, .58), rgba(4, 20, 30, .72));
+  }
+}
+
 .guide-phone.meeting-demo-active .meeting-slide-sign-worker {
   animation: meeting-slide-sign-worker-v51 var(--meeting-duration) ease infinite;
 }

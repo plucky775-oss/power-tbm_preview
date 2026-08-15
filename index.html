@@ -34,9 +34,9 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260815-launch-sound-v56">
-  <script src="app.js?v=20260815-launch-sound-v56" defer></script>
-  <script src="pwa.js?v=20260815-launch-sound-v56" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260815-cinematic-v57">
+  <script src="app.js?v=20260815-cinematic-v57" defer></script>
+  <script src="pwa.js?v=20260815-cinematic-v57" defer></script>
   <noscript>
     <style>
       .launch-intro { display: none !important; }
@@ -113,6 +113,24 @@
 
   <main id="main">
     <section class="tour-section" id="tour">
+      <div class="cinematic-backdrop" id="cinematicBackdrop" data-demo-page="intro" data-demo-mode="sequence" aria-hidden="true">
+        <video class="cinematic-backdrop-video cinematic-backdrop-weather" data-cinematic-page="weather" muted playsinline loop preload="metadata" poster="assets/background/weather-powerlines-poster.jpg" tabindex="-1" disablepictureinpicture>
+          <source src="assets/background/weather-powerlines.mp4" type="video/mp4">
+        </video>
+        <video class="cinematic-backdrop-video cinematic-backdrop-meeting" data-cinematic-page="meeting" muted playsinline loop preload="metadata" poster="assets/background/tablet-review-poster.jpg" tabindex="-1" disablepictureinpicture>
+          <source src="assets/background/tablet-review.mp4" type="video/mp4">
+        </video>
+        <video class="cinematic-backdrop-video cinematic-backdrop-safety" data-cinematic-page="support" muted playsinline loop preload="metadata" poster="assets/background/safety-briefing-poster.jpg" tabindex="-1" disablepictureinpicture>
+          <source src="assets/background/safety-briefing.mp4" type="video/mp4">
+        </video>
+        <video class="cinematic-backdrop-video cinematic-backdrop-emergency" data-cinematic-page="support" muted playsinline loop preload="metadata" poster="assets/background/emergency-response-poster.jpg" tabindex="-1" disablepictureinpicture>
+          <source src="assets/background/emergency-response.mp4" type="video/mp4">
+        </video>
+        <video class="cinematic-backdrop-video cinematic-backdrop-closing" data-cinematic-page="closing" muted playsinline loop preload="metadata" poster="assets/background/field-team-poster.jpg" tabindex="-1" disablepictureinpicture>
+          <source src="assets/background/field-team.mp4" type="video/mp4">
+        </video>
+        <span class="cinematic-backdrop-shade"></span>
+      </div>
       <div class="tour-shell">
         <h1 class="sr-only">Power TBM 자동 시연</h1>
 
