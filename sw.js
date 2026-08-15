@@ -1,15 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v59-20260816`;
+const CACHE_NAME = `${CACHE_PREFIX}v60-20260816`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260816-field-tools-v59',
-  './app.js?v=20260816-field-tools-v59',
-  './pwa.js?v=20260816-field-tools-v59',
+  './styles.css?v=20260816-media-cache-v60',
+  './app.js?v=20260816-media-cache-v60',
+  './pwa.js?v=20260816-media-cache-v60',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -18,18 +18,16 @@ const PRECACHE_URLS = [
   './assets/audio/05-emergency-jisoo.mp3',
   './assets/audio/06-closing-jisoo.mp3',
   './assets/audio/bgm-starcourt-mall-cc0.mp3',
-  './assets/background/emergency-response-poster.jpg',
-  './assets/background/emergency-response.mp4',
-  './assets/background/field-team-poster.jpg',
-  './assets/background/field-team.mp4',
-  './assets/background/field-tools-active-poster.jpg',
-  './assets/background/field-tools-active.mp4',
-  './assets/background/safety-briefing-poster.jpg',
-  './assets/background/safety-briefing.mp4',
-  './assets/background/tablet-review-poster.jpg',
-  './assets/background/tablet-review.mp4',
-  './assets/background/weather-powerlines-poster.jpg',
-  './assets/background/weather-powerlines.mp4',
+  './assets/background/emergency-response-v60-poster.jpg',
+  './assets/background/emergency-response-v60.mp4',
+  './assets/background/field-team-v60-poster.jpg',
+  './assets/background/field-team-v60.mp4',
+  './assets/background/field-tools-active-v60-poster.jpg',
+  './assets/background/field-tools-active-v60.mp4',
+  './assets/background/tablet-review-v60-poster.jpg',
+  './assets/background/tablet-review-v60.mp4',
+  './assets/background/weather-powerlines-v60-poster.jpg',
+  './assets/background/weather-powerlines-v60.mp4',
   './assets/brand/kepco-symbol-v30.png',
   './assets/brand/power-tbm-apple-touch-180.png',
   './assets/brand/power-tbm-icon-192.png',
@@ -117,10 +115,14 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const cacheNames = await caches.keys();
-    await Promise.all(cacheNames
-      .filter((name) => name.startsWith(CACHE_PREFIX) && name !== CACHE_NAME)
-      .map((name) => caches.delete(name)));
+    const staleCacheNames = cacheNames
+      .filter((name) => name.startsWith(CACHE_PREFIX) && name !== CACHE_NAME);
+    await Promise.all(staleCacheNames.map((name) => caches.delete(name)));
     await self.clients.claim();
+    if (staleCacheNames.length > 0) {
+      const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      await Promise.all(windows.map((client) => client.navigate?.(client.url)));
+    }
   })());
 });
 
@@ -194,6 +196,21 @@ self.addEventListener('fetch', (event) => {
 
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
+
+    if (request.mode === 'navigate') {
+      try {
+        const networkResponse = await fetch(new Request(request, { cache: 'reload' }));
+        if (networkResponse.ok && networkResponse.status === 200) {
+          await cache.put(scopedUrl('./index.html'), networkResponse.clone());
+        }
+        return networkResponse;
+      } catch (_) {
+        const fallback = await cache.match(scopedUrl('./index.html'));
+        if (fallback) return fallback;
+        return new Response('', { status: 504, statusText: 'Offline' });
+      }
+    }
+
     const cachedResponse = await cache.match(request, { ignoreSearch: true });
 
     if (cachedResponse) {
@@ -208,10 +225,6 @@ self.addEventListener('fetch', (event) => {
       }
       return networkResponse;
     } catch (_) {
-      if (request.mode === 'navigate') {
-        const fallback = await cache.match(scopedUrl('./index.html'));
-        if (fallback) return fallback;
-      }
       return new Response('', { status: 504, statusText: 'Offline' });
     }
   })());

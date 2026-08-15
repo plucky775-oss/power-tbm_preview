@@ -53,6 +53,7 @@ class MemoryCache {
 }
 
 const cacheBuckets = new Map();
+const navigatedClientUrls = [];
 const cacheStorage = {
   async open(name) {
     if (!cacheBuckets.has(name)) cacheBuckets.set(name, new MemoryCache());
@@ -69,7 +70,13 @@ const cacheStorage = {
 const workerGlobal = {
   registration: { scope: baseUrl },
   location: { origin: new URL(baseUrl).origin },
-  clients: { claim: async () => {} },
+  clients: {
+    claim: async () => {},
+    matchAll: async () => [{
+      url: baseUrl,
+      navigate: async (url) => { navigatedClientUrls.push(url); }
+    }]
+  },
   skipWaiting: async () => {},
   addEventListener(type, handler) {
     handlers.set(type, handler);
@@ -111,9 +118,9 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260816-field-tools-v59',
-  './app.js?v=20260816-field-tools-v59',
-  './pwa.js?v=20260816-field-tools-v59'
+  './styles.css?v=20260816-media-cache-v60',
+  './app.js?v=20260816-media-cache-v60',
+  './pwa.js?v=20260816-media-cache-v60'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
 
@@ -146,12 +153,12 @@ assert.match(indexSource, /id="launchSoundChoices"/);
 assert.match(indexSource, /data-launch-sound="on"/);
 assert.match(indexSource, /data-launch-sound="off"/);
 assert.match(indexSource, /id="cinematicBackdrop"/);
-assert.match(indexSource, /assets\/background\/weather-powerlines\.mp4/);
-assert.match(indexSource, /assets\/background\/tablet-review\.mp4/);
-assert.match(indexSource, /assets\/background\/safety-briefing\.mp4/);
-assert.match(indexSource, /assets\/background\/field-tools-active\.mp4/);
-assert.match(indexSource, /assets\/background\/emergency-response\.mp4/);
-assert.match(indexSource, /assets\/background\/field-team\.mp4/);
+assert.match(indexSource, /assets\/background\/weather-powerlines-v60\.mp4/);
+assert.match(indexSource, /assets\/background\/tablet-review-v60\.mp4/);
+assert.doesNotMatch(indexSource, /assets\/background\/safety-briefing\.mp4/);
+assert.match(indexSource, /assets\/background\/field-tools-active-v60\.mp4/);
+assert.match(indexSource, /assets\/background\/emergency-response-v60\.mp4/);
+assert.match(indexSource, /assets\/background\/field-team-v60\.mp4/);
 assert.doesNotMatch(indexSource, /cinematic-backdrop-video[^>]*\sloop(?:\s|>)/);
 assert.match(indexSource, /id="goldenRulesVideo"/);
 assert.match(indexSource, /golden-rules-11-rule-1-muted\.mp4/);
@@ -188,12 +195,14 @@ assert.match(appSource, /enableNarrationFromGesture\(\{ muted \}\)/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v59-20260816/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v60-20260816/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
 assert.match(workerSource, /PRECACHE_CONCURRENCY\s*=\s*3/);
 assert.match(workerSource, /rangeBufferCache\s*=\s*new Map\(\)/);
+assert.match(workerSource, /request\.mode\s*===\s*'navigate'[\s\S]*?cache:\s*'reload'/);
+assert.match(workerSource, /client\.navigate/);
 
 const server = spawn('python3', ['-m', 'http.server', '8137', '--bind', '127.0.0.1'], {
   cwd: siteRoot,
@@ -220,9 +229,11 @@ try {
   handlers.get('install')({ waitUntil(task) { installTask = task; } });
   await installTask;
 
+  await cacheStorage.open('power-tbm-offline-v59-test');
   let activateTask;
   handlers.get('activate')({ waitUntil(task) { activateTask = task; } });
   await activateTask;
+  assert.deepEqual(navigatedClientUrls, [baseUrl]);
 } finally {
   server.kill('SIGTERM');
   await new Promise((resolve) => server.once('exit', resolve));

@@ -6355,7 +6355,7 @@ body { background: #fff; }
   animation: meeting-slide-qr-signature-v51 var(--meeting-duration) ease infinite;
 }
 
-/* ===== v59 · LONG-FORM CINEMATIC FIELD BACKDROPS ===== */
+/* ===== v60 · VERSIONED LONG-FORM CINEMATIC FIELD BACKDROPS ===== */
 .demo-only-page .tour-section {
   position: relative;
   isolation: isolate;
@@ -6405,10 +6405,6 @@ body { background: #fff; }
 .cinematic-backdrop[data-demo-page="meeting"] .cinematic-backdrop-meeting { opacity: .45; }
 .cinematic-backdrop[data-demo-page="closing"] .cinematic-backdrop-closing { opacity: .51; }
 
-.cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-safety {
-  animation: cinematic-support-safety 50s ease infinite both;
-}
-
 .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-tools {
   animation: cinematic-support-tools 50s ease infinite both;
 }
@@ -6426,15 +6422,9 @@ body { background: #fff; }
   animation-play-state: paused !important;
 }
 
-@keyframes cinematic-support-safety {
-  0%, 69% { opacity: .45; }
-  73%, 100% { opacity: 0; }
-}
-
 @keyframes cinematic-support-tools {
-  0%, 69% { opacity: 0; }
-  73%, 84.5% { opacity: .5; }
-  86%, 100% { opacity: 0; }
+  0%, 84.5% { opacity: .5; }
+  87%, 100% { opacity: 0; }
 }
 
 @keyframes cinematic-support-emergency {
@@ -6455,8 +6445,7 @@ body { background: #fff; }
     animation: none !important;
     transition: none;
   }
-  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-safety { opacity: .45; }
-  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-tools { opacity: 0; }
+  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-tools { opacity: .5; }
   .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-emergency { opacity: 0; }
 }
 
