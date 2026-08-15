@@ -34,9 +34,10 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260816-direct-start-v61">
-  <script src="app.js?v=20260816-direct-start-v61" defer></script>
-  <script src="pwa.js?v=20260816-direct-start-v61" defer></script>
+  <link rel="preload" as="image" href="assets/background/power-tbm-lightning-opening-v62.webp" type="image/webp">
+  <link rel="stylesheet" href="styles.css?v=20260816-bright-lightning-v62">
+  <script src="app.js?v=20260816-bright-lightning-v62" defer></script>
+  <script src="pwa.js?v=20260816-bright-lightning-v62" defer></script>
   <noscript>
     <style>
       .launch-intro { display: none !important; }
@@ -111,6 +112,7 @@
   <main id="main">
     <section class="tour-section" id="tour">
       <div class="cinematic-backdrop" id="cinematicBackdrop" data-demo-page="intro" data-demo-mode="sequence" aria-hidden="true">
+        <img class="cinematic-backdrop-image cinematic-backdrop-intro" src="assets/background/power-tbm-lightning-opening-v62.webp" alt="" width="1672" height="941" decoding="async">
         <video class="cinematic-backdrop-video cinematic-backdrop-weather" data-cinematic-page="weather" muted playsinline preload="metadata" poster="assets/background/weather-powerlines-v60-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/weather-powerlines-v60.mp4" type="video/mp4">
         </video>
@@ -126,6 +128,7 @@
         <video class="cinematic-backdrop-video cinematic-backdrop-closing" data-cinematic-page="closing" muted playsinline preload="metadata" poster="assets/background/field-team-v60-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/field-team-v60.mp4" type="video/mp4">
         </video>
+        <span class="cinematic-backdrop-lightning-flash"></span>
         <span class="cinematic-backdrop-shade"></span>
       </div>
       <div class="tour-shell">

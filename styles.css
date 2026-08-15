@@ -6318,7 +6318,7 @@ body { background: #fff; }
   animation: meeting-slide-qr-signature-v51 var(--meeting-duration) ease infinite;
 }
 
-/* ===== v60 · VERSIONED LONG-FORM CINEMATIC FIELD BACKDROPS ===== */
+/* ===== v62 · BRIGHTER CINEMATIC BACKDROPS + LIGHTNING OPENING ===== */
 .demo-only-page .tour-section {
   position: relative;
   isolation: isolate;
@@ -6348,10 +6348,46 @@ body { background: #fff; }
   max-width: none;
   object-fit: cover;
   opacity: 0;
-  filter: saturate(.74) contrast(1.06) brightness(.86);
+  filter: saturate(.82) contrast(1.04) brightness(1.02);
   transform: scale(1.025);
   transition: opacity 1.05s ease;
   will-change: opacity, transform;
+}
+
+.cinematic-backdrop-image {
+  position: absolute;
+  inset: -3%;
+  z-index: 0;
+  width: 106%;
+  height: 106%;
+  max-width: none;
+  object-fit: cover;
+  opacity: 0;
+  filter: saturate(.94) contrast(1.04) brightness(.94);
+  transform: scale(1.02);
+  transition: opacity 1.05s ease;
+  will-change: opacity, transform;
+}
+
+.cinematic-backdrop[data-demo-page="intro"] .cinematic-backdrop-intro {
+  opacity: .68;
+  animation: cinematic-intro-drift 12s ease-in-out infinite alternate both;
+}
+
+.cinematic-backdrop-lightning-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  background:
+    radial-gradient(circle at 64% 8%, rgba(159, 217, 255, .52), transparent 32%),
+    linear-gradient(110deg, transparent 34%, rgba(113, 194, 255, .16) 51%, transparent 68%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.cinematic-backdrop[data-demo-page="intro"] .cinematic-backdrop-lightning-flash {
+  animation: cinematic-intro-flash 6.8s linear infinite both;
 }
 
 .cinematic-backdrop-shade {
@@ -6359,14 +6395,14 @@ body { background: #fff; }
   inset: 0;
   z-index: 2;
   background:
-    radial-gradient(circle at 12% 18%, rgba(34, 108, 145, .18), transparent 34%),
-    linear-gradient(90deg, rgba(3, 17, 26, .52), rgba(4, 21, 31, .62) 48%, rgba(4, 20, 30, .74)),
-    linear-gradient(180deg, rgba(3, 17, 26, .37), rgba(3, 16, 25, .68));
+    radial-gradient(circle at 12% 18%, rgba(34, 108, 145, .14), transparent 34%),
+    linear-gradient(90deg, rgba(3, 17, 26, .42), rgba(4, 21, 31, .52) 48%, rgba(4, 20, 30, .62)),
+    linear-gradient(180deg, rgba(3, 17, 26, .29), rgba(3, 16, 25, .56));
 }
 
-.cinematic-backdrop[data-demo-page="weather"] .cinematic-backdrop-weather { opacity: .56; }
-.cinematic-backdrop[data-demo-page="meeting"] .cinematic-backdrop-meeting { opacity: .45; }
-.cinematic-backdrop[data-demo-page="closing"] .cinematic-backdrop-closing { opacity: .51; }
+.cinematic-backdrop[data-demo-page="weather"] .cinematic-backdrop-weather { opacity: .62; }
+.cinematic-backdrop[data-demo-page="meeting"] .cinematic-backdrop-meeting { opacity: .56; }
+.cinematic-backdrop[data-demo-page="closing"] .cinematic-backdrop-closing { opacity: .58; }
 
 .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-tools {
   animation: cinematic-support-tools 50s ease infinite both;
@@ -6386,29 +6422,47 @@ body { background: #fff; }
 }
 
 @keyframes cinematic-support-tools {
-  0%, 84.5% { opacity: .5; }
+  0%, 84.5% { opacity: .57; }
   87%, 100% { opacity: 0; }
 }
 
 @keyframes cinematic-support-emergency {
   0%, 84.5% { opacity: 0; }
-  87%, 100% { opacity: .51; }
+  87%, 100% { opacity: .58; }
+}
+
+@keyframes cinematic-intro-drift {
+  from { transform: scale(1.02) translate3d(-.35%, 0, 0); }
+  to { transform: scale(1.065) translate3d(.35%, -.3%, 0); }
+}
+
+@keyframes cinematic-intro-flash {
+  0%, 8%, 11.2%, 53%, 55.4%, 100% { opacity: 0; }
+  8.5% { opacity: .34; }
+  9.2% { opacity: .06; }
+  10% { opacity: .24; }
+  53.5% { opacity: .22; }
+  54.1% { opacity: .04; }
+  54.7% { opacity: .16; }
 }
 
 .demo-only-page .tour-stage {
   border-color: rgba(255, 255, 255, .15);
-  background: rgba(5, 25, 36, .34);
+  background: rgba(5, 25, 36, .28);
   box-shadow: 0 34px 90px rgba(0, 0, 0, .34);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cinematic-backdrop-video {
+  .cinematic-backdrop-video,
+  .cinematic-backdrop-image,
+  .cinematic-backdrop-lightning-flash {
     animation: none !important;
     transition: none;
   }
-  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-tools { opacity: .5; }
+  .cinematic-backdrop[data-demo-page="intro"] .cinematic-backdrop-intro { opacity: .68; }
+  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-tools { opacity: .57; }
   .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-emergency { opacity: 0; }
 }
 
@@ -6417,12 +6471,18 @@ body { background: #fff; }
     inset: -2%;
     width: 104%;
     height: 104%;
-    filter: saturate(.68) contrast(1.06) brightness(.76);
+    filter: saturate(.78) contrast(1.04) brightness(.94);
+  }
+  .cinematic-backdrop-image {
+    inset: -2%;
+    width: 104%;
+    height: 104%;
+    filter: saturate(.88) contrast(1.04) brightness(.9);
   }
   .cinematic-backdrop-shade {
     background:
-      linear-gradient(180deg, rgba(3, 17, 26, .46), rgba(3, 16, 25, .74)),
-      linear-gradient(90deg, rgba(3, 17, 26, .54), rgba(4, 20, 30, .68));
+      linear-gradient(180deg, rgba(3, 17, 26, .4), rgba(3, 16, 25, .64)),
+      linear-gradient(90deg, rgba(3, 17, 26, .46), rgba(4, 20, 30, .62));
   }
 }
 

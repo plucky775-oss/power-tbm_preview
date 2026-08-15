@@ -118,9 +118,9 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260816-direct-start-v61',
-  './app.js?v=20260816-direct-start-v61',
-  './pwa.js?v=20260816-direct-start-v61'
+  './styles.css?v=20260816-bright-lightning-v62',
+  './app.js?v=20260816-bright-lightning-v62',
+  './pwa.js?v=20260816-bright-lightning-v62'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
 
@@ -156,6 +156,7 @@ assert.match(indexSource, /data-launch-sound="off"/);
 assert.match(indexSource, /소리로 재생/);
 assert.match(indexSource, /무음으로 재생/);
 assert.match(indexSource, /id="cinematicBackdrop"/);
+assert.match(indexSource, /assets\/background\/power-tbm-lightning-opening-v62\.webp/);
 assert.match(indexSource, /assets\/background\/weather-powerlines-v60\.mp4/);
 assert.match(indexSource, /assets\/background\/tablet-review-v60\.mp4/);
 assert.doesNotMatch(indexSource, /assets\/background\/safety-briefing\.mp4/);
@@ -191,6 +192,9 @@ assert.match(styleSource, /\.meeting-pdf-worker-signature[\s\S]*?left:\s*23\.13%
 assert.match(styleSource, /\.launch-start-panel\s*\{[\s\S]*?right:[\s\S]*?bottom:/);
 assert.match(styleSource, /\.launch-sound-choices\s*\{[\s\S]*?grid-template-columns:\s*1fr 1fr/);
 assert.match(styleSource, /\.cinematic-backdrop\s*\{/);
+assert.match(styleSource, /\.cinematic-backdrop\[data-demo-page="intro"\]\s+\.cinematic-backdrop-intro\s*\{[\s\S]*?opacity:\s*\.68/);
+assert.match(styleSource, /@keyframes cinematic-intro-flash/);
+assert.match(styleSource, /brightness\(1\.02\)/);
 assert.match(styleSource, /@keyframes cinematic-support-emergency/);
 assert.match(styleSource, /@keyframes cinematic-support-tools/);
 assert.match(appSource, /\[18\.79,\s*70080\][\s\S]*?\[31\.58,\s*88416\]/);
@@ -199,7 +203,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v61-20260816/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v62-20260816/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
