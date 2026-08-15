@@ -6355,7 +6355,7 @@ body { background: #fff; }
   animation: meeting-slide-qr-signature-v51 var(--meeting-duration) ease infinite;
 }
 
-/* ===== v57 · CINEMATIC FIELD BACKDROPS ===== */
+/* ===== v58 · LONG-FORM CINEMATIC FIELD BACKDROPS ===== */
 .demo-only-page .tour-section {
   position: relative;
   isolation: isolate;
@@ -6385,7 +6385,7 @@ body { background: #fff; }
   max-width: none;
   object-fit: cover;
   opacity: 0;
-  filter: saturate(.72) contrast(1.08) brightness(.8);
+  filter: saturate(.74) contrast(1.06) brightness(.86);
   transform: scale(1.025);
   transition: opacity 1.05s ease;
   will-change: opacity, transform;
@@ -6397,13 +6397,13 @@ body { background: #fff; }
   z-index: 2;
   background:
     radial-gradient(circle at 12% 18%, rgba(34, 108, 145, .18), transparent 34%),
-    linear-gradient(90deg, rgba(3, 17, 26, .56), rgba(4, 21, 31, .66) 48%, rgba(4, 20, 30, .78)),
-    linear-gradient(180deg, rgba(3, 17, 26, .4), rgba(3, 16, 25, .72));
+    linear-gradient(90deg, rgba(3, 17, 26, .52), rgba(4, 21, 31, .62) 48%, rgba(4, 20, 30, .74)),
+    linear-gradient(180deg, rgba(3, 17, 26, .37), rgba(3, 16, 25, .68));
 }
 
-.cinematic-backdrop[data-demo-page="weather"] .cinematic-backdrop-weather { opacity: .54; }
-.cinematic-backdrop[data-demo-page="meeting"] .cinematic-backdrop-meeting { opacity: .4; }
-.cinematic-backdrop[data-demo-page="closing"] .cinematic-backdrop-closing { opacity: .48; }
+.cinematic-backdrop[data-demo-page="weather"] .cinematic-backdrop-weather { opacity: .56; }
+.cinematic-backdrop[data-demo-page="meeting"] .cinematic-backdrop-meeting { opacity: .45; }
+.cinematic-backdrop[data-demo-page="closing"] .cinematic-backdrop-closing { opacity: .51; }
 
 .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-safety {
   animation: cinematic-support-safety 50s ease infinite both;
@@ -6423,13 +6423,13 @@ body { background: #fff; }
 }
 
 @keyframes cinematic-support-safety {
-  0%, 81% { opacity: .4; }
+  0%, 81% { opacity: .45; }
   85%, 100% { opacity: 0; }
 }
 
 @keyframes cinematic-support-emergency {
   0%, 81% { opacity: 0; }
-  85%, 100% { opacity: .48; }
+  85%, 100% { opacity: .51; }
 }
 
 .demo-only-page .tour-stage {
@@ -6445,7 +6445,7 @@ body { background: #fff; }
     animation: none !important;
     transition: none;
   }
-  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-safety { opacity: .4; }
+  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-safety { opacity: .45; }
   .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-emergency { opacity: 0; }
 }
 
@@ -6454,12 +6454,12 @@ body { background: #fff; }
     inset: -2%;
     width: 104%;
     height: 104%;
-    filter: saturate(.65) contrast(1.08) brightness(.7);
+    filter: saturate(.68) contrast(1.06) brightness(.76);
   }
   .cinematic-backdrop-shade {
     background:
-      linear-gradient(180deg, rgba(3, 17, 26, .5), rgba(3, 16, 25, .78)),
-      linear-gradient(90deg, rgba(3, 17, 26, .58), rgba(4, 20, 30, .72));
+      linear-gradient(180deg, rgba(3, 17, 26, .46), rgba(3, 16, 25, .74)),
+      linear-gradient(90deg, rgba(3, 17, 26, .54), rgba(4, 20, 30, .68));
   }
 }
 

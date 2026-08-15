@@ -591,6 +591,7 @@
         video.pause();
         return;
       }
+      if (video.ended && !pageChanged) return;
       if (!video.paused) return;
       video.play().catch(() => {
         // The poster remains visible when a browser or data-saving mode blocks video.

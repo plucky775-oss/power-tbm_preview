@@ -111,9 +111,9 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260815-cinematic-v57',
-  './app.js?v=20260815-cinematic-v57',
-  './pwa.js?v=20260815-cinematic-v57'
+  './styles.css?v=20260815-cinematic-v58',
+  './app.js?v=20260815-cinematic-v58',
+  './pwa.js?v=20260815-cinematic-v58'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
 
@@ -151,6 +151,7 @@ assert.match(indexSource, /assets\/background\/tablet-review\.mp4/);
 assert.match(indexSource, /assets\/background\/safety-briefing\.mp4/);
 assert.match(indexSource, /assets\/background\/emergency-response\.mp4/);
 assert.match(indexSource, /assets\/background\/field-team\.mp4/);
+assert.doesNotMatch(indexSource, /cinematic-backdrop-video[^>]*\sloop(?:\s|>)/);
 assert.match(indexSource, /id="goldenRulesVideo"/);
 assert.match(indexSource, /golden-rules-11-rule-1-muted\.mp4/);
 assert.match(indexSource, /goldenRulesVideo[\s\S]*?muted[\s\S]*?playsinline/);
@@ -184,7 +185,8 @@ assert.match(appSource, /\[18\.79,\s*70080\][\s\S]*?\[31\.58,\s*88416\]/);
 assert.match(appSource, /enableNarrationFromGesture\(\{ muted \}\)/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v57-20260815/);
+assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v58-20260815/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
