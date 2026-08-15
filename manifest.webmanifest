@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Power TBM 자동 시연",
   "short_name": "Power TBM",
-  "description": "기상정보부터 TBM 회의록, AI 안전검토, 전자서명과 현장도구까지 Power TBM의 전체 흐름을 소리와 함께 시연합니다.",
+  "description": "기상정보부터 TBM 회의록, AI 안전검토, 전자서명과 현장도구까지 Power TBM의 전체 흐름을 선택한 사운드 모드로 시연합니다.",
   "lang": "ko-KR",
   "dir": "ltr",
   "start_url": "./?source=pwa",

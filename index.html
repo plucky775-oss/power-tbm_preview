@@ -34,9 +34,9 @@
   <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
   <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="stylesheet" href="styles.css?v=20260802-ai-swipe-name-v55">
-  <script src="app.js?v=20260802-ai-swipe-name-v55" defer></script>
-  <script src="pwa.js?v=20260802-ai-swipe-name-v55" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260815-launch-sound-v56">
+  <script src="app.js?v=20260815-launch-sound-v56" defer></script>
+  <script src="pwa.js?v=20260815-launch-sound-v56" defer></script>
   <noscript>
     <style>
       .launch-intro { display: none !important; }
@@ -47,7 +47,7 @@
 </head>
 <body class="demo-only-page launch-prelude-active">
   <a class="skip-link" href="#main">본문으로 바로가기</a>
-  <div class="launch-intro is-active" id="launchIntro" aria-hidden="true">
+  <div class="launch-intro is-active is-awaiting-start" id="launchIntro" role="dialog" aria-modal="true" aria-labelledby="launchStartTitle">
     <video
       class="launch-intro-video"
       id="launchIntroVideo"
@@ -59,6 +59,29 @@
     >
       <source src="assets/video/power-tbm-button-click.mp4" type="video/mp4">
     </video>
+    <div class="launch-start-panel" id="launchStartPanel">
+      <div class="launch-start-copy">
+        <span>POWER TBM · AUTO DEMO</span>
+        <strong id="launchStartTitle">자동시연을 시작합니다</strong>
+        <small>시작 버튼을 누른 뒤 사운드 모드를 선택하세요.</small>
+      </div>
+      <button class="launch-start-button" id="launchStartButton" type="button" aria-expanded="false" aria-controls="launchSoundChoices">
+        <span>시작</span><i aria-hidden="true">→</i>
+      </button>
+      <div class="launch-sound-choices" id="launchSoundChoices" aria-label="사운드 모드 선택" hidden>
+        <p>사운드 모드</p>
+        <button class="launch-sound-choice launch-sound-on" type="button" data-launch-sound="on">
+          <span aria-hidden="true">🔊</span>
+          <b>소리로 시작</b>
+          <small>내레이션과 배경음 재생</small>
+        </button>
+        <button class="launch-sound-choice" type="button" data-launch-sound="off">
+          <span aria-hidden="true">🔇</span>
+          <b>무음으로 시작</b>
+          <small>화면 시연만 재생</small>
+        </button>
+      </div>
+    </div>
   </div>
   <header class="demo-only-header">
     <button class="demo-only-brand" id="homeReset" type="button" aria-label="처음 화면으로 돌아가기" title="처음 화면으로 돌아가기">

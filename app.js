@@ -220,6 +220,10 @@
   const homeReset = $('#homeReset');
   const launchIntro = $('#launchIntro');
   const launchIntroVideo = $('#launchIntroVideo');
+  const launchStartPanel = $('#launchStartPanel');
+  const launchStartButton = $('#launchStartButton');
+  const launchSoundChoices = $('#launchSoundChoices');
+  const launchSoundButtons = $$('[data-launch-sound]', launchStartPanel || document);
   const openingDemoVideo = $('#openingDemoVideo');
   const demoNarration = $('#demoNarration');
   const demoBgm = $('#demoBgm');
@@ -376,6 +380,7 @@
   let launchFinishTimer = null;
   let launchFrameHandle = null;
   let launchFrameUsesVideoCallback = false;
+  let launchChoiceMade = false;
   let narrationRequested = false;
   let narrationMuted = false;
   let narrationUnlocked = false;
@@ -925,7 +930,58 @@
       ? launchRevealStarted
         ? 'revealing'
         : 'button'
-      : 'complete';
+      : launchChoiceMade
+        ? 'complete'
+        : 'awaiting-start';
+  };
+
+  const resetLaunchChoiceControls = () => {
+    if (launchStartButton) {
+      launchStartButton.hidden = false;
+      launchStartButton.setAttribute('aria-expanded', 'false');
+    }
+    if (launchSoundChoices) launchSoundChoices.hidden = true;
+    launchStartPanel?.classList.remove('is-choosing-sound');
+  };
+
+  const showLaunchGate = ({ resetVideo = true, focus = true } = {}) => {
+    const gateAlreadyVisible = launchIntro?.classList.contains('is-active')
+      && launchIntro.classList.contains('is-awaiting-start');
+    if (gateAlreadyVisible) {
+      launchIntroVideo?.pause();
+      launchIntro?.setAttribute('aria-hidden', 'false');
+      document.body.classList.remove('launch-prelude-revealing');
+      document.body.classList.add('launch-prelude-active');
+      updateLaunchStateData();
+      if (focus && launchSoundChoices?.hidden) {
+        window.requestAnimationFrame(() => launchStartButton?.focus({ preventScroll: true }));
+      }
+      return;
+    }
+    launchRunToken += 1;
+    clearLaunchFinishTimer();
+    cancelLaunchFrame();
+    launchActive = false;
+    launchRevealStarted = false;
+    launchContentStarted = false;
+    launchChoiceMade = false;
+    openingDemoVideo?.pause();
+    launchIntroVideo?.pause();
+    if (launchIntroVideo) {
+      launchIntroVideo.muted = true;
+      if (resetVideo) {
+        try { launchIntroVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
+      }
+    }
+    pauseDemoBgm();
+    resetLaunchChoiceControls();
+    launchIntro?.classList.remove('is-revealing', 'is-started');
+    launchIntro?.classList.add('is-active', 'is-awaiting-start');
+    launchIntro?.setAttribute('aria-hidden', 'false');
+    document.body.classList.remove('launch-prelude-revealing');
+    document.body.classList.add('launch-prelude-active');
+    updateLaunchStateData();
+    if (focus) window.requestAnimationFrame(() => launchStartButton?.focus({ preventScroll: true }));
   };
 
   const stopLaunchPrelude = ({ reset = true, revealContent = true } = {}) => {
@@ -939,7 +995,8 @@
     if (reset && launchIntroVideo) {
       try { launchIntroVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
     }
-    launchIntro?.classList.remove('is-active', 'is-revealing');
+    launchIntro?.classList.remove('is-active', 'is-revealing', 'is-awaiting-start', 'is-started');
+    launchIntro?.setAttribute('aria-hidden', 'true');
     if (revealContent) document.body.classList.remove('launch-prelude-active', 'launch-prelude-revealing');
     updateLaunchStateData();
   };
@@ -950,7 +1007,8 @@
     cancelLaunchFrame();
     launchActive = false;
     launchIntroVideo?.pause();
-    launchIntro?.classList.remove('is-active', 'is-revealing');
+    launchIntro?.classList.remove('is-active', 'is-revealing', 'is-awaiting-start', 'is-started');
+    launchIntro?.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('launch-prelude-active', 'launch-prelude-revealing');
     updateLaunchStateData();
   };
@@ -1003,6 +1061,10 @@
 
   const startLaunchPrelude = ({ restart = true } = {}) => {
     if (demoPage !== 'intro') return;
+    if (!launchChoiceMade) {
+      showLaunchGate({ resetVideo: restart });
+      return;
+    }
     launchRunToken += 1;
     const token = launchRunToken;
     clearLaunchFinishTimer();
@@ -1014,8 +1076,9 @@
       try { openingDemoVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
     }
     pauseDemoBgm();
-    launchIntro?.classList.remove('is-revealing');
-    launchIntro?.classList.add('is-active');
+    launchIntro?.classList.remove('is-revealing', 'is-awaiting-start');
+    launchIntro?.classList.add('is-active', 'is-started');
+    launchIntro?.setAttribute('aria-hidden', 'false');
     document.body.classList.remove('launch-prelude-revealing');
     document.body.classList.add('launch-prelude-active');
     updateLaunchStateData();
@@ -1390,16 +1453,18 @@
     window.setTimeout(apply, reduceMotion ? 0 : 150);
   };
 
-  const enableNarrationFromGesture = () => {
+  const enableNarrationFromGesture = ({ muted = narrationMuted } = {}) => {
     if (stageTransitioning) {
       clearStageTransitionTimers();
       stageTransitioning = false;
       guidePhone?.classList.remove('stage-transitioning');
       guideStage?.classList.remove('stage-transitioning');
     }
-    if (!narrationUnlocked) narrationMuted = false;
+    narrationMuted = Boolean(muted);
     narrationRequested = true;
     demoPaused = false;
+    if (demoNarration) demoNarration.muted = narrationMuted;
+    if (demoBgm) demoBgm.muted = narrationMuted;
     setNarrationState('ready');
   };
 
@@ -1438,11 +1503,43 @@
     switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: userInitiated });
   };
 
+  launchStartButton?.addEventListener('click', () => {
+    launchStartButton.hidden = true;
+    launchStartButton.setAttribute('aria-expanded', 'true');
+    if (launchSoundChoices) launchSoundChoices.hidden = false;
+    launchStartPanel?.classList.add('is-choosing-sound');
+    window.requestAnimationFrame(() => launchSoundButtons[0]?.focus({ preventScroll: true }));
+  });
+
+  launchSoundButtons.forEach((button) => button.addEventListener('click', () => {
+    const muted = button.dataset.launchSound !== 'on';
+    launchChoiceMade = true;
+    launchIntro?.classList.remove('is-awaiting-start');
+    launchIntro?.classList.add('is-started');
+    launchStartPanel?.classList.remove('is-choosing-sound');
+    enableNarrationFromGesture({ muted });
+    demoMode = 'sequence';
+    demoPaused = false;
+    switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: true });
+  }));
+
+  launchIntro?.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || launchSoundChoices?.hidden) return;
+    resetLaunchChoiceControls();
+    launchStartButton?.focus({ preventScroll: true });
+  });
+
   homeReset?.addEventListener('click', () => {
     clearStageTransitionTimers();
     stageTransitioning = false;
     guidePhone?.classList.remove('stage-transitioning');
     guideStage?.classList.remove('stage-transitioning');
+    stopNarrationPlayback({ keepRequested: false });
+    stopDemoBgm();
+    narrationMuted = false;
+    narrationUnlocked = false;
+    launchChoiceMade = false;
+    setNarrationState('ready');
     demoMode = 'sequence';
     demoPaused = false;
     switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: true });
@@ -1547,6 +1644,7 @@
   });
   demoMute?.addEventListener('click', () => {
     if (!narrationRequested || !narrationUnlocked || narrationState === 'blocked' || narrationState === 'error') {
+      narrationMuted = false;
       activateSequence({ userInitiated: true });
       return;
     }
@@ -1591,7 +1689,7 @@
   } else if (!reduceMotion) {
     if (demoPage === 'intro') startIntroDemo();
     else startWeatherDemo();
-  } else stopLaunchPrelude();
+  } else showLaunchGate();
   document.addEventListener('visibilitychange', () => {
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'closing' && currentGuide !== 0)) return;
     guidePhone.classList.toggle('is-paused', document.hidden || demoPaused);

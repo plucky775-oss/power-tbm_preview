@@ -111,9 +111,9 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260802-alignment-signature-v49',
-  './app.js?v=20260802-alignment-signature-v49',
-  './pwa.js?v=20260802-alignment-signature-v49'
+  './styles.css?v=20260815-launch-sound-v56',
+  './app.js?v=20260815-launch-sound-v56',
+  './pwa.js?v=20260815-launch-sound-v56'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
 
@@ -141,6 +141,10 @@ const pwaSource = await readFile(path.join(siteRoot, 'pwa.js'), 'utf8');
 assert.match(indexSource, /rel="manifest" href="manifest\.webmanifest"/);
 assert.match(indexSource, /id="homeReset"/);
 assert.match(indexSource, /id="demoMute"/);
+assert.match(indexSource, /id="launchStartButton"/);
+assert.match(indexSource, /id="launchSoundChoices"/);
+assert.match(indexSource, /data-launch-sound="on"/);
+assert.match(indexSource, /data-launch-sound="off"/);
 assert.match(indexSource, /id="goldenRulesVideo"/);
 assert.match(indexSource, /golden-rules-11-rule-1-muted\.mp4/);
 assert.match(indexSource, /goldenRulesVideo[\s\S]*?muted[\s\S]*?playsinline/);
@@ -148,11 +152,11 @@ assert.match(indexSource, /home-weather-alert-collapsed-v48\.jpeg/);
 assert.match(indexSource, /home-weather-alert-expanded-v48\.jpeg/);
 assert.match(indexSource, /meeting-hub-v48\.png/);
 assert.match(indexSource, /meeting-qr-signature-v48\.png/);
-assert.match(indexSource, /meeting-slide-sign-complete[\s\S]*?meeting-slide-qr-signature[\s\S]*?meeting-slide-pdf/);
+assert.match(indexSource, /meeting-slide-qr-signature[\s\S]*?meeting-slide-sign-complete[\s\S]*?meeting-slide-pdf/);
 assert.match(indexSource, /meeting-slide-home" src="assets\/screens\/guide\/home-weather-alert-collapsed-v48\.jpeg/);
 assert.doesNotMatch(indexSource, /meeting-slide-home" src="assets\/screens\/guide\/meeting-home-v1\.jpeg/);
 assert.doesNotMatch(indexSource, /demo-focus[^"\n]*demo-focus-links/);
-assert.match(indexSource, /김일용 원격서명이 회의록에 반영되었습니다/);
+assert.match(indexSource, /QR 원격서명으로 김일용 서명을 먼저 받습니다/);
 assert.match(indexSource, /meeting-pdf-worker-name[\s\S]*?김일용[\s\S]*?meeting-pdf-worker-signature[\s\S]*?김일용/);
 assert.doesNotMatch(indexSource, /서명 1\/2명 · 작업자 대기/);
 assert.doesNotMatch(indexSource, /meeting-menu-v1\.png/);
@@ -166,8 +170,12 @@ assert.match(styleSource, /\.demo-focus-forecast\s*\{[^}]*top:\s*5\.31%/);
 assert.match(styleSource, /\.meeting-focus-sign-saved\s*\{[\s\S]*?top:\s*65\.9%/);
 assert.match(styleSource, /\.meeting-pdf-worker-name[\s\S]*?left:\s*9\.73%/);
 assert.match(styleSource, /\.meeting-pdf-worker-signature[\s\S]*?left:\s*23\.13%/);
+assert.match(styleSource, /\.launch-start-panel\s*\{[\s\S]*?right:[\s\S]*?bottom:/);
+assert.match(styleSource, /\.launch-sound-choices\s*\{[\s\S]*?grid-template-columns:\s*1fr 1fr/);
 assert.match(appSource, /\[18\.79,\s*70080\][\s\S]*?\[31\.58,\s*88416\]/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v49-20260802/);
+assert.match(appSource, /enableNarrationFromGesture\(\{ muted \}\)/);
+assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v56-20260815/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
