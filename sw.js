@@ -1,15 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v58-20260815`;
+const CACHE_NAME = `${CACHE_PREFIX}v59-20260816`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260815-cinematic-v58',
-  './app.js?v=20260815-cinematic-v58',
-  './pwa.js?v=20260815-cinematic-v58',
+  './styles.css?v=20260816-field-tools-v59',
+  './app.js?v=20260816-field-tools-v59',
+  './pwa.js?v=20260816-field-tools-v59',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -22,6 +22,8 @@ const PRECACHE_URLS = [
   './assets/background/emergency-response.mp4',
   './assets/background/field-team-poster.jpg',
   './assets/background/field-team.mp4',
+  './assets/background/field-tools-active-poster.jpg',
+  './assets/background/field-tools-active.mp4',
   './assets/background/safety-briefing-poster.jpg',
   './assets/background/safety-briefing.mp4',
   './assets/background/tablet-review-poster.jpg',

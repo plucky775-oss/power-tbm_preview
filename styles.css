@@ -6355,7 +6355,7 @@ body { background: #fff; }
   animation: meeting-slide-qr-signature-v51 var(--meeting-duration) ease infinite;
 }
 
-/* ===== v58 · LONG-FORM CINEMATIC FIELD BACKDROPS ===== */
+/* ===== v59 · LONG-FORM CINEMATIC FIELD BACKDROPS ===== */
 .demo-only-page .tour-section {
   position: relative;
   isolation: isolate;
@@ -6409,6 +6409,10 @@ body { background: #fff; }
   animation: cinematic-support-safety 50s ease infinite both;
 }
 
+.cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-tools {
+  animation: cinematic-support-tools 50s ease infinite both;
+}
+
 .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-emergency {
   animation: cinematic-support-emergency 50s ease infinite both;
 }
@@ -6423,13 +6427,19 @@ body { background: #fff; }
 }
 
 @keyframes cinematic-support-safety {
-  0%, 81% { opacity: .45; }
-  85%, 100% { opacity: 0; }
+  0%, 69% { opacity: .45; }
+  73%, 100% { opacity: 0; }
+}
+
+@keyframes cinematic-support-tools {
+  0%, 69% { opacity: 0; }
+  73%, 84.5% { opacity: .5; }
+  86%, 100% { opacity: 0; }
 }
 
 @keyframes cinematic-support-emergency {
-  0%, 81% { opacity: 0; }
-  85%, 100% { opacity: .51; }
+  0%, 84.5% { opacity: 0; }
+  87%, 100% { opacity: .51; }
 }
 
 .demo-only-page .tour-stage {
@@ -6446,6 +6456,7 @@ body { background: #fff; }
     transition: none;
   }
   .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-safety { opacity: .45; }
+  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-tools { opacity: 0; }
   .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-emergency { opacity: 0; }
 }
 

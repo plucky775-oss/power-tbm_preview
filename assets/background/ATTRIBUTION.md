@@ -11,5 +11,6 @@ License: https://www.pexels.com/license/
 | `safety-briefing.mp4` | https://www.pexels.com/video/safety-briefing-for-construction-team-outdoors-36034181/<br>https://www.pexels.com/video/4k-engineers-discussion-20653095/ | Mh Tonmoy<br>Tamoor Ahmed |
 | `emergency-response.mp4` | https://www.pexels.com/video/emergency-response-ambulance-at-hospital-entrance-28950232/ | Alex Abram |
 | `field-team.mp4` | https://www.pexels.com/video/workers-walking-in-construction-site-5434223/ | Everett Bumstead |
+| `field-tools-active.mp4` | https://www.pexels.com/video/electricians-working-at-substation-10151854/<br>https://www.pexels.com/video/a-man-fixing-an-electrical-wire-4334561/<br>https://www.pexels.com/video/men-working-at-a-construction-site-16106604/ | Videas Cl<br>K<br>Sururi Ballıdağ Director |
 
 These clips are used only as illustrative background footage. Their creators and depicted people do not endorse Power TBM, KEPCO, or any related organization.
