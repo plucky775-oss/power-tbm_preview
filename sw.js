@@ -1,15 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v65-20260816`;
+const CACHE_NAME = `${CACHE_PREFIX}v66-20260816`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260816-domestic-119-v65',
-  './app.js?v=20260816-domestic-119-v65',
-  './pwa.js?v=20260816-domestic-119-v65',
+  './styles.css?v=20260816-scenario-video-v66',
+  './app.js?v=20260816-scenario-video-v66',
+  './pwa.js?v=20260816-scenario-video-v66',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -18,12 +18,12 @@ const PRECACHE_URLS = [
   './assets/audio/05-emergency-jisoo.mp3',
   './assets/audio/06-closing-jisoo.mp3',
   './assets/audio/bgm-starcourt-mall-cc0.mp3',
-  './assets/background/emergency-response-kr119-v65-poster.jpg',
-  './assets/background/emergency-response-kr119-v65.mp4',
-  './assets/background/field-team-v60-poster.jpg',
-  './assets/background/field-team-v60.mp4',
-  './assets/background/field-tools-active-v60-poster.jpg',
-  './assets/background/field-tools-active-v60.mp4',
+  './assets/background/emergency-response-changwon119-v66-poster.jpg',
+  './assets/background/emergency-response-changwon119-v66.mp4',
+  './assets/background/field-tools-kepco-v66-poster.jpg',
+  './assets/background/field-tools-kepco-v66.mp4',
+  './assets/background/tbm-guide-closing-v66-poster.jpg',
+  './assets/background/tbm-guide-closing-v66.mp4',
   './assets/background/power-tbm-lightning-opening-v62.webp',
   './assets/background/tablet-review-v63-poster.jpg',
   './assets/background/tablet-review-v63.mp4',

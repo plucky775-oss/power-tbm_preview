@@ -1,6 +1,6 @@
 # Background video sources
 
-The cinematic background clips in this folder are edited, muted, slowed, crossfaded, and compressed derivatives of the sources listed below. Most clips were published on Pexels. The domestic 119 clip was published by the Jeonbuk Special Self-Governing Province Fire Headquarters under Korea Open Government License Type 1.
+The cinematic background clips in this folder are edited, muted, cropped, and compressed derivatives of the sources listed below. Earlier stock clips were published on Pexels. Additional Korean field, emergency, and TBM footage is credited separately with the source information supplied for each file.
 
 Pexels license: https://www.pexels.com/license/
 
@@ -14,10 +14,13 @@ Pexels license: https://www.pexels.com/license/
 | `field-team-v60.mp4` | https://www.pexels.com/video/workers-walking-in-construction-site-5434223/ | Everett Bumstead |
 | `field-tools-active-v60.mp4` | https://www.pexels.com/video/electricians-working-at-substation-10151854/<br>https://www.pexels.com/video/a-man-fixing-an-electrical-wire-4334561/<br>https://www.pexels.com/video/men-working-at-a-construction-site-16106604/ | Videas Cl<br>K<br>Sururi Ballıdağ Director |
 
-## Domestic 119 footage
+## Additional Korean footage
 
 | Local file | Original video | Source | License |
 | --- | --- | --- | --- |
 | `emergency-response-kr119-v65.mp4` | https://www.sobang.kr/jinan/board/view.sobang?boardId=BBS_0000041&dataSid=21653&menuCd=DOM_000001404004000000&paging=ok&startPage=43 | 전북특별자치도소방본부 | 공공누리 제1유형(출처표시) |
+| `field-tools-kepco-v66.mp4` | https://www.youtube.com/watch?v=iv1nxqySLhk | 배전운영처 엔지니어링 센터 | Creative Commons Attribution license (reuse allowed) |
+| `emergency-response-changwon119-v66.mp4` | https://www.youtube.com/watch?v=ETC0B2saJ54 | 대한민국_FIRE_소방_119 | 사용자 제공 원본 |
+| `tbm-guide-closing-v66.mp4` | `한국전력공사 TBM가이드.mp4` 09:05–09:20 | 한국전력공사 | 사용자 제공 원본 |
 
 These clips are used only as illustrative background footage. Their creators and depicted people do not endorse Power TBM, KEPCO, or any related organization.
