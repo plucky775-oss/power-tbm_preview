@@ -1,24 +1,18 @@
 # Background video sources
 
-The cinematic background clips in this folder are edited, muted, cropped, and compressed derivatives of the sources listed below. Earlier stock clips were published on Pexels. Additional Korean field, emergency, and TBM footage is credited separately with the source information supplied for each file.
+The active cinematic background clips in this folder are edited, muted, cropped, and compressed derivatives of the sources listed below. Stock clips were published on Pexels. Korean field, emergency, and TBM footage is credited separately with the source information supplied for each file.
 
 Pexels license: https://www.pexels.com/license/
 
 | Local file | Original video | Creator |
 | --- | --- | --- |
 | `weather-powerlines-v60.mp4` | https://www.pexels.com/video/time-lapse-of-a-cloudy-sky-behind-a-transmission-tower-8018115/<br>https://www.pexels.com/video/time-lapse-of-moving-clouds-over-a-transmission-tower-15357261/<br>https://www.pexels.com/video/time-lapse-of-transmission-tower-and-clouds-7796797/ | Bhumik Photography<br>C A<br>Edouard Matte |
-| `tablet-review-v60.mp4`<br>`tablet-review-v63.mp4` | https://www.pexels.com/video/women-having-a-meeting-7490436/ | RDNE Stock project |
-| `safety-briefing.mp4` | https://www.pexels.com/video/safety-briefing-for-construction-team-outdoors-36034181/<br>https://www.pexels.com/video/4k-engineers-discussion-20653095/ | Mh Tonmoy<br>Tamoor Ahmed |
-| `emergency-response-v60.mp4` | https://www.pexels.com/video/emergency-response-ambulance-at-hospital-entrance-28950232/ | Alex Abram |
-| `emergency-response-119-v64.mp4` | https://www.pexels.com/video/ambulance-on-the-road-6520321/ | RDNE Stock project |
-| `field-team-v60.mp4` | https://www.pexels.com/video/workers-walking-in-construction-site-5434223/ | Everett Bumstead |
-| `field-tools-active-v60.mp4` | https://www.pexels.com/video/electricians-working-at-substation-10151854/<br>https://www.pexels.com/video/a-man-fixing-an-electrical-wire-4334561/<br>https://www.pexels.com/video/men-working-at-a-construction-site-16106604/ | Videas Cl<br>K<br>Sururi Ballıdağ Director |
+| `tablet-review-v63.mp4` | https://www.pexels.com/video/women-having-a-meeting-7490436/ | RDNE Stock project |
 
 ## Additional Korean footage
 
 | Local file | Original video | Source | License |
 | --- | --- | --- | --- |
-| `emergency-response-kr119-v65.mp4` | https://www.sobang.kr/jinan/board/view.sobang?boardId=BBS_0000041&dataSid=21653&menuCd=DOM_000001404004000000&paging=ok&startPage=43 | 전북특별자치도소방본부 | 공공누리 제1유형(출처표시) |
 | `field-tools-kepco-v68.mp4` | https://www.youtube.com/watch?v=iv1nxqySLhk (04:13–05:53, 1배속) | 배전운영처 엔지니어링 센터 | Creative Commons Attribution license (reuse allowed) |
 | `emergency-response-changwon119-v66.mp4` | https://www.youtube.com/watch?v=ETC0B2saJ54 | 대한민국_FIRE_소방_119 | 사용자 제공 원본 |
 | `tbm-guide-closing-v69.mp4` | `한국전력공사 TBM가이드.mp4` 09:05–09:11.37(1배속) | 한국전력공사 | 사용자 제공 원본 |

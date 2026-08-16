@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import vm from 'node:vm';
@@ -97,6 +97,23 @@ const context = vm.createContext({
 const workerSource = await readFile(path.join(siteRoot, 'sw.js'), 'utf8');
 vm.runInContext(workerSource, context, { filename: 'sw.js' });
 const precacheUrls = vm.runInContext('[...PRECACHE_URLS]', context);
+
+const expectedBackgroundFiles = [
+  'ATTRIBUTION.md',
+  'emergency-response-changwon119-v66-poster.jpg',
+  'emergency-response-changwon119-v66.mp4',
+  'field-tools-kepco-v68-poster.jpg',
+  'field-tools-kepco-v68.mp4',
+  'power-tbm-lightning-opening-v62.webp',
+  'tablet-review-v63-poster.jpg',
+  'tablet-review-v63.mp4',
+  'tbm-guide-closing-v69-poster.jpg',
+  'tbm-guide-closing-v69.mp4',
+  'weather-powerlines-v60-poster.jpg',
+  'weather-powerlines-v60.mp4'
+].sort();
+const backgroundFiles = (await readdir(path.join(siteRoot, 'assets/background'))).sort();
+assert.deepEqual(backgroundFiles, expectedBackgroundFiles, 'background folder contains stale or missing media');
 
 const sourceFiles = ['index.html', 'app.js', 'styles.css'];
 const assetPattern = /assets\/[A-Za-z0-9_./-]+\.(?:png|jpe?g|webp|mp3|mp4|woff2)/g;
