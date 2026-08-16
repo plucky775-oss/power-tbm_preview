@@ -118,9 +118,9 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260816-field-title-v67',
-  './app.js?v=20260816-field-title-v67',
-  './pwa.js?v=20260816-field-title-v67'
+  './styles.css?v=20260816-field-413-v68',
+  './app.js?v=20260816-field-413-v68',
+  './pwa.js?v=20260816-field-413-v68'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
 
@@ -162,9 +162,9 @@ assert.match(indexSource, /assets\/background\/tablet-review-v63\.mp4/);
 assert.match(indexSource, /assets\/background\/tablet-review-v63-poster\.jpg/);
 assert.doesNotMatch(indexSource, /assets\/background\/tablet-review-v60\.mp4/);
 assert.doesNotMatch(indexSource, /assets\/background\/safety-briefing\.mp4/);
-assert.match(indexSource, /assets\/background\/field-tools-kepco-v67\.mp4/);
-assert.match(indexSource, /assets\/background\/field-tools-kepco-v67-poster\.jpg/);
-assert.doesNotMatch(indexSource, /assets\/background\/field-tools-kepco-v66(?:-poster)?\.(?:mp4|jpg)/);
+assert.match(indexSource, /assets\/background\/field-tools-kepco-v68\.mp4/);
+assert.match(indexSource, /assets\/background\/field-tools-kepco-v68-poster\.jpg/);
+assert.doesNotMatch(indexSource, /assets\/background\/field-tools-kepco-v6[67](?:-poster)?\.(?:mp4|jpg)/);
 assert.match(indexSource, /assets\/background\/emergency-response-changwon119-v66\.mp4/);
 assert.match(indexSource, /assets\/background\/emergency-response-changwon119-v66-poster\.jpg/);
 assert.match(indexSource, /assets\/background\/tbm-guide-closing-v67\.mp4/);
@@ -215,7 +215,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v67-20260816/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v68-20260816/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
