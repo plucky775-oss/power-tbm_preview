@@ -1,15 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v64-20260816`;
+const CACHE_NAME = `${CACHE_PREFIX}v65-20260816`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260816-emergency-119-v64',
-  './app.js?v=20260816-emergency-119-v64',
-  './pwa.js?v=20260816-emergency-119-v64',
+  './styles.css?v=20260816-domestic-119-v65',
+  './app.js?v=20260816-domestic-119-v65',
+  './pwa.js?v=20260816-domestic-119-v65',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -18,8 +18,8 @@ const PRECACHE_URLS = [
   './assets/audio/05-emergency-jisoo.mp3',
   './assets/audio/06-closing-jisoo.mp3',
   './assets/audio/bgm-starcourt-mall-cc0.mp3',
-  './assets/background/emergency-response-119-v64-poster.jpg',
-  './assets/background/emergency-response-119-v64.mp4',
+  './assets/background/emergency-response-kr119-v65-poster.jpg',
+  './assets/background/emergency-response-kr119-v65.mp4',
   './assets/background/field-team-v60-poster.jpg',
   './assets/background/field-team-v60.mp4',
   './assets/background/field-tools-active-v60-poster.jpg',
