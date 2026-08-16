@@ -118,9 +118,9 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260816-closing-cheer-v69',
-  './app.js?v=20260816-closing-cheer-v69',
-  './pwa.js?v=20260816-closing-cheer-v69'
+  './styles.css?v=20260816-exhibition-type-v70',
+  './app.js?v=20260816-exhibition-type-v70',
+  './pwa.js?v=20260816-exhibition-type-v70'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
 
@@ -212,13 +212,17 @@ assert.match(styleSource, /@keyframes cinematic-intro-flash/);
 assert.match(styleSource, /brightness\(1\.02\)/);
 assert.match(styleSource, /@keyframes cinematic-support-emergency/);
 assert.match(styleSource, /@keyframes cinematic-support-tools/);
+assert.match(styleSource, /\.demo-only-page \.demo-explain h3,[\s\S]*?font-size:\s*clamp\(42px,\s*6vh,\s*60px\)/);
+assert.match(styleSource, /\.demo-only-page \.demo-explain > p,[\s\S]*?font-size:\s*clamp\(19px,\s*2\.25vh,\s*23px\)/);
+assert.match(styleSource, /@media \(max-height:\s*720px\)[\s\S]*?\.demo-only-page \.support-explain h3\s*\{\s*font-size:\s*clamp\(40px,\s*6vh,\s*46px\)/);
+assert.match(styleSource, /\.demo-only-page \.closing-detail-promise\s*\{\s*font-size:\s*24px/);
 assert.match(appSource, /\[18\.79,\s*70080\][\s\S]*?\[31\.58,\s*88416\]/);
 assert.match(appSource, /enableNarrationFromGesture\(\{ muted \}\)/);
 assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v69-20260816/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v70-20260816/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);

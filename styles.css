@@ -5420,8 +5420,48 @@ body { background: #fff; }
 .demo-only-page .demo-explain h3,
 .demo-only-page .meeting-explain h3,
 .demo-only-page .support-explain h3 {
-  font-size: clamp(30px, 4.1vh, 52px);
+  font-size: clamp(42px, 6vh, 60px);
 }
+
+.demo-only-page .meeting-explain-ai h3,
+.demo-only-page .support-explain-emergency h3 {
+  font-size: clamp(40px, 5.4vh, 54px);
+}
+
+/* 전시 화면용 원거리 가독성: 오프닝 이후 안내 문구도 같은 시각적 크기로 유지 */
+.demo-only-page .demo-explain > span,
+.demo-only-page .meeting-explain > span,
+.demo-only-page .support-explain > span {
+  font-size: clamp(13px, 1.6vh, 16px);
+}
+
+.demo-only-page .demo-explain > p,
+.demo-only-page .meeting-explain > p,
+.demo-only-page .support-explain > p {
+  max-width: 720px;
+  font-size: clamp(19px, 2.25vh, 23px);
+  line-height: 1.62;
+}
+
+.demo-only-page .demo-explain-points {
+  gap: 11px;
+  margin-top: 29px;
+}
+
+.demo-only-page .demo-explain-points b {
+  padding: 12px 16px;
+  font-size: clamp(13px, 1.45vh, 15px);
+}
+
+.demo-only-page .compare-heading span { font-size: 12px; }
+.demo-only-page .compare-heading h3 { font-size: 28px; }
+.demo-only-page .compare-slide figcaption span { font-size: 11px; }
+.demo-only-page .compare-slide figcaption b { font-size: 15px; }
+.demo-only-page .typhoon-compare > p { font-size: 14px; line-height: 1.55; }
+
+.demo-only-page .closing-detail-intro { font-size: 20px; }
+.demo-only-page .closing-detail-promise { font-size: 24px; }
+.demo-only-page .closing-detail-thanks { font-size: 18px; }
 
 @media (max-height: 720px) and (min-width: 761px) {
   .demo-only-header { min-height: 76px; padding-top: 4px; padding-bottom: 4px; }
@@ -5435,17 +5475,22 @@ body { background: #fff; }
   .demo-only-page .tour-copy h3,
   .demo-only-page .demo-explain h3,
   .demo-only-page .meeting-explain h3,
-  .demo-only-page .support-explain h3 { font-size: clamp(25px, 4.5vh, 38px); }
-  .demo-only-page .support-explain > p { font-size: 13px; line-height: 1.55; }
+  .demo-only-page .support-explain h3 { font-size: clamp(40px, 6vh, 46px); }
+  .demo-only-page .demo-explain > p,
+  .demo-only-page .meeting-explain > p,
+  .demo-only-page .support-explain > p { font-size: 18px; line-height: 1.58; }
   .demo-only-page .support-tool-points { gap: 6px; margin-top: 13px; }
-  .demo-only-page .support-tool-points b { padding: 7px 10px; font-size: 10px; }
-  .demo-only-page .support-action-visuals { height: 88px; margin-top: 13px; }
-  .demo-only-page .support-action-card { grid-template-columns: 60px minmax(0, 1fr); gap: 11px; padding: 9px 13px 9px 10px; border-radius: 17px; }
-  .demo-only-page .support-action-icon { width: 56px; height: 56px; border-radius: 14px; }
-  .demo-only-page .support-action-phone-icon svg { width: 35px; height: 35px; }
-  .demo-only-page .support-action-card small { font-size: 9px; }
-  .demo-only-page .support-action-card strong { font-size: clamp(16px, 2.8vh, 22px); }
-  .demo-only-page .support-action-card em { font-size: 9px; }
+  .demo-only-page .support-tool-points b { padding: 8px 11px; font-size: 12px; }
+  .demo-only-page .support-action-visuals { height: 102px; margin-top: 15px; }
+  .demo-only-page .support-action-card { grid-template-columns: 68px minmax(0, 1fr); gap: 12px; padding: 11px 15px 11px 12px; border-radius: 18px; }
+  .demo-only-page .support-action-icon { width: 62px; height: 62px; border-radius: 15px; }
+  .demo-only-page .support-action-phone-icon svg { width: 40px; height: 40px; }
+  .demo-only-page .support-action-card small { font-size: 10px; }
+  .demo-only-page .support-action-card strong { font-size: clamp(21px, 3.1vh, 25px); }
+  .demo-only-page .support-action-card em { font-size: 11px; }
+  .demo-only-page .closing-detail-intro { font-size: 19px; }
+  .demo-only-page .closing-detail-promise { font-size: 23px; }
+  .demo-only-page .closing-detail-thanks { font-size: 18px; }
 }
 
 @media (max-width: 760px) {
