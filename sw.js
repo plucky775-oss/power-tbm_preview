@@ -1,15 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v68-20260816`;
+const CACHE_NAME = `${CACHE_PREFIX}v69-20260816`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260816-field-413-v68',
-  './app.js?v=20260816-field-413-v68',
-  './pwa.js?v=20260816-field-413-v68',
+  './styles.css?v=20260816-closing-cheer-v69',
+  './app.js?v=20260816-closing-cheer-v69',
+  './pwa.js?v=20260816-closing-cheer-v69',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -22,8 +22,8 @@ const PRECACHE_URLS = [
   './assets/background/emergency-response-changwon119-v66.mp4',
   './assets/background/field-tools-kepco-v68-poster.jpg',
   './assets/background/field-tools-kepco-v68.mp4',
-  './assets/background/tbm-guide-closing-v67-poster.jpg',
-  './assets/background/tbm-guide-closing-v67.mp4',
+  './assets/background/tbm-guide-closing-v69-poster.jpg',
+  './assets/background/tbm-guide-closing-v69.mp4',
   './assets/background/power-tbm-lightning-opening-v62.webp',
   './assets/background/tablet-review-v63-poster.jpg',
   './assets/background/tablet-review-v63.mp4',
