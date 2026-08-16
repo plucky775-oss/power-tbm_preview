@@ -1,15 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v62-20260816`;
+const CACHE_NAME = `${CACHE_PREFIX}v63-20260816`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260816-bright-lightning-v62',
-  './app.js?v=20260816-bright-lightning-v62',
-  './pwa.js?v=20260816-bright-lightning-v62',
+  './styles.css?v=20260816-meeting-continuous-v63',
+  './app.js?v=20260816-meeting-continuous-v63',
+  './pwa.js?v=20260816-meeting-continuous-v63',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -25,8 +25,8 @@ const PRECACHE_URLS = [
   './assets/background/field-tools-active-v60-poster.jpg',
   './assets/background/field-tools-active-v60.mp4',
   './assets/background/power-tbm-lightning-opening-v62.webp',
-  './assets/background/tablet-review-v60-poster.jpg',
-  './assets/background/tablet-review-v60.mp4',
+  './assets/background/tablet-review-v63-poster.jpg',
+  './assets/background/tablet-review-v63.mp4',
   './assets/background/weather-powerlines-v60-poster.jpg',
   './assets/background/weather-powerlines-v60.mp4',
   './assets/brand/kepco-symbol-v30.png',
