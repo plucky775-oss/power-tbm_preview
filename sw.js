@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v75-20260923-short-intro`;
+const CACHE_NAME = `${CACHE_PREFIX}v76-20260923-static-screen`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
@@ -10,7 +10,7 @@ const PRECACHE_URLS = [
   './styles.css?v=20260816-exhibition-type-v70',
   './app.js?v=20260923-short-intro-v75',
   './safety4cut.css?v=20260923-short-intro-v75',
-  './safety4cut.js?v=20260923-short-intro-v75',
+  './safety4cut.js?v=20260923-static-screen-v76',
   './pwa.js?v=20260816-exhibition-type-v70',
   './assets/audio/07-safety4cut.m4a?v=20260923-short-intro-v75',
   './assets/safety4cut/01-admin-v75.png',
