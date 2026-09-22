@@ -1,18 +1,18 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v73-20260922-original-voices`;
+const CACHE_NAME = `${CACHE_PREFIX}v74-20260922-audio-path`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './styles.css?v=20260816-exhibition-type-v70',
-  './app.js?v=20260922-original-voices-v73',
+  './app.js?v=20260922-audio-path-v74',
   './safety4cut.css?v=20260922-safety4cut-v71',
   './safety4cut.js?v=20260922-original-voices-v73',
   './pwa.js?v=20260816-exhibition-type-v70',
-  './assets/audio/07-safety4cut-v73.m4a',
+  './assets/audio/07-safety4cut.m4a?v=20260922-audio-path-v74',
   './assets/safety4cut/01-admin.png',
   './assets/safety4cut/02-upload.png',
   './assets/safety4cut/03-analysis.png',
@@ -27,7 +27,7 @@ const PRECACHE_URLS = [
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
   './assets/audio/03-ai-pdf-jisoo.mp3',
-  './assets/audio/04-safety-tools-taehyung-v73.mp3',
+  './assets/audio/04-safety-tools-taehyung.mp3?v=20260922-audio-path-v74',
   './assets/audio/05-emergency-jisoo.mp3',
   './assets/audio/06-closing-jisoo.mp3',
   './assets/audio/bgm-starcourt-mall-cc0.mp3',
@@ -152,7 +152,7 @@ const rangeNotSatisfiable = (size) => new Response(null, {
 const rangeBufferCache = new Map();
 
 const readRangeBuffer = (request, cachedResponse) => {
-  const cacheKey = new URL(request.url).pathname;
+  const cacheKey = request.url;
   if (!rangeBufferCache.has(cacheKey)) {
     const bufferTask = cachedResponse.arrayBuffer().catch((error) => {
       rangeBufferCache.delete(cacheKey);
@@ -225,7 +225,8 @@ self.addEventListener('fetch', (event) => {
       }
     }
 
-    const cachedResponse = await cache.match(request, { ignoreSearch: true });
+    // Version queries distinguish replaced voices and scripts from old bytes.
+    const cachedResponse = await cache.match(request);
 
     if (cachedResponse) {
       if (request.headers.has('range')) return createRangeResponse(request, cachedResponse);

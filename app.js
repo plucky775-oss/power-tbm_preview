@@ -347,7 +347,7 @@
     support: [
       {
         id: '04-safety-tools',
-        src: 'assets/audio/04-safety-tools-taehyung-v73.mp3',
+        src: 'assets/audio/04-safety-tools-taehyung.mp3?v=20260922-audio-path-v74',
         duration: 31.84325,
         cues: [[0, 0], [3.26, 5700], [12.35, 19600], [16.12, 25950], [22.25, 32600], [24.59, 36100], [30.772188, 42250], [31.84325, 42250]]
       },
@@ -361,7 +361,7 @@
     safety: [
       {
         id: '07-safety4cut',
-        src: 'assets/audio/07-safety4cut-v73.m4a',
+        src: 'assets/audio/07-safety4cut.m4a?v=20260922-audio-path-v74',
         duration: 134.622,
         cues: [[0, 0], [134.622, 134622]]
       }
