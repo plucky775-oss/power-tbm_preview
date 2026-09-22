@@ -1,0 +1,78 @@
+/* The final chapter reuses the existing phone and support explanation styles. */
+@media (min-width: 761px) {
+  .demo-only-page .demo-page-switch { grid-template-columns: 1.35fr repeat(4, minmax(0, 1fr)); }
+}
+.safety-demo {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: none;
+  overflow: hidden;
+  background: #f3f7fc;
+}
+.guide-phone.safety-demo-active .safety-demo { display: block; }
+.guide-phone.safety-demo-active #guideImage,
+.guide-phone.safety-demo-active .opening-demo-video,
+.guide-phone.safety-demo-active .weather-demo,
+.guide-phone.safety-demo-active .meeting-demo,
+.guide-phone.safety-demo-active .support-demo,
+.guide-phone.safety-demo-active .closing-demo { visibility: hidden; }
+.tour-stage.safety-page .tour-detail > :not(.safety-explanations) { display: none; }
+.tour-stage.safety-page .safety-explanations { display: block; }
+.tour-stage:not(.safety-page) .safety-explanations { display: none; }
+.safety-explain { opacity: 1; transform: none; }
+.safety-screen-viewport {
+  position: absolute;
+  inset: 6% 0 10%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.safety-screen-canvas { position: relative; flex: none; }
+#safetyScreenshot { display: block; width: 100%; height: 100%; object-fit: contain; }
+.safety-focus {
+  position: absolute;
+  z-index: 2;
+  opacity: 1;
+  box-sizing: border-box;
+  border: 2px solid var(--yellow);
+  border-radius: 7px;
+  box-shadow: 0 0 0 3px rgb(255 214 47 / 18%);
+}
+.safety-focus[hidden], .safety-hand[hidden] { display: none; }
+.safety-hand {
+  position: absolute;
+  z-index: 3;
+  font-size: 27px;
+  line-height: 1;
+  transform: translate(-35%, -10%);
+  filter: drop-shadow(0 3px 3px rgb(0 0 0 / 25%));
+}
+.safety-caption {
+  position: absolute;
+  inset: auto 4% 3.5%;
+  z-index: 5;
+  padding: 10px 9px;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 12px;
+  color: white;
+  background: rgb(7 26 52 / 94%);
+  font-size: clamp(10px, 1.4vh, 13px);
+  font-weight: 800;
+  line-height: 1.5;
+  text-align: center;
+}
+.safety-progress { position: absolute; inset: auto 7% 2%; height: 3px; overflow: hidden; background: #c9d5e5; border-radius: 3px; }
+.safety-progress i { display: block; width: 100%; height: 100%; transform-origin: left; background: var(--yellow); }
+.safety-video-shell { position: absolute; inset: 0; display: none; flex-direction: column; justify-content: center; gap: 22px; background: #081d37; color: white; text-align: center; }
+.safety-video-shell > span { color: var(--yellow); font-size: 11px; font-weight: 900; letter-spacing: .09em; }
+.safety-video-shell video { width: 100%; aspect-ratio: 1; object-fit: contain; background: #000; }
+.safety-video-shell p { margin: 0; font-size: 14px; font-weight: 800; line-height: 1.6; }
+.safety-showing-video .safety-screen-viewport { display: none; }
+.safety-showing-video .safety-video-shell { display: flex; }
+/* Reuse the existing field-review backdrop without changing earlier chapters. */
+.cinematic-backdrop[data-demo-page="safety"] .cinematic-backdrop-meeting { opacity: .36; }
+@media (max-width: 760px) {
+  .safety-explain > span { align-self: center; }
+  .safety-explain .demo-explain-points { justify-content: center; }
+}

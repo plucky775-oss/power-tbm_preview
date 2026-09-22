@@ -1,15 +1,28 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v70-20260816`;
+const CACHE_NAME = `${CACHE_PREFIX}v71-20260922-safety4cut`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './styles.css?v=20260816-exhibition-type-v70',
-  './app.js?v=20260816-exhibition-type-v70',
+  './app.js?v=20260922-safety4cut-v71',
+  './safety4cut.css?v=20260922-safety4cut-v71',
+  './safety4cut.js?v=20260922-safety4cut-v71',
   './pwa.js?v=20260816-exhibition-type-v70',
+  './assets/audio/07-safety4cut.m4a',
+  './assets/safety4cut/01-admin.png',
+  './assets/safety4cut/02-upload.png',
+  './assets/safety4cut/03-analysis.png',
+  './assets/safety4cut/04-story.png',
+  './assets/safety4cut/05-scenario.png',
+  './assets/safety4cut/06-cartoon.jpg',
+  './assets/safety4cut/07-realistic.jpg',
+  './assets/safety4cut/08-audio-video.jpg',
+  './assets/safety4cut/09-example-poster.jpg',
+  './assets/safety4cut/09-example.mp4',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
@@ -85,7 +98,7 @@ const PRECACHE_URLS = [
 ];
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
-const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js)(?:\?|$)/.test(path) || path === './';
+const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css))(?:\?|$)/.test(path) || path === './';
 
 const precacheInSmallBatches = async (cache) => {
   let nextIndex = 0;

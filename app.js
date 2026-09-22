@@ -217,6 +217,8 @@
   const weatherDemoPage = $('#weatherDemoPage');
   const meetingDemoPage = $('#meetingDemoPage');
   const supportDemoPage = $('#supportDemoPage');
+  const safetyDemoPage = $('#safetyDemoPage');
+  const safety = window.PowerTBMSafety;
   const homeReset = $('#homeReset');
   const launchIntro = $('#launchIntro');
   const launchIntroVideo = $('#launchIntroVideo');
@@ -282,7 +284,7 @@
     meetingTargetObserver.observe(meetingDemo);
   }
 
-  const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000, closing: 11494 };
+  const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000, safety: 102400, closing: 11494 };
   // A complete stage change fades to the Power TBM navy, swaps while fully
   // covered, then gently reveals the next scene. Keeping the swap and reveal
   // as separate moments prevents the opening video from cutting straight to
@@ -296,18 +298,19 @@
   // Each stage advances while its final scene is still fully visible.
   // The weather timeline begins fading its last comparison earlier than the
   // other stages, so it intentionally has a different end ratio.
-  const demoEndRatios = { intro: 1, weather: .91, meeting: .989, support: .98, closing: 1 };
+  const demoEndRatios = { intro: 1, weather: .91, meeting: .989, support: .98, safety: 1, closing: 1 };
   // The source track is intentionally kept well below the normalized voices.
   // It rises slightly for the opening and field-photo ending, then ducks under
   // every information-heavy narration section.
-  const bgmVolumeByPage = { intro: .12, weather: .065, meeting: .065, support: .065, closing: .13 };
+  const bgmVolumeByPage = { intro: .12, weather: .065, meeting: .065, support: .065, safety: .065, closing: .13 };
   const bgmClosingFadeSeconds = 2.35;
-  const stageActiveClasses = ['opening-demo-active', 'demo-active', 'meeting-demo-active', 'support-demo-active', 'closing-demo-active'];
+  const stageActiveClasses = ['opening-demo-active', 'demo-active', 'meeting-demo-active', 'support-demo-active', 'safety-demo-active', 'closing-demo-active'];
   const stageClassByPage = {
     intro: 'opening-demo-active',
     weather: 'demo-active',
     meeting: 'meeting-demo-active',
     support: 'support-demo-active',
+    safety: 'safety-demo-active',
     closing: 'closing-demo-active'
   };
   const narrationByPage = {
@@ -353,6 +356,14 @@
         src: 'assets/audio/05-emergency-jisoo.mp3',
         duration: 21.995102,
         cues: [[0, 42450], [6.19, 43800], [13.1, 45500], [17.41, 47000], [21.995102, 49000]]
+      }
+    ],
+    safety: [
+      {
+        id: '07-safety4cut',
+        src: 'assets/audio/07-safety4cut.m4a',
+        duration: 102.4,
+        cues: [[0, 0], [102.4, 102400]]
       }
     ],
     closing: [
@@ -575,7 +586,8 @@
     cinematicBackdrop.classList.toggle('is-static', !cinematicPlaybackAllowed);
 
     cinematicVideos.forEach((video) => {
-      const active = video.dataset.cinematicPage === demoPage;
+      const active = video.dataset.cinematicPage === demoPage
+        || (demoPage === 'safety' && video.classList.contains('cinematic-backdrop-meeting'));
       video.muted = true;
       video.defaultMuted = true;
       if (!active) {
@@ -814,6 +826,10 @@
       return;
     }
     const visualTime = mapNarrationTimeToVisual(segment, seconds);
+    if (demoPage === 'safety') {
+      safety?.render(visualTime / 1000, { paused: demoPaused || document.hidden });
+      return;
+    }
     if (!syncedAnimations.length) collectNarrationAnimations(demoPage);
     syncedAnimations.forEach((animation) => {
       try {
@@ -863,6 +879,7 @@
     narrationUnlocked = false;
     setNarrationState(error?.name === 'NotAllowedError' ? 'blocked' : 'error');
     if (demoPage === 'support') startGoldenRulesClock({ reset: false });
+    if (demoPage === 'safety') safety?.startFallback();
     scheduleSequenceAdvance();
   };
 
@@ -1126,6 +1143,7 @@
   };
 
   const getStageRunDuration = (page) => {
+    if (page === 'safety') return demoDurationFallbacks.safety;
     if (page === 'intro') {
       const videoDuration = Number(openingDemoVideo?.duration);
       return Number.isFinite(videoDuration) && videoDuration > 0
@@ -1159,7 +1177,8 @@
     if (demoPage === 'intro') activateWeatherPage({ keepMode: true });
     else if (demoPage === 'weather') activateMeetingPage({ keepMode: true });
     else if (demoPage === 'meeting') activateSupportPage({ keepMode: true });
-    else if (demoPage === 'support') activateClosingPage({ keepMode: true });
+    else if (demoPage === 'support') activateSafetyPage({ keepMode: true });
+    else if (demoPage === 'safety') activateClosingPage({ keepMode: true });
     else activateIntroPage({ keepMode: true });
   };
 
@@ -1181,6 +1200,7 @@
       startNarrationForPage(demoPage, { restartVideo });
       return;
     }
+    if (demoPage === 'safety') safety?.startFallback();
     scheduleSequenceAdvance();
   };
 
@@ -1195,7 +1215,8 @@
     const sequenceSelected = demoMode === 'sequence';
     const weatherSelected = demoPage === 'weather';
     const meetingSelected = demoPage === 'meeting';
-    const supportSelected = demoPage === 'support' || demoPage === 'closing';
+    const supportSelected = demoPage === 'support';
+    const safetySelected = demoPage === 'safety' || demoPage === 'closing';
     allDemoPage?.classList.toggle('active', sequenceSelected);
     allDemoPage?.setAttribute('aria-selected', String(sequenceSelected));
     guidePhone?.classList.toggle('sequence-mode', sequenceSelected);
@@ -1203,7 +1224,8 @@
     [
       [weatherDemoPage, weatherSelected],
       [meetingDemoPage, meetingSelected],
-      [supportDemoPage, supportSelected]
+      [supportDemoPage, supportSelected],
+      [safetyDemoPage, safetySelected]
     ].forEach(([button, selected]) => {
       button?.classList.toggle('active', !sequenceSelected && selected);
       button?.classList.toggle('current', sequenceSelected && selected);
@@ -1215,6 +1237,7 @@
   };
 
   const stopAllDemos = () => {
+    safety?.pause();
     clearSequenceTimer();
     clearStageTransitionTimers();
     stopLaunchPrelude();
@@ -1222,8 +1245,8 @@
     stopNarrationPlayback({ keepRequested: false });
     stopDemoBgm();
     stageTransitioning = false;
-    guidePhone?.classList.remove('opening-demo-active', 'demo-active', 'meeting-demo-active', 'support-demo-active', 'closing-demo-active', 'is-paused', 'stage-transitioning');
-    guideStage?.classList.remove('intro-page', 'meeting-page', 'support-page', 'closing-page', 'stage-transitioning');
+    guidePhone?.classList.remove('opening-demo-active', 'demo-active', 'meeting-demo-active', 'support-demo-active', 'safety-demo-active', 'closing-demo-active', 'is-paused', 'stage-transitioning');
+    guideStage?.classList.remove('intro-page', 'meeting-page', 'support-page', 'safety-page', 'closing-page', 'stage-transitioning');
     openingDemoVideo?.pause();
     demoControls?.classList.remove('active');
     demoPaused = false;
@@ -1370,11 +1393,12 @@
     stopLaunchPrelude();
     if (page !== 'support') stopGoldenRulesClock();
     if (demoPage === 'intro' && page !== 'intro') openingDemoVideo?.pause();
+    safety?.reset();
     demoPage = page;
     if (page === 'weather') syncWeatherGuide();
 
     stageActiveClasses.forEach((className) => guidePhone.classList.remove(className));
-    guideStage?.classList.remove('intro-page', 'meeting-page', 'support-page', 'closing-page');
+    guideStage?.classList.remove('intro-page', 'meeting-page', 'support-page', 'safety-page', 'closing-page');
     // Force a clean animation start while the transition veil is opaque.
     void guidePhone.offsetWidth;
     if (guideStage) void guideStage.offsetWidth;
@@ -1382,6 +1406,7 @@
     if (page === 'intro') guideStage?.classList.add('intro-page');
     if (page === 'meeting') guideStage?.classList.add('meeting-page');
     if (page === 'support') guideStage?.classList.add('support-page');
+    if (page === 'safety') guideStage?.classList.add('safety-page');
     if (page === 'closing') guideStage?.classList.add('closing-page');
     guidePhone.classList.add(stageClassByPage[page]);
     if (page === 'support') startGoldenRulesClock({ reset: true });
@@ -1392,12 +1417,12 @@
       guideIndex.textContent = page === 'intro'
         ? 'OPENING'
         : page === 'weather'
-          ? '01 / 03'
+          ? '01 / 04'
           : page === 'meeting'
-            ? '02 / 03'
+            ? '02 / 04'
             : page === 'closing'
               ? 'ENDING'
-              : '03 / 03';
+              : page === 'safety' ? '04 / 04' : '03 / 04';
     }
     if (page !== 'weather') {
       guideTabs.forEach((tab) => {
@@ -1427,6 +1452,7 @@
     clearSequenceTimer();
     if (page !== 'intro' && launchActive) stopLaunchPrelude();
     if (narrationRequested) stopNarrationPlayback({ keepRequested: true });
+    safety?.pause();
     updateDemoPageButtons();
     const hasVisibleStage = stageActiveClasses.some((className) => guidePhone.classList.contains(className));
     if (immediate || reduceMotion || !hasVisibleStage) {
@@ -1466,7 +1492,7 @@
       guideImage.alt = item.alt;
       if (guideIndex) {
         guideIndex.textContent = (demoPage === 'weather' && index === 0)
-          ? '01 / 03'
+          ? '01 / 04'
           : `${String(index + 1).padStart(2, '0')} / ${String(guideData.length).padStart(2, '0')}`;
       }
       if (guideCategory) guideCategory.textContent = item.category;
@@ -1523,6 +1549,11 @@
     switchDemoStage('support', { keepMode, forceRestart: true, immediate: userInitiated && !narrationUnlocked });
   };
 
+  const activateSafetyPage = ({ keepMode = false, userInitiated = false } = {}) => {
+    if (userInitiated) enableNarrationFromGesture();
+    switchDemoStage('safety', { keepMode, forceRestart: true, immediate: userInitiated && !narrationUnlocked });
+  };
+
   const activateClosingPage = ({ keepMode = false } = {}) => {
     switchDemoStage('closing', { keepMode, forceRestart: true });
   };
@@ -1568,6 +1599,7 @@
   weatherDemoPage?.addEventListener('click', () => activateWeatherPage({ userInitiated: true }));
   meetingDemoPage?.addEventListener('click', () => activateMeetingPage({ userInitiated: true }));
   supportDemoPage?.addEventListener('click', () => activateSupportPage({ userInitiated: true }));
+  safetyDemoPage?.addEventListener('click', () => activateSafetyPage({ userInitiated: true }));
   guideTabs.forEach((tab, index) => tab.addEventListener('click', () => {
     demoMode = 'single';
     demoPage = index === 0 ? 'weather' : 'manual';
@@ -1576,7 +1608,8 @@
   }));
   $('#guidePrev')?.addEventListener('click', () => {
     if (demoPage === 'intro') activateSupportPage();
-    else if (demoPage === 'closing') activateSupportPage();
+    else if (demoPage === 'closing') activateSafetyPage();
+    else if (demoPage === 'safety') activateSupportPage();
     else if (demoPage === 'support') activateMeetingPage();
     else if (demoPage === 'meeting') activateWeatherPage();
     else if (demoPage === 'weather') activateSupportPage();
@@ -1586,14 +1619,16 @@
     if (demoPage === 'intro') activateWeatherPage();
     else if (demoPage === 'weather') activateMeetingPage();
     else if (demoPage === 'meeting') activateSupportPage();
-    else if (demoPage === 'support') activateWeatherPage();
+    else if (demoPage === 'support') activateSafetyPage();
+    else if (demoPage === 'safety') activateClosingPage();
     else if (demoPage === 'closing') activateIntroPage();
     else updateGuide(currentGuide + 1);
   });
   guideStage?.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') {
       if (demoPage === 'intro') activateSupportPage();
-      else if (demoPage === 'closing') activateSupportPage();
+      else if (demoPage === 'closing') activateSafetyPage();
+      else if (demoPage === 'safety') activateSupportPage();
       else if (demoPage === 'support') activateMeetingPage();
       else if (demoPage === 'meeting') activateWeatherPage();
       else if (demoPage === 'weather') activateSupportPage();
@@ -1603,13 +1638,14 @@
       if (demoPage === 'intro') activateWeatherPage();
       else if (demoPage === 'weather') activateMeetingPage();
       else if (demoPage === 'meeting') activateSupportPage();
-      else if (demoPage === 'support') activateWeatherPage();
+      else if (demoPage === 'support') activateSafetyPage();
+      else if (demoPage === 'safety') activateClosingPage();
       else if (demoPage === 'closing') activateIntroPage();
       else updateGuide(currentGuide + 1);
     }
   });
   demoToggle?.addEventListener('click', () => {
-    if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'closing' && currentGuide !== 0)) return;
+    if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'safety' && demoPage !== 'closing' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
     guidePhone.classList.toggle('is-paused', demoPaused);
     syncCinematicBackdrop();
@@ -1630,6 +1666,10 @@
       }
     }
     if (demoPage === 'support') syncGoldenRulesVideo(getGoldenRulesVisualTime());
+    if (demoPage === 'safety') {
+      if (demoPaused || document.hidden) safety?.pause();
+      else if (!narrationRequested) safety?.startFallback({ reset: false });
+    }
     if (narrationRequested && demoNarration) {
       if (demoPaused) {
         demoNarration.pause();
@@ -1661,6 +1701,7 @@
     if (demoMode === 'sequence') activateSequence({ userInitiated: true });
     else if (demoPage === 'meeting') activateMeetingPage({ userInitiated: true });
     else if (demoPage === 'support') activateSupportPage({ userInitiated: true });
+    else if (demoPage === 'safety') activateSafetyPage({ userInitiated: true });
     else activateWeatherPage({ userInitiated: true });
   });
   demoMute?.addEventListener('click', () => {
@@ -1703,6 +1744,7 @@
         else if (demoPage === 'meeting') startMeetingDemo({ restart: true });
         else if (demoPage === 'support') startSupportDemo({ restart: true });
         else if (demoPage === 'closing') startClosingDemo({ restart: true });
+        else if (demoPage === 'safety') safety?.startFallback();
         else if (currentGuide === 0) startWeatherDemo({ restart: true });
       });
     }, { threshold: .35 });
@@ -1712,7 +1754,7 @@
     else startWeatherDemo();
   } else showLaunchGate();
   document.addEventListener('visibilitychange', () => {
-    if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'closing' && currentGuide !== 0)) return;
+    if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'safety' && demoPage !== 'closing' && currentGuide !== 0)) return;
     guidePhone.classList.toggle('is-paused', document.hidden || demoPaused);
     syncCinematicBackdrop();
     if (launchActive && document.hidden) {
@@ -1728,6 +1770,10 @@
       return;
     }
     if (demoPage === 'support') syncGoldenRulesVideo(getGoldenRulesVisualTime());
+    if (demoPage === 'safety') {
+      if (demoPaused || document.hidden) safety?.pause();
+      else if (!narrationRequested) safety?.startFallback({ reset: false });
+    }
     if (narrationRequested && demoNarration) {
       if (document.hidden) {
         demoNarration.pause();
