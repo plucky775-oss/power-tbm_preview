@@ -30,6 +30,11 @@
 }
 .safety-screen-canvas { position: relative; flex: none; }
 #safetyScreenshot { display: block; width: 100%; height: 100%; object-fit: contain; }
+/* The two app screenshots fill the same phone screen as the other chapters. */
+.safety-fullscreen-photo .safety-screen-viewport { inset: 0; grid-template: minmax(0, 1fr) / minmax(0, 1fr); }
+.safety-fullscreen-photo #safetyScreenshot { border-radius: 0; }
+.safety-fullscreen-photo .safety-caption,
+.safety-fullscreen-photo .safety-progress { display: none; }
 .safety-focus {
   position: absolute;
   z-index: 2;

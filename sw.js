@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v76-20260923-static-screen`;
+const CACHE_NAME = `${CACHE_PREFIX}v77-20260923-ansan-fullscreen`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
@@ -9,8 +9,8 @@ const PRECACHE_URLS = [
   './manifest.webmanifest',
   './styles.css?v=20260816-exhibition-type-v70',
   './app.js?v=20260923-short-intro-v75',
-  './safety4cut.css?v=20260923-short-intro-v75',
-  './safety4cut.js?v=20260923-static-screen-v76',
+  './safety4cut.css?v=20260923-ansan-fullscreen-v77',
+  './safety4cut.js?v=20260923-ansan-fullscreen-v77',
   './pwa.js?v=20260816-exhibition-type-v70',
   './assets/audio/07-safety4cut.m4a?v=20260923-short-intro-v75',
   './assets/safety4cut/01-admin-v75.png',
@@ -89,8 +89,8 @@ const PRECACHE_URLS = [
   './assets/video/golden-rules-11-rule-1-poster.jpg',
   './assets/video/power-tbm-button-click-poster.jpg',
   './assets/video/power-tbm-button-click.mp4',
-  './assets/video/power-tbm-opening-v22-poster.jpg',
-  './assets/video/power-tbm-opening-v22.mp4'
+  './assets/video/power-tbm-opening-ansan-v77-poster.jpg',
+  './assets/video/power-tbm-opening-ansan-v77.mp4'
 ];
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
