@@ -284,7 +284,7 @@
     meetingTargetObserver.observe(meetingDemo);
   }
 
-  const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000, safety: 141600, closing: 11494 };
+  const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000, safety: 134622, closing: 11494 };
   // A complete stage change fades to the Power TBM navy, swaps while fully
   // covered, then gently reveals the next scene. Keeping the swap and reveal
   // as separate moments prevents the opening video from cutting straight to
@@ -347,7 +347,7 @@
     support: [
       {
         id: '04-safety-tools',
-        src: 'assets/audio/04-safety-tools-taehyung-v72.mp3',
+        src: 'assets/audio/04-safety-tools-taehyung-v73.mp3',
         duration: 31.84325,
         cues: [[0, 0], [3.26, 5700], [12.35, 19600], [16.12, 25950], [22.25, 32600], [24.59, 36100], [30.772188, 42250], [31.84325, 42250]]
       },
@@ -361,9 +361,9 @@
     safety: [
       {
         id: '07-safety4cut',
-        src: 'assets/audio/07-safety4cut-v72.m4a',
-        duration: 141.6,
-        cues: [[0, 0], [141.6, 141600]]
+        src: 'assets/audio/07-safety4cut-v73.m4a',
+        duration: 134.622,
+        cues: [[0, 0], [134.622, 134622]]
       }
     ],
     closing: [
@@ -828,15 +828,16 @@
       // decoder advance naturally instead of seeking on every animation frame.
       return;
     }
-    const visualTime = mapNarrationTimeToVisual(segment, seconds);
     if (demoPage === 'safety') {
-      safety?.render(visualTime / 1000, { paused: demoPaused || document.hidden });
+      // These scenes use the audio clock directly, without cue interpolation.
+      safety?.render(seconds, { paused: demoPaused || document.hidden });
       if (demoBgm && safety && seconds >= safety.videoOffset - .65) {
         cancelBgmFrame();
         demoBgm.volume = getCurrentBgmTarget('safety');
       }
       return;
     }
+    const visualTime = mapNarrationTimeToVisual(segment, seconds);
     if (!syncedAnimations.length) collectNarrationAnimations(demoPage);
     syncedAnimations.forEach((animation) => {
       try {

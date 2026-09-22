@@ -1,18 +1,18 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v72-20260922-narration`;
+const CACHE_NAME = `${CACHE_PREFIX}v73-20260922-original-voices`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './styles.css?v=20260816-exhibition-type-v70',
-  './app.js?v=20260922-narration-v72',
+  './app.js?v=20260922-original-voices-v73',
   './safety4cut.css?v=20260922-safety4cut-v71',
-  './safety4cut.js?v=20260922-narration-v72',
+  './safety4cut.js?v=20260922-original-voices-v73',
   './pwa.js?v=20260816-exhibition-type-v70',
-  './assets/audio/07-safety4cut-v72.m4a',
+  './assets/audio/07-safety4cut-v73.m4a',
   './assets/safety4cut/01-admin.png',
   './assets/safety4cut/02-upload.png',
   './assets/safety4cut/03-analysis.png',
@@ -27,7 +27,7 @@ const PRECACHE_URLS = [
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
   './assets/audio/03-ai-pdf-jisoo.mp3',
-  './assets/audio/04-safety-tools-taehyung-v72.mp3',
+  './assets/audio/04-safety-tools-taehyung-v73.mp3',
   './assets/audio/05-emergency-jisoo.mp3',
   './assets/audio/06-closing-jisoo.mp3',
   './assets/audio/bgm-starcourt-mall-cc0.mp3',
