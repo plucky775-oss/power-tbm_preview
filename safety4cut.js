@@ -1,15 +1,11 @@
 (() => {
   'use strict';
   const scenes = [
-    { at: 0.0, label: 'TBM 연결', src: '01-admin.png', title: ['안전점검에서', '사고예방 교육까지'], description: '현장 안전을 확인했다면, 이제 사고사례를 함께 배울 차례입니다. 관리자 메뉴의 ‘4컷카툰 제작’에서 Safety 4-Cut으로 이어집니다.', points: ['안전회의', '사고사례', '예방교육'], caption: 'TBM에서 4컷카툰 제작으로 이어집니다', focus: [64, 27.2, 9.4, 3.5], zoom: 1.65, origin: '68% 29%' },
-    { at: 8.202, label: '사고자료', src: '02-upload.png', title: ['사고보고서와 사진을', '교육의 시작으로'], description: '사진·PDF 자료를 올리고 작업 현장조건을 선택합니다. 등록한 자료를 바탕으로 사고 분석을 시작합니다.', points: ['사진·PDF', '현장조건', 'AI 사고분석'], caption: '사고자료를 올리고 현장조건을 선택합니다', focus: [3.8, 43.4, 48, 16.2], zoom: 1.18, origin: '35% 50%' },
-    { at: 16.717, label: 'AI 분석', src: '03-analysis.png', title: ['사고의 흐름과 원인을', '한눈에 정리'], description: '사고 개요와 진행 순서를 확인합니다. 확인된 사실과 원인 후보를 구분해 검토하고 필요한 내용을 수정합니다.', points: ['사실 확인', '진행 순서', '원인 검토'], caption: '분석 내용을 확인하고 수정합니다', focus: [3.8, 52.7, 92.5, 30.8], zoom: 1.08, origin: '50% 60%' },
-    { at: 26.068, label: '이야기 구성', src: '04-story.png', title: ['전달할 핵심에 맞춰', '이야기를 구성'], description: '작업 따라가기, 위험 찾아보기 등 전개방식을 고릅니다. 기본 4컷 또는 AI가 추천한 컷수를 선택합니다.', points: ['작업 상황', '위험과 사고', '예방조치'], caption: '교육 목적에 맞는 이야기 전개를 고릅니다', focus: [3.8, 28, 92.5, 18.1], zoom: 1.08, origin: '50% 45%' },
-    { at: 35.837, label: '대본·그림체', src: '05-scenario.png', title: ['대본을 확인하고', '표현방식을 선택'], description: '장면과 대사, 교육 포인트를 확인합니다. 카툰형·실사형을 선택하고 공구·장비 참고사진을 등록할 수 있습니다.', points: ['시나리오 확인', '그림체 선택', '참고사진'], caption: '대본과 그림체를 확인해 카툰을 만듭니다', focus: [3.8, 10.7, 92.5, 36.8], zoom: 1.08, origin: '50% 30%' },
-    { at: 46.494, label: '카툰형', src: '06-cartoon.jpg', title: ['어려운 사고사례도', '네 컷으로 이해'], description: '작업 상황부터 사고 발생과 예방조치까지. 현장에서 함께 보며 설명할 수 있는 교육자료로 만듭니다.', points: ['작업 상황', '사고 원인', '예방조치'], caption: '실제 생성 결과 · 카툰형' },
-    { at: 57.804, label: '실사형', src: '07-realistic.jpg', title: ['같은 사고사례를', '실사형으로도'], description: '교육 목적에 맞춰 그림체를 선택합니다. 같은 사례의 카툰형과 실사형 결과를 비교해 보세요.', points: ['같은 사고사례', '실사형 표현', '현장 교육'], caption: '실제 생성 결과 · 실사형' },
-    { at: 68.043, label: '음성·효과음', src: '08-audio-video.jpg', title: ['대사와 현장 소리를', '영상에 함께'], description: '등장인물의 음성에 사고 효과음과 현장 배경음을 더합니다. ‘음성·영상 만들기’로 MP4를 제작합니다.', points: ['등장인물 음성', '사고 효과음', '현장 배경음'], caption: '음성과 효과음을 더해 교육영상으로 만듭니다', focus: [5.5, 23.3, 89, 16.6], zoom: 1.12, origin: '50% 30%' },
-    { at: 79.222, label: '완성 영상', title: ['보고 듣고 기억하는', '사고예방 교육'], description: '지상변압기 작업 사례로 만든 실제 교육영상입니다. 사고의 흐름과 예방조치를 함께 보고, 다음 안전회의에서 다시 확인합니다.', points: ['사고사례 공유', '예방조치 확인', '다음 TBM 교육'], caption: '실제 생성 교육영상 재생 중', video: true }
+    { at: 0, label: '관리자 메뉴', src: '01-admin-v75.png', title: ['관리자 화면에서', '4컷 카툰 제작'], description: '마지막으로, 사고예방 교육을 위한 안전 4컷입니다. 관리자 메뉴에서 ‘4컷카툰 제작’을 눌러 시작합니다.', points: ['관리자 메뉴', '4컷카툰 제작', '안전교육'], caption: '‘4컷카툰 제작’을 눌러 시작합니다', focus: [6.8, 25.8, 24.3, 5.2], gesture: { from: [75, 68], to: [19, 28.4], start: 4.1, arrive: 6.1, tap: 6.5, end: 7.8 }, zoom: 1.16, origin: '20% 28.4%' },
+    { at: 8.202, label: '사고사례 등록', src: '02-upload-v75.png', title: ['사고사례를 등록하면', '카툰부터 교육영상까지'], description: '사고사례 사진·보고서를 등록하면 4컷 카툰은 물론, 음성과 효과음이 들어간 몰입도 높은 안전교육 영상까지 간편하게 만들 수 있습니다.', points: ['사고사례 등록', '4컷 카툰', '음성·효과음 영상'], caption: '사고사례를 등록해 카툰과 교육영상을 만듭니다', focus: [7.1, 24.3, 85.8, 13.7], gesture: { from: [82, 71], to: [50, 32.8], start: .25, arrive: 1.4, tap: 1.7, end: 3 }, zoom: 1.1, origin: '50% 33%' },
+    { at: 17.971, label: '카툰형', src: '06-cartoon.jpg', title: ['실제 사고사례를', '네 컷으로 이해'], description: '지금 보시는 화면은 실제 사고사례로 만든 카툰형 교육자료입니다. 작업 상황과 사고 발생, 예방조치를 함께 보여줍니다.', points: ['작업 상황', '사고 원인', '예방조치'], caption: '실제 생성 결과 · 카툰형' },
+    { at: 23.377, label: '실사형', src: '07-realistic.jpg', title: ['같은 사고사례를', '실사형으로도'], description: '같은 사례를 실사형 교육자료로도 만들 수 있습니다. 이어서 음성과 효과음이 담긴 실제 제작 영상을 함께 보시겠습니다.', points: ['실사형 표현', '음성·효과음', '실제 영상 보기'], caption: '실제 생성 결과 · 실사형' },
+    { at: 30.325, label: '완성 영상', title: ['보고 듣고 기억하는', '사고예방 교육'], description: '지상변압기 작업 사례로 만든 실제 교육영상입니다. 사고의 흐름과 예방조치를 함께 보고, 다음 안전회의에서 다시 확인합니다.', points: ['사고사례 공유', '예방조치 확인', '다음 TBM 교육'], caption: '실제 생성 교육영상 재생 중', video: true }
   ];
   const root = document.querySelector('#safetyDemo');
   if (!root) return;
@@ -19,8 +15,8 @@
   const focus = root.querySelector('.safety-focus');
   const hand = root.querySelector('.safety-hand');
   const sample = root.querySelector('#safetyExample');
-  const duration = 134.622;
-  const videoOffset = 79.222;
+  const duration = 85.725;
+  const videoOffset = 30.325;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let current = -1;
   let frame = 0;
@@ -56,23 +52,24 @@
       document.querySelector('#safetyTitle').innerHTML = `${scene.title[0]}<br><em>${scene.title[1]}</em>`;
       document.querySelector('#safetyDescription').textContent = scene.description;
       document.querySelector('#safetyPoints').innerHTML = scene.points.map(point => `<b>${point}</b>`).join('');
-      document.querySelector('#safetySceneLabel').textContent = `${index + 1} / 9 · ${scene.label}`;
+      document.querySelector('#safetySceneLabel').textContent = `${index + 1} / ${scenes.length} · ${scene.label}`;
       root.querySelector('#safetyCaption').textContent = scene.caption;
       if (scene.src) {
         picture.src = `assets/safety4cut/${scene.src}`;
         picture.alt = `Safety 4-Cut ${scene.label} 실제 화면`;
         fitCanvas();
       }
-      focus.hidden = hand.hidden = !scene.focus;
+      focus.hidden = !scene.focus;
+      hand.hidden = !scene.gesture;
       if (scene.focus) {
         const [left, top, width, height] = scene.focus;
         Object.assign(focus.style, { left: `${left}%`, top: `${top}%`, width: `${width}%`, height: `${height}%` });
-        Object.assign(hand.style, { left: `${left + width * .6}%`, top: `${top + height * .65}%` });
       }
       canvas.style.transformOrigin = scene.origin || '50% 50%';
     }
     const progress = reduceMotion ? 0 : Math.min(1, (lastTime - scene.at) / 2);
     canvas.style.transform = `scale(${1 + ((scene.zoom || 1) - 1) * (1 - Math.pow(1 - progress, 3))})`;
+    renderGesture(scene, lastTime - scene.at);
     root.querySelector('.safety-progress i').style.transform = `scaleX(${lastTime / duration})`;
     if (!scene.video || paused || document.hidden) {
       sample.pause();
@@ -88,6 +85,32 @@
       playPending = true;
       sample.play().catch(() => { videoUnavailable = true; }).finally(() => { playPending = false; });
     }
+  }
+
+  // Drive the finger and press from the same audio clock as the scene.
+  function renderGesture(scene, elapsed) {
+    const gesture = scene.gesture;
+    focus.classList.remove('is-tapping');
+    if (!gesture) {
+      root.dataset.gesture = 'none';
+      return;
+    }
+    const travel = reduceMotion ? 1 : Math.min(1, Math.max(0, (elapsed - gesture.start) / (gesture.arrive - gesture.start)));
+    const eased = 1 - Math.pow(1 - travel, 3);
+    const x = gesture.from[0] + (gesture.to[0] - gesture.from[0]) * eased;
+    const y = gesture.from[1] + (gesture.to[1] - gesture.from[1]) * eased;
+    const tapProgress = (elapsed - gesture.tap) / .4;
+    const tapping = !reduceMotion && tapProgress >= 0 && tapProgress <= 1;
+    const press = tapping ? Math.sin(tapProgress * Math.PI) : 0;
+    const fade = Math.min(1, Math.max(0, (elapsed - gesture.start) / .25), Math.max(0, (gesture.end - elapsed) / .35));
+    Object.assign(hand.style, {
+      left: `${x}%`, top: `${y}%`, opacity: String(reduceMotion ? 1 : fade),
+      transform: `translate(-50%, -10%) rotate(${-10 + 4 * press}deg) scale(${1 - .23 * press})`
+    });
+    hand.style.setProperty('--tap-opacity', String(tapping ? 1 - tapProgress : 0));
+    hand.style.setProperty('--tap-scale', String(1 + Math.max(0, tapProgress) * .8));
+    focus.classList.toggle('is-tapping', tapping);
+    root.dataset.gesture = reduceMotion ? 'still' : elapsed < gesture.start ? 'waiting' : travel < 1 ? 'moving' : tapping ? 'tapping' : elapsed < gesture.end ? 'pointing' : 'complete';
   }
 
   function pause() {

@@ -1,26 +1,22 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v74-20260922-audio-path`;
+const CACHE_NAME = `${CACHE_PREFIX}v75-20260923-short-intro`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './styles.css?v=20260816-exhibition-type-v70',
-  './app.js?v=20260922-audio-path-v74',
-  './safety4cut.css?v=20260922-safety4cut-v71',
-  './safety4cut.js?v=20260922-original-voices-v73',
+  './app.js?v=20260923-short-intro-v75',
+  './safety4cut.css?v=20260923-short-intro-v75',
+  './safety4cut.js?v=20260923-short-intro-v75',
   './pwa.js?v=20260816-exhibition-type-v70',
-  './assets/audio/07-safety4cut.m4a?v=20260922-audio-path-v74',
-  './assets/safety4cut/01-admin.png',
-  './assets/safety4cut/02-upload.png',
-  './assets/safety4cut/03-analysis.png',
-  './assets/safety4cut/04-story.png',
-  './assets/safety4cut/05-scenario.png',
+  './assets/audio/07-safety4cut.m4a?v=20260923-short-intro-v75',
+  './assets/safety4cut/01-admin-v75.png',
+  './assets/safety4cut/02-upload-v75.png',
   './assets/safety4cut/06-cartoon.jpg',
   './assets/safety4cut/07-realistic.jpg',
-  './assets/safety4cut/08-audio-video.jpg',
   './assets/safety4cut/09-example-poster.jpg',
   './assets/safety4cut/09-example.mp4',
   './assets/audio/00-opening-taehyung.mp3',

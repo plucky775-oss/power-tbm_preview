@@ -284,7 +284,7 @@
     meetingTargetObserver.observe(meetingDemo);
   }
 
-  const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000, safety: 134622, closing: 11494 };
+  const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000, safety: 85725, closing: 11494 };
   // A complete stage change fades to the Power TBM navy, swaps while fully
   // covered, then gently reveals the next scene. Keeping the swap and reveal
   // as separate moments prevents the opening video from cutting straight to
@@ -361,9 +361,9 @@
     safety: [
       {
         id: '07-safety4cut',
-        src: 'assets/audio/07-safety4cut.m4a?v=20260922-audio-path-v74',
-        duration: 134.622,
-        cues: [[0, 0], [134.622, 134622]]
+        src: 'assets/audio/07-safety4cut.m4a?v=20260923-short-intro-v75',
+        duration: 85.725,
+        cues: [[0, 0], [85.725, 85725]]
       }
     ],
     closing: [
