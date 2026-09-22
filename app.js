@@ -284,7 +284,7 @@
     meetingTargetObserver.observe(meetingDemo);
   }
 
-  const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000, safety: 102400, closing: 11494 };
+  const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000, safety: 141600, closing: 11494 };
   // A complete stage change fades to the Power TBM navy, swaps while fully
   // covered, then gently reveals the next scene. Keeping the swap and reveal
   // as separate moments prevents the opening video from cutting straight to
@@ -347,7 +347,7 @@
     support: [
       {
         id: '04-safety-tools',
-        src: 'assets/audio/04-safety-tools-taehyung.mp3',
+        src: 'assets/audio/04-safety-tools-taehyung-v72.mp3',
         duration: 31.84325,
         cues: [[0, 0], [3.26, 5700], [12.35, 19600], [16.12, 25950], [22.25, 32600], [24.59, 36100], [30.772188, 42250], [31.84325, 42250]]
       },
@@ -361,9 +361,9 @@
     safety: [
       {
         id: '07-safety4cut',
-        src: 'assets/audio/07-safety4cut.m4a',
-        duration: 102.4,
-        cues: [[0, 0], [102.4, 102400]]
+        src: 'assets/audio/07-safety4cut-v72.m4a',
+        duration: 141.6,
+        cues: [[0, 0], [141.6, 141600]]
       }
     ],
     closing: [
@@ -683,6 +683,9 @@
 
   const getCurrentBgmTarget = (page = demoPage) => {
     const base = bgmVolumeByPage[page] || bgmVolumeByPage.weather;
+    if (page === 'safety' && safety && demoNarration) {
+      return base * Math.min(1, Math.max(0, (safety.videoOffset - demoNarration.currentTime) / .65));
+    }
     if (page !== 'closing' || !demoNarration) return base;
     const segment = narrationByPage.closing?.[0];
     const fadeStart = Math.max(0, (segment?.duration || 0) - bgmClosingFadeSeconds);
@@ -828,6 +831,10 @@
     const visualTime = mapNarrationTimeToVisual(segment, seconds);
     if (demoPage === 'safety') {
       safety?.render(visualTime / 1000, { paused: demoPaused || document.hidden });
+      if (demoBgm && safety && seconds >= safety.videoOffset - .65) {
+        cancelBgmFrame();
+        demoBgm.volume = getCurrentBgmTarget('safety');
+      }
       return;
     }
     if (!syncedAnimations.length) collectNarrationAnimations(demoPage);
