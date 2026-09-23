@@ -4,8 +4,8 @@
     { at: 0, label: '관리자 메뉴', src: '01-admin-v75.png', fullScreen: true, title: ['관리자 화면에서', '4컷 카툰 제작'], description: '마지막으로, 사고예방 교육을 위한 안전 4컷입니다. 관리자 메뉴에서 ‘4컷카툰 제작’을 눌러 시작합니다.', points: ['관리자 메뉴', '4컷카툰 제작', '안전교육'], caption: '‘4컷카툰 제작’을 눌러 시작합니다', focus: [6.8, 25.8, 24.3, 5.2], gesture: { from: [75, 68], to: [19, 28.4], start: 4.1, arrive: 6.1, tap: 6.5, end: 7.8 } },
     { at: 8.202, label: '사고사례 등록', src: '02-upload-v75.png', fullScreen: true, title: ['사고사례를 등록하면', '카툰부터 교육영상까지'], description: '사고사례 사진·보고서를 등록하면 4컷 카툰은 물론, 음성과 효과음이 들어간 몰입도 높은 안전교육 영상까지 간편하게 만들 수 있습니다.', points: ['사고사례 등록', '4컷 카툰', '음성·효과음 영상'], caption: '사고사례를 등록해 카툰과 교육영상을 만듭니다', focus: [7.1, 24.3, 85.8, 13.7], gesture: { from: [82, 71], to: [50, 32.8], start: .25, arrive: 1.4, tap: 1.7, end: 3 } },
     { at: 17.971, label: '카툰형', src: '06-cartoon.jpg', title: ['실제 사고사례를', '네 컷으로 이해'], description: '지금 보시는 화면은 실제 사고사례로 만든 카툰형 교육자료입니다. 작업 상황과 사고 발생, 예방조치를 함께 보여줍니다.', points: ['작업 상황', '사고 원인', '예방조치'], caption: '실제 생성 결과 · 카툰형' },
-    { at: 23.377, label: '실사형', src: '07-realistic.jpg', title: ['같은 사고사례를', '실사형으로도'], description: '같은 사례를 실사형 교육자료로도 만들 수 있습니다. 이어서 음성과 효과음이 담긴 실제 제작 영상을 함께 보시겠습니다.', points: ['실사형 표현', '음성·효과음', '실제 영상 보기'], caption: '실제 생성 결과 · 실사형' },
-    { at: 30.325, label: '완성 영상', title: ['보고 듣고 기억하는', '사고예방 교육'], description: '지상변압기 작업 사례로 만든 실제 교육영상입니다. 사고의 흐름과 예방조치를 함께 보고, 다음 안전회의에서 다시 확인합니다.', points: ['사고사례 공유', '예방조치 확인', '다음 TBM 교육'], caption: '실제 생성 교육영상 재생 중', video: true }
+    { at: 23.377, label: '실사형 · AI 추천 컷', src: '07-realistic.jpg', title: ['실사형 제작부터', 'AI 추천 컷까지'], description: '같은 사례를 실사형으로도 만들 수 있습니다. 또한, AI가 산재사례를 분석하여 최적의 컷 수를 확인하고, 카툰 및 영상을 제작하는 기능도 있습니다. 다음은 AI 추천 컷으로 만든 영상입니다.', points: ['산재사례 분석', '최적의 컷 수', '카툰·영상 제작'], caption: '실제 생성 결과 · 실사형' },
+    { at: 38.031, label: 'AI 추천 컷 영상', title: ['AI 추천 컷으로 만든', '사고예방 교육영상'], description: '지상변압기 전원측 엘보 분리 작업 중 감전 예방을 다룬 실제 교육영상입니다. 위험을 찾아보며 사고 원인과 예방조치를 함께 확인합니다.', points: ['AI 추천 컷', '위험 찾아보기', '감전 예방'], caption: 'AI 추천 컷으로 만든 교육영상 재생 중', video: true }
   ];
   const root = document.querySelector('#safetyDemo');
   if (!root) return;
@@ -15,9 +15,10 @@
   const focus = root.querySelector('.safety-focus');
   const hand = root.querySelector('.safety-hand');
   const sample = root.querySelector('#safetyExample');
-  const duration = 85.725;
-  const videoOffset = 30.325;
+  const duration = 105.024;
+  const videoOffset = 38.031;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pressScale = parseFloat(getComputedStyle(root).getPropertyValue('--demo-hand-press-scale')) || .74;
   let current = -1;
   let frame = 0;
   let lastTime = 0;
@@ -106,7 +107,7 @@
     const fade = Math.min(1, Math.max(0, (elapsed - gesture.start) / .25), Math.max(0, (gesture.end - elapsed) / .35));
     Object.assign(hand.style, {
       left: `${x}%`, top: `${y}%`, opacity: String(reduceMotion ? 1 : fade),
-      transform: `translate(-50%, -10%) rotate(${-10 + 4 * press}deg) scale(${1 - .23 * press})`
+      transform: `translate(-50%, -10%) rotate(${-10 + 4 * press}deg) scale(${1 - (1 - pressScale) * press})`
     });
     hand.style.setProperty('--tap-opacity', String(tapping ? 1 - tapProgress : 0));
     hand.style.setProperty('--tap-scale', String(1 + Math.max(0, tapProgress) * .8));
