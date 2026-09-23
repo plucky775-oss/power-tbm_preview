@@ -569,20 +569,16 @@ button { color: inherit; }
   z-index: 7;
   display: block;
   opacity: 0;
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  font-size: 124px;
-  line-height: 1;
   filter: drop-shadow(0 14px 18px rgba(5, 25, 39, .42));
   transform-origin: 52% 12%;
   will-change: opacity, transform;
 }
 .demo-hand-alert { left: 31%; top: 39%; }
 .demo-hand-tap { left: 31%; top: 18%; }
-.demo-hand-swipe { left: 43%; top: 67%; font-size: 116px; }
+.demo-hand-swipe { left: 43%; top: 67%; }
 .demo-hand-links {
   left: 2%;
   top: 74%;
-  font-size: 88px;
 }
 .demo-ripple {
   position: absolute;
@@ -748,18 +744,18 @@ button { color: inherit; }
   100% { transform: translateY(-58.7%); }
 }
 @keyframes demo-hand-alert {
-  0%, 1.5% { opacity: 0; transform: translate(-145%, 260%) rotate(-30deg) scale(1.14); }
+  0%, 1.5% { opacity: 0; transform: translate(-145%, 260%) rotate(-30deg) scale(1); }
   2.2% { opacity: .8; }
   5.8% { opacity: .8; transform: translate(0, 0) rotate(-11deg) scale(1); }
-  6.4%, 6.9% { opacity: .96; transform: translate(2%, 2%) rotate(-7deg) scale(.74); }
-  7.8%, 100% { opacity: 0; transform: translate(2%, 2%) rotate(-7deg) scale(.92); }
+  6.4%, 6.9% { opacity: .96; transform: translate(2%, 2%) rotate(-7deg) scale(var(--demo-hand-press-scale)); }
+  7.8%, 100% { opacity: 0; transform: translate(2%, 2%) rotate(-7deg) scale(1); }
 }
 @keyframes demo-hand-tap {
-  0%, 9.3% { opacity: 0; transform: translate(-145%, 260%) rotate(-30deg) scale(1.14); }
+  0%, 9.3% { opacity: 0; transform: translate(-145%, 260%) rotate(-30deg) scale(1); }
   10% { opacity: .8; }
   12.7% { opacity: .8; transform: translate(0, 0) rotate(-11deg) scale(1); }
-  13.4%, 13.9% { opacity: .96; transform: translate(2%, 2%) rotate(-7deg) scale(.74); }
-  15%, 100% { opacity: 0; transform: translate(2%, 2%) rotate(-7deg) scale(.92); }
+  13.4%, 13.9% { opacity: .96; transform: translate(2%, 2%) rotate(-7deg) scale(var(--demo-hand-press-scale)); }
+  15%, 100% { opacity: 0; transform: translate(2%, 2%) rotate(-7deg) scale(1); }
 }
 @keyframes demo-hand-swipe {
   0%, 22.4% { opacity: 0; transform: translate(0, 20%) rotate(-8deg) scale(1); }
@@ -818,20 +814,20 @@ button { color: inherit; }
 @keyframes demo-hand-links {
   0%, 49% { opacity: 0; left: 2%; top: 74%; transform: rotate(-9deg) scale(1); }
   49.7%, 51.1% { opacity: .94; left: 2%; top: 74%; transform: rotate(-9deg) scale(1); }
-  51.5%, 52% { opacity: 1; left: 2%; top: 74%; transform: rotate(-4deg) scale(.7); }
-  52.8%, 57.2% { opacity: 0; left: 2%; top: 74%; transform: rotate(-9deg) scale(.94); }
+  51.5%, 52% { opacity: 1; left: 2%; top: 74%; transform: rotate(-4deg) scale(var(--demo-hand-press-scale)); }
+  52.8%, 57.2% { opacity: 0; left: 2%; top: 74%; transform: rotate(-9deg) scale(1); }
   57.8%, 59.1% { opacity: .94; left: 35%; top: 74%; transform: rotate(-9deg) scale(1); }
-  59.5%, 60% { opacity: 1; left: 35%; top: 74%; transform: rotate(-4deg) scale(.7); }
-  60.8%, 65.2% { opacity: 0; left: 35%; top: 74%; transform: rotate(-9deg) scale(.94); }
+  59.5%, 60% { opacity: 1; left: 35%; top: 74%; transform: rotate(-4deg) scale(var(--demo-hand-press-scale)); }
+  60.8%, 65.2% { opacity: 0; left: 35%; top: 74%; transform: rotate(-9deg) scale(1); }
   65.8%, 67.1% { opacity: .94; left: 68%; top: 74%; transform: rotate(-9deg) scale(1); }
-  67.5%, 68% { opacity: 1; left: 68%; top: 74%; transform: rotate(-4deg) scale(.7); }
-  68.8%, 73.2% { opacity: 0; left: 68%; top: 74%; transform: rotate(-9deg) scale(.94); }
+  67.5%, 68% { opacity: 1; left: 68%; top: 74%; transform: rotate(-4deg) scale(var(--demo-hand-press-scale)); }
+  68.8%, 73.2% { opacity: 0; left: 68%; top: 74%; transform: rotate(-9deg) scale(1); }
   73.8%, 75.1% { opacity: .94; left: 11%; top: 90.5%; transform: rotate(-9deg) scale(1); }
-  75.5%, 76% { opacity: 1; left: 11%; top: 90.5%; transform: rotate(-4deg) scale(.7); }
-  76.8%, 81.2% { opacity: 0; left: 11%; top: 90.5%; transform: rotate(-9deg) scale(.94); }
+  75.5%, 76% { opacity: 1; left: 11%; top: 90.5%; transform: rotate(-4deg) scale(var(--demo-hand-press-scale)); }
+  76.8%, 81.2% { opacity: 0; left: 11%; top: 90.5%; transform: rotate(-9deg) scale(1); }
   81.8%, 83.1% { opacity: .94; left: 60%; top: 90.5%; transform: rotate(-9deg) scale(1); }
-  83.5%, 84% { opacity: 1; left: 60%; top: 90.5%; transform: rotate(-4deg) scale(.7); }
-  84.8%, 100% { opacity: 0; left: 60%; top: 90.5%; transform: rotate(-9deg) scale(.94); }
+  83.5%, 84% { opacity: 1; left: 60%; top: 90.5%; transform: rotate(-4deg) scale(var(--demo-hand-press-scale)); }
+  84.8%, 100% { opacity: 0; left: 60%; top: 90.5%; transform: rotate(-9deg) scale(1); }
 }
 @keyframes demo-link-ripple {
   0%, 51.2% { opacity: 0; left: 16.7%; top: 76.5%; transform: scale(.2); }
@@ -1837,11 +1833,10 @@ button { color: inherit; }
   z-index: 30;
   left: 52%;
   top: 56%;
-  font-size: 104px;
-  line-height: 1;
   filter: drop-shadow(0 9px 12px rgba(0, 0, 0, .25));
   opacity: 0;
   transform: translate(-42%, -20%) rotate(-8deg);
+  transform-origin: 42% 20%;
 }
 .meeting-touch-ripple {
   position: absolute;
@@ -2882,83 +2877,83 @@ button { color: inherit; }
 @keyframes meeting-hand {
   0%, 3.4% { left: 55%; top: 58%; opacity: 0; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
   3.8%, 4.7% { left: 55%; top: 58%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  4.95% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  4.95% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   5.4%, 8.8% { opacity: 0; }
   9.2%, 10.1% { left: 55%; top: 24.5%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  10.35% { left: 55%; top: 24.5%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  10.35% { left: 55%; top: 24.5%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   10.8%, 12.8% { opacity: 0; }
   13.05%, 13.65% { left: calc(var(--meeting-basic-project-x, 50%) + 3.6%); top: calc(var(--meeting-basic-project-y, 27.65%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  13.9% { left: calc(var(--meeting-basic-project-x, 50%) + 3.6%); top: calc(var(--meeting-basic-project-y, 27.65%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  13.9% { left: calc(var(--meeting-basic-project-x, 50%) + 3.6%); top: calc(var(--meeting-basic-project-y, 27.65%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   14.2%, 15.4% { opacity: 0; }
   15.65%, 16.2% { left: calc(var(--meeting-basic-place-x, 50%) + 3.6%); top: calc(var(--meeting-basic-place-y, 36.29%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  16.45% { left: calc(var(--meeting-basic-place-x, 50%) + 3.6%); top: calc(var(--meeting-basic-place-y, 36.29%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  16.45% { left: calc(var(--meeting-basic-place-x, 50%) + 3.6%); top: calc(var(--meeting-basic-place-y, 36.29%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   16.75%, 17.9% { opacity: 0; }
   18.15%, 18.7% { left: calc(var(--meeting-basic-manager-x, 50%) + 3.6%); top: calc(var(--meeting-basic-manager-y, 44.98%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  18.95% { left: calc(var(--meeting-basic-manager-x, 50%) + 3.6%); top: calc(var(--meeting-basic-manager-y, 44.98%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  18.95% { left: calc(var(--meeting-basic-manager-x, 50%) + 3.6%); top: calc(var(--meeting-basic-manager-y, 44.98%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   19.25%, 20.2% { opacity: 0; }
   20.45%, 20.9% { left: calc(var(--meeting-basic-next-x, 50%) + 3.6%); top: calc(var(--meeting-basic-next-y, 63.48%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  21.1% { left: calc(var(--meeting-basic-next-x, 50%) + 3.6%); top: calc(var(--meeting-basic-next-y, 63.48%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  21.1% { left: calc(var(--meeting-basic-next-x, 50%) + 3.6%); top: calc(var(--meeting-basic-next-y, 63.48%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   21.35%, 22% { opacity: 0; }
   22.15%, 22.7% { left: 30%; top: 43.8%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  22.95% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  22.95% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   23.2%, 24.35% { opacity: 0; }
   24.5%, 25.05% { left: 30%; top: 54.4%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  25.3% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  25.3% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   25.55%, 27% { opacity: 0; }
   27.15%, 27.55% { left: 50%; top: 61.2%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  27.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  27.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   28.05%, 29% { opacity: 0; }
   29.1%, 29.55% { left: 74%; top: 87.2%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  29.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  29.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   30.1%, 32.25% { opacity: 0; }
   32.45%, 32.95% { left: 85.1%; top: 24.7%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  33.2% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  33.2% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   33.45%, 35.25% { opacity: 0; }
   35.45%, 35.95% { left: 85.1%; top: 34.6%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  36.2% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  36.2% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   36.45%, 40.2% { opacity: 0; }
   40.4%, 40.95% { left: 16.5%; top: 28.9%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  41.2% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  41.2% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   41.45%, 42.65% { opacity: 0; }
   42.85%, 43.4% { left: 16.5%; top: 51.1%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  43.65% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  43.65% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   43.9%, 44.9% { opacity: 0; }
   45.1%, 45.65% { left: 16.5%; top: 57.9%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  45.9% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  45.9% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   46.15%, 46.85% { opacity: 0; }
   47.05%, 47.55% { left: 74.2%; top: 86.1%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  47.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  47.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   48.05%, 50.45% { opacity: 0; }
   50.65%, 51.15% { left: 13.7%; top: 46%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  51.4% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  51.4% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   51.65%, 55% { opacity: 0; }
   55.2%, 55.7% { left: 74.2%; top: 86.1%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  55.95% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  55.95% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   56.2%, 63.4% { opacity: 0; }
-  63.6%, 64.1% { left: 75.3%; top: 95%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.86); }
-  64.35% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  63.6%, 64.1% { left: 75.3%; top: 95%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  64.35% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   64.6%, 67.6% { opacity: 0; }
   67.8%, 68.35% { left: 13.6%; top: 32.5%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  68.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  68.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   68.85%, 68.95% { opacity: 0; }
   69.05%, 69.35% { left: 75%; top: 92.5%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  69.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  69.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   69.85%, 78.7% { opacity: 0; }
   78.9%, 79.45% { left: 67%; top: 60.3%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  79.7% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  79.7% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   79.95%, 80.55% { opacity: 0; }
-  80.7%, 81% { left: 24%; top: 44%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
-  81.7% { left: 32%; top: 54%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
-  82.4% { left: 43%; top: 45%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
-  83.1% { left: 56%; top: 55%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
-  83.8% { left: 68%; top: 46%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
-  84.5% { left: 80%; top: 56%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.72); }
+  80.7%, 81% { left: 24%; top: 44%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  81.7% { left: 32%; top: 54%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  82.4% { left: 43%; top: 45%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  83.1% { left: 56%; top: 55%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  83.8% { left: 68%; top: 46%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  84.5% { left: 80%; top: 56%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   84.9%, 85.05% { opacity: 0; }
   85.2%, 85.55% { left: 86.5%; top: 64.6%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  85.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  85.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   86.05%, 89.65% { opacity: 0; }
   89.85%, 90.35% { left: 75%; top: 89%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  90.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.82); }
+  90.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   90.85%, 100% { opacity: 0; }
 }
 
@@ -3312,12 +3307,10 @@ button { color: inherit; }
   position: absolute;
   z-index: 24;
   display: block;
-  font-size: 82px;
-  line-height: 1;
   filter: drop-shadow(0 11px 13px rgba(0, 0, 0, .3));
   opacity: 0;
   transform: translate(-42%, -20%) rotate(-8deg);
-  transform-origin: 45% 15%;
+  transform-origin: 42% 20%;
   will-change: left, top, opacity, transform;
 }
 
@@ -3430,12 +3423,12 @@ button { color: inherit; }
 @keyframes support-slide-emergency { 0%, 85.5% { opacity: 0; } 85.9%, 93.3% { opacity: 1; } 94%, 100% { opacity: 0; } }
 @keyframes support-slide-location { 0%, 93.3% { opacity: 0; } 94%, 100% { opacity: 1; } }
 
-@keyframes support-hand-safety { 0%, 5.8% { opacity: 0; } 6.4%, 9.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 10.1% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 10.8%, 100% { opacity: 0; } }
-@keyframes support-hand-risk { 0%, 17.7% { opacity: 0; } 18.3%, 21.4% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 21.9% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 22.6%, 100% { opacity: 0; } }
-@keyframes support-hand-back { 0%, 35.2% { opacity: 0; } 35.8%, 38% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 38.5% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 39.1%, 100% { opacity: 0; } }
-@keyframes support-hand-golden { 0%, 46.2% { opacity: 0; } 46.8%, 49.9% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 50.4% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 51.1%, 100% { opacity: 0; } }
-@keyframes support-hand-tools { 0%, 67.1% { opacity: 0; } 67.7%, 70.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 71.1% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 71.8%, 100% { opacity: 0; } }
-@keyframes support-hand-emergency { 0%, 84.6% { opacity: 0; } 85%, 85.35% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 85.5% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(.84); } 85.9%, 100% { opacity: 0; } }
+@keyframes support-hand-safety { 0%, 5.8% { opacity: 0; } 6.4%, 9.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 10.1% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); } 10.8%, 100% { opacity: 0; } }
+@keyframes support-hand-risk { 0%, 17.7% { opacity: 0; } 18.3%, 21.4% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 21.9% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); } 22.6%, 100% { opacity: 0; } }
+@keyframes support-hand-back { 0%, 35.2% { opacity: 0; } 35.8%, 38% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 38.5% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); } 39.1%, 100% { opacity: 0; } }
+@keyframes support-hand-golden { 0%, 46.2% { opacity: 0; } 46.8%, 49.9% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 50.4% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); } 51.1%, 100% { opacity: 0; } }
+@keyframes support-hand-tools { 0%, 67.1% { opacity: 0; } 67.7%, 70.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 71.1% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); } 71.8%, 100% { opacity: 0; } }
+@keyframes support-hand-emergency { 0%, 84.6% { opacity: 0; } 85%, 85.35% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); } 85.5% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); } 85.9%, 100% { opacity: 0; } }
 
 @keyframes support-ripple-safety { 0%, 9.7% { opacity: 0; transform: translate(-50%, -50%) scale(.4); } 10.1% { opacity: 1; } 11% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); } 11.1%, 100% { opacity: 0; } }
 @keyframes support-ripple-risk { 0%, 21.5% { opacity: 0; transform: translate(-50%, -50%) scale(.4); } 21.9% { opacity: 1; } 22.8% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); } 22.9%, 100% { opacity: 0; } }
@@ -5926,11 +5919,10 @@ body { background: #fff; }
   left: 61%;
   top: 74%;
   display: block;
-  font-size: 104px;
-  line-height: 1;
   filter: drop-shadow(0 9px 12px rgba(0, 0, 0, .25));
   opacity: 0;
-  transform: translate(-42%, -20%) rotate(-8deg) scale(.9);
+  transform: translate(-42%, -20%) rotate(-8deg) scale(1);
+  transform-origin: 42% 20%;
   pointer-events: none;
   will-change: top, opacity, transform;
 }
@@ -5963,25 +5955,25 @@ body { background: #fff; }
     left: 61%;
     top: 75%;
     opacity: 0;
-    transform: translate(-42%, -20%) rotate(-8deg) scale(.9);
+    transform: translate(-42%, -20%) rotate(-8deg) scale(1);
   }
   61.15%, 61.4% {
     left: 61%;
     top: 75%;
     opacity: 1;
-    transform: translate(-42%, -20%) rotate(-8deg) scale(.9);
+    transform: translate(-42%, -20%) rotate(-8deg) scale(1);
   }
   63.05% {
     left: 56%;
     top: 38%;
     opacity: 1;
-    transform: translate(-42%, -20%) rotate(-8deg) scale(.86);
+    transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale));
   }
   63.4%, 100% {
     left: 55%;
     top: 35%;
     opacity: 0;
-    transform: translate(-42%, -20%) rotate(-8deg) scale(.84);
+    transform: translate(-42%, -20%) rotate(-8deg) scale(1);
   }
 }
 
@@ -6306,11 +6298,6 @@ body { background: #fff; }
 
 /* ===== v51 · FULL AI FIELD + QR-FIRST SIGNATURE FLOW ===== */
 .meeting-demo { container-type: inline-size; }
-
-.meeting-hand,
-.meeting-ai-swipe-hand {
-  font-size: clamp(62px, 24cqi, 104px);
-}
 
 .meeting-touch-ripple {
   width: clamp(36px, 13.5cqi, 58px);

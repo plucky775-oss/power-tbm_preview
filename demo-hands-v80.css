@@ -1,0 +1,15 @@
+/* Loaded last: every chapter uses the weather-alert hand's dimensions. */
+.guide-phone {
+  --demo-hand-size: 124px;
+  --demo-hand-press-scale: .74;
+}
+
+.guide-phone :is(.demo-hand, .meeting-hand, .meeting-ai-swipe-hand, .support-hand, .safety-hand) {
+  width: var(--demo-hand-size);
+  height: var(--demo-hand-size);
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: var(--demo-hand-size);
+  line-height: 1;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}

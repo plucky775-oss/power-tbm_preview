@@ -49,9 +49,6 @@
 .safety-hand {
   position: absolute;
   z-index: 3;
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  font-size: clamp(30px, 3.8vw, 44px);
-  line-height: 1;
   opacity: 0;
   transform: translate(-50%, -10%);
   transform-origin: 50% 10%;
