@@ -1,16 +1,18 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v80-20260923-hand-fix`;
+const CACHE_NAME = `${CACHE_PREFIX}v81-20260923-recorder`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './styles.css?v=20260923-hand-fix-v80',
-  './app.js?v=20260923-ai-example-v79',
+  './app.js?v=20260923-recorder-v81',
   './safety4cut.css?v=20260923-hand-fix-v80',
   './demo-hands-v80.css',
+  './demo-recorder-v81.css',
+  './demo-recorder-v81.js',
   './safety4cut.js?v=20260923-ai-example-v79',
   './pwa.js?v=20260816-exhibition-type-v70',
   './assets/audio/07-safety4cut.m4a?v=20260923-ai-example-v79',

@@ -1187,7 +1187,11 @@
     else if (demoPage === 'meeting') activateSupportPage({ keepMode: true });
     else if (demoPage === 'support') activateSafetyPage({ keepMode: true });
     else if (demoPage === 'safety') activateClosingPage({ keepMode: true });
-    else activateIntroPage({ keepMode: true });
+    else {
+      const completed = new CustomEvent('power-tbm:sequence-complete', { cancelable: true });
+      document.dispatchEvent(completed);
+      if (!completed.defaultPrevented) activateIntroPage({ keepMode: true });
+    }
   };
 
   const scheduleSequenceAdvance = ({ reset = true } = {}) => {
@@ -1604,6 +1608,11 @@
     switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: true });
   });
   allDemoPage?.addEventListener('click', () => activateSequence({ userInitiated: true }));
+  document.addEventListener('power-tbm:recording-start', () => {
+    launchChoiceMade = true;
+    enableNarrationFromGesture({ muted: false });
+    activateSequence({ userInitiated: true });
+  });
   weatherDemoPage?.addEventListener('click', () => activateWeatherPage({ userInitiated: true }));
   meetingDemoPage?.addEventListener('click', () => activateMeetingPage({ userInitiated: true }));
   supportDemoPage?.addEventListener('click', () => activateSupportPage({ userInitiated: true }));

@@ -1,0 +1,82 @@
+/* A compact, final header action. Unsupported devices keep the existing header. */
+.demo-only-header.has-demo-recorder {
+  grid-template-columns: auto minmax(0, 1fr) auto 58px;
+  column-gap: clamp(8px, 1.2vw, 20px);
+}
+
+.demo-record-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 58px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: 9px;
+  color: #fff;
+  background: rgba(6, 24, 36, .28);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.demo-record-button[hidden],
+.demo-record-dialog [hidden] { display: none; }
+.demo-record-button:hover { background: rgba(255, 255, 255, .15); }
+.demo-record-button:focus-visible,
+.demo-record-dialog :is(button, a):focus-visible {
+  outline: 3px solid #ffd649;
+  outline-offset: 3px;
+}
+.demo-record-button:disabled,
+.demo-record-dialog button:disabled { opacity: .6; cursor: wait; }
+.demo-record-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff7077; }
+.demo-record-button.is-recording { border-color: #ff8f96; background: #5d2333; }
+.demo-record-button.is-recording .demo-record-dot { border-radius: 2px; background: #fff; }
+
+.demo-record-dialog {
+  width: min(480px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  box-sizing: border-box;
+  margin: auto;
+  padding: 24px;
+  overflow: auto;
+  border: 1px solid #48677a;
+  border-radius: 18px;
+  color: #f7fafc;
+  background: #102b3d;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .5);
+  font-family: inherit;
+}
+.demo-record-dialog::backdrop { background: rgba(0, 10, 18, .7); }
+.demo-record-dialog h2 { margin: 0 0 12px; font-size: 21px; }
+.demo-record-dialog p { margin: 0 0 18px; font-size: 15px; line-height: 1.65; color: #d2e0e9; }
+.demo-record-dialog .demo-record-error { padding: 12px; border-radius: 8px; background: #532b38; color: #ffe5e8; }
+.demo-record-preview { width: 100%; max-height: 42vh; margin-bottom: 12px; background: #06111a; border-radius: 8px; }
+.demo-record-dialog .demo-record-meta { font-size: 13px; color: #b8cddc; }
+.demo-record-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.demo-record-actions :is(button, a) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid #5b7789;
+  border-radius: 9px;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+.demo-record-actions .demo-record-primary { border-color: #ffd649; background: #ffd649; color: #102b3d; }
+@media (max-width: 760px) {
+  .demo-only-header.has-demo-recorder { grid-template-columns: auto minmax(0, 1fr) 42px 44px; gap: 6px; }
+  .demo-record-button { width: 44px; height: 42px; gap: 4px; }
+  .demo-record-dialog { padding: 20px; }
+}

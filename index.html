@@ -38,8 +38,10 @@
   <link rel="stylesheet" href="styles.css?v=20260923-hand-fix-v80">
   <link rel="stylesheet" href="safety4cut.css?v=20260923-hand-fix-v80">
   <link rel="stylesheet" href="demo-hands-v80.css">
+  <link rel="stylesheet" href="demo-recorder-v81.css">
   <script src="safety4cut.js?v=20260923-ai-example-v79" defer></script>
-  <script src="app.js?v=20260923-ai-example-v79" defer></script>
+  <script src="app.js?v=20260923-recorder-v81" defer></script>
+  <script src="demo-recorder-v81.js" defer></script>
   <script src="pwa.js?v=20260816-exhibition-type-v70" defer></script>
   <noscript>
     <style>
@@ -113,7 +115,24 @@
       <span class="demo-sound-icon" aria-hidden="true">🔊</span>
       <span class="demo-sound-label">소리 시작</span>
     </button>
+    <button class="demo-record-button" id="demoRecord" type="button" hidden aria-label="시연 영상 녹화" title="시연 영상 녹화" aria-haspopup="dialog" aria-controls="demoRecordDialog">
+      <span class="demo-record-dot" aria-hidden="true"></span><span id="demoRecordLabel">녹화</span>
+    </button>
   </header>
+
+  <dialog class="demo-record-dialog" id="demoRecordDialog" aria-labelledby="demoRecordTitle" aria-describedby="demoRecordMessage">
+    <h2 id="demoRecordTitle">시연 영상 녹화</h2>
+    <p id="demoRecordMessage">다음 창에서 이 Power TBM 탭을 선택하고 ‘탭 오디오 공유’를 켜 주세요. 전체 시연을 처음부터 녹화합니다.</p>
+    <p class="demo-record-error" id="demoRecordError" role="alert" hidden></p>
+    <video class="demo-record-preview" id="demoRecordPreview" controls playsinline preload="metadata" hidden></video>
+    <p class="demo-record-meta" id="demoRecordMeta" hidden></p>
+    <div class="demo-record-actions">
+      <button type="button" id="demoRecordClose">닫기</button>
+      <button class="demo-record-primary" type="button" id="demoRecordStart">녹화 시작</button>
+      <a class="demo-record-primary" id="demoRecordDownload" hidden>영상 저장</a>
+    </div>
+  </dialog>
+  <p class="sr-only" id="demoRecordStatus" role="status" aria-live="polite"></p>
 
   <main id="main">
     <section class="tour-section" id="tour">
