@@ -5,7 +5,7 @@
     { at: 8.202, label: '사고사례 등록', src: '02-upload-v75.png', fullScreen: true, title: ['사고사례를 등록하면', '카툰부터 교육영상까지'], description: '사고사례 사진·보고서를 등록하면 4컷 카툰은 물론, 음성과 효과음이 들어간 몰입도 높은 안전교육 영상까지 간편하게 만들 수 있습니다.', points: ['사고사례 등록', '4컷 카툰', '음성·효과음 영상'], caption: '사고사례를 등록해 카툰과 교육영상을 만듭니다', focus: [7.1, 24.3, 85.8, 13.7], gesture: { from: [82, 71], to: [50, 32.8], start: .25, arrive: 1.4, tap: 1.7, end: 3 } },
     { at: 17.971, label: '카툰형', src: '06-cartoon.jpg', title: ['실제 사고사례를', '네 컷으로 이해'], description: '지금 보시는 화면은 실제 사고사례로 만든 카툰형 교육자료입니다. 작업 상황과 사고 발생, 예방조치를 함께 보여줍니다.', points: ['작업 상황', '사고 원인', '예방조치'], caption: '실제 생성 결과 · 카툰형' },
     { at: 23.377, label: '실사형 · AI 추천 컷', src: '07-realistic.jpg', title: ['실사형 제작부터', 'AI 추천 컷까지'], description: '같은 사례를 실사형으로도 만들 수 있습니다. 또한, AI가 산재사례를 분석하여 최적의 컷 수를 확인하고, 카툰 및 영상을 제작하는 기능도 있습니다. 다음은 AI 추천 컷으로 만든 영상입니다.', points: ['산재사례 분석', '최적의 컷 수', '카툰·영상 제작'], caption: '실제 생성 결과 · 실사형' },
-    { at: 38.031, label: 'AI 추천 컷 영상', title: ['AI 추천 컷으로 만든', '사고예방 교육영상'], description: '지상변압기 전원측 엘보 분리 작업 중 감전 예방을 다룬 실제 교육영상입니다. 위험을 찾아보며 사고 원인과 예방조치를 함께 확인합니다.', points: ['AI 추천 컷', '위험 찾아보기', '감전 예방'], caption: 'AI 추천 컷으로 만든 교육영상 재생 중', video: true }
+    { at: 38.037, label: 'AI 추천 컷 영상', title: ['AI 추천 컷으로 만든', '사고예방 교육영상'], description: '지상변압기 작업 시 감전 예방을 다룬 실제 교육영상입니다. 위험을 찾아보며 사고 원인과 예방조치를 함께 확인합니다.', points: ['AI 추천 컷', '위험 찾아보기', '감전 예방'], caption: 'AI 추천 컷으로 만든 교육영상 재생 중', video: true }
   ];
   const root = document.querySelector('#safetyDemo');
   if (!root) return;
@@ -15,8 +15,8 @@
   const focus = root.querySelector('.safety-focus');
   const hand = root.querySelector('.safety-hand');
   const sample = root.querySelector('#safetyExample');
-  const duration = 105.024;
-  const videoOffset = 38.031;
+  const duration = 102.604;
+  const videoOffset = 38.037;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pressScale = parseFloat(getComputedStyle(root).getPropertyValue('--demo-hand-press-scale')) || .74;
   let current = -1;
@@ -24,6 +24,7 @@
   let lastTime = 0;
   let startedAt = 0;
   let playPending = false;
+  let playToken = 0;
   let videoUnavailable = false;
   let paused = true;
 
@@ -74,18 +75,25 @@
     renderGesture(scene, lastTime - scene.at);
     root.querySelector('.safety-progress i').style.transform = `scaleX(${lastTime / duration})`;
     if (!scene.video || paused || document.hidden) {
-      sample.pause();
+      pauseVideo();
       return;
     }
-    // The shared narration track contains the supplied video's original audio.
+    // The narration player reads the same, unmodified MP4 for its audio.
     sample.muted = true;
     const target = Math.min(lastTime - videoOffset, Number.isFinite(sample.duration) ? Math.max(0, sample.duration - .025) : duration - videoOffset);
-    if (sample.readyState >= 1 && Math.abs(sample.currentTime - target) > .4) {
+    // If audio ends before buffered video catches up, let the remaining frames
+    // play naturally. Never seek straight to the end to satisfy the stage clock.
+    if (!options.finishing && sample.readyState >= 1 && Math.abs(sample.currentTime - target) > .4) {
       try { sample.currentTime = target; } catch (_) { /* wait for metadata */ }
     }
     if (sample.paused && !sample.ended && !playPending && !videoUnavailable) {
       playPending = true;
-      sample.play().catch(() => { videoUnavailable = true; }).finally(() => { playPending = false; });
+      const token = ++playToken;
+      sample.play().catch((error) => {
+        if (token !== playToken || error?.name === 'AbortError') return;
+        videoUnavailable = true;
+        root.querySelector('#safetyCaption').textContent = '교육영상 재생을 시작하지 못했습니다';
+      }).finally(() => { if (token === playToken) playPending = false; });
     }
   }
 
@@ -115,11 +123,16 @@
     root.dataset.gesture = reduceMotion ? 'still' : elapsed < gesture.start ? 'waiting' : travel < 1 ? 'moving' : tapping ? 'tapping' : elapsed < gesture.end ? 'pointing' : 'complete';
   }
 
+  function pauseVideo() {
+    if (playPending || !sample.paused) playToken += 1;
+    playPending = false;
+    sample.pause();
+  }
   function pause() {
     paused = true;
     cancelAnimationFrame(frame);
     frame = 0;
-    sample.pause();
+    pauseVideo();
   }
   function startFallback({ reset = true } = {}) {
     pause();
@@ -127,7 +140,8 @@
     startedAt = performance.now() - lastTime * 1000;
     const tick = () => {
       if (document.hidden) return;
-      render((performance.now() - startedAt) / 1000);
+      const seconds = (performance.now() - startedAt) / 1000;
+      render(seconds, { finishing: seconds >= duration });
       if (lastTime < duration) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
@@ -140,10 +154,14 @@
     render(0, { paused: true });
   }
   sample.addEventListener('loadedmetadata', () => render(lastTime, { paused }));
+  sample.addEventListener('ended', () => {
+    root.dispatchEvent(new CustomEvent('safetyvideoended', { bubbles: true }));
+  });
   sample.addEventListener('error', () => {
     videoUnavailable = true;
     root.querySelector('#safetyCaption').textContent = '교육영상을 불러오지 못했습니다';
   });
-  window.PowerTBMSafety = { scenes, duration, videoOffset, render, pause, startFallback, reset, get time() { return lastTime; } };
+  window.PowerTBMSafety = { scenes, duration, videoOffset, render, pause, startFallback, reset,
+    get time() { return lastTime; }, get videoEnded() { return sample.ended; } };
   reset();
 })();

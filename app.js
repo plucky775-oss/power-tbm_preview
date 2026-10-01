@@ -284,7 +284,7 @@
     meetingTargetObserver.observe(meetingDemo);
   }
 
-  const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000, safety: 105024, closing: 11494 };
+  const demoDurationFallbacks = { intro: 8350, weather: 40000, meeting: 96000, support: 50000, safety: 102604, closing: 11494 };
   // A complete stage change fades to the Power TBM navy, swaps while fully
   // covered, then gently reveals the next scene. Keeping the swap and reveal
   // as separate moments prevents the opening video from cutting straight to
@@ -360,10 +360,17 @@
     ],
     safety: [
       {
-        id: '07-safety4cut',
-        src: 'assets/audio/07-safety4cut.m4a?v=20260923-ai-example-v79',
-        duration: 105.024,
-        cues: [[0, 0], [105.024, 105024]]
+        id: '07-safety4cut-intro',
+        src: 'assets/audio/07-safety4cut-intro-v84.m4a',
+        duration: 38.037,
+        cues: [[0, 0], [38.037, 38037]]
+      },
+      {
+        // Play the uploaded MP4's own audio without remixing or re-encoding it.
+        id: '08-safety4cut-example',
+        src: 'assets/safety4cut/09-ai-example-v84.mp4',
+        duration: 64.566667,
+        cues: [[0, 38037], [64.566667, 102603.667]]
       }
     ],
     closing: [
@@ -684,6 +691,7 @@
   const getCurrentBgmTarget = (page = demoPage) => {
     const base = bgmVolumeByPage[page] || bgmVolumeByPage.weather;
     if (page === 'safety' && safety && demoNarration) {
+      if (narrationSegmentIndex > 0) return 0;
       return base * Math.min(1, Math.max(0, (safety.videoOffset - demoNarration.currentTime) / .65));
     }
     if (page !== 'closing' || !demoNarration) return base;
@@ -829,9 +837,11 @@
       return;
     }
     if (demoPage === 'safety') {
-      // These scenes use the audio clock directly, without cue interpolation.
-      safety?.render(seconds, { paused: demoPaused || document.hidden });
-      if (demoBgm && safety && seconds >= safety.videoOffset - .65) {
+      // Intro narration and original MP4 audio have separate local clocks.
+      const stageSeconds = mapNarrationTimeToVisual(segment, seconds) / 1000;
+      safety?.render(stageSeconds, { paused: demoPaused || document.hidden,
+        finishing: segment.id === '08-safety4cut-example' && demoNarration.ended });
+      if (demoBgm && safety && stageSeconds >= safety.videoOffset - .65) {
         cancelBgmFrame();
         demoBgm.volume = getCurrentBgmTarget('safety');
       }
@@ -1182,6 +1192,9 @@
 
   const advanceSequence = () => {
     if (demoMode !== 'sequence') return;
+    // A duration estimate or audio-ended event must not cut off the last video
+    // frames. Its native ended event retries this after playback really ends.
+    if (demoPage === 'safety' && !safety?.videoEnded) return;
     if (demoPage === 'intro') activateWeatherPage({ keepMode: true });
     else if (demoPage === 'weather') activateMeetingPage({ keepMode: true });
     else if (demoPage === 'meeting') activateSupportPage({ keepMode: true });
@@ -1192,6 +1205,17 @@
       document.dispatchEvent(completed);
       if (!completed.defaultPrevented) activateIntroPage({ keepMode: true });
     }
+  };
+
+  const resumeSafetyEnding = () => {
+    if (demoPage !== 'safety' || !narrationRequested || !demoNarration?.ended
+      || narrationSegmentIndex !== narrationByPage.safety.length - 1) return false;
+    if (!demoPaused && !document.hidden) {
+      safety?.render(safety.time, { finishing: true });
+      advanceSequence();
+    }
+    updateDemoButton();
+    return true;
   };
 
   const scheduleSequenceAdvance = ({ reset = true } = {}) => {
@@ -1687,6 +1711,7 @@
       if (demoPaused || document.hidden) safety?.pause();
       else if (!narrationRequested) safety?.startFallback({ reset: false });
     }
+    if (resumeSafetyEnding()) return;
     if (narrationRequested && demoNarration) {
       if (demoPaused) {
         demoNarration.pause();
@@ -1791,6 +1816,7 @@
       if (demoPaused || document.hidden) safety?.pause();
       else if (!narrationRequested) safety?.startFallback({ reset: false });
     }
+    if (resumeSafetyEnding()) return;
     if (narrationRequested && demoNarration) {
       if (document.hidden) {
         demoNarration.pause();
@@ -1834,6 +1860,12 @@
   openingDemoVideo?.addEventListener('ended', () => {
     // The narration is intentionally longer than the eight-second video.
     // Keep the final frame visible until the opening voice track ends.
+  });
+
+  document.addEventListener('safetyvideoended', () => {
+    if (demoPage !== 'safety' || demoPaused || document.hidden || stageTransitioning) return;
+    if (!narrationRequested || (demoNarration?.ended
+      && narrationSegmentIndex === narrationByPage.safety.length - 1)) advanceSequence();
   });
 
   demoNarration?.addEventListener('ended', () => {
