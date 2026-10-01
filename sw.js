@@ -1,27 +1,27 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v81-20260923-recorder`;
+const CACHE_NAME = `${CACHE_PREFIX}v84-20261001-original-video`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './styles.css?v=20260923-hand-fix-v80',
-  './app.js?v=20260923-recorder-v81',
+  './app.js?v=20261001-original-video-v84',
   './safety4cut.css?v=20260923-hand-fix-v80',
   './demo-hands-v80.css',
   './demo-recorder-v81.css',
   './demo-recorder-v81.js',
-  './safety4cut.js?v=20260923-ai-example-v79',
+  './safety4cut.js?v=20261001-original-video-v84',
   './pwa.js?v=20260816-exhibition-type-v70',
-  './assets/audio/07-safety4cut.m4a?v=20260923-ai-example-v79',
+  './assets/audio/07-safety4cut-intro-v84.m4a',
   './assets/safety4cut/01-admin-v75.png',
   './assets/safety4cut/02-upload-v75.png',
   './assets/safety4cut/06-cartoon.jpg',
   './assets/safety4cut/07-realistic.jpg',
   './assets/safety4cut/09-ai-example-v79-poster.jpg',
-  './assets/safety4cut/09-ai-example-v79.mp4',
+  './assets/safety4cut/09-ai-example-v84.mp4',
   './assets/audio/00-opening-taehyung.mp3',
   './assets/audio/01-weather-jisoo.mp3',
   './assets/audio/02-tbm-basic-taehyung.mp3',
