@@ -4,7 +4,7 @@
   display: grid;
   place-items: center;
   min-height: clamp(78px, 10vh, 118px);
-  padding: 10px 92px 10px 20px;
+  padding: 10px 148px 10px 20px;
   padding-bottom: max(10px, env(safe-area-inset-bottom));
   background: #07131e;
   border-top: 1px solid #ffffff24;
@@ -33,14 +33,14 @@
   -webkit-text-fill-color: transparent;
 }
 
-#subtitleToggle { position: fixed; z-index: 110; right: max(10px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); min-width: 72px; min-height: 44px; border: 1px solid #ffffff66; border-radius: 10px; background: #17374c; color: #fff; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; touch-action: manipulation; }
-#subtitleToggle[aria-pressed="true"] { color: #ffda35; border-color: #ffda3580; }
+#subtitleToggle { position: fixed; z-index: 110; right: max(10px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); min-width: 126px; padding: 0 8px; min-height: 44px; border: 1px solid #ffffff66; border-radius: 10px; background: #17374c; color: #fff; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; touch-action: manipulation; }
+.subtitles-enabled #subtitleToggle, .subtitles-bubble #subtitleToggle { color: #ffda35; border-color: #ffda3580; }
 #subtitleToggle:focus-visible { outline: 3px solid #ffda35; outline-offset: 3px; }
 .launch-prelude-active:not(.launch-prelude-revealing) #subtitleToggle,
 .launch-prelude-active:not(.launch-prelude-revealing) .narration-subtitles { visibility: hidden; }
 @media (max-width: 760px) {
   .subtitle-line { font-size: clamp(18px, 3.2vw, 24px); }
-  .narration-subtitles { min-height: 88px; padding: 8px 86px 8px 12px; }
+  .narration-subtitles { min-height: 88px; padding: 8px 138px 8px 12px; }
 }
 @media (forced-colors: active) {
   .subtitle-word { background: none; -webkit-text-fill-color: currentColor; }
@@ -49,4 +49,41 @@
 .demo-only-page.subtitles-enabled .tour-device {
   width: min(430px, calc((100dvh - 250px) * .44), calc(100vw - 34px));
   min-width: 130px;
+}
+
+/* Keep the complete karaoke captions intact; bubble mode uses a separate layer. */
+.subtitle-bubble {
+  position: absolute;
+  z-index: 50;
+  padding: 14px 18px;
+  border: 1px solid #9cdbe6;
+  border-radius: 17px;
+  background: #12384d;
+  color: #fff;
+  box-shadow: 0 5px 16px #0003;
+  font-size: clamp(18px, 1.6vw, 25px);
+  font-weight: 700;
+  line-height: 1.5;
+  word-break: keep-all;
+  text-align: center;
+  pointer-events: none;
+}
+.subtitle-bubble[hidden] { display: none; }
+.subtitle-bubble::before {
+  content: ''; position: absolute; left: -7px; top: 22px;
+  width: 12px; height: 12px; background: #12384d;
+  border-left: 1px solid #9cdbe6; border-bottom: 1px solid #9cdbe6;
+  transform: rotate(45deg);
+}
+.subtitle-bubble.is-stacked::before {
+  top: auto; bottom: -7px; left: calc(50% - 6px); transform: rotate(-45deg);
+}
+.launch-prelude-active:not(.launch-prelude-revealing) .subtitle-bubble { visibility: hidden; }
+@media (max-width: 900px) {
+  .demo-only-page.subtitles-bubble .tour-stage { padding-top: 100px; }
+  .demo-only-page.subtitles-bubble .tour-device {
+    width: min(360px, calc((100dvh - 245px) * .44), calc(100vw - 40px));
+    min-width: 130px;
+  }
+  .subtitle-bubble { font-size: 18px; padding: 10px 14px; }
 }
