@@ -51,7 +51,7 @@
   min-width: 130px;
 }
 
-/* Keep the complete karaoke captions intact; bubble mode uses a separate layer. */
+/* Keep the complete karaoke captions intact; bubble mode displays the same transcript in a separate layer. */
 .subtitle-bubble {
   position: absolute;
   z-index: 50;
@@ -80,9 +80,9 @@
 }
 .launch-prelude-active:not(.launch-prelude-revealing) .subtitle-bubble { visibility: hidden; }
 @media (max-width: 900px) {
-  .demo-only-page.subtitles-bubble .tour-stage { padding-top: 100px; }
+  .demo-only-page.subtitles-bubble .tour-stage { padding-top: 130px; }
   .demo-only-page.subtitles-bubble .tour-device {
-    width: min(360px, calc((100dvh - 245px) * .44), calc(100vw - 40px));
+    width: min(360px, calc((100dvh - 275px) * .44), calc(100vw - 40px));
     min-width: 130px;
   }
   .subtitle-bubble { font-size: 18px; padding: 10px 14px; }

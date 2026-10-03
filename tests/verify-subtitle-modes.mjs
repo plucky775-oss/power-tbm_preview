@@ -55,7 +55,7 @@ assert.equal(words.at(-1).style['--read'], '0.0%');
 h.choose('bubble');
 assert.equal(h.nodes.narrationSubtitles.hidden, true);
 assert.equal(h.bubble.hidden, false);
-assert.equal(h.bubble.textContent, '기상 확인부터 안전회의 기록까지');
+assert.equal(h.bubble.textContent, '기상 확인부터 AI 안전 검토와 서명, 기록까지,');
 assert.equal(h.nodes.subtitleLine.textContent, '', 'modes never overlap');
 assert.ok(parseFloat(h.bubble.style.left) >= 400, 'wide layout places bubble beside device');
 h.render('02-tbm-basic', 19);
@@ -90,3 +90,17 @@ noStorage.nodes.demoNarration.currentTime = 19;
 noStorage.nodes.demoNarration.dispatchEvent(new Event('seeked'));
 assert.match(noStorage.bubble.textContent, /공종/);
 console.log('PASS: existing highlight, three modes, immediate switches, media seek, persistence, legacy preference, storage failure, silent intervals, placement branches');
+
+// Every cue in every voice track must show identical, unabridged text in both modes.
+const all = setup();
+for (const [id, cues] of Object.entries(all.window.PowerTBMSubtitleData)) {
+  for (const cue of cues) {
+    const at = (cue.start + cue.end) / 2;
+    all.choose('bubble'); all.render(id, at);
+    const expected = cue.words.map(word => word.text).join(' ');
+    assert.equal(all.bubble.textContent, expected, `complete bubble transcript: ${id}@${at}`);
+    all.choose('karaoke');
+    assert.equal(all.nodes.subtitleLine.textContent, expected, `same text after switching: ${id}@${at}`);
+  }
+}
+console.log('PASS: every bubble cue exactly matches the full original subtitle text');

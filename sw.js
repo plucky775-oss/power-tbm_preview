@@ -1,14 +1,14 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v86-20261004-bubble`;
+const CACHE_NAME = `${CACHE_PREFIX}v87-20261004-bubble-fulltext`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './subtitles.css?v=20261004-v86',
-  './subtitles.js?v=20261004-v86',
-  './subtitle-data.js?v=20261004-v86',
+  './subtitles.css?v=20261004-v87',
+  './subtitles.js?v=20261004-v87',
+  './subtitle-data.js?v=20261004-v87',
   './manifest.webmanifest',
   './styles.css?v=20260923-hand-fix-v80',
   './app.js?v=20261003-subtitles-v85',

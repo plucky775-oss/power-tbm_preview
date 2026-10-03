@@ -138,9 +138,9 @@ const coreUrls = [
   './styles.css?v=20260923-hand-fix-v80',
   './app.js?v=20261003-subtitles-v85',
   './pwa.js?v=20260816-exhibition-type-v70',
-  './subtitles.js?v=20261004-v86',
-  './subtitle-data.js?v=20261004-v86',
-  './subtitles.css?v=20261004-v86'
+  './subtitles.js?v=20261004-v87',
+  './subtitle-data.js?v=20261004-v87',
+  './subtitles.css?v=20261004-v87'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
 
@@ -242,7 +242,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v86-20261004-bubble/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v87-20261004-bubble-fulltext/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
