@@ -831,6 +831,7 @@
 
   const applyNarrationVisualTime = (segment, seconds) => {
     if (!segment) return;
+    window.PowerTBMSubtitles?.render(segment.id, seconds);
     if (demoPage === 'intro') {
       // Audio and video start, pause and resume together. Let the hardware
       // decoder advance naturally instead of seeking on every animation frame.
@@ -888,6 +889,7 @@
 
   const handleNarrationFailure = (error, token) => {
     if (token !== narrationRunToken) return;
+    window.PowerTBMSubtitles?.clear();
     console.warn('내레이션 재생을 시작하지 못해 무음 자동시연으로 전환합니다.', error);
     cancelNarrationFrame();
     releaseSyncedAnimations({ resume: true });
@@ -1425,6 +1427,7 @@
 
   const applyDemoStage = (page) => {
     if (!guidePhone || !stageClassByPage[page]) return;
+    window.PowerTBMSubtitles?.clear();
     clearSequenceTimer();
     stopLaunchPrelude();
     if (page !== 'support') stopGoldenRulesClock();

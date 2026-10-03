@@ -1,14 +1,17 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v84-20261001-original-video`;
+const CACHE_NAME = `${CACHE_PREFIX}v85-20261003-subtitles`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
+  './subtitles.css?v=20261003-v85',
+  './subtitles.js?v=20261003-v85',
+  './subtitle-data.js?v=20261003-v85',
   './manifest.webmanifest',
   './styles.css?v=20260923-hand-fix-v80',
-  './app.js?v=20261001-original-video-v84',
+  './app.js?v=20261003-subtitles-v85',
   './safety4cut.css?v=20260923-hand-fix-v80',
   './demo-hands-v80.css',
   './demo-recorder-v81.css',
@@ -97,7 +100,7 @@ const PRECACHE_URLS = [
 ];
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
-const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css))(?:\?|$)/.test(path) || path === './';
+const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data\.js)(?:\?|$)/.test(path) || path === './';
 
 const precacheInSmallBatches = async (cache) => {
   let nextIndex = 0;

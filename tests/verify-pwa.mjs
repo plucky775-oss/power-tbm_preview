@@ -116,7 +116,7 @@ const backgroundFiles = (await readdir(path.join(siteRoot, 'assets/background'))
 assert.deepEqual(backgroundFiles, expectedBackgroundFiles, 'background folder contains stale or missing media');
 
 const sourceFiles = ['index.html', 'app.js', 'styles.css'];
-const assetPattern = /assets\/[A-Za-z0-9_./-]+\.(?:png|jpe?g|webp|mp3|mp4|woff2)/g;
+const assetPattern = /assets\/[A-Za-z0-9_./-]+\.(?:png|jpe?g|webp|mp3|mp4|woff2)(?:\?[^'"\s)<>]+)?/g;
 const referencedAssets = new Set();
 for (const file of sourceFiles) {
   const source = await readFile(path.join(siteRoot, file), 'utf8');
@@ -135,9 +135,12 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20260816-exhibition-type-v70',
-  './app.js?v=20260816-exhibition-type-v70',
-  './pwa.js?v=20260816-exhibition-type-v70'
+  './styles.css?v=20260923-hand-fix-v80',
+  './app.js?v=20261003-subtitles-v85',
+  './pwa.js?v=20260816-exhibition-type-v70',
+  './subtitles.js?v=20261003-v85',
+  './subtitle-data.js?v=20261003-v85',
+  './subtitles.css?v=20261003-v85'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
 
@@ -239,7 +242,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v70-20260816/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v85-20261003-subtitles/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);

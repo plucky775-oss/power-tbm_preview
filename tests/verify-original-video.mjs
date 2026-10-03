@@ -144,6 +144,7 @@ vm.runInContext(read('sw.js'), cacheContext);
 const cached = vm.runInContext('PRECACHE_URLS', cacheContext);
 assert(cached.includes('./assets/safety4cut/09-ai-example-v84.mp4'));
 assert(cached.includes('./assets/audio/07-safety4cut-intro-v84.m4a'));
-assert(cached.includes('./app.js?v=20261001-original-video-v84'));
+assert(cached.includes('./app.js?v=20261003-subtitles-v85'));
+for (const path of ['subtitles.css','subtitles.js','subtitle-data.js']) assert(cached.includes(`./${path}?v=20261003-v85`));
 assert(cached.includes('./safety4cut.js?v=20261001-original-video-v84'));
 console.log('PASS: original bytes, intro handoff, both ending orders, pause/resume, hidden-tab resume, fallback, aborted play retry, and cache paths');

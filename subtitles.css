@@ -1,0 +1,52 @@
+/* A dedicated row keeps subtitles outside the phone and example video. */
+.demo-only-page { grid-template-rows: auto minmax(0, 1fr) auto; }
+.narration-subtitles {
+  display: grid;
+  place-items: center;
+  min-height: clamp(78px, 10vh, 118px);
+  padding: 10px 92px 10px 20px;
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  background: #07131e;
+  border-top: 1px solid #ffffff24;
+  color: #fff;
+  text-align: center;
+  pointer-events: none;
+}
+.narration-subtitles[hidden] { display: none; }
+.subtitle-line {
+  margin: 0;
+  max-width: 1400px;
+  font-size: clamp(24px, 2.6vw, 44px);
+  font-weight: 800;
+  line-height: 1.45;
+  letter-spacing: -.025em;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.subtitle-word {
+  --read: 0%;
+  display: inline-block;
+  color: #fff;
+  background: linear-gradient(to right, #ffda35 0%, #ffda35 var(--read), #fff var(--read), #fff 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#subtitleToggle { position: fixed; z-index: 110; right: max(10px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); min-width: 72px; min-height: 44px; border: 1px solid #ffffff66; border-radius: 10px; background: #17374c; color: #fff; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; touch-action: manipulation; }
+#subtitleToggle[aria-pressed="true"] { color: #ffda35; border-color: #ffda3580; }
+#subtitleToggle:focus-visible { outline: 3px solid #ffda35; outline-offset: 3px; }
+.launch-prelude-active:not(.launch-prelude-revealing) #subtitleToggle,
+.launch-prelude-active:not(.launch-prelude-revealing) .narration-subtitles { visibility: hidden; }
+@media (max-width: 760px) {
+  .subtitle-line { font-size: clamp(18px, 3.2vw, 24px); }
+  .narration-subtitles { min-height: 88px; padding: 8px 86px 8px 12px; }
+}
+@media (forced-colors: active) {
+  .subtitle-word { background: none; -webkit-text-fill-color: currentColor; }
+}
+/* Reserve the subtitle row when sizing the existing phone frame. */
+.demo-only-page.subtitles-enabled .tour-device {
+  width: min(430px, calc((100dvh - 250px) * .44), calc(100vw - 34px));
+  min-width: 130px;
+}
