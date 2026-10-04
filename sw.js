@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v88-20261004-video-demo-icon`;
+const CACHE_NAME = `${CACHE_PREFIX}v89-20261004-header-brand`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
