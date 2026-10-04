@@ -156,10 +156,10 @@ const pngSize = async (relativePath) => {
   assert.equal(bytes.toString('hex', 0, 8), '89504e470d0a1a0a', `${relativePath} is not PNG`);
   return [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
 };
-assert.deepEqual(await pngSize('assets/brand/power-tbm-apple-touch-180.png'), [180, 180]);
-assert.deepEqual(await pngSize('assets/brand/power-tbm-icon-192.png'), [192, 192]);
-assert.deepEqual(await pngSize('assets/brand/power-tbm-icon-512.png'), [512, 512]);
-assert.deepEqual(await pngSize('assets/brand/power-tbm-maskable-512.png'), [512, 512]);
+assert.deepEqual(await pngSize('assets/brand/video-demo-icon-180-v1.png'), [180, 180]);
+assert.deepEqual(await pngSize('assets/brand/video-demo-icon-192-v1.png'), [192, 192]);
+assert.deepEqual(await pngSize('assets/brand/video-demo-icon-512-v1.png'), [512, 512]);
+assert.deepEqual(await pngSize('assets/brand/video-demo-icon-maskable-512-v1.png'), [512, 512]);
 
 const indexSource = await readFile(path.join(siteRoot, 'index.html'), 'utf8');
 const appSource = await readFile(path.join(siteRoot, 'app.js'), 'utf8');
@@ -242,7 +242,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v87-20261004-bubble-fulltext/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v88-20261004-video-demo-icon/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
@@ -331,7 +331,7 @@ const fallbackRequest = {
 };
 const fallbackResponse = await dispatchFetch(fallbackRequest);
 assert.equal(fallbackResponse.status, 200);
-assert.match(await fallbackResponse.text(), /<title>Power TBM \| 자동 시연<\/title>/);
+assert.match(await fallbackResponse.text(), /<title>영상 시연 \| Power TBM · Safety 4-Cut<\/title>/);
 
 console.log(JSON.stringify({
   status: 'passed',

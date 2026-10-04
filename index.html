@@ -3,25 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#173e56">
+  <meta name="theme-color" content="#2b1049">
+  <meta name="application-name" content="영상 시연">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Power TBM">
+  <meta name="apple-mobile-web-app-title" content="영상 시연">
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="Power TBM의 기상정보, TBM 회의록, AI 안전검토, 전자서명, 현장도구와 안전 4컷을 한 화면에서 자동 시연합니다.">
   <meta name="author" content="안산지사 최재혁 차장">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Power TBM | 자동 시연">
+  <meta property="og:title" content="영상 시연 | Power TBM · Safety 4-Cut">
   <meta property="og:description" content="Power TBM의 전체 흐름을 실제 앱 화면 기반 자동 시연으로 확인하세요.">
-  <meta property="og:image" content="assets/screens/guide/home-weather-alert-expanded-v48.jpeg">
-  <meta property="og:image:alt" content="Power TBM 홈 화면">
+  <meta property="og:image" content="assets/brand/video-demo-icon-512-v1.png">
+  <meta property="og:image:alt" content="보라색 재생 버튼과 영상 시연 글자가 있는 앱 아이콘">
   <meta name="music-credit" content="Soundtrack From the Starcourt Mall — Bryan Teoh, CC0 1.0 Universal">
-  <title>Power TBM | 자동 시연</title>
+  <title>영상 시연 | Power TBM · Safety 4-Cut</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="assets/brand/power-tbm-icon.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/power-tbm-icon-192.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/power-tbm-apple-touch-180.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/video-demo-icon-32-v1.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/video-demo-icon-192-v1.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/video-demo-icon-180-v1.png">
   <link rel="preload" as="image" href="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg">
   <link rel="preload" as="image" href="assets/screens/guide/home-weather-alert-expanded-v48.jpeg">
   <link rel="preload" as="image" href="assets/video/power-tbm-button-click-poster.jpg">
@@ -91,8 +92,8 @@
   </div>
   <header class="demo-only-header">
     <button class="demo-only-brand" id="homeReset" type="button" aria-label="처음 화면으로 돌아가기" title="처음 화면으로 돌아가기">
-      <img src="assets/brand/power-tbm-icon.png" alt="" width="48" height="48">
-      <span><b>Power TBM</b></span>
+      <img src="assets/brand/video-demo-icon-192-v1.png" alt="" width="48" height="48">
+      <span><b>영상 시연</b></span>
     </button>
     <div class="demo-only-header-stack">
       <div class="demo-page-switch reveal" role="tablist" aria-label="자동 시연 페이지 선택">
@@ -125,7 +126,7 @@
 
   <dialog class="demo-record-dialog" id="demoRecordDialog" aria-labelledby="demoRecordTitle" aria-describedby="demoRecordMessage">
     <h2 id="demoRecordTitle">시연 영상 녹화</h2>
-    <p id="demoRecordMessage">다음 창에서 이 Power TBM 탭을 선택하고 ‘탭 오디오 공유’를 켜 주세요. 전체 시연을 처음부터 녹화합니다.</p>
+    <p id="demoRecordMessage">다음 창에서 이 영상 시연 탭을 선택하고 ‘탭 오디오 공유’를 켜 주세요. 전체 시연을 처음부터 녹화합니다.</p>
     <p class="demo-record-error" id="demoRecordError" role="alert" hidden></p>
     <video class="demo-record-preview" id="demoRecordPreview" controls playsinline preload="metadata" hidden></video>
     <p class="demo-record-meta" id="demoRecordMeta" hidden></p>

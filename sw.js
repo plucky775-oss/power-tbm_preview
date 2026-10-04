@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v87-20261004-bubble-fulltext`;
+const CACHE_NAME = `${CACHE_PREFIX}v88-20261004-video-demo-icon`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
@@ -45,6 +45,11 @@ const PRECACHE_URLS = [
   './assets/background/weather-powerlines-v60-poster.jpg',
   './assets/background/weather-powerlines-v60.mp4',
   './assets/brand/kepco-symbol-v30.png',
+  './assets/brand/video-demo-icon-32-v1.png',
+  './assets/brand/video-demo-icon-180-v1.png',
+  './assets/brand/video-demo-icon-192-v1.png',
+  './assets/brand/video-demo-icon-512-v1.png',
+  './assets/brand/video-demo-icon-maskable-512-v1.png',
   './assets/brand/power-tbm-apple-touch-180.png',
   './assets/brand/power-tbm-icon-192.png',
   './assets/brand/power-tbm-icon-512.png',
