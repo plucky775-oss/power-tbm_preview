@@ -2335,10 +2335,11 @@ button { color: inherit; }
 .meeting-focus-ppe { left: 6.7%; top: 43%; width: 86.6%; height: 39%; }
 .meeting-focus-risk { left: 6.7%; top: 41.2%; width: 86.6%; height: 40.8%; }
 .meeting-focus-ai {
-  left: 6.5%;
-  top: 14.7%;
-  width: 87%;
-  height: 72.7%;
+  /* Match the AI card above the fixed navigation buttons. */
+  left: 3.2%;
+  top: 16.4%;
+  width: 93.6%;
+  height: 65.7%;
   --highlight-radius: 14px;
 }
 .meeting-focus-priority { left: 6.7%; top: 29.3%; width: 86.6%; height: 6.5%; }
@@ -2378,7 +2379,14 @@ button { color: inherit; }
 @keyframes meeting-focus-health { 0%, 38.8% { opacity: 0; transform: scale(.985); } 39.3%, 43.2% { opacity: 1; transform: scale(1); } 43.7%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes meeting-focus-ppe { 0%, 43.2% { opacity: 0; transform: scale(.985); } 43.7%, 48.1% { opacity: 1; transform: scale(1); } 48.6%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes meeting-focus-risk { 0%, 48.3% { opacity: 0; transform: scale(.985); } 48.8%, 57% { opacity: 1; transform: scale(1); } 57.5%, 100% { opacity: 0; transform: scale(1.01); } }
-@keyframes meeting-focus-ai { 0%, 60.3% { opacity: 0; transform: scale(.985); } 60.8%, 65.5% { opacity: 1; transform: scale(1); } 66%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-ai {
+  0%, 60.3% { opacity: 0; }
+  60.8%, 65.5% { opacity: 1; }
+  66%, 100% { opacity: 0; }
+  /* Follow the existing scrolled-state transition without covering its footer. */
+  0%, 61.05% { left: 3.2%; top: 16.4%; width: 93.6%; height: 65.7%; }
+  61.7%, 100% { left: 1.8%; top: 14.4%; width: 96.4%; height: 73.4%; }
+}
 @keyframes meeting-focus-priority { 0%, 65.7% { opacity: 0; transform: scale(.985); } 66.2%, 73% { opacity: 1; transform: scale(1); } 73.5%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes meeting-focus-signature { 0%, 73.1% { opacity: 0; transform: scale(.985); } 73.7%, 80.5% { opacity: 1; transform: scale(1); } 81%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes meeting-focus-sign-pad { 0%, 80.6% { opacity: 0; transform: scale(.985); } 81.2%, 87.5% { opacity: 1; transform: scale(1); } 88%, 100% { opacity: 0; transform: scale(1.01); } }
@@ -3265,7 +3273,16 @@ button { color: inherit; }
 .support-focus-emergency-nav { left: 9.8%; top: 45.3%; width: 18.3%; height: 5.8%; --highlight-radius: 10px; }
 .support-focus-emergency-call { left: 28%; top: 45.3%; width: 14.3%; height: 5.8%; --highlight-radius: 10px; }
 .support-focus-emergency-119 { left: 30.4%; top: 23.7%; width: 22.7%; height: 5.8%; border-color: #ff4148; background: rgba(255, 48, 58, .1); box-shadow: 0 0 0 2px #fff, 0 0 0 9px rgba(255, 48, 58, .24), 0 13px 30px rgba(86, 7, 13, .25); }
-.support-focus-location-consent { left: 6.5%; top: 73.2%; width: 43.5%; height: 10.7%; }
+.support-focus-location-consent {
+  /* Only the teal agree button, excluding decline and reset. */
+  left: 6.8%; top: 73.8%; width: 11.7%; height: 4.1%;
+  --highlight-radius: 999px;
+}
+.support-focus-location-consent.demo-highlight-box {
+  border-width: 2px;
+  background: transparent;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .94), 0 0 0 4px rgba(255, 213, 42, .24);
+}
 
 .guide-phone.support-demo-active .support-focus-home-safety { animation: support-focus-home-safety var(--support-duration) ease infinite; }
 .guide-phone.support-demo-active .support-focus-safety-menu { animation: support-focus-safety-menu var(--support-duration) ease infinite; }

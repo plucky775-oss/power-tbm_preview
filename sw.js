@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v90-20261005-soft-launch-click`;
+const CACHE_NAME = `${CACHE_PREFIX}v91-20261005-focus-bounds`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
@@ -10,7 +10,7 @@ const PRECACHE_URLS = [
   './subtitles.js?v=20261004-v87',
   './subtitle-data.js?v=20261004-v87',
   './manifest.webmanifest',
-  './styles.css?v=20260923-hand-fix-v80',
+  './styles.css?v=20261005-focus-v91',
   './app.js?v=20261003-subtitles-v85',
   './safety4cut.css?v=20260923-hand-fix-v80',
   './demo-hands-v80.css',
