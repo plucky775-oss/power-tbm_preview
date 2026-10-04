@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v89-20261004-header-brand`;
+const CACHE_NAME = `${CACHE_PREFIX}v90-20261005-soft-launch-click`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
@@ -99,7 +99,7 @@ const PRECACHE_URLS = [
   './assets/video/golden-rules-11-rule-1-muted.mp4',
   './assets/video/golden-rules-11-rule-1-poster.jpg',
   './assets/video/power-tbm-button-click-poster.jpg',
-  './assets/video/power-tbm-button-click.mp4',
+  './assets/video/power-tbm-button-click-soft-v90.mp4',
   './assets/video/power-tbm-opening-ansan-v77-poster.jpg',
   './assets/video/power-tbm-opening-ansan-v77.mp4'
 ];
