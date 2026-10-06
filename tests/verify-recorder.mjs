@@ -247,7 +247,7 @@ for (const options of [{ withAudio: false }, { failVideo: true }, { cancel: true
     assert(precache.includes('./' + url), `${name} entry point must match the offline cache`);
     assert.match(url, /recording-aspect-v95/);
   }
-  assert.match(vm.runInContext('CACHE_NAME', context), /v95-20261006-recording-aspect$/);
+  assert.match(vm.runInContext('CACHE_NAME', context), /v96-20261007-swipe$/);
   assert.match(index, /<option value="4:3" selected>/);
   assert.match(index, /<option value="16:9">/);
 }
