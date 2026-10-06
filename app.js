@@ -3,7 +3,7 @@
 
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
 
   const header = $('#siteHeader');
@@ -226,7 +226,9 @@
   const launchSoundChoices = $('#launchSoundChoices');
   const launchSoundButtons = $$('[data-launch-sound]', launchStartPanel || document);
   const openingDemoVideo = $('#openingDemoVideo');
-  const demoNarration = $('#demoNarration');
+  const narrationAudio = $('#demoNarration');
+  const safetyExample = $('#safetyExample');
+  let demoNarration = narrationAudio;
   const demoBgm = $('#demoBgm');
   const demoMute = $('#demoMute');
   const cinematicBackdrop = $('#cinematicBackdrop');
@@ -517,7 +519,7 @@
       }
     }
 
-    if (demoPaused || document.hidden || reduceMotion) {
+    if (demoPaused || document.hidden) {
       if (goldenRulesPlayPending) {
         goldenRulesRunToken += 1;
         goldenRulesPlayPending = false;
@@ -533,16 +535,15 @@
       const playAttempt = goldenRulesVideo.play();
       if (playAttempt?.then) {
         playAttempt.then(() => {
-          if (playToken !== goldenRulesRunToken) {
-            goldenRulesVideo.pause();
-            return;
-          }
+          if (playToken !== goldenRulesRunToken) return;
           setGoldenRulesPlaybackState('playing');
         }).catch((error) => {
           if (playToken !== goldenRulesRunToken) return;
+          if (error?.name === 'AbortError') return;
           goldenRulesPlaybackBlocked = true;
           setGoldenRulesPlaybackState('blocked');
           console.warn('골든룰스11 무음 영상을 자동재생하지 못했습니다.', error);
+          document.dispatchEvent(new CustomEvent('power-tbm:playback-error', { detail: { message: '골든룰스11 영상 재생이 중단되어 녹화를 멈췄습니다.' } }));
         }).finally(() => {
           if (playToken === goldenRulesRunToken) goldenRulesPlayPending = false;
         });
@@ -580,10 +581,12 @@
     goldenRulesClockFrame = window.requestAnimationFrame(tick);
   };
 
-  const cinematicPlaybackAllowed = !reduceMotion && !navigator.connection?.saveData;
-
   const syncCinematicBackdrop = () => {
     if (!cinematicBackdrop) return;
+    // Recording is an explicit request for moving footage, including on PCs
+    // whose OS disables decorative motion or enables data saving.
+    const cinematicPlaybackAllowed = document.body.classList.contains('demo-recording')
+      || (!reduceMotion && !navigator.connection?.saveData);
     const previousPage = cinematicBackdrop.dataset.demoPage;
     const pageChanged = previousPage !== demoPage;
     const playbackPaused = demoPaused || document.hidden;
@@ -611,8 +614,9 @@
       }
       if (video.ended && !pageChanged) return;
       if (!video.paused) return;
-      video.play().catch(() => {
-        // The poster remains visible when a browser or data-saving mode blocks video.
+      video.play().catch((error) => {
+        if (error?.name === 'AbortError') return;
+        document.dispatchEvent(new CustomEvent('power-tbm:playback-error', { detail: { message: '배경영상 재생이 중단되어 녹화를 멈췄습니다.' } }));
       });
     });
   };
@@ -841,6 +845,7 @@
       // Intro narration and original MP4 audio have separate local clocks.
       const stageSeconds = mapNarrationTimeToVisual(segment, seconds) / 1000;
       safety?.render(stageSeconds, { paused: demoPaused || document.hidden,
+        mediaClock: demoNarration === safetyExample,
         finishing: segment.id === '08-safety4cut-example' && demoNarration.ended });
       if (demoBgm && safety && stageSeconds >= safety.videoOffset - .65) {
         cancelBgmFrame();
@@ -878,6 +883,7 @@
     narrationRunToken += 1;
     cancelNarrationFrame();
     releaseSyncedAnimations();
+    if (demoNarration) demoNarration.dataset.narrationActive = 'false';
     demoNarration?.pause();
     if (reset && demoNarration) {
       try { demoNarration.currentTime = 0; } catch (_) { /* source may be changing */ }
@@ -889,6 +895,24 @@
 
   const handleNarrationFailure = (error, token) => {
     if (token !== narrationRunToken) return;
+    if (error?.name === 'AbortError' && (demoPaused || document.hidden || stageTransitioning)) return;
+    if (demoPage === 'safety' || document.body.classList.contains('demo-recording')) {
+      // Keep the failed scene in place. A silent fallback used to restart the
+      // 4-cut introduction when the original video's audio failed to load.
+      cancelNarrationFrame();
+      demoNarration?.pause();
+      safety?.pause();
+      pauseDemoBgm();
+      demoPaused = true;
+      guidePhone?.classList.add('is-paused');
+      syncCinematicBackdrop();
+      setNarrationState(error?.name === 'NotAllowedError' ? 'blocked' : 'error');
+      updateDemoButton();
+      const message = '영상·음성 재생이 중단되었습니다. 계속 재생을 눌러 다시 시도해 주세요.';
+      if (demoPage === 'safety') $('#safetyCaption').textContent = message;
+      document.dispatchEvent(new CustomEvent('power-tbm:playback-error', { detail: { message } }));
+      return;
+    }
     window.PowerTBMSubtitles?.clear();
     console.warn('내레이션 재생을 시작하지 못해 무음 자동시연으로 전환합니다.', error);
     cancelNarrationFrame();
@@ -905,6 +929,15 @@
 
   const loadNarrationSegment = (segment, token) => {
     if (!demoNarration || !segment || token !== narrationRunToken) return;
+    // Use the visible MP4 as the sole audio/video clock. Loading that MP4 into
+    // a second <audio> element doubled decoding and allowed the clocks to split.
+    const player = segment.id === '08-safety4cut-example' ? safetyExample : narrationAudio;
+    if (player !== demoNarration) {
+      demoNarration.dataset.narrationActive = 'false';
+      demoNarration.pause();
+      demoNarration = player;
+    }
+    demoNarration.dataset.narrationActive = 'true';
     const currentSource = demoNarration.getAttribute('src') || '';
     if (currentSource !== segment.src) {
       demoNarration.src = segment.src;
@@ -1213,7 +1246,7 @@
     if (demoPage !== 'safety' || !narrationRequested || !demoNarration?.ended
       || narrationSegmentIndex !== narrationByPage.safety.length - 1) return false;
     if (!demoPaused && !document.hidden) {
-      safety?.render(safety.time, { finishing: true });
+      safety?.render(safety.time, { finishing: true, mediaClock: demoNarration === safetyExample });
       advanceSequence();
     }
     updateDemoButton();
@@ -1298,7 +1331,7 @@
     if (restart) {
       try { openingDemoVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
     }
-    if (demoPaused || document.hidden || reduceMotion || demoPage !== 'intro') {
+    if (demoPaused || document.hidden || demoPage !== 'intro') {
       openingDemoVideo.pause();
       return;
     }
@@ -1636,9 +1669,14 @@
   });
   allDemoPage?.addEventListener('click', () => activateSequence({ userInitiated: true }));
   document.addEventListener('power-tbm:recording-start', () => {
+    reduceMotion = false;
     launchChoiceMade = true;
     enableNarrationFromGesture({ muted: false });
     activateSequence({ userInitiated: true });
+  });
+  document.addEventListener('power-tbm:recording-stop', () => {
+    reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    syncCinematicBackdrop();
   });
   weatherDemoPage?.addEventListener('click', () => activateWeatherPage({ userInitiated: true }));
   meetingDemoPage?.addEventListener('click', () => activateMeetingPage({ userInitiated: true }));
@@ -1750,6 +1788,10 @@
     else activateWeatherPage({ userInitiated: true });
   });
   demoMute?.addEventListener('click', () => {
+    if (narrationRequested && demoPaused && ['blocked', 'error'].includes(narrationState)) {
+      demoToggle?.click();
+      return;
+    }
     if (!narrationRequested || !narrationUnlocked || narrationState === 'blocked' || narrationState === 'error') {
       narrationMuted = false;
       activateSequence({ userInitiated: true });
@@ -1871,7 +1913,8 @@
       && narrationSegmentIndex === narrationByPage.safety.length - 1)) advanceSequence();
   });
 
-  demoNarration?.addEventListener('ended', () => {
+  [narrationAudio, safetyExample].forEach((player) => player?.addEventListener('ended', () => {
+    if (player !== demoNarration) return;
     const token = Number(demoNarration.dataset.runToken);
     if (!narrationRequested || token !== narrationRunToken || demoPaused || document.hidden) return;
     if (Number.isFinite(demoNarration.duration) && demoNarration.currentTime < demoNarration.duration - .2) return;
@@ -1880,24 +1923,25 @@
     applyNarrationVisualTime(completed, completed?.duration || demoNarration.duration);
     if (narrationSegmentIndex + 1 < segments.length) {
       narrationSegmentIndex += 1;
-      playNarrationSegment({ token });
+      playNarrationSegment({ token: ++narrationRunToken });
       return;
     }
     cancelNarrationFrame();
     setNarrationState('complete');
     if (demoMode === 'sequence') advanceSequence();
     else fadeOutDemoBgm();
-  });
+  }));
 
   demoBgm?.addEventListener('error', () => {
     console.warn('배경음 파일을 불러오지 못했습니다.', demoBgm.error);
     stopDemoBgm({ reset: false });
   });
 
-  demoNarration?.addEventListener('error', () => {
+  [narrationAudio, safetyExample].forEach((player) => player?.addEventListener('error', () => {
+    if (player !== demoNarration) return;
     if (!narrationRequested || !demoNarration.currentSrc) return;
     handleNarrationFailure(demoNarration.error || new Error('내레이션 파일을 불러오지 못했습니다.'), narrationRunToken);
-  });
+  }));
 
   const video = $('#promoVideo');
   const videoToggle = $('#videoToggle');

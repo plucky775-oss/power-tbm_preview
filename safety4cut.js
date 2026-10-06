@@ -17,7 +17,6 @@
   const sample = root.querySelector('#safetyExample');
   const duration = 102.604;
   const videoOffset = 38.037;
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pressScale = parseFloat(getComputedStyle(root).getPropertyValue('--demo-hand-press-scale')) || .74;
   let current = -1;
   let frame = 0;
@@ -27,6 +26,7 @@
   let playToken = 0;
   let videoUnavailable = false;
   let paused = true;
+  let mediaClock = false;
 
   function fitCanvas() {
     if (!picture.naturalWidth || !picture.naturalHeight) return;
@@ -45,6 +45,7 @@
 
   function render(seconds, options = {}) {
     paused = Boolean(options.paused);
+    mediaClock = Boolean(options.mediaClock);
     lastTime = Math.max(0, Math.min(duration, seconds));
     let index = scenes.length - 1;
     while (index > 0 && lastTime < scenes[index].at) index -= 1;
@@ -74,11 +75,17 @@
     // Keep the fitted screenshot fixed; only the finger moves and presses.
     renderGesture(scene, lastTime - scene.at);
     root.querySelector('.safety-progress i').style.transform = `scaleX(${lastTime / duration})`;
+    // app.js owns play/pause, mute and the clock when this visible video is
+    // also the narration player. Never seek or mute it from its own clock.
+    if (scene.video && mediaClock) {
+      root.querySelector('#safetyCaption').textContent = scene.caption;
+      return;
+    }
     if (!scene.video || paused || document.hidden) {
       pauseVideo();
       return;
     }
-    // The narration player reads the same, unmodified MP4 for its audio.
+    // Only the automatic silent fallback uses this independent video clock.
     sample.muted = true;
     const target = Math.min(lastTime - videoOffset, Number.isFinite(sample.duration) ? Math.max(0, sample.duration - .025) : duration - videoOffset);
     // If audio ends before buffered video catches up, let the remaining frames
@@ -99,6 +106,8 @@
 
   // Drive the finger and press from the same audio clock as the scene.
   function renderGesture(scene, elapsed) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      && !document.body.classList.contains('demo-recording');
     const gesture = scene.gesture;
     focus.classList.remove('is-tapping');
     if (!gesture) {
@@ -153,7 +162,7 @@
     try { sample.currentTime = 0; } catch (_) { /* metadata may be loading */ }
     render(0, { paused: true });
   }
-  sample.addEventListener('loadedmetadata', () => render(lastTime, { paused }));
+  sample.addEventListener('loadedmetadata', () => render(lastTime, { paused, mediaClock }));
   sample.addEventListener('ended', () => {
     root.dispatchEvent(new CustomEvent('safetyvideoended', { bubbles: true }));
   });

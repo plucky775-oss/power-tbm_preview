@@ -8,7 +8,7 @@ const read = name => readFileSync(new URL(name, root), 'utf8');
 
 // Exercise the actual app's media events, with controllable buffering/ended
 // states so a delayed final frame and a hidden tab can be reproduced reliably.
-function harness() {
+function harness({ reducedMotion = true, saveData = false } = {}) {
   const elements = new Map();
   let document;
   class Element extends EventTarget {
@@ -28,12 +28,13 @@ function harness() {
       };
     }
     querySelector(selector) { return element(selector); }
-    querySelectorAll() { return []; }
+    querySelectorAll(selector) { return selector === '[data-cinematic-page]' ? [element('#backdropVideo')] : []; }
     getAnimations() { return []; }
     getBoundingClientRect() { return { width: 1024, height: 768, left: 0, top: 0 }; }
     setAttribute(k, v) { this.attrs[k] = String(v); }
     getAttribute(k) { return k === 'src' ? this.src : this.attrs[k]; }
     removeAttribute(k) { delete this.attrs[k]; }
+    click() { this.dispatchEvent(new Event('click')); }
     focus() {}
     scrollIntoView() {}
     load() { this.currentTime = 0; this.ended = false; }
@@ -51,14 +52,16 @@ function harness() {
   const window = new Element();
   const noTimer = () => 1;
   Object.assign(window, { innerWidth: 1024, innerHeight: 768, scrollY: 0,
-    matchMedia: q => ({ matches: q.includes('reduced-motion') }),
+    matchMedia: q => ({ matches: reducedMotion && q.includes('reduced-motion') }),
     requestAnimationFrame: noTimer, cancelAnimationFrame() {}, setTimeout: noTimer, clearTimeout() {} });
   const context = vm.createContext({ window, document, console, Event, CustomEvent, Image: Element,
+    navigator: { connection: { saveData } },
     getComputedStyle: () => ({ getPropertyValue: () => '.74' }),
     requestAnimationFrame: noTimer, cancelAnimationFrame() {}, performance: { now: () => 0 } });
   vm.runInContext(read('safety4cut.js'), context);
   const expose = `window.testApp = {
     prepare(index = 1, requested = true) {
+      demoNarration = narrationAudio;
       demoPage = 'safety'; demoMode = 'sequence'; demoPaused = false;
       narrationRequested = requested; narrationUnlocked = true; narrationRunToken = 1;
       narrationSegmentIndex = index; demoNarration.dataset.runToken = '1';
@@ -67,73 +70,112 @@ function harness() {
     },
     start: () => playNarrationSegment({ token: 1 }),
     advance: advanceSequence,
+    media: () => demoNarration,
+    tick(seconds) { demoNarration.currentTime = seconds; applyNarrationVisualTime(narrationByPage[demoPage][narrationSegmentIndex], seconds); },
+    cinematic(page = 'weather') { demoPage = page; syncCinematicBackdrop(); },
+    golden() { demoPage = 'support'; guidePhone.classList.add('support-demo-active'); syncGoldenRulesVideo(27000); },
+    fail: (error) => handleNarrationFailure(error, narrationRunToken),
+    visuals: () => ({ requested: narrationRequested, state: narrationState, reduced: reduceMotion }),
     state: () => ({ page: demoPage, index: narrationSegmentIndex, paused: demoPaused })
   };`;
   vm.runInContext(read('app.js').replace(/\}\)\(\);\s*$/, `${expose}\n})();`), context);
   return { api: window.testApp, safety: window.PowerTBMSafety, element, document,
-    audio: element('#demoNarration'), video: element('#safetyExample') };
+    audio: element('#demoNarration'), video: element('#safetyExample'),
+    get media() { return window.testApp.media(); } };
 }
 
-const finishAudio = h => {
-  h.audio.currentTime = h.audio.duration; h.audio.ended = true;
-  h.audio.dispatchEvent(new Event('ended'));
-};
-const finishVideo = h => {
-  h.video.currentTime = h.video.duration; h.video.ended = true;
-  h.video.dispatchEvent(new Event('ended'));
+const settle = () => new Promise(resolve => setImmediate(resolve));
+const finishMedia = h => {
+  h.media.currentTime = h.media.duration; h.media.ended = true;
+  h.media.dispatchEvent(new Event('ended'));
 };
 
 {
   const h = harness(); h.api.prepare(0); h.api.start();
   assert.match(h.audio.src, /intro-v84\.m4a$/);
-  finishAudio(h);
+  finishMedia(h);
   assert.equal(h.api.state().index, 1);
-  assert.equal(h.audio.src, 'assets/safety4cut/09-ai-example-v84.mp4');
+  assert.equal(h.media, h.video, 'visible video must own both picture and original audio');
+  assert.equal(h.video.src, 'assets/safety4cut/09-ai-example-v84.mp4');
+  assert.equal(h.audio.paused, true, 'no duplicate audio decoder');
+  assert.equal(h.video.muted, false);
+  h.video.dispatchEvent(new Event('loadedmetadata'));
+  h.api.tick(12);
+  assert.equal(h.video.currentTime, 12, 'video clock must not seek itself');
+  assert.equal(h.video.muted, false, 'metadata/render must not mute the shared player');
+  assert.equal(h.element('#safetyDemo').dataset.scene, '4');
   assert.equal(h.api.state().page, 'safety');
+  h.audio.ended = true; h.audio.dispatchEvent(new Event('ended'));
+  assert.equal(h.api.state().page, 'safety', 'stale audio event must not advance the video');
+  finishMedia(h);
+  assert.equal(h.api.state().page, 'closing', 'native video end advances without clipping');
+  assert.equal(h.media, h.audio, 'closing restores narration audio');
 }
 {
-  const h = harness(); h.api.prepare(); h.video.currentTime = 60;
-  finishAudio(h);
-  assert.equal(h.api.state().page, 'safety', 'audio completion must wait for video');
-  assert.equal(h.video.currentTime, 60, 'must play the remaining frames without seeking to the end');
-  const plays = h.audio.playCount;
-  h.element('#demoToggle').dispatchEvent(new Event('click'));
+  const h = harness(); h.api.prepare(); h.api.start(); await settle();
+  h.api.tick(30);
+  h.element('#demoToggle').click();
   assert.equal(h.video.paused, true);
-  h.element('#demoToggle').dispatchEvent(new Event('click'));
-  assert.equal(h.audio.playCount, plays, 'resume must not replay the completed narration');
+  h.element('#demoToggle').click(); await settle();
   assert.equal(h.video.paused, false);
-  finishVideo(h);
-  assert.equal(h.api.state().page, 'closing');
-}
-{
-  const h = harness(); h.api.prepare(); h.video.currentTime = 62; finishAudio(h);
+  assert.equal(h.video.currentTime, 30);
   h.document.hidden = true; h.document.dispatchEvent(new Event('visibilitychange'));
   assert.equal(h.video.paused, true);
-  const plays = h.audio.playCount;
-  h.document.hidden = false; h.document.dispatchEvent(new Event('visibilitychange'));
+  h.document.hidden = false; h.document.dispatchEvent(new Event('visibilitychange')); await settle();
   assert.equal(h.video.paused, false);
-  assert.equal(h.audio.playCount, plays);
-  finishVideo(h); assert.equal(h.api.state().page, 'closing');
+  assert.equal(h.video.currentTime, 30);
+  h.element('#demoMute').click(); assert.equal(h.video.muted, true);
+  h.element('#demoMute').click(); assert.equal(h.video.muted, false);
 }
 {
-  const h = harness(); h.api.prepare(); finishVideo(h);
-  assert.equal(h.api.state().page, 'safety', 'video completion must wait for original audio');
-  finishAudio(h); assert.equal(h.api.state().page, 'closing');
+  const h = harness(); h.api.prepare(); h.api.start(); await settle();
+  h.api.tick(7); h.api.fail(new Error('decode failed'));
+  assert.equal(h.api.state().page, 'safety');
+  assert.equal(h.api.state().index, 1);
+  assert.equal(h.api.state().paused, true);
+  assert.equal(h.api.visuals().requested, true, 'failure must not enter silent fallback');
+  assert.equal(h.element('#safetyDemo').dataset.scene, '4', 'must not replay introduction');
+  h.element('#demoMute').click(); await settle();
+  assert.equal(h.video.currentTime, 7);
+  assert.equal(h.video.paused, false);
+}
+{
+  const h = harness(); h.api.prepare(0);
+  let rejectIntro;
+  h.audio.play = () => new Promise((_, reject) => { rejectIntro = reject; });
+  h.api.start(); finishMedia(h);
+  rejectIntro(Object.assign(new Error('old load interrupted'), { name: 'AbortError' }));
+  await settle();
+  assert.equal(h.api.state().index, 1);
+  assert.equal(h.api.state().paused, false, 'old segment rejection must not stop the new segment');
+  assert.equal(h.media, h.video);
 }
 {
   const h = harness(); h.api.prepare(0, false); h.api.advance();
-  assert.equal(h.api.state().page, 'safety', 'fallback timer must also wait for video');
-  finishVideo(h); assert.equal(h.api.state().page, 'closing');
+  assert.equal(h.api.state().page, 'safety', 'fallback must wait for native video end');
+  h.video.ended = true; h.video.dispatchEvent(new Event('ended'));
+  assert.equal(h.api.state().page, 'closing');
 }
 {
-  const h = harness(); let attempts = 0;
-  h.video.play = () => {
-    attempts++; h.video.paused = attempts === 1;
-    return attempts === 1 ? Promise.reject(Object.assign(new Error('interrupted'), { name: 'AbortError' })) : Promise.resolve();
-  };
-  h.safety.render(40); await new Promise(resolve => setImmediate(resolve));
-  h.safety.pause(); h.safety.render(40); await new Promise(resolve => setImmediate(resolve));
-  assert.equal(attempts, 2, 'a transient play cancellation must be retryable');
+  const h = harness({ reducedMotion: true, saveData: true });
+  const backdrop = h.element('#backdropVideo'); backdrop.dataset.cinematicPage = 'weather';
+  h.api.cinematic(); assert.equal(backdrop.paused, true, 'ordinary viewing respects reduced motion');
+  h.document.body.classList.add('demo-recording');
+  h.api.cinematic(); await settle(); assert.equal(backdrop.paused, false, 'recording includes moving backdrops');
+  h.document.body.classList.remove('demo-recording');
+  h.document.dispatchEvent(new CustomEvent('power-tbm:recording-stop'));
+  assert.equal(backdrop.paused, true, 'restore viewer preference after recording');
+  h.api.golden(); await settle();
+  assert.equal(h.element('#goldenRulesVideo').paused, false, 'explicit tutorial video is not decorative motion');
+}
+{
+  const h = harness(); const golden = h.element('#goldenRulesVideo'); let attempts = 0;
+  golden.play = () => ++attempts === 1
+    ? Promise.reject(Object.assign(new Error('cancelled'), { name: 'AbortError' }))
+    : (golden.paused = false, Promise.resolve());
+  h.api.golden(); await settle(); h.api.golden(); await settle();
+  assert.equal(attempts, 2, 'transient golden video interruption is retryable');
+  assert.equal(golden.paused, false);
 }
 
 const original = readFileSync(new URL('assets/safety4cut/09-ai-example-v84.mp4', root));
@@ -144,7 +186,8 @@ vm.runInContext(read('sw.js'), cacheContext);
 const cached = vm.runInContext('PRECACHE_URLS', cacheContext);
 assert(cached.includes('./assets/safety4cut/09-ai-example-v84.mp4'));
 assert(cached.includes('./assets/audio/07-safety4cut-intro-v84.m4a'));
-assert(cached.includes('./app.js?v=20261003-subtitles-v85'));
-for (const path of ['subtitles.css','subtitles.js','subtitle-data.js']) assert(cached.includes(`./${path}?v=20261004-v87`));
-assert(cached.includes('./safety4cut.js?v=20261001-original-video-v84'));
-console.log('PASS: original bytes, intro handoff, both ending orders, pause/resume, hidden-tab resume, fallback, aborted play retry, and cache paths');
+assert(cached.includes('./app.js?v=20261006-recording-v92'));
+assert(cached.includes('./subtitles.js?v=20261006-recording-v92'));
+for (const path of ['subtitles.css','subtitle-data.js']) assert(cached.includes(`./${path}?v=20261004-v87`));
+assert(cached.includes('./safety4cut.js?v=20261006-recording-v92'));
+console.log('PASS: original bytes, single video/audio clock, intro handoff, no rewind on error, stale events, mute, pause/resume, hidden tab, fallback, recording motion, Golden Rules retry, cache paths');

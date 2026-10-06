@@ -933,8 +933,8 @@ button { color: inherit; }
   55% { box-shadow: 0 0 0 7px rgba(255, 214, 73, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  #demoMute.needs-start,
-  .demo-page-switch .demo-all-button.narration-start-hint { animation: none; }
+  :where(html:not(.demo-recording)) #demoMute.needs-start,
+  :where(html:not(.demo-recording)) .demo-page-switch .demo-all-button.narration-start-hint { animation: none; }
 }
 .tour-detail {
   position: relative;
@@ -1475,9 +1475,9 @@ button { color: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-  .reveal { opacity: 1; transform: none; }
+  html:where(:not(.demo-recording)) { scroll-behavior: auto; }
+  :where(html:not(.demo-recording)) *, :where(html:not(.demo-recording)) *::before, :where(html:not(.demo-recording)) *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  :where(html:not(.demo-recording)) .reveal { opacity: 1; transform: none; }
 }
 
 /* ===== REAL SCREEN GUIDE · PAGE 2 / TBM MEETING DEMO ===== */
@@ -3066,20 +3066,20 @@ button { color: inherit; }
 @keyframes meeting-explain-save { 0%, 91.5% { opacity: 0; transform: translateY(18px); } 92.1%, 100% { opacity: 1; transform: translateY(0); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .guide-phone.meeting-demo-active .meeting-slide {
+  :where(html:not(.demo-recording)) .guide-phone.meeting-demo-active .meeting-slide {
     opacity: 0 !important;
     animation: none !important;
   }
-  .guide-phone.meeting-demo-active .meeting-slide-home { opacity: 1 !important; }
-  .guide-phone.meeting-demo-active .meeting-hand,
-  .guide-phone.meeting-demo-active .meeting-touch-ripple,
-  .guide-phone.meeting-demo-active .meeting-state-layer,
-  .guide-phone.meeting-demo-active .meeting-focus-layer { display: none !important; }
-  .tour-stage.meeting-page .meeting-explain {
+  :where(html:not(.demo-recording)) .guide-phone.meeting-demo-active .meeting-slide-home { opacity: 1 !important; }
+  :where(html:not(.demo-recording)) .guide-phone.meeting-demo-active .meeting-hand,
+  :where(html:not(.demo-recording)) .guide-phone.meeting-demo-active .meeting-touch-ripple,
+  :where(html:not(.demo-recording)) .guide-phone.meeting-demo-active .meeting-state-layer,
+  :where(html:not(.demo-recording)) .guide-phone.meeting-demo-active .meeting-focus-layer { display: none !important; }
+  :where(html:not(.demo-recording)) .tour-stage.meeting-page .meeting-explain {
     opacity: 0 !important;
     animation: none !important;
   }
-  .tour-stage.meeting-page .meeting-explain-entry {
+  :where(html:not(.demo-recording)) .tour-stage.meeting-page .meeting-explain-entry {
     opacity: 1 !important;
     transform: none !important;
   }
@@ -3700,21 +3700,21 @@ button { color: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .guide-phone.support-demo-active .support-slide {
+  :where(html:not(.demo-recording)) .guide-phone.support-demo-active .support-slide {
     opacity: 0 !important;
     animation: none !important;
   }
-  .guide-phone.support-demo-active .support-slide-safety { opacity: 1 !important; }
-  .guide-phone.support-demo-active .support-hand,
-  .guide-phone.support-demo-active .support-ripple,
-  .guide-phone.support-demo-active .support-focus-layer { display: none !important; }
-  .tour-stage.support-page .support-tool-points,
-  .tour-stage.support-page .support-action-visuals { display: none !important; }
-  .tour-stage.support-page .support-explain {
+  :where(html:not(.demo-recording)) .guide-phone.support-demo-active .support-slide-safety { opacity: 1 !important; }
+  :where(html:not(.demo-recording)) .guide-phone.support-demo-active .support-hand,
+  :where(html:not(.demo-recording)) .guide-phone.support-demo-active .support-ripple,
+  :where(html:not(.demo-recording)) .guide-phone.support-demo-active .support-focus-layer { display: none !important; }
+  :where(html:not(.demo-recording)) .tour-stage.support-page .support-tool-points,
+  :where(html:not(.demo-recording)) .tour-stage.support-page .support-action-visuals { display: none !important; }
+  :where(html:not(.demo-recording)) .tour-stage.support-page .support-explain {
     opacity: 0 !important;
     animation: none !important;
   }
-  .tour-stage.support-page .support-explain-safety {
+  :where(html:not(.demo-recording)) .tour-stage.support-page .support-explain-safety {
     opacity: 1 !important;
     transform: none !important;
   }
@@ -4014,8 +4014,8 @@ button { color: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .guide-media::after,
-  .tour-detail {
+  :where(html:not(.demo-recording)) .guide-media::after,
+  :where(html:not(.demo-recording)) .tour-detail {
     transition: none;
   }
 }
@@ -4780,7 +4780,7 @@ body { background: #fff; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tour-stage.intro-page .opening-explanation { animation: none; }
+  :where(html:not(.demo-recording)) .tour-stage.intro-page .opening-explanation { animation: none; }
 }
 
 /* ===== v27 · FIELD PHOTO CLOSING ===== */
@@ -5067,28 +5067,28 @@ body { background: #fff; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .closing-photo {
+  :where(html:not(.demo-recording)) .closing-photo {
     opacity: 1 !important;
     transform: translateY(5%) scale(1.14) !important;
     animation: none !important;
   }
-  .closing-brand,
-  .closing-screen-copy > h3,
-  .closing-screen-line-one,
-  .closing-screen-line-two,
-  .closing-screen-copy > strong,
-  .closing-screen-copy > small,
-  .closing-detail-kicker,
-  .closing-detail-line-one,
-  .closing-detail-line-two,
-  .closing-detail-promise,
-  .closing-detail-thanks {
+  :where(html:not(.demo-recording)) .closing-brand,
+  :where(html:not(.demo-recording)) .closing-screen-copy > h3,
+  :where(html:not(.demo-recording)) .closing-screen-line-one,
+  :where(html:not(.demo-recording)) .closing-screen-line-two,
+  :where(html:not(.demo-recording)) .closing-screen-copy > strong,
+  :where(html:not(.demo-recording)) .closing-screen-copy > small,
+  :where(html:not(.demo-recording)) .closing-detail-kicker,
+  :where(html:not(.demo-recording)) .closing-detail-line-one,
+  :where(html:not(.demo-recording)) .closing-detail-line-two,
+  :where(html:not(.demo-recording)) .closing-detail-promise,
+  :where(html:not(.demo-recording)) .closing-detail-thanks {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
   }
-  .closing-screen-intro,
-  .closing-detail-intro { display: none; }
+  :where(html:not(.demo-recording)) .closing-screen-intro,
+  :where(html:not(.demo-recording)) .closing-detail-intro { display: none; }
 }
 
 /* ===== v28 · IPHONE FRAME + NAMED SIGNATURE ===== */
@@ -5243,12 +5243,12 @@ body { background: #fff; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .meeting-signature-name {
+  :where(html:not(.demo-recording)) .meeting-signature-name {
     clip-path: inset(0 0 0 0) !important;
     opacity: 1 !important;
     animation: none !important;
   }
-  .meeting-pdf-signature { display: none !important; }
+  :where(html:not(.demo-recording)) .meeting-pdf-signature { display: none !important; }
 }
 
 /* ===== DEMO-ONLY SINGLE PAGE ===== */
@@ -5735,9 +5735,9 @@ body { background: #fff; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .launch-intro,
-  .demo-only-page > .demo-only-header,
-  .demo-only-page > #main {
+  :where(html:not(.demo-recording)) .launch-intro,
+  :where(html:not(.demo-recording)) .demo-only-page > .demo-only-header,
+  :where(html:not(.demo-recording)) .demo-only-page > #main {
     transition: none;
   }
 }
@@ -6186,8 +6186,8 @@ body { background: #fff; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .meeting-ai-swipe-hand,
-  .meeting-ai-scrolled-state { display: none !important; }
+  :where(html:not(.demo-recording)) .meeting-ai-swipe-hand,
+  :where(html:not(.demo-recording)) .meeting-ai-scrolled-state { display: none !important; }
 }
 
 /* ===== v49 · CARD ALIGNMENT + KIM IL-YONG REMOTE SIGNATURE ===== */
@@ -6276,8 +6276,8 @@ body { background: #fff; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .meeting-pdf-worker-name,
-  .meeting-pdf-worker-signature { display: none !important; }
+  :where(html:not(.demo-recording)) .meeting-pdf-worker-name,
+  :where(html:not(.demo-recording)) .meeting-pdf-worker-signature { display: none !important; }
 }
 
 @media (max-width: 760px) {
@@ -6504,15 +6504,15 @@ body { background: #fff; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cinematic-backdrop-video,
-  .cinematic-backdrop-image,
-  .cinematic-backdrop-lightning-flash {
+  :where(html:not(.demo-recording)) .cinematic-backdrop-video,
+  :where(html:not(.demo-recording)) .cinematic-backdrop-image,
+  :where(html:not(.demo-recording)) .cinematic-backdrop-lightning-flash {
     animation: none !important;
     transition: none;
   }
-  .cinematic-backdrop[data-demo-page="intro"] .cinematic-backdrop-intro { opacity: .68; }
-  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-tools { opacity: .57; }
-  .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-emergency { opacity: 0; }
+  :where(html:not(.demo-recording)) .cinematic-backdrop[data-demo-page="intro"] .cinematic-backdrop-intro { opacity: .68; }
+  :where(html:not(.demo-recording)) .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-tools { opacity: .57; }
+  :where(html:not(.demo-recording)) .cinematic-backdrop[data-demo-page="support"] .cinematic-backdrop-emergency { opacity: 0; }
 }
 
 @media (max-width: 760px) {

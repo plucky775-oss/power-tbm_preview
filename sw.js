@@ -1,22 +1,22 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v91-20261005-focus-bounds`;
+const CACHE_NAME = `${CACHE_PREFIX}v92-20261006-recording-media`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './subtitles.css?v=20261004-v87',
-  './subtitles.js?v=20261004-v87',
+  './subtitles.js?v=20261006-recording-v92',
   './subtitle-data.js?v=20261004-v87',
   './manifest.webmanifest',
-  './styles.css?v=20261005-focus-v91',
-  './app.js?v=20261003-subtitles-v85',
+  './styles.css?v=20261006-recording-v92',
+  './app.js?v=20261006-recording-v92',
   './safety4cut.css?v=20260923-hand-fix-v80',
   './demo-hands-v80.css',
   './demo-recorder-v81.css',
-  './demo-recorder-v81.js',
-  './safety4cut.js?v=20261001-original-video-v84',
+  './demo-recorder-v81.js?v=20261006-recording-v92',
+  './safety4cut.js?v=20261006-recording-v92',
   './pwa.js?v=20260816-exhibition-type-v70',
   './assets/audio/07-safety4cut-intro-v84.m4a',
   './assets/safety4cut/01-admin-v75.png',

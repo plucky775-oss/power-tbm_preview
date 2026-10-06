@@ -3,7 +3,7 @@
   const panel = document.getElementById('narrationSubtitles');
   const line = document.getElementById('subtitleLine');
   const toggle = document.getElementById('subtitleToggle');
-  const audio = document.getElementById('demoNarration');
+  const players = [document.getElementById('demoNarration'), document.getElementById('safetyExample')].filter(Boolean);
   if (!panel || !line || !toggle) return;
   const key = 'power-tbm-subtitles-enabled';
   const modeKey = 'power-tbm-subtitles-mode';
@@ -111,10 +111,13 @@
   });
   // currentTime is authoritative: seeks, pauses, rate changes and muted playback
   // must never advance the karaoke highlight using a separate timer.
-  ['timeupdate', 'seeked', 'loadeddata', 'pause'].forEach(event => {
-    audio?.addEventListener(event, () => render(audio.dataset.segment, audio.currentTime));
+  players.forEach(player => {
+    const active = () => player.dataset.segment && player.dataset.narrationActive !== 'false';
+    ['timeupdate', 'seeked', 'loadeddata', 'pause'].forEach(event => {
+      player.addEventListener(event, () => { if (active()) render(player.dataset.segment, player.currentTime); });
+    });
+    player.addEventListener('emptied', () => { if (active()) { lastId = ''; clear(); } });
   });
-  audio?.addEventListener('emptied', () => { lastId = ''; clear(); });
   window.PowerTBMSubtitles = {
     render,
     clear: () => { lastId = ''; lastTime = 0; clear(); }

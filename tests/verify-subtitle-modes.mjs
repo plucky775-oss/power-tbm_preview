@@ -22,7 +22,7 @@ function setup(saved = {}, storageUnavailable = false) {
     getBoundingClientRect() { return this.box; }
     querySelector() { return device; }
   }
-  const nodes = Object.fromEntries(['narrationSubtitles', 'subtitleLine', 'subtitleToggle', 'demoNarration', 'tourStage'].map(id => [id, new Element()]));
+  const nodes = Object.fromEntries(['narrationSubtitles', 'subtitleLine', 'subtitleToggle', 'demoNarration', 'safetyExample', 'tourStage'].map(id => [id, new Element()]));
   const device = new Element(); device.box = { left: 90, right: 420, top: 120 };
   nodes.tourStage.box = { left: 20, top: 90, width: 1400 };
   const document = {
@@ -89,6 +89,15 @@ noStorage.nodes.demoNarration.dataset.segment = '02-tbm-basic';
 noStorage.nodes.demoNarration.currentTime = 19;
 noStorage.nodes.demoNarration.dispatchEvent(new Event('seeked'));
 assert.match(noStorage.bubble.textContent, /공종/);
+noStorage.nodes.demoNarration.dataset.narrationActive = 'false';
+noStorage.nodes.safetyExample.dataset.segment = '08-safety4cut-example';
+noStorage.nodes.safetyExample.dataset.narrationActive = 'true';
+noStorage.nodes.safetyExample.currentTime = 19;
+noStorage.nodes.safetyExample.dispatchEvent(new Event('seeked'));
+assert.match(noStorage.bubble.textContent, /무전압/, 'paused visible video seeks update captions');
+noStorage.nodes.demoNarration.dispatchEvent(new Event('pause'));
+noStorage.nodes.demoNarration.dispatchEvent(new Event('emptied'));
+assert.match(noStorage.bubble.textContent, /무전압/, 'inactive audio events cannot overwrite video captions');
 console.log('PASS: existing highlight, three modes, immediate switches, media seek, persistence, legacy preference, storage failure, silent intervals, placement branches');
 
 // Every cue in every voice track must show identical, unabridged text in both modes.

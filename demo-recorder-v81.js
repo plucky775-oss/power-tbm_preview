@@ -67,11 +67,12 @@
     result = null;
   };
   const showResult = () => {
-    title.textContent = '녹화 영상 준비 완료';
+    title.textContent = result.warning ? '녹화 결과 확인 필요' : '녹화 영상 준비 완료';
     message.textContent = '화면과 소리를 확인한 뒤 영상을 저장하세요. 이 창을 닫아도 녹화 버튼으로 다시 열 수 있습니다.';
     preview.hidden = false;
     metadata.hidden = false;
-    metadata.textContent = `${elapsedText(result.duration)} · ${(result.size / 1024 / 1024).toFixed(1)} MB · ${result.extension.toUpperCase()}`;
+    metadata.textContent = `${elapsedText(result.duration)} · ${(result.size / 1024 / 1024).toFixed(1)} MB · ${result.extension === 'mp4' ? 'MP4 (H.264 / AAC)' : 'WebM (Opus)'}`;
+    if (result.extension === 'webm') message.textContent += ' 이 브라우저는 AAC 녹화를 지원하지 않아 WebM으로 저장합니다. Chrome·Edge에서 재생할 수 있습니다.';
     download.hidden = false;
     download.textContent = `영상 저장 (${result.extension.toUpperCase()})`;
     startButton.hidden = false;
@@ -83,14 +84,31 @@
     openDialog();
   };
   const stopTracks = (stream) => stream?.getTracks().forEach((track) => track.stop());
+  const inspectAudio = (run) => {
+    if (!run.analyser || run.hasAudio) return;
+    run.analyser.getFloatTimeDomainData(run.samples);
+    run.hasAudio = run.samples.some((value) => Math.abs(value) > .0001);
+  };
+  const releaseAudio = (run) => {
+    run.audioSource?.disconnect();
+    run.analyser?.disconnect();
+    run.audioContext?.close().catch(() => {});
+  };
   const finish = (run) => {
     if (session !== run) return;
     window.clearInterval(clock);
     clock = null;
+    inspectAudio(run);
+    if (run.analyser && !run.hasAudio) {
+      run.warning = [run.warning, '녹화에서 소리 신호가 감지되지 않았습니다. 탭 음소거를 해제하고 탭 오디오 공유를 켠 뒤 다시 녹화해 주세요.'].filter(Boolean).join(' ');
+    }
+    releaseAudio(run);
     stopTracks(run.stream);
     session = null;
     state = 'idle';
     document.body.classList.remove('demo-recording');
+    document.documentElement.classList.remove('demo-recording');
+    document.dispatchEvent(new CustomEvent('power-tbm:recording-stop'));
     updateButton();
     const type = run.recorder.mimeType || run.chunks[0]?.type;
     if (!run.chunks.length || !type || !/video\/(mp4|webm)/i.test(type)) {
@@ -131,7 +149,10 @@
     // An inactive recorder already has its final data/stop events queued.
   };
   const createRecorder = (stream) => {
-    const types = ['video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+    // A bare video/mp4 can select Opus audio, which some desktop MP4 players
+    // cannot decode. Only offer MP4 when H.264 + AAC can actually be encoded.
+    const types = ['video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4;codecs=avc1.640033,mp4a.40.2',
+      'video/webm;codecs=vp8,opus', 'video/webm;codecs=vp9,opus'];
     for (const mimeType of types) {
       if (!MediaRecorder.isTypeSupported(mimeType)) continue;
       try {
@@ -140,6 +161,25 @@
     }
     throw new Error('이 브라우저에서 지원하는 녹화 형식이 없습니다. PC의 최신 Chrome 또는 Edge에서 열어 주세요.');
   };
+  const prepareVideos = () => Promise.all([...document.querySelectorAll(
+    '#launchIntroVideo, #openingDemoVideo, [data-cinematic-page], #goldenRulesVideo, #safetyExample'
+  )].map((video) => new Promise((resolve, reject) => {
+    if (video.readyState >= 2) { resolve(); return; }
+    const finish = (error) => {
+      window.clearTimeout(timer);
+      video.removeEventListener('loadeddata', ready);
+      video.removeEventListener('error', failed);
+      error ? reject(error) : resolve();
+    };
+    const ready = () => finish();
+    const failed = () => finish(new Error('시연 영상을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 녹화해 주세요.'));
+    const timer = window.setTimeout(() => finish(new Error('영상 준비 시간이 초과되었습니다. 영상이 재생되는지 확인한 뒤 다시 녹화해 주세요.')), 20000);
+    video.addEventListener('loadeddata', ready, { once: true });
+    video.addEventListener('error', failed, { once: true });
+    video.preload = 'auto';
+    // preload=metadata may stop downloading before the first decoded frame.
+    video.load();
+  })));
   const startRecording = async () => {
     if (state !== 'idle') return;
     state = 'selecting';
@@ -149,7 +189,14 @@
     updateButton();
     let stream;
     let run;
+    let audioContext;
     try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        audioContext = new AudioContextClass();
+        // Resume inside the click gesture, before opening the native picker.
+        audioContext.resume().catch(() => {});
+      }
       // Called directly from the start button: the native picker requires a user gesture.
       stream = await navigator.mediaDevices.getDisplayMedia({
         video: { displaySurface: 'browser', width: { ideal: 1920 }, height: { ideal: 1440 }, frameRate: { ideal: 30, max: 30 } },
@@ -167,7 +214,18 @@
       if (surface && surface !== 'browser') throw new Error('이 Power TBM 탭을 선택해 주세요. 탭을 선택해야 시연 화면과 소리를 함께 녹화할 수 있습니다.');
       if (!audioTrack || audioTrack.readyState !== 'live') throw new Error('탭 소리가 공유되지 않았습니다. 이 Power TBM 탭을 선택하고 ‘탭 오디오 공유’를 켜 주세요.');
       const recorder = createRecorder(stream);
-      run = { stream, recorder, chunks: [], startedAt: performance.now(), warning: '' };
+      message.textContent = '배경영상·골든룰스11·4컷 교육영상을 준비하고 있습니다.';
+      await prepareVideos();
+      if (videoTrack.readyState !== 'live' || audioTrack.readyState !== 'live') throw new Error('영상 준비 중 화면 또는 소리 공유가 종료되었습니다. 다시 녹화해 주세요.');
+      run = { stream, recorder, chunks: [], startedAt: performance.now(), warning: '', audioContext };
+      if (audioContext?.state === 'running') {
+        run.audioSource = audioContext.createMediaStreamSource(new MediaStream([audioTrack]));
+        run.analyser = audioContext.createAnalyser();
+        run.analyser.fftSize = 2048;
+        run.samples = new Float32Array(run.analyser.fftSize);
+        run.hasAudio = false;
+        run.audioSource.connect(run.analyser); // Never feed captured sound back to speakers.
+      }
       session = run;
       recorder.addEventListener('dataavailable', (event) => {
         if (event.data?.size) run.chunks.push(event.data);
@@ -184,18 +242,23 @@
       recorder.start(1000);
       state = 'recording';
       document.body.classList.add('demo-recording');
+      document.documentElement.classList.add('demo-recording');
       updateButton();
-      clock = window.setInterval(updateButton, 1000);
+      clock = window.setInterval(() => { inspectAudio(run); updateButton(); }, 250);
       status.textContent = '화면과 소리 녹화를 시작했습니다.';
       document.dispatchEvent(new CustomEvent('power-tbm:recording-start'));
     } catch (error) {
       // Do not leave a screen/audio sharing session alive after cancel or setup failure.
       session = null;
       if (run && run.recorder.state !== 'inactive') run.recorder.stop();
+      if (run) releaseAudio(run);
+      else audioContext?.close().catch(() => {});
       stopTracks(stream);
       state = 'idle';
       window.clearInterval(clock);
       document.body.classList.remove('demo-recording');
+      document.documentElement.classList.remove('demo-recording');
+      document.dispatchEvent(new CustomEvent('power-tbm:recording-stop'));
       updateButton();
       const text = error.name === 'NotAllowedError' || error.name === 'AbortError'
         ? '화면 공유가 취소되었거나 허용되지 않았습니다. 녹화 시작을 눌러 다시 선택할 수 있습니다.'
@@ -225,6 +288,12 @@
     if (state !== 'recording') return;
     event.preventDefault();
     stopRecording();
+  });
+  document.addEventListener('power-tbm:playback-error', (event) => {
+    stopRecording(event.detail?.message || '시연 재생이 중단되어 녹화를 멈췄습니다.');
+  });
+  document.querySelectorAll('#launchIntroVideo, #openingDemoVideo, [data-cinematic-page], #goldenRulesVideo, #safetyExample').forEach((video) => {
+    video.addEventListener('error', () => stopRecording('시연 영상 재생 오류로 녹화를 멈췄습니다. 저장하기 전에 확인해 주세요.'));
   });
   window.addEventListener('beforeunload', (event) => {
     if (state !== 'recording' && state !== 'finishing') return;
