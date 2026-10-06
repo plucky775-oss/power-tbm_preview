@@ -80,3 +80,61 @@
   .demo-record-button { width: 44px; height: 42px; gap: 4px; }
   .demo-record-dialog { padding: 20px; }
 }
+
+.demo-record-aspect { display: grid; gap: 8px; margin-bottom: 20px; font-weight: 800; }
+.demo-record-aspect select {
+  width: 100%; min-height: 46px; padding: 10px 12px;
+  border: 1px solid #5b7789; border-radius: 9px;
+  color: #fff; background: #17374c; font: inherit;
+}
+.demo-record-aspect select:focus-visible { outline: 3px solid #ffd649; outline-offset: 3px; }
+
+/* Only recording uses the selected aspect. The canvas crops this live app rectangle,
+   so the surrounding desktop gutters are never part of the saved video. */
+body.demo-only-page.demo-recording {
+  position: fixed;
+  inset: 0;
+  width: min(100vw, calc(100dvh * 4 / 3));
+  height: min(100dvh, 75vw);
+  min-height: 0;
+  margin: auto;
+  transform: translateZ(0);
+  container-type: size;
+}
+body.demo-only-page.demo-recording[data-record-aspect="16:9"] {
+  width: min(100vw, calc(100dvh * 16 / 9));
+  height: min(100dvh, 56.25vw);
+}
+body.demo-recording .tour-shell { width: 100%; }
+body.demo-recording .tour-stage {
+  grid-template-columns: 34% minmax(0, 1fr);
+  gap: 3cqw;
+  padding: 1.5cqh 2cqw;
+}
+body.demo-recording .tour-device {
+  width: min(100%, calc((100cqh - 130px) * .44));
+  min-width: 0;
+  transform: translateY(-2cqh);
+}
+body.demo-recording.subtitles-enabled .tour-device {
+  width: min(100%, calc((100cqh - 250px) * .44));
+}
+body.demo-recording .demo-only-header.has-demo-recorder {
+  min-height: 7.2cqh;
+  padding: 6px 2cqw;
+  column-gap: 1cqw;
+}
+body.demo-recording .demo-only-brand { gap: 8px; }
+body.demo-recording .demo-only-brand b { font-size: clamp(16px, 1.65cqw, 23px); }
+body.demo-recording .demo-only-brand img { width: 3.8cqw; height: 3.8cqw; }
+body.demo-recording .demo-page-switch button { padding-inline: 4px; column-gap: 4px; }
+body.demo-recording .demo-page-switch button > span { min-width: 20px; }
+body.demo-recording .demo-page-switch button b { font-size: clamp(12px, 1.2cqw, 18px); }
+body.demo-recording .demo-only-header > #demoMute { min-width: 90px; padding-inline: 9px; }
+body.demo-recording .demo-only-developer { right: 3cqw; font-size: clamp(13px, 1.35cqw, 20px); }
+body.demo-recording :is(.tour-copy, .demo-explain, .meeting-explain, .support-explain) h3 {
+  font-size: clamp(28px, 5.5cqh, 60px);
+}
+body.demo-recording :is(.demo-explain, .meeting-explain, .support-explain) > p {
+  font-size: clamp(15px, 2.25cqh, 23px);
+}

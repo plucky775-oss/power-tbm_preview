@@ -39,13 +39,13 @@
   <link rel="stylesheet" href="styles.css?v=20261006-recording-v92">
   <link rel="stylesheet" href="safety4cut.css?v=20260923-hand-fix-v80">
   <link rel="stylesheet" href="demo-hands-v80.css?v=20261006-windows-hand-v93">
-  <link rel="stylesheet" href="demo-recorder-v81.css">
+  <link rel="stylesheet" href="demo-recorder-v81.css?v=20261006-recording-aspect-v95">
   <script src="safety4cut.js?v=20261006-recording-v92" defer></script>
   <link rel="stylesheet" href="subtitles.css?v=20261004-v87">
   <script src="subtitle-data.js?v=20261004-v87" defer></script>
   <script src="subtitles.js?v=20261006-recording-v92" defer></script>
   <script src="app.js?v=20261006-windows-hand-v93" defer></script>
-  <script src="demo-recorder-v81.js?v=20261006-recording-v92" defer></script>
+  <script src="demo-recorder-v81.js?v=20261006-recording-aspect-v95" defer></script>
   <script src="pwa.js?v=20260816-exhibition-type-v70" defer></script>
   <noscript>
     <style>
@@ -128,6 +128,13 @@
     <h2 id="demoRecordTitle">시연 영상 녹화</h2>
     <p id="demoRecordMessage">다음 창에서 이 영상 시연 탭을 선택하고 ‘탭 오디오 공유’를 켜 주세요. 전체 시연을 처음부터 녹화합니다.</p>
     <p class="demo-record-error" id="demoRecordError" role="alert" hidden></p>
+    <label class="demo-record-aspect" id="demoRecordAspectField" for="demoRecordAspect">
+      저장 화면 비율
+      <select id="demoRecordAspect">
+        <option value="16:9">16:9 · 와이드 화면 (1920×1080)</option>
+        <option value="4:3" selected>4:3 · 앱 화면 비율 (1440×1080)</option>
+      </select>
+    </label>
     <video class="demo-record-preview" id="demoRecordPreview" controls playsinline preload="metadata" hidden></video>
     <p class="demo-record-meta" id="demoRecordMeta" hidden></p>
     <div class="demo-record-actions">

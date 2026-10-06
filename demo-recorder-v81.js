@@ -17,6 +17,12 @@
   const preview = document.getElementById('demoRecordPreview');
   const metadata = document.getElementById('demoRecordMeta');
   const status = document.getElementById('demoRecordStatus');
+  const aspectField = document.getElementById('demoRecordAspectField');
+  const aspectSelect = document.getElementById('demoRecordAspect');
+  const presets = {
+    '16:9': { aspect: '16:9', width: 1920, height: 1080 },
+    '4:3': { aspect: '4:3', width: 1440, height: 1080 }
+  };
   let state = 'idle';
   let session = null;
   let result = null;
@@ -46,7 +52,9 @@
   };
   const showSetup = (error = '') => {
     title.textContent = '시연 영상 녹화';
-    message.textContent = '다음 창에서 이 Power TBM 탭을 선택하고 ‘탭 오디오 공유’를 켜 주세요. 전체 시연을 처음부터 녹화하고, 마지막 장면이 끝나면 자동으로 종료합니다.';
+    message.textContent = '저장할 화면 비율을 선택해 주세요. 다음 창에서 이 Power TBM 탭을 선택하고 ‘탭 오디오 공유’를 켜면, 선택한 비율로 전체 시연을 녹화하고 마지막 장면에서 자동으로 종료합니다.';
+    aspectField.hidden = false;
+    aspectSelect.disabled = false;
     startButton.hidden = false;
     startButton.disabled = false;
     startButton.textContent = '녹화 시작';
@@ -67,11 +75,12 @@
     result = null;
   };
   const showResult = () => {
+    aspectField.hidden = true;
     title.textContent = result.warning ? '녹화 결과 확인 필요' : '녹화 영상 준비 완료';
     message.textContent = '화면과 소리를 확인한 뒤 영상을 저장하세요. 이 창을 닫아도 녹화 버튼으로 다시 열 수 있습니다.';
     preview.hidden = false;
     metadata.hidden = false;
-    metadata.textContent = `${elapsedText(result.duration)} · ${(result.size / 1024 / 1024).toFixed(1)} MB · ${result.extension === 'mp4' ? 'MP4 (H.264 / AAC)' : 'WebM (Opus)'}`;
+    metadata.textContent = `${elapsedText(result.duration)} · ${result.preset.width}×${result.preset.height} (${result.preset.aspect}) · ${(result.size / 1024 / 1024).toFixed(1)} MB · ${result.extension === 'mp4' ? 'MP4 (H.264 / AAC)' : 'WebM (Opus)'}`;
     if (result.extension === 'webm') message.textContent += ' 이 브라우저는 AAC 녹화를 지원하지 않아 WebM으로 저장합니다. Chrome·Edge에서 재생할 수 있습니다.';
     download.hidden = false;
     download.textContent = `영상 저장 (${result.extension.toUpperCase()})`;
@@ -84,6 +93,40 @@
     openDialog();
   };
   const stopTracks = (stream) => stream?.getTracks().forEach((track) => track.stop());
+  // Capture the live tab (including videos), but encode only the selected app area.
+  // Requesting ideal display dimensions does not change a tab's aspect ratio.
+  const prepareRecordingVideo = async (run) => {
+    const video = document.createElement('video');
+    const canvas = document.createElement('canvas');
+    canvas.width = run.preset.width;
+    canvas.height = run.preset.height;
+    const context = canvas.getContext('2d', { alpha: false });
+    if (!context || !canvas.captureStream) throw new Error('이 브라우저에서 화면 비율 지정 녹화를 지원하지 않습니다. PC Chrome 또는 Edge에서 다시 시도해 주세요.');
+    run.captureVideo = video;
+    video.muted = true;
+    video.playsInline = true;
+    video.srcObject = new MediaStream(run.stream.getVideoTracks());
+    await video.play();
+    await new Promise((resolve) => window.requestAnimationFrame(resolve));
+    const draw = () => {
+      if (video.readyState < 2 || !video.videoWidth || !video.videoHeight) return;
+      const bounds = document.body.getBoundingClientRect();
+      const scaleX = video.videoWidth / window.innerWidth;
+      const scaleY = video.videoHeight / window.innerHeight;
+      context.drawImage(video, bounds.left * scaleX, bounds.top * scaleY,
+        bounds.width * scaleX, bounds.height * scaleY, 0, 0, canvas.width, canvas.height);
+    };
+    draw();
+    run.canvasStream = canvas.captureStream(30);
+    run.drawTimer = window.setInterval(draw, 1000 / 30);
+    return new MediaStream([...run.canvasStream.getVideoTracks(), ...run.stream.getAudioTracks()]);
+  };
+  const releaseRecordingVideo = (run) => {
+    window.clearInterval(run.drawTimer);
+    run.captureVideo?.pause();
+    if (run.captureVideo) run.captureVideo.srcObject = null;
+    stopTracks(run.canvasStream);
+  };
   const inspectAudio = (run) => {
     if (!run.analyser || run.hasAudio) return;
     run.analyser.getFloatTimeDomainData(run.samples);
@@ -103,10 +146,12 @@
       run.warning = [run.warning, '녹화에서 소리 신호가 감지되지 않았습니다. 탭 음소거를 해제하고 탭 오디오 공유를 켠 뒤 다시 녹화해 주세요.'].filter(Boolean).join(' ');
     }
     releaseAudio(run);
+    releaseRecordingVideo(run);
     stopTracks(run.stream);
     session = null;
     state = 'idle';
     document.body.classList.remove('demo-recording');
+    document.body.removeAttribute('data-record-aspect');
     document.documentElement.classList.remove('demo-recording');
     document.dispatchEvent(new CustomEvent('power-tbm:recording-stop'));
     updateButton();
@@ -128,11 +173,11 @@
     result = {
       url: URL.createObjectURL(blob), extension, size: blob.size,
       duration: (run.stoppedAt || performance.now()) - run.startedAt,
-      warning: run.warning
+      warning: run.warning, preset: run.preset
     };
     preview.src = result.url;
     download.href = result.url;
-    download.download = `Power_TBM_${stamp}.${extension}`;
+    download.download = `Power_TBM_${result.preset.aspect.replace(':', 'x')}_${stamp}.${extension}`;
     status.textContent = '녹화가 끝났습니다. 영상 저장 버튼을 눌러 저장하세요.';
     showResult();
   };
@@ -182,7 +227,9 @@
   })));
   const startRecording = async () => {
     if (state !== 'idle') return;
+    const preset = aspectSelect.value === '16:9' ? presets['16:9'] : presets['4:3'];
     state = 'selecting';
+    aspectSelect.disabled = true;
     startButton.disabled = true;
     closeButton.disabled = true;
     showError('');
@@ -213,11 +260,20 @@
       const surface = videoTrack.getSettings().displaySurface;
       if (surface && surface !== 'browser') throw new Error('이 Power TBM 탭을 선택해 주세요. 탭을 선택해야 시연 화면과 소리를 함께 녹화할 수 있습니다.');
       if (!audioTrack || audioTrack.readyState !== 'live') throw new Error('탭 소리가 공유되지 않았습니다. 이 Power TBM 탭을 선택하고 ‘탭 오디오 공유’를 켜 주세요.');
-      const recorder = createRecorder(stream);
       message.textContent = '배경영상·골든룰스11·4컷 교육영상을 준비하고 있습니다.';
       await prepareVideos();
       if (videoTrack.readyState !== 'live' || audioTrack.readyState !== 'live') throw new Error('영상 준비 중 화면 또는 소리 공유가 종료되었습니다. 다시 녹화해 주세요.');
-      run = { stream, recorder, chunks: [], startedAt: performance.now(), warning: '', audioContext };
+      run = { stream, chunks: [], warning: '', audioContext, preset };
+      preview.pause();
+      dialog.close();
+      document.body.setAttribute('data-record-aspect', preset.aspect);
+      document.body.classList.add('demo-recording');
+      document.documentElement.classList.add('demo-recording');
+      const recordingStream = await prepareRecordingVideo(run);
+      if (videoTrack.readyState !== 'live' || audioTrack.readyState !== 'live') throw new Error('화면 또는 소리 공유가 종료되었습니다. 다시 녹화해 주세요.');
+      const recorder = createRecorder(recordingStream);
+      run.recorder = recorder;
+      run.startedAt = performance.now();
       if (audioContext?.state === 'running') {
         run.audioSource = audioContext.createMediaStreamSource(new MediaStream([audioTrack]));
         run.analyser = audioContext.createAnalyser();
@@ -237,12 +293,8 @@
       });
       videoTrack.addEventListener('ended', () => stopRecording(), { once: true });
       audioTrack.addEventListener('ended', () => stopRecording('소리 공유가 종료되어 녹화를 멈췄습니다. 종료 전까지의 영상을 확인한 뒤 저장하세요.'), { once: true });
-      preview.pause();
-      dialog.close();
       recorder.start(1000);
       state = 'recording';
-      document.body.classList.add('demo-recording');
-      document.documentElement.classList.add('demo-recording');
       updateButton();
       clock = window.setInterval(() => { inspectAudio(run); updateButton(); }, 250);
       status.textContent = '화면과 소리 녹화를 시작했습니다.';
@@ -250,13 +302,14 @@
     } catch (error) {
       // Do not leave a screen/audio sharing session alive after cancel or setup failure.
       session = null;
-      if (run && run.recorder.state !== 'inactive') run.recorder.stop();
-      if (run) releaseAudio(run);
+      if (run?.recorder && run.recorder.state !== 'inactive') run.recorder.stop();
+      if (run) { releaseAudio(run); releaseRecordingVideo(run); }
       else audioContext?.close().catch(() => {});
       stopTracks(stream);
       state = 'idle';
       window.clearInterval(clock);
       document.body.classList.remove('demo-recording');
+      document.body.removeAttribute('data-record-aspect');
       document.documentElement.classList.remove('demo-recording');
       document.dispatchEvent(new CustomEvent('power-tbm:recording-stop'));
       updateButton();
