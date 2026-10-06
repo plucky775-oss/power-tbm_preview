@@ -1216,10 +1216,6 @@
   const clearStageTransitionTimers = () => {
     stageTransitionTimers.forEach((timer) => window.clearTimeout(timer));
     stageTransitionTimers = [];
-    if (guideStage) {
-      delete guideStage.dataset.pageTurn;
-      delete guideStage.dataset.turnDirection;
-    }
   };
 
   const clearSequenceTimer = ({ preserve = false } = {}) => {
@@ -1517,7 +1513,7 @@
     if (!stageTransitioning) startCurrentStageClock();
   };
 
-  const switchDemoStage = (page, { keepMode = false, forceRestart = false, immediate = false, turnDirection = 0 } = {}) => {
+  const switchDemoStage = (page, { keepMode = false, forceRestart = false, immediate = false } = {}) => {
     if (!guidePhone || !stageClassByPage[page] || guideChanging || stageTransitioning) return;
     if (!keepMode) demoMode = 'single';
     const activeClass = stageClassByPage[page];
@@ -1539,26 +1535,6 @@
     }
 
     stageTransitioning = true;
-    if (turnDirection && guideStage) {
-      // Fold the whole presentation around its edge; keep media and scene clocks
-      // still until the incoming page is flat. Reuse the normal transition lock.
-      openingDemoVideo?.pause();
-      stopGoldenRulesClock({ reset: false });
-      window.PowerTBMSubtitles?.clear();
-      guideStage.dataset.turnDirection = turnDirection > 0 ? 'next' : 'previous';
-      guideStage.dataset.pageTurn = 'out';
-      const swapTimer = window.setTimeout(() => {
-        applyDemoStage(page);
-        guideStage.dataset.pageTurn = 'in';
-      }, 220);
-      const finishTimer = window.setTimeout(() => {
-        clearStageTransitionTimers();
-        stageTransitioning = false;
-        startCurrentStageClock();
-      }, 460);
-      stageTransitionTimers = [swapTimer, finishTimer];
-      return;
-    }
     guidePhone.classList.add('stage-transitioning');
     guideStage?.classList.add('stage-transitioning');
 
@@ -1714,94 +1690,44 @@
     updateDemoPageButtons();
     updateGuide(index);
   }));
-  // One order for touch, mouse and keyboard, including opening and closing.
-  const pageOrder = ['intro', 'weather', 'meeting', 'support', 'safety', 'closing'];
-  const pageNames = ['시작 화면', '기상정보', 'TBM 회의록', '안전·현장도구', 'Safety 4-Cut', '마무리'];
-  const pageStatus = $('#pageTurnStatus');
-  const turnPage = (direction) => {
-    if (guideChanging || stageTransitioning) return;
-    const current = pageOrder.indexOf(demoPage);
-    if (current < 0) {
-      const target = currentGuide + direction;
-      if (target >= 0 && target < guideData.length) updateGuide(target);
-      return;
-    }
-    const target = current + direction;
-    if (target < 0 || target >= pageOrder.length) {
-      if (pageStatus) pageStatus.textContent = target < 0 ? '첫 페이지입니다.' : '마지막 페이지입니다.';
-      return;
-    }
-    switchDemoStage(pageOrder[target], { turnDirection: direction });
-    if (pageStatus) pageStatus.textContent = `${target + 1} / ${pageOrder.length} · ${pageNames[target]}`;
-  };
-  const isPageControl = (target) => target instanceof Element && Boolean(target.closest(
-    'button, a, input, select, textarea, [contenteditable]:not([contenteditable="false"]), [role="button"], [role="slider"], video[controls], audio[controls], .safety-steps, [data-no-swipe]'
-  ));
+  $('#guidePrev')?.addEventListener('click', () => {
+    if (demoPage === 'intro') activateSupportPage();
+    else if (demoPage === 'closing') activateSafetyPage();
+    else if (demoPage === 'safety') activateSupportPage();
+    else if (demoPage === 'support') activateMeetingPage();
+    else if (demoPage === 'meeting') activateWeatherPage();
+    else if (demoPage === 'weather') activateSupportPage();
+    else updateGuide(currentGuide - 1);
+  });
+  $('#guideNext')?.addEventListener('click', () => {
+    if (demoPage === 'intro') activateWeatherPage();
+    else if (demoPage === 'weather') activateMeetingPage();
+    else if (demoPage === 'meeting') activateSupportPage();
+    else if (demoPage === 'support') activateSafetyPage();
+    else if (demoPage === 'safety') activateClosingPage();
+    else if (demoPage === 'closing') activateIntroPage();
+    else updateGuide(currentGuide + 1);
+  });
   guideStage?.addEventListener('keydown', (event) => {
-    if (isPageControl(event.target) || event.altKey || event.ctrlKey || event.metaKey) return;
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-      event.preventDefault();
-      turnPage(event.key === 'ArrowRight' ? 1 : -1);
+    if (event.key === 'ArrowLeft') {
+      if (demoPage === 'intro') activateSupportPage();
+      else if (demoPage === 'closing') activateSafetyPage();
+      else if (demoPage === 'safety') activateSupportPage();
+      else if (demoPage === 'support') activateMeetingPage();
+      else if (demoPage === 'meeting') activateWeatherPage();
+      else if (demoPage === 'weather') activateSupportPage();
+      else updateGuide(currentGuide - 1);
+    }
+    if (event.key === 'ArrowRight') {
+      if (demoPage === 'intro') activateWeatherPage();
+      else if (demoPage === 'weather') activateMeetingPage();
+      else if (demoPage === 'meeting') activateSupportPage();
+      else if (demoPage === 'support') activateSafetyPage();
+      else if (demoPage === 'safety') activateClosingPage();
+      else if (demoPage === 'closing') activateIntroPage();
+      else updateGuide(currentGuide + 1);
     }
   });
-
-  if (guideStage) {
-    let swipe = null;
-    const resetSwipe = () => {
-      const previous = swipe;
-      swipe = null;
-      guideStage.classList.remove('is-page-dragging');
-      if (previous && guideStage.hasPointerCapture?.(previous.id)) {
-        guideStage.releasePointerCapture(previous.id);
-      }
-    };
-    // A second finger anywhere cancels navigation and leaves pinch zoom alone.
-    document.addEventListener('pointerdown', (event) => {
-      if (swipe && swipe.id !== event.pointerId) resetSwipe();
-    }, { capture: true, passive: true });
-    guideStage.addEventListener('pointerdown', (event) => {
-      if (!event.isPrimary || event.button !== 0 || isPageControl(event.target) ||
-          guideChanging || stageTransitioning) return;
-      // Leave the system's very-edge back/forward gesture to Safari.
-      if (event.pointerType === 'touch' && (event.clientX < 18 || event.clientX > window.innerWidth - 18)) return;
-      swipe = { id: event.pointerId, x: event.clientX, y: event.clientY, axis: null, page: demoPage };
-    }, { passive: true });
-    window.addEventListener('pointermove', (event) => {
-      if (!swipe || event.pointerId !== swipe.id) return;
-      const dx = event.clientX - swipe.x;
-      const dy = event.clientY - swipe.y;
-      if (!swipe.axis) {
-        if (Math.max(Math.abs(dx), Math.abs(dy)) < 12) return;
-        if (Math.abs(dx) <= Math.abs(dy) * 1.35) {
-          resetSwipe();
-          return;
-        }
-        swipe.axis = 'horizontal';
-        guideStage.classList.add('is-page-dragging');
-        guideStage.setPointerCapture?.(event.pointerId);
-      }
-      if (event.cancelable) event.preventDefault();
-    }, { passive: false });
-    window.addEventListener('pointerup', (event) => {
-      if (!swipe || event.pointerId !== swipe.id) return;
-      const gesture = swipe;
-      const dx = event.clientX - gesture.x;
-      const dy = event.clientY - gesture.y;
-      const threshold = Math.max(44, Math.min(96, guideStage.clientWidth * .08));
-      resetSwipe();
-      if (gesture.axis === 'horizontal' && Math.abs(dx) >= threshold &&
-          Math.abs(dx) > Math.abs(dy) * 1.35 && gesture.page === demoPage) {
-        turnPage(dx < 0 ? 1 : -1);
-      }
-    });
-    window.addEventListener('pointercancel', resetSwipe);
-    guideStage.addEventListener('lostpointercapture', resetSwipe);
-    window.addEventListener('blur', resetSwipe);
-    document.addEventListener('visibilitychange', resetSwipe);
-    guideStage.addEventListener('dragstart', (event) => {
-      if (!isPageControl(event.target)) event.preventDefault();
-    });
-  }
   demoToggle?.addEventListener('click', () => {
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'safety' && demoPage !== 'closing' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
