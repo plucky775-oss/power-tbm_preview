@@ -38,13 +38,13 @@
   <link rel="preload" as="image" href="assets/background/power-tbm-lightning-opening-v62.webp" type="image/webp">
   <link rel="stylesheet" href="styles.css?v=20261006-recording-v92">
   <link rel="stylesheet" href="safety4cut.css?v=20260923-hand-fix-v80">
-  <link rel="stylesheet" href="demo-hands-v80.css">
+  <link rel="stylesheet" href="demo-hands-v80.css?v=20261006-windows-hand-v93">
   <link rel="stylesheet" href="demo-recorder-v81.css">
   <script src="safety4cut.js?v=20261006-recording-v92" defer></script>
   <link rel="stylesheet" href="subtitles.css?v=20261004-v87">
   <script src="subtitle-data.js?v=20261004-v87" defer></script>
   <script src="subtitles.js?v=20261006-recording-v92" defer></script>
-  <script src="app.js?v=20261006-recording-v92" defer></script>
+  <script src="app.js?v=20261006-windows-hand-v93" defer></script>
   <script src="demo-recorder-v81.js?v=20261006-recording-v92" defer></script>
   <script src="pwa.js?v=20260816-exhibition-type-v70" defer></script>
   <noscript>
@@ -202,9 +202,9 @@
                   </div>
                   <span class="demo-ripple demo-ripple-alert" aria-hidden="true"></span>
                   <span class="demo-ripple demo-ripple-weather" aria-hidden="true"></span>
-                  <span class="demo-hand demo-hand-alert" aria-hidden="true">👆🏻</span>
-                  <span class="demo-hand demo-hand-tap" aria-hidden="true">👆🏻</span>
-                  <span class="demo-hand demo-hand-swipe" aria-hidden="true">👆🏻</span>
+                  <span class="demo-hand demo-hand-alert" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
+                  <span class="demo-hand demo-hand-tap" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
+                  <span class="demo-hand demo-hand-swipe" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
                   <span class="demo-focus demo-highlight-box demo-highlight-critical demo-focus-alert-summary" aria-hidden="true"></span>
                   <span class="demo-focus demo-highlight-box demo-highlight-critical demo-focus-alert-detail" aria-hidden="true"></span>
                   <span class="demo-focus demo-highlight-box demo-focus-weather-card" aria-hidden="true"></span>
@@ -218,7 +218,7 @@
                   <span class="demo-focus demo-highlight-box demo-focus-link-radar" aria-hidden="true"></span>
                   <span class="demo-focus demo-highlight-box demo-highlight-critical demo-focus-link-alert" aria-hidden="true"></span>
                   <span class="demo-link-ripple" aria-hidden="true"></span>
-                  <span class="demo-hand demo-hand-links" aria-hidden="true">👆🏻</span>
+                  <span class="demo-hand demo-hand-links" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
                   <div class="demo-caption" aria-hidden="true">
                     <span class="demo-caption-alert">기상특보를 먼저 눌러 펼칩니다</span>
                     <span class="demo-caption-alert-open">산업분야 조치사항을 확인합니다</span>
@@ -382,8 +382,8 @@
                   </div>
 
                   <span class="meeting-touch-ripple" aria-hidden="true"></span>
-                  <span class="meeting-hand" aria-hidden="true">👆🏻</span>
-                  <span class="meeting-ai-swipe-hand" aria-hidden="true">👆🏻</span>
+                  <span class="meeting-hand" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
+                  <span class="meeting-ai-swipe-hand" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
                   <div class="meeting-caption" aria-hidden="true">
                     <span class="meeting-caption-home">홈에서 TBM 회의록을 선택합니다</span>
                     <span class="meeting-caption-menu">새 회의록 작성을 시작합니다</span>
@@ -451,12 +451,12 @@
                     <span class="support-focus demo-highlight-box support-focus-location-consent"></span>
                   </div>
 
-                  <span class="support-hand support-hand-safety" aria-hidden="true">👆🏻</span>
-                  <span class="support-hand support-hand-risk" aria-hidden="true">👆🏻</span>
-                  <span class="support-hand support-hand-back" aria-hidden="true">👆🏻</span>
-                  <span class="support-hand support-hand-golden" aria-hidden="true">👆🏻</span>
-                  <span class="support-hand support-hand-tools" aria-hidden="true">👆🏻</span>
-                  <span class="support-hand support-hand-emergency" aria-hidden="true">👆🏻</span>
+                  <span class="support-hand support-hand-safety" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
+                  <span class="support-hand support-hand-risk" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
+                  <span class="support-hand support-hand-back" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
+                  <span class="support-hand support-hand-golden" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
+                  <span class="support-hand support-hand-tools" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
+                  <span class="support-hand support-hand-emergency" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
                   <span class="support-ripple support-ripple-safety" aria-hidden="true"></span>
                   <span class="support-ripple support-ripple-risk" aria-hidden="true"></span>
                   <span class="support-ripple support-ripple-back" aria-hidden="true"></span>
@@ -484,7 +484,7 @@
                     <div class="safety-screen-canvas">
                       <img id="safetyScreenshot" src="assets/safety4cut/01-admin-v75.png" alt="Power TBM 관리자 메뉴의 4컷카툰 제작" width="1179" height="2556" decoding="async">
                       <span class="safety-focus demo-highlight-box" aria-hidden="true"></span>
-                      <span class="safety-hand" aria-hidden="true">👆🏻</span>
+                      <span class="safety-hand" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
                     </div>
                   </div>
                   <div class="safety-video-shell">

@@ -13,3 +13,13 @@
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
+
+/* Adjust only the Windows glyph; the parent keeps its tap/swipe coordinates,
+   timing and press scale. Apple and Android retain their original rendering. */
+.windows-hands .guide-phone .demo-hand-glyph {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(.70);
+  transform-origin: 52% 12%;
+}

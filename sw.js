@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v92-20261006-recording-media`;
+const CACHE_NAME = `${CACHE_PREFIX}v93-20261006-windows-hand`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
@@ -11,9 +11,9 @@ const PRECACHE_URLS = [
   './subtitle-data.js?v=20261004-v87',
   './manifest.webmanifest',
   './styles.css?v=20261006-recording-v92',
-  './app.js?v=20261006-recording-v92',
+  './app.js?v=20261006-windows-hand-v93',
   './safety4cut.css?v=20260923-hand-fix-v80',
-  './demo-hands-v80.css',
+  './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css',
   './demo-recorder-v81.js?v=20261006-recording-v92',
   './safety4cut.js?v=20261006-recording-v92',

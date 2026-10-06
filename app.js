@@ -5,6 +5,8 @@
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   let reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+  // Segoe UI's pointing hand is wider than Apple's glyph at the same font size.
+  document.documentElement.classList.toggle('windows-hands', /^Win/i.test(navigator.userAgentData?.platform || navigator.platform || ''));
 
   const header = $('#siteHeader');
   const progress = $('.scroll-progress span');
