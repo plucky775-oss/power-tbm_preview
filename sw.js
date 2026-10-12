@@ -1,25 +1,25 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v95-20261006-recording-aspect`;
+const CACHE_NAME = `${CACHE_PREFIX}v96-20261013-main-menu`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261006-recording-v92',
-  './subtitle-data.js?v=20261004-v87',
+  './subtitle-data.js?v=20261013-main-menu-v96',
   './manifest.webmanifest',
   './styles.css?v=20261006-recording-v92',
-  './app.js?v=20261006-windows-hand-v93',
-  './safety4cut.css?v=20260923-hand-fix-v80',
+  './app.js?v=20261013-main-menu-v96',
+  './safety4cut.css?v=20261013-main-menu-v96',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css?v=20261006-recording-aspect-v95',
   './demo-recorder-v81.js?v=20261006-recording-aspect-v95',
-  './safety4cut.js?v=20261006-recording-v92',
+  './safety4cut.js?v=20261013-main-menu-v96',
   './pwa.js?v=20260816-exhibition-type-v70',
-  './assets/audio/07-safety4cut-intro-v84.m4a',
-  './assets/safety4cut/01-admin-v75.png',
+  './assets/audio/07-safety4cut-intro-v96.m4a',
+  './assets/safety4cut/01-main-menu-v96.png',
   './assets/safety4cut/02-upload-v75.png',
   './assets/safety4cut/06-cartoon.jpg',
   './assets/safety4cut/07-realistic.jpg',

@@ -92,7 +92,7 @@ const finishMedia = h => {
 
 {
   const h = harness(); h.api.prepare(0); h.api.start();
-  assert.match(h.audio.src, /intro-v84\.m4a$/);
+  assert.match(h.audio.src, /intro-v96\.m4a$/);
   finishMedia(h);
   assert.equal(h.api.state().index, 1);
   assert.equal(h.media, h.video, 'visible video must own both picture and original audio');
@@ -185,9 +185,10 @@ const cacheContext = vm.createContext({ self: { addEventListener() {} }, URL, Ma
 vm.runInContext(read('sw.js'), cacheContext);
 const cached = vm.runInContext('PRECACHE_URLS', cacheContext);
 assert(cached.includes('./assets/safety4cut/09-ai-example-v84.mp4'));
-assert(cached.includes('./assets/audio/07-safety4cut-intro-v84.m4a'));
-assert(cached.includes('./app.js?v=20261006-windows-hand-v93'));
+assert(cached.includes('./assets/audio/07-safety4cut-intro-v96.m4a'));
+assert(cached.includes('./app.js?v=20261013-main-menu-v96'));
 assert(cached.includes('./subtitles.js?v=20261006-recording-v92'));
-for (const path of ['subtitles.css','subtitle-data.js']) assert(cached.includes(`./${path}?v=20261004-v87`));
-assert(cached.includes('./safety4cut.js?v=20261006-recording-v92'));
+assert(cached.includes('./subtitles.css?v=20261004-v87'));
+assert(cached.includes('./subtitle-data.js?v=20261013-main-menu-v96'));
+assert(cached.includes('./safety4cut.js?v=20261013-main-menu-v96'));
 console.log('PASS: original bytes, single video/audio clock, intro handoff, no rewind on error, stale events, mute, pause/resume, hidden tab, fallback, recording motion, Golden Rules retry, cache paths');

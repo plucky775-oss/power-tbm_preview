@@ -66,6 +66,14 @@
   opacity: var(--tap-opacity, 0);
   transform: translate(-50%, -50%) scale(var(--tap-scale, 1));
 }
+/* Keep the finger inside the bottom menu card on every phone-frame size. */
+.safety-demo[data-scene="0"] .safety-screen-canvas { container-type: inline-size; }
+.guide-phone .safety-demo[data-scene="0"] .safety-hand {
+  width: min(var(--demo-hand-size), 26cqw);
+  height: min(var(--demo-hand-size), 26cqw);
+  font-size: min(var(--demo-hand-size), 26cqw);
+}
+.safety-demo[data-scene="0"] .safety-focus { border-radius: 7cqw; }
 .safety-caption {
   position: absolute;
   inset: auto 4% 3.5%;
