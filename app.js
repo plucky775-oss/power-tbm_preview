@@ -365,7 +365,7 @@
     safety: [
       {
         id: '07-safety4cut-intro',
-        src: 'assets/audio/07-safety4cut-intro-v96.m4a',
+        src: 'assets/audio/07-safety4cut-intro-v97.m4a',
         duration: 38.037,
         cues: [[0, 0], [38.037, 38037]]
       },
