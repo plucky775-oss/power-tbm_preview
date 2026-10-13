@@ -76,7 +76,9 @@ function harness({ reducedMotion = true, saveData = false } = {}) {
     golden() { demoPage = 'support'; guidePhone.classList.add('support-demo-active'); syncGoldenRulesVideo(27000); },
     fail: (error) => handleNarrationFailure(error, narrationRunToken),
     visuals: () => ({ requested: narrationRequested, state: narrationState, reduced: reduceMotion }),
-    state: () => ({ page: demoPage, index: narrationSegmentIndex, paused: demoPaused })
+    transition(value) { stageTransitioning = value; },
+    launched() { launchChoiceMade = true; },
+    state: () => ({ page: demoPage, index: narrationSegmentIndex, paused: demoPaused, mode: demoMode })
   };`;
   vm.runInContext(read('app.js').replace(/\}\)\(\);\s*$/, `${expose}\n})();`), context);
   return { api: window.testApp, safety: window.PowerTBMSafety, element, document,
@@ -89,6 +91,79 @@ const finishMedia = h => {
   h.media.currentTime = h.media.duration; h.media.ended = true;
   h.media.dispatchEvent(new Event('ended'));
 };
+
+// Dispatch real registered surface listeners without depending on layout.
+const surfaceTarget = (control = false, inside = true) => ({
+  closest: selector => selector.startsWith('#tour') ? (inside ? {} : null) : (control ? {} : null)
+});
+const surfaceEvent = (h, type, target, props = {}) => {
+  const event = new Event(type, { cancelable: true });
+  Object.defineProperty(event, 'target', { value: target });
+  Object.assign(event, { clientX: 10, clientY: 10 }, props);
+  h.document.dispatchEvent(event);
+};
+{
+  const h = harness(); h.api.prepare(0); h.api.start();
+  h.media.currentTime = 4.5;
+  const surface = surfaceTarget();
+  surfaceEvent(h, 'pointerdown', surface);
+  surfaceEvent(h, 'click', surface);
+  assert.equal(h.api.state().paused, true, 'central tap pauses narration');
+  assert.equal(h.media.paused, true);
+  assert.equal(h.element('#demoPauseHint').hidden, false);
+  surfaceEvent(h, 'pointerdown', surface);
+  surfaceEvent(h, 'click', surface);
+  assert.equal(h.api.state().paused, false, 'second tap resumes');
+  assert.equal(h.media.currentTime, 4.5, 'resume never rewinds');
+  assert.equal(h.element('#demoPauseHint').hidden, true);
+  for (const target of [surfaceTarget(true), surfaceTarget(false, false)]) {
+    surfaceEvent(h, 'pointerdown', target); surfaceEvent(h, 'click', target);
+    assert.equal(h.api.state().paused, false, 'controls and header must not toggle playback');
+  }
+  surfaceEvent(h, 'pointerdown', surface);
+  surfaceEvent(h, 'pointermove', surface, { clientX: 40 });
+  surfaceEvent(h, 'click', surface);
+  assert.equal(h.api.state().paused, false, 'drag/scroll is not a tap');
+  surfaceEvent(h, 'pointerdown', surface); surfaceEvent(h, 'pointercancel', surface);
+  surfaceEvent(h, 'click', surface);
+  assert.equal(h.api.state().paused, false, 'cancelled touch is ignored');
+  h.api.transition(true);
+  surfaceEvent(h, 'pointerdown', surface); surfaceEvent(h, 'click', surface);
+  assert.equal(h.api.state().paused, false, 'transition cannot be interrupted');
+  h.api.transition(false);
+  const key = new Event('keydown', { cancelable: true });
+  Object.assign(key, { key: ' ' }); h.element('.tour-stage').dispatchEvent(key);
+  assert.equal(h.api.state().paused, true, 'keyboard pause works');
+  assert.equal(key.defaultPrevented, true, 'space does not scroll');
+}
+{
+  const h = harness(); h.api.prepare(1); h.api.start();
+  h.video.currentTime = 12;
+  surfaceEvent(h, 'click', surfaceTarget());
+  assert.equal(h.video.paused, true, 'original safety video pauses with narration');
+  surfaceEvent(h, 'click', surfaceTarget());
+  assert.equal(h.video.paused, false);
+  assert.equal(h.video.currentTime, 12);
+}
+for (const [menu, page, next] of [
+  ['weatherDemoPage', 'weather', 'meeting'], ['meetingDemoPage', 'meeting', 'support'],
+  ['supportDemoPage', 'support', 'safety'], ['safetyDemoPage', 'safety', 'closing']
+]) {
+  const h = harness(); h.api.prepare(0);
+  h.element('#' + menu).click();
+  assert.equal(h.api.state().page, page);
+  assert.equal(h.api.state().mode, 'sequence', 'each menu starts continuous playback');
+  for (let i = 0; i < 12 && h.api.state().page === page; i++) finishMedia(h);
+  assert.equal(h.api.state().page, next, menu + ' continues into the next chapter');
+}
+{
+  const h = harness(); h.api.prepare(0, false); h.api.launched();
+  surfaceEvent(h, 'click', surfaceTarget());
+  assert.equal(h.api.state().paused, true, 'silent fallback can also be paused');
+  surfaceEvent(h, 'click', surfaceTarget());
+  assert.equal(h.api.state().paused, false);
+}
+console.log('PASS: central tap, resume position, controls excluded, drag/cancel guards, keyboard, video pause, silent fallback, every menu continues');
 
 {
   const h = harness(); h.api.prepare(0); h.api.start();
@@ -186,7 +261,7 @@ vm.runInContext(read('sw.js'), cacheContext);
 const cached = vm.runInContext('PRECACHE_URLS', cacheContext);
 assert(cached.includes('./assets/safety4cut/09-ai-example-v84.mp4'));
 assert(cached.includes('./assets/audio/07-safety4cut-intro-v97.m4a'));
-assert(cached.includes('./app.js?v=20261013-safety-title-v97'));
+assert(cached.includes('./app.js?v=20261013-touch-pause-v98'));
 assert(cached.includes('./subtitles.js?v=20261006-recording-v92'));
 assert(cached.includes('./subtitles.css?v=20261004-v87'));
 assert(cached.includes('./subtitle-data.js?v=20261013-safety-title-v97'));

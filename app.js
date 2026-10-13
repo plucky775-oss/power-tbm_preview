@@ -1278,6 +1278,11 @@
   };
 
   const updateDemoButton = () => {
+    const pauseHint = $('#demoPauseHint');
+    if (pauseHint) pauseHint.hidden = !demoPaused;
+    guideStage?.setAttribute('aria-label', demoPaused
+      ? '시연 일시정지 중. 터치하거나 스페이스 키를 누르면 계속 재생합니다.'
+      : '자동 시연. 터치하거나 스페이스 키를 누르면 일시정지합니다.');
     if (!demoToggle) return;
     demoToggle.setAttribute('aria-pressed', String(demoPaused));
     const playingLabel = demoMode === 'sequence' ? '전체 시연 일시정지' : '시연 일시정지';
@@ -1515,7 +1520,8 @@
 
   const switchDemoStage = (page, { keepMode = false, forceRestart = false, immediate = false } = {}) => {
     if (!guidePhone || !stageClassByPage[page] || guideChanging || stageTransitioning) return;
-    if (!keepMode) demoMode = 'single';
+    // A menu selection starts the continuous tour at that chapter.
+    if (!keepMode) demoMode = 'sequence';
     const activeClass = stageClassByPage[page];
     const alreadyActive = demoPage === page && guidePhone.classList.contains(activeClass);
     if (alreadyActive && !forceRestart) {
@@ -1728,7 +1734,8 @@
       else updateGuide(currentGuide + 1);
     }
   });
-  demoToggle?.addEventListener('click', () => {
+  const toggleDemoPlayback = () => {
+    if (stageTransitioning || guideChanging) return;
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'safety' && demoPage !== 'closing' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
     guidePhone.classList.toggle('is-paused', demoPaused);
@@ -1781,6 +1788,32 @@
       else scheduleSequenceAdvance({ reset: false });
     }
     updateDemoButton();
+  };
+  demoToggle?.addEventListener('click', toggleDemoPlayback);
+
+  const playbackControlSelector = 'button, a, input, select, textarea, summary, [role="button"], [role="tab"], [role="slider"], [contenteditable="true"], video[controls], audio[controls]';
+  const isPlaybackSurface = (target) => Boolean(target?.closest?.('#tour, #narrationSubtitles, #subtitleBubble'))
+    && !target.closest(playbackControlSelector);
+  let surfacePointer = null;
+  let surfaceDragged = false;
+  document.addEventListener('pointerdown', (event) => {
+    surfacePointer = isPlaybackSurface(event.target) ? { x: event.clientX, y: event.clientY } : null;
+    surfaceDragged = false;
+  });
+  document.addEventListener('pointermove', (event) => {
+    if (surfacePointer && Math.hypot(event.clientX - surfacePointer.x, event.clientY - surfacePointer.y) > 12) surfaceDragged = true;
+  });
+  document.addEventListener('pointercancel', () => { surfacePointer = null; surfaceDragged = true; });
+  document.addEventListener('click', (event) => {
+    if (!isPlaybackSurface(event.target) || event.defaultPrevented || surfaceDragged
+      || (!narrationRequested && !launchChoiceMade) || window.getSelection?.()?.isCollapsed === false) return;
+    toggleDemoPlayback();
+  });
+  guideStage?.addEventListener('keydown', (event) => {
+    if ((event.key !== ' ' && event.key !== 'Enter') || event.repeat
+      || event.target?.closest?.(playbackControlSelector) || (!narrationRequested && !launchChoiceMade)) return;
+    event.preventDefault();
+    toggleDemoPlayback();
   });
   demoReplay?.addEventListener('click', () => {
     if (demoMode === 'sequence') activateSequence({ userInitiated: true });
@@ -1791,7 +1824,7 @@
   });
   demoMute?.addEventListener('click', () => {
     if (narrationRequested && demoPaused && ['blocked', 'error'].includes(narrationState)) {
-      demoToggle?.click();
+      toggleDemoPlayback();
       return;
     }
     if (!narrationRequested || !narrationUnlocked || narrationState === 'blocked' || narrationState === 'error') {
