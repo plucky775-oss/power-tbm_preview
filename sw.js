@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v105-20261016-subtitle-clock`;
+const CACHE_VERSION = `${CACHE_PREFIX}v106-20261016-hide-tip`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -15,7 +15,7 @@ const PRECACHE_URLS = [
   './subtitles.js?v=20261016-subtitle-clock-v105',
   './subtitle-data.js?v=20261013-safety-title-v97',
   './manifest.webmanifest',
-  './styles.css?v=20261013-touch-pause-v98',
+  './styles.css?v=20261016-hide-tip-v106',
   './app.js?v=20261016-continuous-v104',
   './safety4cut.css?v=20261013-safety-title-v97',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',

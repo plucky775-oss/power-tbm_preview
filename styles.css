@@ -5420,6 +5420,11 @@ body { background: #fff; }
   overflow: hidden;
 }
 
+/* Keep the manual guide, including its yellow tip, out of every tour transition. */
+.demo-only-page .tour-stage.sequence-mode .tour-copy {
+  display: none;
+}
+
 .demo-only-page .demo-explanations,
 .demo-only-page .meeting-explanations,
 .demo-only-page .support-explanations {
