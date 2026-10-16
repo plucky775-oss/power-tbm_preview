@@ -1,5 +1,6 @@
 /* Only active on webOS/SmartTV or with ?tv=1. */
-.tv-media-player {
+/* Override the desktop audio-only #demoNarration { display: none } rule. */
+.tbm-tv #demoNarration.tv-media-player {
   position: fixed;
   display: block;
   max-width: none;

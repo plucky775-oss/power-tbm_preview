@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v100-20261016-stable`;
+const CACHE_VERSION = `${CACHE_PREFIX}v101-20261016-visible-player`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -9,7 +9,7 @@ const PRECACHE_URLS = [
   './',
   './index.html',
   './tv-compat.js?v=20261016-stable-v100',
-  './tv-compat.css?v=20261016-stable-v100',
+  './tv-compat.css?v=20261016-visible-player-v101',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261016-stable-v100',
   './subtitle-data.js?v=20261013-safety-title-v97',
