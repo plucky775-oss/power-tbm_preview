@@ -126,6 +126,33 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
    assert.ok(e.window.PowerTBMTV.localTime(entry)<.4,'subtitle clock must be chapter-local');
   }
  });
+ await test('TV media events keep chapter-local captions visible between animation frames', async () => {
+  for (const mode of ['karaoke', 'bubble']) {
+   const e=environment();e.click('meetingDemoPage');await e.tick(2000);
+   const select=e.el('subtitleToggle');select.value=mode;select.dispatchEvent({type:'change'});
+   const output=e.el(mode==='bubble'?'subtitleBubble':'subtitleLine'),m=e.el('demoNarration');
+   const text=output.textContent,children=[...output.children];
+   assert.ok(text,'the meeting cue must be visible before native media events');
+   for(const type of ['timeupdate','seeked','loadeddata','pause']) {
+    m.dispatchEvent({type});
+    assert.equal(output.textContent,text,mode+' cleared or replaced its cue on '+type);
+    assert.equal(output.hidden,false,mode+' hid its cue on '+type);
+    assert.deepEqual(output.children,children,'unchanged karaoke words must retain their DOM nodes');
+   }
+   tap(e);await e.tick(500);
+   assert.equal(output.textContent,text,'pausing must preserve the current cue without another animation frame');
+   // The media event can precede the frame that updates dataset.segment.
+   for(const entry of timeline.segments) {
+    const cue=e.window.PowerTBMSubtitleData[entry.id][0],local=(cue.start+cue.end)/2;
+    m._time=entry.start+local;
+    m.dispatchEvent({type:'seeked'});
+    assert.equal(output.textContent,cue.words.map(word=>word.text).join(' '),mode+' used a stale chapter at '+entry.id);
+   }
+   const held=output.textContent;m.seeking=true;m._time=1;m.dispatchEvent({type:'timeupdate'});
+   assert.equal(output.textContent,held,'an unfinished seek must not flash a different cue');
+   m.seeking=false;
+  }
+ });
  await test('A chapter selected before metadata waits for its own seek without jumping to opening', async () => {
   const e=environment(),m=e.el('demoNarration');
   m.readyState=0;m.preventMetadata=true;m.permanentStall=true;

@@ -118,7 +118,19 @@
   players.forEach(player => {
     const active = () => player.dataset.segment && player.dataset.narrationActive !== 'false';
     ['timeupdate', 'seeked', 'loadeddata', 'pause'].forEach(event => {
-      player.addEventListener(event, () => { if (active()) render(player.dataset.segment, player.currentTime); });
+      player.addEventListener(event, () => {
+        if (!active()) return;
+        const tv = window.PowerTBMTV;
+        if (tv?.enabled && player === tv.media) {
+          // The continuous file has an absolute clock, but subtitle cues are
+          // chapter-local. Native events can precede the frame that updates
+          // dataset.segment; use the same media timeline as the visual clock.
+          const segment = tv.segmentAtTime();
+          if (segment) render(segment.id, tv.localTime(segment));
+          return;
+        }
+        render(player.dataset.segment, player.currentTime);
+      });
     });
     player.addEventListener('emptied', () => { if (active()) { lastId = ''; clear(); } });
   });
