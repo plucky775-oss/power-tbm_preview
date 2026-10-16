@@ -98,6 +98,8 @@ const context = vm.createContext({
 const workerSource = await readFile(path.join(siteRoot, 'sw.js'), 'utf8');
 vm.runInContext(workerSource, context, { filename: 'sw.js' });
 const precacheUrls = vm.runInContext('[...PRECACHE_URLS]', context);
+const standardPrecacheUrls = vm.runInContext('[...ACTIVE_PRECACHE_URLS]', context);
+assert.ok(standardPrecacheUrls.every(url => !url.includes('/tv-v104/')), 'desktop must not download the unused TV stream');
 const tvHandlers = new Map();
 const tvContext = vm.createContext({ ...context, self: {
   ...workerGlobal, location: { ...workerGlobal.location, search: '?tv=1' },
@@ -110,7 +112,7 @@ for (const url of tvPrecacheUrls) {
   const file = url === './' ? './index.html' : url.split('?')[0];
   tvPrecacheBytes += (await stat(path.join(siteRoot, file))).size;
   assert.doesNotMatch(url, /assets\/audio\//, 'TV must not precache separate narration and BGM');
-  if (/\.mp4$/.test(url)) assert.match(url, /tv-v99|09-ai-example-v84/, 'TV must not precache unused desktop videos');
+  if (/\.mp4$/.test(url)) assert.match(url, /tv-v104/, 'TV must not precache unused desktop videos');
 }
 assert.ok(tvPrecacheBytes < 35 * 1024 * 1024, 'TV offline download exceeded its budget');
 
@@ -152,7 +154,7 @@ const coreUrls = [
   './index.html',
   './manifest.webmanifest',
   './styles.css?v=20261013-touch-pause-v98',
-  './app.js?v=20261016-preloaded-v103',
+  './app.js?v=20261016-continuous-v104',
   './pwa.js?v=20261016-stable-v100',
   './subtitles.js?v=20261016-stable-v100',
   './subtitle-data.js?v=20261013-safety-title-v97',
@@ -258,7 +260,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v103-20261016-preloaded/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v104-20261016-continuous/);
 assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
@@ -318,7 +320,7 @@ const dispatchFetch = async (request, activeHandlers = handlers) => {
   return responseTask;
 };
 
-for (const relativeUrl of precacheUrls) {
+for (const relativeUrl of standardPrecacheUrls) {
   const response = await dispatchFetch(new Request(new URL(relativeUrl, baseUrl)));
   assert.equal(response.status, 200, `offline cache miss: ${relativeUrl}`);
 }
@@ -331,7 +333,7 @@ for (const relativeUrl of tvPrecacheUrls) {
   if (media) assert.equal((await response.arrayBuffer()).byteLength, 20);
 }
 
-const mediaUrls = precacheUrls.filter((url) => /\.(?:mp3|mp4)$/.test(url));
+const mediaUrls = standardPrecacheUrls.filter((url) => /\.(?:mp3|mp4)$/.test(url));
 for (const relativeUrl of mediaUrls) {
   const response = await dispatchFetch(new Request(new URL(relativeUrl, baseUrl), {
     headers: { Range: 'bytes=10-29' }

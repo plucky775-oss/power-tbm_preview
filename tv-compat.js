@@ -1,4 +1,4 @@
-/* webOS uses one media pipeline. Keep video, narration and music in one file. */
+/* webOS uses one media pipeline. The entire tour shares one continuous file. */
 (() => {
   'use strict';
   const params = new URLSearchParams(location.search);
@@ -53,7 +53,7 @@
   const media = document.createElement('video');
   media.id = 'demoNarration';
   media.className = 'tv-media-player';
-  media.preload = 'none';
+  media.preload = 'auto';
   media.playsInline = true;
   media.setAttribute('playsinline', '');
   media.setAttribute('aria-hidden', 'true');
@@ -61,6 +61,30 @@
   original.replaceWith(media);
   // Do not reparent the active player during playback: it can reset TV decoding.
   document.body.append(media);
+
+  const timeline = window.PowerTBMTVTimeline;
+  const entryFor = segment => timeline.segments.find(entry => entry.id === segment.id);
+  let pendingStart = null;
+  const seekToChapter = () => {
+    if (pendingStart === null) return;
+    try {
+      media.currentTime = pendingStart;
+      pendingStart = null;
+    } catch (_) { /* loadedmetadata will retry on older TV engines */ }
+  };
+  media.addEventListener('loadedmetadata', seekToChapter);
+  api.select = segment => {
+    pendingStart = entryFor(segment).start;
+    if (media.getAttribute('src') !== timeline.src) {
+      media.src = timeline.src;
+      media.load();
+    }
+    if (media.readyState >= 1) seekToChapter();
+  };
+  api.segmentAtTime = () => pendingStart !== null || media.seeking ? null :
+    [...timeline.segments].reverse().find(entry => media.currentTime >= entry.start);
+  api.localTime = segment => Math.max(0, media.currentTime - entryFor(segment).start);
+  api.segmentEnded = id => media.currentTime >= entryFor({ id }).end - .001;
 
   document.querySelectorAll('video').forEach(video => {
     if (video === media || video.id === 'demoRecordPreview') return;
@@ -114,23 +138,24 @@
     if (!layoutFrame) layoutFrame = requestAnimationFrame(layout);
   };
   api.present = (page, segment, visualTime) => {
-    const next = page === 'intro' ? document.getElementById('openingDemoVideo') :
-      segment.id === '08-safety4cut-example' ? document.getElementById('safetyExample') :
-      page === 'support' && segment.id === '04-safety-tools' ? document.getElementById('goldenRulesVideo') : null;
+    // Every embedded clip is precomposed into the same phone-sized frame.
+    // Changing source dimensions or resizing the video plane interrupts webOS.
+    const next = document.querySelector('.guide-media');
     if (!next) { park(); return; }
-    const visible = page !== 'support' || (visualTime >= 26100 && visualTime < 32600);
-    media.dataset.surface = visible ? page : 'audio';
-    media.style.zIndex = visible ? '15' : '-1';
+    const visible = page === 'intro' || segment.id === '08-safety4cut-example' ||
+      (segment.id === '04-safety-tools' && visualTime >= 26100 && visualTime < 32600);
+    const surface = visible ? page : 'audio';
+    if (media.dataset.surface !== surface) {
+      media.dataset.surface = surface;
+      media.style.zIndex = visible ? '15' : '-1';
+    }
     if (next === target) return;
     target = next;
     parked = false;
-    media.style.objectFit = page === 'intro' ? 'cover' : 'contain';
     layout();
     scheduleLayout();
   };
   api.park = park;
-  api.sourceFor = segment => segment.id === '08-safety4cut-example'
-    ? segment.src : `assets/tv-v99/${segment.id}.mp4`;
   api.media = media;
   park();
   window.addEventListener('resize', scheduleLayout, { passive: true });
@@ -138,6 +163,7 @@
   document.addEventListener('fullscreenchange', scheduleLayout);
   if ('ResizeObserver' in window) {
     const observer = new ResizeObserver(scheduleLayout);
-    ['openingDemoVideo', 'safetyExample', 'goldenRulesVideo', 'tourStage'].forEach(id => observer.observe(document.getElementById(id)));
+    observer.observe(document.querySelector('.guide-media'));
+    observer.observe(document.getElementById('tourStage'));
   }
 })();

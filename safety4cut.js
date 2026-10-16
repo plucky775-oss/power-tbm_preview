@@ -176,7 +176,7 @@
   });
   window.PowerTBMSafety = { scenes, duration, videoOffset, render, pause, startFallback, reset,
     get time() { return lastTime; }, get videoEnded() { return tvMode
-      ? window.PowerTBMTV.media.dataset.segment === '08-safety4cut-example' && window.PowerTBMTV.media.ended
+      ? window.PowerTBMTV.segmentEnded('08-safety4cut-example')
       : sample.ended; } };
   reset();
 })();

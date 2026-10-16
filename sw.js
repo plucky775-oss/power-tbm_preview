@@ -1,35 +1,29 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v103-20261016-preloaded`;
+const CACHE_VERSION = `${CACHE_PREFIX}v104-20261016-continuous`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './tv-compat.js?v=20261016-recording-v102',
-  './tv-compat.css?v=20261016-visible-player-v101',
+  './tv-media-timeline.js?v=20261016-continuous-v104',
+  './tv-compat.js?v=20261016-continuous-v104',
+  './tv-compat.css?v=20261016-continuous-v104',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261016-stable-v100',
   './subtitle-data.js?v=20261013-safety-title-v97',
   './manifest.webmanifest',
   './styles.css?v=20261013-touch-pause-v98',
-  './app.js?v=20261016-preloaded-v103',
+  './app.js?v=20261016-continuous-v104',
   './safety4cut.css?v=20261013-safety-title-v97',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css?v=20261006-recording-aspect-v95',
   './demo-recorder-v81.js?v=20261016-recording-v102',
-  './safety4cut.js?v=20261016-recording-v102',
+  './safety4cut.js?v=20261016-continuous-v104',
   './pwa.js?v=20261016-stable-v100',
-  './assets/tv-v99/00-opening.mp4',
-  './assets/tv-v99/01-weather.mp4',
-  './assets/tv-v99/02-tbm-basic.mp4',
-  './assets/tv-v99/03-ai-pdf.mp4',
-  './assets/tv-v99/04-safety-tools.mp4',
-  './assets/tv-v99/05-emergency.mp4',
-  './assets/tv-v99/06-closing.mp4',
-  './assets/tv-v99/07-safety4cut-intro.mp4',
+  './assets/tv-v104/tour.mp4',
   './assets/audio/07-safety4cut-intro-v97.m4a',
   './assets/safety4cut/01-main-menu-v97.png',
   './assets/safety4cut/02-upload-v75.png',
@@ -120,13 +114,13 @@ const PRECACHE_URLS = [
 // Preserve a complete offline tour without downloading those unused files.
 const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
   .filter(path => !path.startsWith('./assets/audio/') &&
-    (!/\.mp4(?:\?|$)/.test(path) || path.includes('/tv-v99/') || path.endsWith('/09-ai-example-v84.mp4')))
+    (!/\.mp4(?:\?|$)/.test(path) || path.includes('/tv-v104/')))
   .map(path => /^\.\/assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(path)
     ? path.replace('./assets/', './assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : path)
-  : PRECACHE_URLS;
+  : PRECACHE_URLS.filter(path => !path.includes('/tv-v104/'));
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
-const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data\.js|tv-compat\.(?:js|css))(?:\?|$)/.test(path) || path === './';
+const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data\.js|tv-compat\.(?:js|css)|tv-media-timeline\.js)(?:\?|$)/.test(path) || path === './';
 
 const precacheInSmallBatches = async (cache) => {
   let nextIndex = 0;

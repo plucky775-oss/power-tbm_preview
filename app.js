@@ -868,7 +868,7 @@
       const stageSeconds = mapNarrationTimeToVisual(segment, seconds) / 1000;
       safety?.render(stageSeconds, { paused: demoPaused || document.hidden,
         mediaClock: tvMode || demoNarration === safetyExample,
-        finishing: segment.id === '08-safety4cut-example' && demoNarration.ended });
+        finishing: segment.id === '08-safety4cut-example' && (tvMode ? tv.segmentEnded(segment.id) : demoNarration.ended) });
       // The video shell was display:none before render. Size the native TV
       // surface only after the shell is visible, before calling play().
       if (tvMode) tv.present(demoPage, segment, stageSeconds * 1000);
@@ -901,9 +901,23 @@
       if (token !== narrationRunToken || !narrationRequested || !demoNarration) return;
       if (!narrationLastVisualUpdate || now - narrationLastVisualUpdate >= visualFrameInterval) {
         narrationLastVisualUpdate = now;
+        if (tvMode) {
+          const entry = tv.segmentAtTime();
+          if (entry && demoNarration.dataset.segment !== entry.id) {
+            // Advance only the UI. Keep the media decoder running across
+            // chapter and voice boundaries without pause, seek, load or play.
+            if (demoPage !== entry.page) applyDemoStage(entry.page, { keepMedia: true });
+            narrationSegmentIndex = entry.index;
+            demoNarration.dataset.segment = entry.id;
+            releaseSyncedAnimations();
+            collectNarrationAnimations(demoPage);
+            updateDemoStateData();
+          }
+        }
         const segment = narrationByPage[demoPage]?.[narrationSegmentIndex];
-        applyNarrationVisualTime(segment, demoNarration.currentTime);
-        syncClosingBgmFade(segment, demoNarration.currentTime);
+        const seconds = tvMode ? tv.localTime(segment) : demoNarration.currentTime;
+        applyNarrationVisualTime(segment, seconds);
+        syncClosingBgmFade(segment, seconds);
       }
       if (!demoPaused && !document.hidden && !demoNarration.ended) narrationFrame = window.requestAnimationFrame(tick);
     };
@@ -917,7 +931,7 @@
     releaseSyncedAnimations();
     if (demoNarration) demoNarration.dataset.narrationActive = 'false';
     demoNarration?.pause();
-    if (reset && demoNarration) {
+    if (reset && demoNarration && !tvMode) {
       try { demoNarration.currentTime = 0; } catch (_) { /* source may be changing */ }
     }
     narrationSegmentIndex = 0;
@@ -970,12 +984,14 @@
       demoNarration = player;
     }
     demoNarration.dataset.narrationActive = 'true';
-    const source = tvMode ? tv.sourceFor(segment) : segment.src;
+    const source = segment.src;
     // The original safety video is declared with <source>, not video.src.
     // Re-loading that same URL discarded the decoder warmed up for recording.
     const currentSource = demoNarration.getAttribute('src')
       || demoNarration.querySelector('source')?.getAttribute('src') || '';
-    if (currentSource !== source) {
+    if (tvMode) {
+      tv.select(segment);
+    } else if (currentSource !== source) {
       demoNarration.src = source;
       demoNarration.load();
     } else {
@@ -1500,7 +1516,7 @@
     });
   };
 
-  const applyDemoStage = (page) => {
+  const applyDemoStage = (page, { keepMedia = false } = {}) => {
     if (!guidePhone || !stageClassByPage[page]) return;
     window.PowerTBMSubtitles?.clear();
     clearSequenceTimer();
@@ -1550,7 +1566,7 @@
     } else openingDemoVideo?.pause();
     updateDemoPageButtons();
     updateDemoButton();
-    if (!stageTransitioning) startCurrentStageClock();
+    if (!stageTransitioning && !keepMedia) startCurrentStageClock();
   };
 
   const switchDemoStage = (page, { keepMode = false, forceRestart = false, immediate = false } = {}) => {

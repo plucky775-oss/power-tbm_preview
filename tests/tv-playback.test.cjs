@@ -4,6 +4,9 @@ const fs = require('fs'), vm = require('vm'), path = require('path');
 const {execFileSync} = require('child_process');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
+const timelineContext = { window: {} };
+vm.runInNewContext(fs.readFileSync(path.join(root, 'tv-media-timeline.js'), 'utf8'), timelineContext);
+const timeline = timelineContext.window.PowerTBMTVTimeline;
 const tree = JSON.parse(execFileSync('python3',[path.join(__dirname,'export-dom.py')],{encoding:'utf8'}));
 const durations = {'00-opening':8.166667,'01-weather':29.701,'02-tbm-basic':34.3,'03-ai-pdf':40.646,
  '07-safety4cut-intro':38.037,'09-ai-example-v84':64.566667,'04-safety-tools':31.84325,'05-emergency':22,'06-closing':11.5};
@@ -55,11 +58,12 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
  }
  const mediaSet=new Set();
  class Media extends Element {
-  constructor(tag,attrs={}){super(tag,attrs);this.paused=true;this.muted='muted'in attrs;this.ended=false;this.currentTime=0;this.duration=8;this.volume=1;this.readyState=4;this.seeking=false;this.playCount=0;this.loadCount=0;mediaSet.add(this);}
+  constructor(tag,attrs={}){super(tag,attrs);this.paused=true;this.muted='muted'in attrs;this.ended=false;this._time=0;this.seekCount=0;this.pauseCount=0;this.duration=8;this.volume=1;this.readyState=4;this.seeking=false;this.playCount=0;this.loadCount=0;mediaSet.add(this);}
+  get currentTime(){return this._time;}set currentTime(value){this.seekCount++;this._time=value;this.ended=false;}
   get currentSrc(){return this.src;}
-  load(){this.loadCount++;this.currentTime=0;this.ended=false;this.paused=true;const key=Object.keys(durations).find(k=>this.src.includes(k));this.duration=durations[key]||8;this.dispatchEvent({type:'emptied'});if(!this.preventMetadata)this.dispatchEvent({type:'loadedmetadata'});}
+  load(){this.loadCount++;this.currentTime=0;this.ended=false;this.paused=true;const key=Object.keys(durations).find(k=>this.src.includes(k));this.duration=this.src===timeline.src?timeline.duration:durations[key]||8;this.dispatchEvent({type:'emptied'});if(!this.preventMetadata)this.dispatchEvent({type:'loadedmetadata'});}
   play(){mediaPlays++;this.playCount++;if(!this.src && !this.querySelector('source'))return Promise.reject(new Error('no source'));this.paused=false;this.ended=false;if(!this.permanentStall)this.stall=false;this.dispatchEvent({type:'play'});return Promise.resolve();}
-  pause(){this.paused=true;this.dispatchEvent({type:'pause'});}
+  pause(){this.pauseCount++;this.paused=true;this.dispatchEvent({type:'pause'});}
  }
  const build=d=>{const n=['audio','video'].includes(d.tag)?new Media(d.tag,d.attrs):new Element(d.tag,d.attrs);n._text=d.text||'';for(const c of d.children||[])n.append(build(c));return n;};
  const document=build(tree);document.documentElement=document.querySelector('html');document.body=document.querySelector('body');document.hidden=false;document.fonts={ready:Promise.resolve()};document.getElementById=id=>document.querySelector('#'+id);
@@ -74,10 +78,10 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
   getComputedStyle:()=>({borderRadius:'20px',getPropertyValue:key=>({'--demo-duration':'40s','--meeting-duration':'96s','--support-duration':'50s','--closing-duration':'11.494s'}[key]||'')}),
   localStorage:{getItem(){return null;},setItem(){}},console:{warn:(...v)=>errors.push(v.map(String).join(' ')),log:()=>{}}
  });
- for(const file of ['tv-compat.js','safety4cut.js','subtitle-data.js','subtitles.js','app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
+ for(const file of ['tv-media-timeline.js','tv-compat.js','safety4cut.js','subtitle-data.js','subtitles.js','app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
  const tick=async(ms,step=50)=>{for(let elapsed=0;elapsed<ms;elapsed+=step){now+=step;
   for(const m of [...mediaSet]){if(!m.parentElement||m.paused||m.ended||m.stall||m.permanentStall||document.hidden)continue;
-   if(m.id==='demoNarration')seen.add(m.getAttribute('src'));m.currentTime=Math.min(m.duration,m.currentTime+step/1000);m.dispatchEvent({type:'timeupdate'});
+   if(m.id==='demoNarration')seen.add(m.getAttribute('src'));m._time=Math.min(m.duration,m.currentTime+step/1000);m.dispatchEvent({type:'timeupdate'});
    if(m.currentTime>=m.duration){m.ended=true;m.paused=true;m.dispatchEvent({type:'ended'});}}
   for(const[id,t]of[...timers])if(t.at<=now){if(t.repeat)t.at=now+t.repeat;else timers.delete(id);t.fn();}
   const frames=[...raf.values()];raf.clear();for(const fn of frames)fn(now);
@@ -98,7 +102,8 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
   const e = environment();
   e.document.querySelector('[data-launch-sound="on"]').click();
   await e.tick(290000);
-  assert.equal(e.seen.size, 9, 'eight TV mixes plus unchanged original safety video');
+  assert.equal(e.seen.size, 1, 'the entire tour must share one continuous source');
+  assert.equal(e.el('demoNarration').loadCount, 1, 'looping must not reload the file');
   assert.equal(e.el('demoNarration').muted, false);
   assert.equal(e.el('tourStage').dataset.narrationState, 'playing');
   assert.equal(e.errors.length, 0);
@@ -107,15 +112,41 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
    assert.equal(e.el(id).tagName, 'IMG', id + ' must not allocate another decoder');
   }
  });
- await test('Golden Rules and latest 4-cut use the same player, original media, and complete ending', async () => {
+ await test('Every automatic voice/chapter change keeps the decoder and audio clock running', async () => {
+  const e=environment();e.document.querySelector('[data-launch-sound="on"]').click();await e.tick(1000);
+  const m=e.el('demoNarration');
+  const counts=()=>[m.loadCount,m.playCount,m.pauseCount,m.seekCount];
+  const initial=counts();
+  for(const entry of timeline.segments.slice(1)) {
+   await e.tick(Math.ceil((entry.start+.2-m.currentTime)*1000));
+   assert.equal(m.dataset.segment,entry.id);
+   assert.equal(e.el('tourStage').dataset.demoPage,entry.page);
+   assert.deepEqual(counts(),initial,'decoder restarted at '+entry.id);
+   assert.equal(m.paused,false);
+   assert.ok(e.window.PowerTBMTV.localTime(entry)<.4,'subtitle clock must be chapter-local');
+  }
+ });
+ await test('A chapter selected before metadata waits for its own seek without jumping to opening', async () => {
+  const e=environment(),m=e.el('demoNarration');
+  m.readyState=0;m.preventMetadata=true;m.permanentStall=true;
+  e.click('supportDemoPage');await e.tick(2000);
+  assert.equal(e.el('tourStage').dataset.demoPage,'support');
+  m.readyState=4;m.dispatchEvent({type:'loadedmetadata'});m.permanentStall=false;
+  await e.tick(500);
+  assert.equal(m.dataset.segment,'04-safety-tools');
+  assert.ok(Math.abs(m.currentTime-timeline.segments[4].start-.5)<.1);
+  assert.equal(m.loadCount,1);
+ });
+ await test('Golden Rules and latest 4-cut use the same stream and complete ending', async () => {
   const e = environment(); e.click('supportDemoPage'); await e.tick(17000);
   assert.equal(e.el('demoNarration').dataset.surface, 'support');
   await e.tick(6000); assert.equal(e.el('demoNarration').dataset.surface, 'audio');
   e.click('safetyDemoPage'); await e.tick(2000);
-  assert.match(e.el('demoNarration').src, /07-safety4cut-intro/);
+  assert.equal(e.el('demoNarration').dataset.segment, '07-safety4cut-intro');
   assert.equal(e.el('demoNarration').dataset.surface, 'audio');
   await e.tick(38000);
-  assert.equal(e.el('demoNarration').src, 'assets/safety4cut/09-ai-example-v84.mp4');
+  assert.equal(e.el('demoNarration').src, timeline.src);
+  assert.equal(e.el('demoNarration').dataset.segment, '08-safety4cut-example');
   assert.equal(e.el('demoNarration').dataset.surface, 'safety');
   await e.tick(62000); assert.equal(e.el('tourStage').dataset.demoPage, 'safety');
   await e.tick(1500); assert.equal(e.el('tourStage').dataset.demoPage, 'closing');
