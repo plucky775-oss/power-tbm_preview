@@ -406,6 +406,7 @@
   let launchFrameHandle = null;
   let launchFrameUsesVideoCallback = false;
   let launchChoiceMade = false;
+  let recordingPrepared = false;
   let narrationRequested = false;
   let narrationMuted = false;
   let narrationUnlocked = false;
@@ -1751,7 +1752,23 @@
     switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: true });
   });
   allDemoPage?.addEventListener('click', () => activateSequence({ userInitiated: true }));
+  document.addEventListener('power-tbm:recording-prepare', () => {
+    reduceMotion = false;
+    launchChoiceMade = true;
+    enableNarrationFromGesture({ muted: false });
+    demoMode = 'sequence';
+    demoPaused = true;
+    switchDemoStage('intro', { keepMode: true, forceRestart: true, immediate: true });
+    recordingPrepared = true;
+  });
   document.addEventListener('power-tbm:recording-start', () => {
+    if (recordingPrepared) {
+      recordingPrepared = false;
+      // The encoder already holds the button clip's first frame. Resume it
+      // without resetting the stage, seeking again or replaying the entrance.
+      if (demoPaused) toggleDemoPlayback();
+      return;
+    }
     reduceMotion = false;
     launchChoiceMade = true;
     enableNarrationFromGesture({ muted: false });
@@ -1759,6 +1776,15 @@
   });
   document.addEventListener('power-tbm:recording-stop', () => {
     reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (recordingPrepared) {
+      recordingPrepared = false;
+      stopNarrationPlayback({ keepRequested: false });
+      stopDemoBgm();
+      launchChoiceMade = false;
+      demoPaused = false;
+      showLaunchGate();
+      updateDemoButton();
+    }
     syncCinematicBackdrop();
   });
   weatherDemoPage?.addEventListener('click', () => activateWeatherPage({ userInitiated: true }));

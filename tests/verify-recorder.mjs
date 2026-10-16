@@ -8,7 +8,8 @@ const webm = 'video/webm;codecs=vp8,opus';
 const settle = () => new Promise(resolve => setImmediate(resolve));
 
 function harness({ supported = [aac, webm], failEncoder = '', sound = true, withAudio = true, failVideo = false, cancel = false,
-  viewport = [1920, 1080], captured = [1920, 1080], failCapture = false, aspect = '4:3', frameCallbacks = false } = {}) {
+  viewport = [1920, 1080], captured = [1920, 1080], failCapture = false, aspect = '4:3', frameCallbacks = false,
+  autoCaptureFrames = true } = {}) {
   const elements = new Map();
   const blobs = [];
   const intervals = new Map();
@@ -16,6 +17,11 @@ function harness({ supported = [aac, webm], failEncoder = '', sound = true, with
   const draws = [];
   const videoFrames = new Map();
   const revoked = [];
+  const events = [];
+  const drawnScenes = [];
+  let launchPrepared = false;
+  let deliveredFrames = 0;
+  let firstEncodedScene;
   let layoutReads = 0;
   let id = 0;
   let recorder;
@@ -25,7 +31,8 @@ function harness({ supported = [aac, webm], failEncoder = '', sound = true, with
   class Element extends EventTarget {
     constructor() {
       super(); this.hidden = false; this.attrs = {}; this.paused = true;
-      this.readyState = 0; this.open = false; this.textContent = '';
+      this.readyState = 0; this.open = false; this.textContent = ''; this.currentTime = 0;
+      this.capturedScene = 'previous-screen';
       const classes = new Set();
       this.classList = {
         add: name => classes.add(name), remove: name => classes.delete(name),
@@ -74,7 +81,7 @@ function harness({ supported = [aac, webm], failEncoder = '', sound = true, with
         item.cancelVideoFrameCallback = key => videoFrames.delete(key);
       }
       if (name === 'canvas') {
-        item.getContext = () => ({ drawImage: (...args) => draws.push(args) });
+        item.getContext = () => ({ drawImage: (...args) => { draws.push(args); drawnScenes.push(args[0].capturedScene); } });
         item.captureStream = fps => { item.fps = fps; return new Stream([new Track('video')]); };
       }
       return item;
@@ -97,7 +104,7 @@ function harness({ supported = [aac, webm], failEncoder = '', sound = true, with
       if (options.mimeType === failEncoder) throw new Error('encoder unavailable');
       this.mimeType = options.mimeType; this.state = 'inactive'; this.stream = stream; recorder = this;
     }
-    start() { readyBeforeStart = video.readyState >= 2; this.state = 'recording'; }
+    start() { readyBeforeStart = video.readyState >= 2; firstEncodedScene = drawnScenes.at(-1); events.push('encode'); this.state = 'recording'; }
     pause() { this.state = 'paused'; }
     resume() { this.state = 'recording'; }
     stop() {
@@ -117,8 +124,21 @@ function harness({ supported = [aac, webm], failEncoder = '', sound = true, with
     createAnalyser() { return { disconnect() {}, getFloatTimeDomainData: a => a.fill(sound ? .2 : 0) }; }
   }
   const window = new Element();
+  const advanceCapture = () => {
+    const v = element('capture-video');
+    if (v.paused) return;
+    v.currentTime += 1 / 30;
+    // The first delivered frame was queued before the app changed scenes.
+    v.capturedScene = launchPrepared && ++deliveredFrames > 1 ? 'button-press' : 'previous-screen';
+  };
+  const frame = () => {
+    advanceCapture();
+    const callbacks = [...videoFrames.values()]; videoFrames.clear(); callbacks.forEach(f => f());
+  };
   Object.assign(window, { isSecureContext: true, MediaRecorder: Recorder, AudioContext,
-    innerWidth: viewport[0], innerHeight: viewport[1], requestAnimationFrame: f => queueMicrotask(f),
+    innerWidth: viewport[0], innerHeight: viewport[1],
+    requestAnimationFrame: f => { const key=++id; queueMicrotask(() => { if (!frameCallbacks) advanceCapture(); f(); }); return key; },
+    cancelAnimationFrame() {},
     setInterval: f => (intervals.set(++id, f), id), clearInterval: id => intervals.delete(id),
     setTimeout: () => ++id, clearTimeout() {} });
   const navigator = { mediaDevices: { getDisplayMedia: async options => {
@@ -126,17 +146,62 @@ function harness({ supported = [aac, webm], failEncoder = '', sound = true, with
     if (cancel) throw Object.assign(new Error('cancelled'), { name: 'NotAllowedError' });
     return new Stream([new Track('video'), ...(withAudio ? [new Track('audio')] : [])]);
   } } };
+  document.addEventListener('power-tbm:recording-prepare', () => { launchPrepared = true; deliveredFrames = 0; events.push('prepare'); });
+  document.addEventListener('power-tbm:recording-start', () => events.push('play'));
+  document.addEventListener('power-tbm:recording-stop', () => { launchPrepared = false; events.push('stop'); });
   vm.runInNewContext(source, { document, window, navigator, MediaRecorder: Recorder, MediaStream: Stream,
     Blob, Float32Array, CustomEvent, Date, performance: { now: () => 2000 },
     URL: { createObjectURL: b => (blobs.push(b), 'blob:test'), revokeObjectURL: url => revoked.push(url) } });
-  return { document, window, element, blobs, tracks, intervals, draws, videoFrames, revoked,
-    frame: () => { const callbacks = [...videoFrames.values()]; videoFrames.clear(); callbacks.forEach(f => f()); },
+  const drain = async () => { await settle(); if (autoCaptureFrames && frameCallbacks) { frame(); await settle(); frame(); await settle(); } };
+  return { document, window, element, blobs, tracks, intervals, draws, videoFrames, revoked, events, frame, drain,
+    get firstEncodedScene() { return firstEncodedScene; },
     get layoutReads() { return layoutReads; },
     get recorder() { return recorder; }, get audioContext() { return audioContext; },
     get prepared() { return readyBeforeStart; }, get options() { return captureOptions; },
-    start: async () => { element('demoRecord').click(); element('demoRecordStart').click(); await settle(); },
+    start: async () => { element('demoRecord').click(); element('demoRecordStart').click(); await drain(); },
     stop: async () => { element('demoRecord').click(); await settle(); }
   };
+}
+
+{
+  const h = harness(); await h.start();
+  assert.equal(h.firstEncodedScene, 'button-press', 'the recording must not begin with the previous page');
+  assert.deepEqual(h.events.slice(0, 3), ['prepare', 'encode', 'play'], 'prepare the launch before encoding; play only after encoding begins');
+  await h.stop();
+}
+
+for (const aspect of ['16:9', '4:3']) {
+  const h = harness({ aspect, frameCallbacks: true, autoCaptureFrames: false });
+  await h.start();
+  assert.equal(h.recorder, undefined, 'do not encode while capture has no new frames');
+  h.frame(); await settle();
+  assert.equal(h.recorder, undefined, 'discard the stale first capture frame');
+  h.frame(); await settle();
+  assert.equal(h.firstEncodedScene, 'button-press');
+  assert.deepEqual(h.events.slice(0, 3), ['prepare', 'encode', 'play']);
+  await h.stop();
+}
+{
+  const h = harness({ frameCallbacks: true, autoCaptureFrames: false }); await h.start();
+  h.tracks[0].dispatchEvent(new Event('ended')); await settle();
+  assert.equal(h.recorder, undefined);
+  assert.equal(h.blobs.length, 0);
+  assert.equal(h.videoFrames.size, 0, 'cancel the pending first-frame callback on failure');
+  assert(h.tracks.every(t => t.readyState === 'ended'));
+  assert.equal(h.document.body.classList.contains('demo-recording'), false);
+  assert.deepEqual(h.events, ['prepare', 'stop']);
+}
+{
+  const h = harness();
+  const v = h.element('required-video');
+  v.readyState = 2; v.seeking = true;
+  await h.start();
+  assert.equal(h.recorder, undefined, 'wait for the button clip to rewind before capturing it');
+  v.dispatchEvent(new Event('loadeddata')); await settle();
+  assert.equal(h.recorder, undefined, 'decoded old frames do not complete a pending seek');
+  v.seeking = false; v.dispatchEvent(new Event('seeked')); await settle();
+  assert.equal(h.firstEncodedScene, 'button-press');
+  await h.stop();
 }
 
 {
@@ -159,7 +224,7 @@ function harness({ supported = [aac, webm], failEncoder = '', sound = true, with
   await h.stop();
   assert.equal(h.videoFrames.size, 0, 'release the frame callback on stop');
   const count = h.draws.length; h.frame(); assert.equal(h.draws.length, count);
-  h.element('demoRecordStart').click(); h.element('demoRecordStart').click(); await settle();
+  h.element('demoRecordStart').click(); h.element('demoRecordStart').click(); await h.drain();
   assert.equal(h.revoked.length, 1, 'release the old full recording before accumulating the new one');
   await h.stop();
 }
@@ -283,9 +348,9 @@ for (const options of [{ withAudio: false }, { failVideo: true }, { cancel: true
     const url = index.match(new RegExp(`(?:src|href)="(${name.replaceAll('.', '\\.')}\\?[^"\\s]+)"`))?.[1];
     assert(url, `${name} needs a versioned entry point`);
     assert(precache.includes('./' + url), `${name} entry point must match the offline cache`);
-    assert.match(url, name.endsWith('.js') ? /20261016-recording-v102/ : /recording-aspect-v95/);
+    assert.match(url, /20261017-recording-start-v113/);
   }
-  assert.match(vm.runInContext('CACHE_NAME', context), /v112-20261017-opening-ready-standard$/);
+  assert.match(vm.runInContext('CACHE_NAME', context), /v113-20261017-recording-start-standard$/);
   assert.match(index, /<option value="4:3" selected>/);
   assert.match(index, /<option value="16:9">/);
 }

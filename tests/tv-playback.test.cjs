@@ -102,6 +102,35 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   e.document.dispatchEvent({type:'pointerdown',target,clientX:500,clientY:300});
   e.document.dispatchEvent({type:'click',target});
  };
+ await test('Recording prepares a paused button clip from any scene, then resumes without seeking', async () => {
+  for(const page of ['weatherDemoPage','supportDemoPage','safetyDemoPage']) {
+   const e=environment('?tv=0');e.click(page);await e.tick(2000);
+   e.document.body.classList.add('demo-recording');
+   e.document.dispatchEvent({type:'power-tbm:recording-prepare'});
+   const clip=e.el('launchIntroVideo');
+   assert.equal(e.el('tourStage').dataset.demoPage,'intro');
+   assert.equal(e.el('tourStage').dataset.launchState,'choice');
+   assert.equal(e.el('launchIntro').classList.contains('is-started'),true);
+   assert.equal(clip.paused,true);assert.equal(clip.currentTime,0);
+   const seeks=clip.seekCount,plays=clip.playCount;
+   await e.tick(1000);
+   assert.equal(clip.currentTime,0,'button action must wait for the encoder');
+   e.document.dispatchEvent({type:'power-tbm:recording-start'});
+   assert.equal(clip.paused,false);assert.equal(clip.playCount,plays+1);
+   assert.equal(clip.seekCount,seeks,'starting the encoder must not rewind the prepared clip');
+   await e.tick(3000);
+   assert.ok(e.el('demoNarration').currentTime>0,'button clip must hand off to narration');
+  }
+ });
+ await test('Failed recording preparation returns to the sound-choice gate without autoplay', async () => {
+  const e=environment('?tv=0');e.click('meetingDemoPage');
+  e.document.dispatchEvent({type:'power-tbm:recording-prepare'});
+  e.document.dispatchEvent({type:'power-tbm:recording-stop'});
+  assert.equal(e.el('launchIntro').classList.contains('is-awaiting-start'),true);
+  await e.tick(5000);
+  assert.equal(e.el('launchIntroVideo').paused,true);
+  assert.equal(e.el('demoNarration').paused,true);
+ });
  await test('TV prepares the opening behind the start gate and starts without reloading or seeking', async () => {
   for(const mode of ['on','off']) {
    const e=environment(),m=e.el('demoNarration');

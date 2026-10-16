@@ -111,9 +111,41 @@
     run.captureVideo = video;
     video.muted = true;
     video.playsInline = true;
+    // Let the prepared launch screen paint before attaching its live capture.
+    await new Promise(resolve => window.requestAnimationFrame(() => window.requestAnimationFrame(resolve)));
     video.srcObject = new MediaStream(run.stream.getVideoTracks());
     await video.play();
-    await new Promise((resolve) => window.requestAnimationFrame(resolve));
+    // A display stream can still deliver a frame queued before the scene reset.
+    // Wait for fresh captured frames, not just a DOM animation frame or a delay.
+    await new Promise((resolve, reject) => {
+      const nativeFrames = typeof video.requestVideoFrameCallback === 'function';
+      let frame;
+      let remaining = 2;
+      let previousTime = video.currentTime;
+      const tracks = run.stream.getTracks();
+      const finish = error => {
+        window.clearTimeout(timer);
+        if (nativeFrames) video.cancelVideoFrameCallback(frame);
+        else window.cancelAnimationFrame(frame);
+        tracks.forEach(track => track.removeEventListener('ended', ended));
+        error ? reject(error) : resolve();
+      };
+      const ended = () => finish(new Error('녹화 준비 중 화면 또는 소리 공유가 종료되었습니다. 다시 녹화해 주세요.'));
+      const tick = () => {
+        if (video.readyState >= 2 && video.videoWidth && video.videoHeight
+          && (nativeFrames || video.currentTime > previousTime)) {
+          previousTime = video.currentTime;
+          if (--remaining === 0) { finish(); return; }
+        }
+        schedule();
+      };
+      const schedule = () => {
+        frame = nativeFrames ? video.requestVideoFrameCallback(tick) : window.requestAnimationFrame(tick);
+      };
+      const timer = window.setTimeout(() => finish(new Error('녹화할 첫 화면을 받지 못했습니다. 이 탭으로 돌아온 뒤 다시 녹화해 주세요.')), 10000);
+      tracks.forEach(track => track.addEventListener('ended', ended, { once: true }));
+      schedule();
+    });
     let crop = null;
     run.updateCrop = () => { crop = null; };
     window.addEventListener('resize', run.updateCrop, { passive: true });
@@ -236,21 +268,23 @@
     // Do not allocate every background decoder in parallel with screen capture.
     for (const video of document.querySelectorAll('#launchIntroVideo, #openingDemoVideo, #goldenRulesVideo, #safetyExample')) {
       await new Promise((resolve, reject) => {
-        if (video.readyState >= 2) { resolve(); return; }
+        if (video.readyState >= 2 && !video.seeking) { resolve(); return; }
         const finish = (error) => {
           window.clearTimeout(timer);
           video.removeEventListener('loadeddata', ready);
+          video.removeEventListener('seeked', ready);
           video.removeEventListener('error', failed);
           error ? reject(error) : resolve();
         };
-        const ready = () => finish();
+        const ready = () => { if (video.readyState >= 2 && !video.seeking) finish(); };
         const failed = () => finish(new Error('시연 영상을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 녹화해 주세요.'));
         const timer = window.setTimeout(() => finish(new Error('영상 준비 시간이 초과되었습니다. 영상이 재생되는지 확인한 뒤 다시 녹화해 주세요.')), 20000);
         video.addEventListener('loadeddata', ready, { once: true });
+        video.addEventListener('seeked', ready);
         video.addEventListener('error', failed, { once: true });
         video.preload = 'auto';
         // preload=metadata may stop downloading before the first decoded frame.
-        video.load();
+        if (!video.seeking) video.load();
       });
     }
   };
@@ -290,14 +324,15 @@
       if (surface && surface !== 'browser') throw new Error('이 Power TBM 탭을 선택해 주세요. 탭을 선택해야 시연 화면과 소리를 함께 녹화할 수 있습니다.');
       if (!audioTrack || audioTrack.readyState !== 'live') throw new Error('탭 소리가 공유되지 않았습니다. 이 Power TBM 탭을 선택하고 ‘탭 오디오 공유’를 켜 주세요.');
       message.textContent = '오프닝·골든룰스11·4컷 교육영상을 준비하고 있습니다.';
-      await prepareVideos();
-      if (videoTrack.readyState !== 'live' || audioTrack.readyState !== 'live') throw new Error('영상 준비 중 화면 또는 소리 공유가 종료되었습니다. 다시 녹화해 주세요.');
       run = { stream, chunks: [], warning: '', audioContext, preset };
       preview.pause();
       dialog.close();
       document.body.setAttribute('data-record-aspect', preset.aspect);
       document.body.classList.add('demo-recording');
       document.documentElement.classList.add('demo-recording');
+      document.dispatchEvent(new CustomEvent('power-tbm:recording-prepare'));
+      await prepareVideos();
+      if (videoTrack.readyState !== 'live' || audioTrack.readyState !== 'live') throw new Error('영상 준비 중 화면 또는 소리 공유가 종료되었습니다. 다시 녹화해 주세요.');
       const recordingStream = await prepareRecordingVideo(run);
       if (videoTrack.readyState !== 'live' || audioTrack.readyState !== 'live') throw new Error('화면 또는 소리 공유가 종료되었습니다. 다시 녹화해 주세요.');
       const recorder = createRecorder(recordingStream);
