@@ -8,12 +8,15 @@ const webm = 'video/webm;codecs=vp8,opus';
 const settle = () => new Promise(resolve => setImmediate(resolve));
 
 function harness({ supported = [aac, webm], failEncoder = '', sound = true, withAudio = true, failVideo = false, cancel = false,
-  viewport = [1920, 1080], captured = [1920, 1080], failCapture = false, aspect = '4:3' } = {}) {
+  viewport = [1920, 1080], captured = [1920, 1080], failCapture = false, aspect = '4:3', frameCallbacks = false } = {}) {
   const elements = new Map();
   const blobs = [];
   const intervals = new Map();
   const tracks = [];
   const draws = [];
+  const videoFrames = new Map();
+  const revoked = [];
+  let layoutReads = 0;
   let id = 0;
   let recorder;
   let audioContext;
@@ -41,6 +44,7 @@ function harness({ supported = [aac, webm], failEncoder = '', sound = true, with
       return Promise.resolve();
     }
     getBoundingClientRect() {
+      layoutReads++;
       const ratio = this.attrs['data-record-aspect'] === '16:9' ? 16 / 9 : 4 / 3;
       const width = Math.min(window.innerWidth, window.innerHeight * ratio);
       const height = width / ratio;
@@ -61,9 +65,14 @@ function harness({ supported = [aac, webm], failEncoder = '', sound = true, with
   element('demoRecordAspect').value = aspect;
   const document = new Element();
   Object.assign(document, { body: element('body'), documentElement: element('html'),
-    getElementById: element, querySelectorAll: () => [video],
+    getElementById: element, querySelectorAll: selector => selector.includes('[data-cinematic-page]')
+      ? [video, element('background-video')] : [video],
     createElement: name => {
       const item = element('capture-' + name);
+      if (name === 'video' && frameCallbacks) {
+        item.requestVideoFrameCallback = f => (videoFrames.set(++id, f), id);
+        item.cancelVideoFrameCallback = key => videoFrames.delete(key);
+      }
       if (name === 'canvas') {
         item.getContext = () => ({ drawImage: (...args) => draws.push(args) });
         item.captureStream = fps => { item.fps = fps; return new Stream([new Track('video')]); };
@@ -89,6 +98,8 @@ function harness({ supported = [aac, webm], failEncoder = '', sound = true, with
       this.mimeType = options.mimeType; this.state = 'inactive'; this.stream = stream; recorder = this;
     }
     start() { readyBeforeStart = video.readyState >= 2; this.state = 'recording'; }
+    pause() { this.state = 'paused'; }
+    resume() { this.state = 'recording'; }
     stop() {
       this.state = 'inactive';
       queueMicrotask(() => {
@@ -117,13 +128,40 @@ function harness({ supported = [aac, webm], failEncoder = '', sound = true, with
   } } };
   vm.runInNewContext(source, { document, window, navigator, MediaRecorder: Recorder, MediaStream: Stream,
     Blob, Float32Array, CustomEvent, Date, performance: { now: () => 2000 },
-    URL: { createObjectURL: b => (blobs.push(b), 'blob:test'), revokeObjectURL() {} } });
-  return { document, window, element, blobs, tracks, intervals, draws,
+    URL: { createObjectURL: b => (blobs.push(b), 'blob:test'), revokeObjectURL: url => revoked.push(url) } });
+  return { document, window, element, blobs, tracks, intervals, draws, videoFrames, revoked,
+    frame: () => { const callbacks = [...videoFrames.values()]; videoFrames.clear(); callbacks.forEach(f => f()); },
+    get layoutReads() { return layoutReads; },
     get recorder() { return recorder; }, get audioContext() { return audioContext; },
     get prepared() { return readyBeforeStart; }, get options() { return captureOptions; },
     start: async () => { element('demoRecord').click(); element('demoRecordStart').click(); await settle(); },
     stop: async () => { element('demoRecord').click(); await settle(); }
   };
+}
+
+{
+  const h = harness({ frameCallbacks: true, aspect: '16:9' }); await h.start();
+  assert.equal(h.intervals.size, 1, 'only the status clock runs; frames have no redraw timer');
+  assert.equal(h.element('background-video').readyState, 0, 'do not pre-decode optional backgrounds');
+  const reads = h.layoutReads;
+  for (let i = 0; i < 5400; i++) h.frame();
+  assert.equal(h.draws.length, 5401, 'one draw for each delivered frame through a three-minute segment');
+  assert.equal(h.layoutReads, reads, 'steady recording does not remeasure layout each frame');
+  h.document.dispatchEvent(new Event('resize'));
+  h.window.dispatchEvent(new Event('resize')); h.frame();
+  assert.equal(h.layoutReads, reads + 1, 'resize recomputes crop once');
+  h.element('background-video').dispatchEvent(new Event('error')); await settle();
+  assert.equal(h.recorder.state, 'recording', 'an optional background failure does not stop recording');
+  h.document.hidden = true; h.document.dispatchEvent(new Event('visibilitychange'));
+  assert.equal(h.recorder.state, 'paused', 'a hidden tab does not encode a frozen tour');
+  h.document.hidden = false; h.document.dispatchEvent(new Event('visibilitychange'));
+  assert.equal(h.recorder.state, 'recording', 'returning to the tab resumes the same recording');
+  await h.stop();
+  assert.equal(h.videoFrames.size, 0, 'release the frame callback on stop');
+  const count = h.draws.length; h.frame(); assert.equal(h.draws.length, count);
+  h.element('demoRecordStart').click(); h.element('demoRecordStart').click(); await settle();
+  assert.equal(h.revoked.length, 1, 'release the old full recording before accumulating the new one');
+  await h.stop();
 }
 
 {
@@ -245,9 +283,9 @@ for (const options of [{ withAudio: false }, { failVideo: true }, { cancel: true
     const url = index.match(new RegExp(`(?:src|href)="(${name.replaceAll('.', '\\.')}\\?[^"\\s]+)"`))?.[1];
     assert(url, `${name} needs a versioned entry point`);
     assert(precache.includes('./' + url), `${name} entry point must match the offline cache`);
-    assert.match(url, name.endsWith('.js') ? /20261016-stable-v100/ : /recording-aspect-v95/);
+    assert.match(url, name.endsWith('.js') ? /20261016-recording-v102/ : /recording-aspect-v95/);
   }
-  assert.match(vm.runInContext('CACHE_NAME', context), /v101-20261016-visible-player-standard$/);
+  assert.match(vm.runInContext('CACHE_NAME', context), /v102-20261016-recording-standard$/);
   assert.match(index, /<option value="4:3" selected>/);
   assert.match(index, /<option value="16:9">/);
 }

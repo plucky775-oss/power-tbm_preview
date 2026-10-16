@@ -28,6 +28,12 @@
   let result = null;
   let clock = null;
 
+  const recordedDuration = (run) => {
+    const end = run.stoppedAt || performance.now();
+    return end - run.startedAt - (run.hiddenDuration || 0)
+      - (run.hiddenAt == null ? 0 : end - run.hiddenAt);
+  };
+
   const elapsedText = (ms) => {
     const seconds = Math.floor(ms / 1000);
     return `${Math.floor(seconds / 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
@@ -39,7 +45,7 @@
     button.setAttribute('aria-pressed', String(recording));
     label.textContent = recording ? '중지' : '녹화';
     button.title = recording
-      ? `녹화 중 ${elapsedText(performance.now() - session.startedAt)} · 클릭하여 종료 및 저장`
+      ? `녹화 중 ${elapsedText(recordedDuration(session))} · 클릭하여 종료 및 저장`
       : '시연 영상 녹화';
     button.setAttribute('aria-label', recording ? '녹화 중지 및 영상 저장' : '시연 영상 녹화');
   };
@@ -108,21 +114,41 @@
     video.srcObject = new MediaStream(run.stream.getVideoTracks());
     await video.play();
     await new Promise((resolve) => window.requestAnimationFrame(resolve));
+    let crop = null;
+    run.updateCrop = () => { crop = null; };
+    window.addEventListener('resize', run.updateCrop, { passive: true });
     const draw = () => {
       if (video.readyState < 2 || !video.videoWidth || !video.videoHeight) return;
-      const bounds = document.body.getBoundingClientRect();
-      const scaleX = video.videoWidth / window.innerWidth;
-      const scaleY = video.videoHeight / window.innerHeight;
-      context.drawImage(video, bounds.left * scaleX, bounds.top * scaleY,
-        bounds.width * scaleX, bounds.height * scaleY, 0, 0, canvas.width, canvas.height);
+      if (!crop || crop.videoWidth !== video.videoWidth || crop.videoHeight !== video.videoHeight
+        || crop.width !== window.innerWidth || crop.height !== window.innerHeight) {
+        const bounds = document.body.getBoundingClientRect();
+        const scaleX = video.videoWidth / window.innerWidth;
+        const scaleY = video.videoHeight / window.innerHeight;
+        crop = { videoWidth: video.videoWidth, videoHeight: video.videoHeight,
+          width: window.innerWidth, height: window.innerHeight,
+          source: [bounds.left * scaleX, bounds.top * scaleY, bounds.width * scaleX, bounds.height * scaleY] };
+      }
+      context.drawImage(video, ...crop.source, 0, 0, canvas.width, canvas.height);
     };
     draw();
     run.canvasStream = canvas.captureStream(30);
-    run.drawTimer = window.setInterval(draw, 1000 / 30);
+    // Draw each captured frame once. A timer used to redraw duplicate frames
+    // and force a layout read while the tutorial's own videos were decoding.
+    if (video.requestVideoFrameCallback) {
+      const onFrame = () => {
+        if (run.captureStopped) return;
+        draw();
+        run.drawFrame = video.requestVideoFrameCallback(onFrame);
+      };
+      run.drawFrame = video.requestVideoFrameCallback(onFrame);
+    } else run.drawTimer = window.setInterval(draw, 1000 / 30);
     return new MediaStream([...run.canvasStream.getVideoTracks(), ...run.stream.getAudioTracks()]);
   };
   const releaseRecordingVideo = (run) => {
+    run.captureStopped = true;
+    if (run.drawFrame != null) run.captureVideo?.cancelVideoFrameCallback?.(run.drawFrame);
     window.clearInterval(run.drawTimer);
+    if (run.updateCrop) window.removeEventListener('resize', run.updateCrop);
     run.captureVideo?.pause();
     if (run.captureVideo) run.captureVideo.srcObject = null;
     stopTracks(run.canvasStream);
@@ -172,7 +198,7 @@
     const stamp = new Date().toISOString().replace(/[:.]/g, '-');
     result = {
       url: URL.createObjectURL(blob), extension, size: blob.size,
-      duration: (run.stoppedAt || performance.now()) - run.startedAt,
+      duration: recordedDuration(run),
       warning: run.warning, preset: run.preset
     };
     preview.src = result.url;
@@ -206,25 +232,28 @@
     }
     throw new Error('이 브라우저에서 지원하는 녹화 형식이 없습니다. PC의 최신 Chrome 또는 Edge에서 열어 주세요.');
   };
-  const prepareVideos = () => Promise.all([...document.querySelectorAll(
-    '#launchIntroVideo, #openingDemoVideo, [data-cinematic-page], #goldenRulesVideo, #safetyExample'
-  )].map((video) => new Promise((resolve, reject) => {
-    if (video.readyState >= 2) { resolve(); return; }
-    const finish = (error) => {
-      window.clearTimeout(timer);
-      video.removeEventListener('loadeddata', ready);
-      video.removeEventListener('error', failed);
-      error ? reject(error) : resolve();
-    };
-    const ready = () => finish();
-    const failed = () => finish(new Error('시연 영상을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 녹화해 주세요.'));
-    const timer = window.setTimeout(() => finish(new Error('영상 준비 시간이 초과되었습니다. 영상이 재생되는지 확인한 뒤 다시 녹화해 주세요.')), 20000);
-    video.addEventListener('loadeddata', ready, { once: true });
-    video.addEventListener('error', failed, { once: true });
-    video.preload = 'auto';
-    // preload=metadata may stop downloading before the first decoded frame.
-    video.load();
-  })));
+  const prepareVideos = async () => {
+    // Do not allocate every background decoder in parallel with screen capture.
+    for (const video of document.querySelectorAll('#launchIntroVideo, #openingDemoVideo, #goldenRulesVideo, #safetyExample')) {
+      await new Promise((resolve, reject) => {
+        if (video.readyState >= 2) { resolve(); return; }
+        const finish = (error) => {
+          window.clearTimeout(timer);
+          video.removeEventListener('loadeddata', ready);
+          video.removeEventListener('error', failed);
+          error ? reject(error) : resolve();
+        };
+        const ready = () => finish();
+        const failed = () => finish(new Error('시연 영상을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 녹화해 주세요.'));
+        const timer = window.setTimeout(() => finish(new Error('영상 준비 시간이 초과되었습니다. 영상이 재생되는지 확인한 뒤 다시 녹화해 주세요.')), 20000);
+        video.addEventListener('loadeddata', ready, { once: true });
+        video.addEventListener('error', failed, { once: true });
+        video.preload = 'auto';
+        // preload=metadata may stop downloading before the first decoded frame.
+        video.load();
+      });
+    }
+  };
   const startRecording = async () => {
     if (state !== 'idle') return;
     const preset = aspectSelect.value === '16:9' ? presets['16:9'] : presets['4:3'];
@@ -260,7 +289,7 @@
       const surface = videoTrack.getSettings().displaySurface;
       if (surface && surface !== 'browser') throw new Error('이 Power TBM 탭을 선택해 주세요. 탭을 선택해야 시연 화면과 소리를 함께 녹화할 수 있습니다.');
       if (!audioTrack || audioTrack.readyState !== 'live') throw new Error('탭 소리가 공유되지 않았습니다. 이 Power TBM 탭을 선택하고 ‘탭 오디오 공유’를 켜 주세요.');
-      message.textContent = '배경영상·골든룰스11·4컷 교육영상을 준비하고 있습니다.';
+      message.textContent = '오프닝·골든룰스11·4컷 교육영상을 준비하고 있습니다.';
       await prepareVideos();
       if (videoTrack.readyState !== 'live' || audioTrack.readyState !== 'live') throw new Error('영상 준비 중 화면 또는 소리 공유가 종료되었습니다. 다시 녹화해 주세요.');
       run = { stream, chunks: [], warning: '', audioContext, preset };
@@ -272,6 +301,8 @@
       const recordingStream = await prepareRecordingVideo(run);
       if (videoTrack.readyState !== 'live' || audioTrack.readyState !== 'live') throw new Error('화면 또는 소리 공유가 종료되었습니다. 다시 녹화해 주세요.');
       const recorder = createRecorder(recordingStream);
+      // A retry must not retain the previous full recording alongside the new one.
+      discardResult();
       run.recorder = recorder;
       run.startedAt = performance.now();
       if (audioContext?.state === 'running') {
@@ -345,7 +376,23 @@
   document.addEventListener('power-tbm:playback-error', (event) => {
     stopRecording(event.detail?.message || '시연 재생이 중단되어 녹화를 멈췄습니다.');
   });
-  document.querySelectorAll('#launchIntroVideo, #openingDemoVideo, [data-cinematic-page], #goldenRulesVideo, #safetyExample').forEach((video) => {
+  // The tour pauses in a hidden tab. Pause the encoder as well so returning
+  // to the tab continues the file without a long frozen section in between.
+  document.addEventListener('visibilitychange', () => {
+    if (state !== 'recording' || !session) return;
+    const run = session;
+    if (document.hidden && run.recorder.state === 'recording') {
+      run.hiddenAt = performance.now();
+      run.recorder.pause();
+      status.textContent = '이 탭으로 돌아오면 녹화를 이어갑니다.';
+    } else if (!document.hidden && run.hiddenAt != null && run.recorder.state === 'paused') {
+      run.hiddenDuration = (run.hiddenDuration || 0) + performance.now() - run.hiddenAt;
+      run.hiddenAt = null;
+      run.recorder.resume();
+      status.textContent = '화면과 소리 녹화를 이어갑니다.';
+    }
+  });
+  document.querySelectorAll('#openingDemoVideo, #goldenRulesVideo, #safetyExample').forEach((video) => {
     video.addEventListener('error', () => stopRecording('시연 영상 재생 오류로 녹화를 멈췄습니다. 저장하기 전에 확인해 주세요.'));
   });
   window.addEventListener('beforeunload', (event) => {

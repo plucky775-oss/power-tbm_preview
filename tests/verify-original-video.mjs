@@ -252,6 +252,27 @@ console.log('PASS: central tap, resume position, controls excluded, drag/cancel 
   assert.equal(attempts, 2, 'transient golden video interruption is retryable');
   assert.equal(golden.paused, false);
 }
+{
+  const h = harness({ reducedMotion: false });
+  const backdrop = h.element('#backdropVideo');
+  backdrop.dataset.cinematicPage = 'support';
+  backdrop.classList.add('cinematic-backdrop-tools');
+  h.api.golden(); await settle();
+  assert.equal(backdrop.paused, true, 'Golden Rules owns the decoder while its clip is visible');
+  h.api.prepare(1); h.api.start(); h.api.tick(1); await settle();
+  backdrop.dataset.cinematicPage = 'safety';
+  h.api.cinematic('safety');
+  assert.equal(backdrop.paused, true, '4-cut footage does not compete with background decoding');
+}
+{
+  const h = harness({ reducedMotion: false }); let failures = 0;
+  h.document.addEventListener('power-tbm:playback-error', () => failures++);
+  const backdrop = h.element('#backdropVideo'); backdrop.dataset.cinematicPage = 'weather';
+  backdrop.play = () => Promise.reject(new Error('optional decoder unavailable'));
+  h.api.cinematic(); await settle();
+  assert.equal(failures, 0, 'optional background failure must not stop a healthy recording');
+  assert.equal(backdrop.dataset.playbackFailed, 'true');
+}
 
 const original = readFileSync(new URL('assets/safety4cut/09-ai-example-v84.mp4', root));
 assert.equal(createHash('sha256').update(original).digest('hex'),
@@ -261,9 +282,9 @@ vm.runInContext(read('sw.js'), cacheContext);
 const cached = vm.runInContext('PRECACHE_URLS', cacheContext);
 assert(cached.includes('./assets/safety4cut/09-ai-example-v84.mp4'));
 assert(cached.includes('./assets/audio/07-safety4cut-intro-v97.m4a'));
-assert(cached.includes('./app.js?v=20261016-stable-v100'));
+assert(cached.includes('./app.js?v=20261016-recording-v102'));
 assert(cached.includes('./subtitles.js?v=20261016-stable-v100'));
 assert(cached.includes('./subtitles.css?v=20261004-v87'));
 assert(cached.includes('./subtitle-data.js?v=20261013-safety-title-v97'));
-assert(cached.includes('./safety4cut.js?v=20261016-stable-v100'));
+assert(cached.includes('./safety4cut.js?v=20261016-recording-v102'));
 console.log('PASS: original bytes, single video/audio clock, intro handoff, no rewind on error, stale events, mute, pause/resume, hidden tab, fallback, recording motion, Golden Rules retry, cache paths');

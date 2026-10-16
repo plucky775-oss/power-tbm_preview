@@ -120,6 +120,16 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
   await e.tick(62000); assert.equal(e.el('tourStage').dataset.demoPage, 'safety');
   await e.tick(1500); assert.equal(e.el('tourStage').dataset.demoPage, 'closing');
  });
+ await test('TV prepares a full-size Golden Rules surface before its visible window', async () => {
+  const e = environment(); e.click('supportDemoPage'); await e.tick(2000);
+  const m = e.el('demoNarration');
+  assert.equal(m.dataset.surface, 'audio');
+  assert.ok(parseFloat(m.style.width) >= 300);
+  const geometry = [m.style.left, m.style.top, m.style.width, m.style.height];
+  await e.tick(15000);
+  assert.equal(m.dataset.surface, 'support');
+  assert.deepEqual([m.style.left, m.style.top, m.style.width, m.style.height], geometry);
+ });
  await test('Central tap, drag guard, continuous menu playback, mute and both subtitle modes', async () => {
   const e = environment(); e.click('weatherDemoPage'); await e.tick(1000);
   const target = e.el('tourStage');
@@ -193,7 +203,10 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
    const e=environment(q,ua);assert.equal(e.window.PowerTBMTV.enabled,on);
    if(!on){
     assert.ok(e.el('demoBgm'));assert.equal(e.el('openingDemoVideo').tagName,'VIDEO');
-    for(const image of e.document.querySelectorAll('[data-demo-src]'))assert.equal(image.src,image.dataset.demoSrc);
+    assert.equal(e.el('safetyScreenshot').src, '', 'inactive PC images are lazy too');
+    e.window.PowerTBMTV.setPage('safety');
+    assert.equal(e.el('safetyScreenshot').src, e.el('safetyScreenshot').dataset.demoSrc, 'PC retains original image resolution');
+    assert.equal(e.el('guideImage').src, '');
     for(const media of e.document.querySelectorAll('[data-demo-poster]'))assert.equal(media.poster,media.dataset.demoPoster);
    }
   }

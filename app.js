@@ -421,6 +421,7 @@
   let goldenRulesVideoActive = false;
   let goldenRulesPlayPending = false;
   let goldenRulesPlaybackBlocked = false;
+  let foregroundVideoActive = false;
   let goldenRulesRunToken = 0;
   let goldenRulesTimelineAnimation = null;
   let goldenRulesTimelineDuration = demoDurationFallbacks.support;
@@ -497,6 +498,11 @@
       && Number.isFinite(time)
       && time >= goldenRulesTimeline.start
       && time < goldenRulesTimeline.end;
+
+    if (foregroundVideoActive !== inVideoWindow) {
+      foregroundVideoActive = inVideoWindow;
+      syncCinematicBackdrop();
+    }
 
     if (!inVideoWindow) {
       if (goldenRulesVideoActive || goldenRulesPlayPending || !goldenRulesVideo.paused) {
@@ -593,20 +599,26 @@
       || (!reduceMotion && !navigator.connection?.saveData));
     const previousPage = cinematicBackdrop.dataset.demoPage;
     const pageChanged = previousPage !== demoPage;
-    const playbackPaused = demoPaused || document.hidden;
+    const playbackPaused = demoPaused || document.hidden || foregroundVideoActive;
     cinematicBackdrop.dataset.demoPage = demoPage;
     cinematicBackdrop.dataset.demoMode = demoMode;
     cinematicBackdrop.classList.toggle('is-paused', playbackPaused);
     cinematicBackdrop.classList.toggle('is-static', !cinematicPlaybackAllowed);
 
     cinematicVideos.forEach((video) => {
-      const active = video.dataset.cinematicPage === demoPage
+      let active = video.dataset.cinematicPage === demoPage
         || (demoPage === 'safety' && video.classList.contains('cinematic-backdrop-meeting'));
+      if (active && demoPage === 'support' && narrationRequested) {
+        const emergency = narrationByPage.support[narrationSegmentIndex]?.id === '05-emergency';
+        active = video.classList.contains(emergency ? 'cinematic-backdrop-emergency' : 'cinematic-backdrop-tools');
+      }
       video.muted = true;
       video.defaultMuted = true;
       if (!active) {
         video.pause();
-        try { video.currentTime = 0; } catch (_) { /* metadata may not be ready */ }
+        if (video.currentTime > .02) {
+          try { video.currentTime = 0; } catch (_) { /* metadata may not be ready */ }
+        }
         return;
       }
       if (pageChanged) {
@@ -616,11 +628,14 @@
         video.pause();
         return;
       }
-      if (video.ended && !pageChanged) return;
+      if (video.error || video.dataset.playbackFailed === 'true' || (video.ended && !pageChanged)) return;
       if (!video.paused) return;
       video.play().catch((error) => {
         if (error?.name === 'AbortError') return;
-        document.dispatchEvent(new CustomEvent('power-tbm:playback-error', { detail: { message: '배경영상 재생이 중단되어 녹화를 멈췄습니다.' } }));
+        // Decorative footage must not terminate a healthy narration/recording.
+        video.dataset.playbackFailed = 'true';
+        video.pause();
+        console.warn('배경영상 대신 정지 화면을 유지합니다.', error);
       });
     });
   };
@@ -629,7 +644,7 @@
     if (!guideStage) return;
     guideStage.dataset.playbackMode = tvMode ? 'tv-single-player' : 'standard';
     guideStage.dataset.demoPage = demoPage;
-    if (tvMode) tv.setPage(demoPage);
+    tv?.setPage(demoPage);
     guideStage.dataset.demoMode = demoMode;
     guideStage.dataset.narrationState = narrationState;
     guideStage.dataset.narrationMuted = String(narrationMuted);
@@ -842,8 +857,8 @@
   const applyNarrationVisualTime = (segment, seconds) => {
     if (!segment) return;
     window.PowerTBMSubtitles?.render(segment.id, seconds);
-    if (tvMode) tv.present(demoPage, segment, mapNarrationTimeToVisual(segment, seconds));
     if (demoPage === 'intro') {
+      if (tvMode) tv.present(demoPage, segment, 0);
       // Audio and video start, pause and resume together. Let the hardware
       // decoder advance naturally instead of seeking on every animation frame.
       return;
@@ -854,6 +869,14 @@
       safety?.render(stageSeconds, { paused: demoPaused || document.hidden,
         mediaClock: tvMode || demoNarration === safetyExample,
         finishing: segment.id === '08-safety4cut-example' && demoNarration.ended });
+      // The video shell was display:none before render. Size the native TV
+      // surface only after the shell is visible, before calling play().
+      if (tvMode) tv.present(demoPage, segment, stageSeconds * 1000);
+      const showingVideo = segment.id === '08-safety4cut-example';
+      if (foregroundVideoActive !== showingVideo) {
+        foregroundVideoActive = showingVideo;
+        syncCinematicBackdrop();
+      }
       if (demoBgm && safety && stageSeconds >= safety.videoOffset - .65) {
         cancelBgmFrame();
         demoBgm.volume = getCurrentBgmTarget('safety');
@@ -867,12 +890,13 @@
         animation.currentTime = visualTime;
       } catch (_) { /* a scene can detach during a soft transition */ }
     });
+    if (tvMode) tv.present(demoPage, segment, visualTime);
     if (demoPage === 'support') syncGoldenRulesVideo(visualTime);
   };
 
   const runNarrationVisualClock = (token) => {
     cancelNarrationFrame();
-    const visualFrameInterval = tvMode ? 50 : coarsePointer ? 30 : 14;
+    const visualFrameInterval = tvMode ? 50 : document.body.classList.contains('demo-recording') ? 32 : coarsePointer ? 30 : 14;
     const tick = (now) => {
       if (token !== narrationRunToken || !narrationRequested || !demoNarration) return;
       if (!narrationLastVisualUpdate || now - narrationLastVisualUpdate >= visualFrameInterval) {
@@ -887,6 +911,7 @@
   };
 
   const stopNarrationPlayback = ({ reset = true, keepRequested = true } = {}) => {
+    foregroundVideoActive = false;
     narrationRunToken += 1;
     cancelNarrationFrame();
     releaseSyncedAnimations();
@@ -1453,7 +1478,7 @@
     const item = guideData[0];
     currentGuide = 0;
     if (guideImage) {
-      if (tvMode) tv.setImage(guideImage, item.src);
+      if (tv?.setImage) tv.setImage(guideImage, item.src);
       else guideImage.src = item.src;
       guideImage.width = item.width;
       guideImage.height = item.height;
@@ -1574,7 +1599,7 @@
     const apply = () => {
       const item = guideData[index];
       currentGuide = index;
-      if (tvMode) tv.setImage(guideImage, item.src);
+      if (tv?.setImage) tv.setImage(guideImage, item.src);
       else guideImage.src = item.src;
       guideImage.width = item.width;
       guideImage.height = item.height;
