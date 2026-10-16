@@ -10,7 +10,7 @@ const timeline = timelineContext.window.PowerTBMTVTimeline;
 const tree = JSON.parse(execFileSync('python3',[path.join(__dirname,'export-dom.py')],{encoding:'utf8'}));
 const durations = {'00-opening':8.166667,'01-weather':29.701,'02-tbm-basic':34.3,'03-ai-pdf':40.646,
  '07-safety4cut-intro':38.037,'09-ai-example-v84':64.566667,'04-safety-tools':31.84325,'05-emergency':22,'06-closing':11.5};
-function environment(query='?tv=1', ua='Chrome', reduce=false) {
+function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true) {
  let now=0, nextId=1, writes=0, mediaPlays=0; const raf=new Map(), timers=new Map(), seen=new Set(), errors=[];
  class Events {
   constructor(){this.listeners={};}
@@ -22,7 +22,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
  class Element extends Events {
   constructor(tag='div',attrs={}) {super();this.tagName=tag.toUpperCase();this.attrs={...attrs};this.children=[];this.parentElement=null;
    this.style={setProperty(k,v){this[k]=v;}};this.dataset={};for(const[k,v]of Object.entries(attrs))if(k.startsWith('data-'))this.dataset[k.slice(5).replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]=v;
-   this._text='';this.hidden='hidden'in attrs;this.naturalWidth=512;this.naturalHeight=910;
+   this._text='';this.hidden='hidden'in attrs;this.naturalWidth=imagesReady?512:0;this.naturalHeight=imagesReady?910:0;this.complete=imagesReady;
    this.classList={contains:c=>this.className.split(/\s+/).includes(c),add:(...cs)=>{this.className=[...new Set([...this.className.split(/\s+/).filter(Boolean),...cs])].join(' ');},remove:(...cs)=>{this.className=this.className.split(/\s+/).filter(c=>!cs.includes(c)).join(' ');},toggle:(c,force)=>{const b=force===undefined?!this.classList.contains(c):force;if(b)this.classList.add(c);else this.classList.remove(c);return b;}};
    this.clientWidth=1000;this.offsetWidth=300;this.scrollHeight=1080;this._animations=null;
   }
@@ -178,6 +178,57 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
   await e.tick(62000); assert.equal(e.el('tourStage').dataset.demoPage, 'safety');
   await e.tick(1500); assert.equal(e.el('tourStage').dataset.demoPage, 'closing');
  });
+ await test('Safety image and highlight reveal together after loading and decoding', async () => {
+  for(const query of ['?tv=1','?tv=0']) {
+   const e=environment(query,'Chrome',true,false),p=e.el('safetyScreenshot'),r=e.el('safetyDemo');
+   const focus=r.querySelector('.safety-focus'),hand=r.querySelector('.safety-hand');
+   let finishDecode;
+   p.decode=()=>new Promise(resolve=>{finishDecode=resolve;});
+   p.complete=false;p.naturalWidth=0;
+   e.click('safetyDemoPage');await e.tick(500);
+   assert.equal(focus.hidden,true,'yellow focus appeared over an unloaded screenshot');
+   assert.equal(hand.hidden,true,'gesture appeared before the screenshot');
+   assert.equal(r.classList.contains('safety-image-ready'),false);
+   p.complete=true;p.naturalWidth=512;p.naturalHeight=1110;p.dispatchEvent({type:'load'});
+   assert.equal(focus.hidden,true,'load must wait for the pending decode');
+   finishDecode();await Promise.resolve();
+   assert.equal(r.classList.contains('safety-image-ready'),true);
+   assert.equal(focus.hidden,false);
+   assert.ok(parseFloat(r.querySelector('.safety-screen-canvas').style.height)>0);
+   // Scene changes must invalidate an old decode, including a return to the same source.
+   p.complete=false;e.window.PowerTBMSafety.render(9,{paused:true});
+   assert.equal(focus.hidden,true);
+   p.complete=true;p.dispatchEvent({type:'load'});const oldDecode=finishDecode;
+   p.complete=false;e.window.PowerTBMSafety.reset();
+   oldDecode();await Promise.resolve();
+   assert.equal(r.classList.contains('safety-image-ready'),false,'stale decode revealed the next screenshot');
+   p.complete=true;p.decode=()=>Promise.reject(new Error('decode failed'));p.dispatchEvent({type:'load'});
+   await Promise.resolve();await Promise.resolve();
+   assert.equal(focus.hidden,true,'failed decode must not reveal the focus');
+   // Older TV engines without decode() still use the real load completion.
+   p.decode=undefined;p.dispatchEvent({type:'load'});
+   assert.equal(focus.hidden,false);
+   p.dispatchEvent({type:'error'});
+   assert.equal(focus.hidden,true);
+   assert.equal(r.classList.contains('safety-image-ready'),false);
+  }
+ });
+ await test('Only the safety menu is kept ready between chapter selections', async () => {
+  for(const query of ['?tv=1','?tv=0']) {
+   const e=environment(query,'Chrome',true),p=e.el('safetyScreenshot');
+   const first=p.getAttribute('src');
+   assert.ok(first?.includes('01-main-menu-v97'),'safety menu should be prepared before the first click');
+   assert.equal(first.includes('/tv-v100/images/'),query==='?tv=1');
+   e.click('safetyDemoPage');await e.tick(500);
+   assert.equal(p.getAttribute('src'),first,'first click must reuse the prepared image');
+   assert.equal(e.el('safetyDemo').classList.contains('safety-image-ready'),true,'a cached menu must remain ready');
+   e.window.PowerTBMSafety.render(9,{paused:true});
+   assert.ok(p.getAttribute('src').includes('02-upload-v75'));
+   e.click('weatherDemoPage');await e.tick(500);
+   assert.equal(p.getAttribute('src'),first,'leaving safety must release the later scene and prepare the menu');
+   assert.ok(e.el('supportDemo').querySelectorAll('img').every(i=>!i.getAttribute('src')));
+  }
+ });
  await test('TV prepares a full-size Golden Rules surface before its visible window', async () => {
   const e = environment(); e.click('supportDemoPage'); await e.tick(2000);
   const m = e.el('demoNarration');
@@ -261,7 +312,8 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
    const e=environment(q,ua);assert.equal(e.window.PowerTBMTV.enabled,on);
    if(!on){
     assert.ok(e.el('demoBgm'));assert.equal(e.el('openingDemoVideo').tagName,'VIDEO');
-    assert.equal(e.el('safetyScreenshot').src, '', 'inactive PC images are lazy too');
+    assert.equal(e.el('safetyScreenshot').src, e.el('safetyScreenshot').dataset.demoSrc, 'PC prepares the single safety menu at original resolution');
+    assert.ok(e.el('meetingDemo').querySelectorAll('img').every(i=>!i.getAttribute('src')), 'other inactive PC images remain lazy');
     e.window.PowerTBMTV.setPage('safety');
     assert.equal(e.el('safetyScreenshot').src, e.el('safetyScreenshot').dataset.demoSrc, 'PC retains original image resolution');
     assert.equal(e.el('guideImage').src, '');

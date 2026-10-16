@@ -24,13 +24,13 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/video-demo-icon-192-v1.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/video-demo-icon-180-v1.png">
   <link rel="stylesheet" href="styles.css?v=20261016-hide-tip-v106">
-  <link rel="stylesheet" href="safety4cut.css?v=20261013-safety-title-v97">
+  <link rel="stylesheet" href="safety4cut.css?v=20261016-safety-reveal-v107">
   <link rel="stylesheet" href="demo-hands-v80.css?v=20261006-windows-hand-v93">
   <link rel="stylesheet" href="demo-recorder-v81.css?v=20261006-recording-aspect-v95">
   <link rel="stylesheet" href="tv-compat.css?v=20261016-continuous-v104">
   <script src="tv-media-timeline.js?v=20261016-continuous-v104" defer></script>
-  <script src="tv-compat.js?v=20261016-continuous-v104" defer></script>
-  <script src="safety4cut.js?v=20261016-continuous-v104" defer></script>
+  <script src="tv-compat.js?v=20261016-safety-reveal-v107" defer></script>
+  <script src="safety4cut.js?v=20261016-safety-reveal-v107" defer></script>
   <link rel="stylesheet" href="subtitles.css?v=20261004-v87">
   <script src="subtitle-data.js?v=20261013-safety-title-v97" defer></script>
   <script src="subtitles.js?v=20261016-subtitle-clock-v105" defer></script>
@@ -480,9 +480,9 @@
                 <div class="safety-demo safety-fullscreen-photo" id="safetyDemo" role="group" aria-label="안전 4컷 제작과 교육영상 자동 시연">
                   <div class="safety-screen-viewport">
                     <div class="safety-screen-canvas">
-                      <img id="safetyScreenshot" data-demo-src="assets/safety4cut/01-main-menu-v97.png" alt="Power TBM 메인메뉴의 안전-4컷" width="1179" height="2556" decoding="async">
-                      <span class="safety-focus demo-highlight-box" aria-hidden="true"></span>
-                      <span class="safety-hand" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
+                      <img id="safetyScreenshot" data-demo-src="assets/safety4cut/01-main-menu-v97.png" data-demo-preload="true" alt="Power TBM 메인메뉴의 안전-4컷" width="1179" height="2556" decoding="async">
+                      <span class="safety-focus demo-highlight-box" aria-hidden="true" hidden></span>
+                      <span class="safety-hand" aria-hidden="true" hidden><span class="demo-hand-glyph">👆🏻</span></span>
                     </div>
                   </div>
                   <div class="safety-video-shell">

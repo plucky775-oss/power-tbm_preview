@@ -28,6 +28,8 @@
   let videoUnavailable = false;
   let paused = true;
   let mediaClock = false;
+  let imageRequest = 0;
+  let decodedSource = '';
 
   function fitCanvas() {
     if (!picture.naturalWidth || !picture.naturalHeight) return;
@@ -40,7 +42,28 @@
     canvas.style.width = `${width}px`;
     canvas.style.height = `${width / ratio}px`;
   }
-  picture.addEventListener('load', fitCanvas);
+  function revealImage() {
+    const source = picture.getAttribute('src');
+    if (!scenes[current]?.src || !source || !picture.complete || !picture.naturalWidth) return;
+    const request = imageRequest;
+    const reveal = () => {
+      if (request !== imageRequest || picture.getAttribute('src') !== source || !picture.complete || !picture.naturalWidth) return;
+      decodedSource = source;
+      fitCanvas();
+      root.classList.add('safety-image-ready');
+      focus.hidden = !scenes[current].focus;
+      hand.hidden = !scenes[current].gesture;
+    };
+    if (decodedSource === source || typeof picture.decode !== 'function') reveal();
+    else picture.decode().then(reveal, () => { /* Keep overlays hidden if decoding fails. */ });
+  }
+  picture.addEventListener('load', revealImage);
+  picture.addEventListener('error', () => {
+    imageRequest++;
+    decodedSource = '';
+    root.classList.remove('safety-image-ready');
+    focus.hidden = hand.hidden = true;
+  });
   window.addEventListener('resize', fitCanvas, { passive: true });
   if ('ResizeObserver' in window) new ResizeObserver(fitCanvas).observe(viewport);
 
@@ -52,6 +75,9 @@
     while (index > 0 && lastTime < scenes[index].at) index -= 1;
     const scene = scenes[index];
     if (index !== current) {
+      imageRequest++;
+      root.classList.remove('safety-image-ready');
+      focus.hidden = hand.hidden = true;
       current = index;
       root.dataset.scene = String(index);
       root.classList.toggle('safety-showing-video', Boolean(scene.video));
@@ -62,13 +88,13 @@
       document.querySelector('#safetySceneLabel').textContent = `${index + 1} / ${scenes.length} · ${scene.label}`;
       root.querySelector('#safetyCaption').textContent = scene.caption;
       if (scene.src) {
+        const previousSource = picture.getAttribute('src');
         if (window.PowerTBMTV?.setImage) window.PowerTBMTV.setImage(picture, `assets/safety4cut/${scene.src}`);
         else picture.src = `assets/safety4cut/${scene.src}`;
+        if (picture.getAttribute('src') !== previousSource) decodedSource = '';
         picture.alt = `Safety 4-Cut ${scene.label} 실제 화면`;
-        fitCanvas();
+        revealImage();
       }
-      focus.hidden = !scene.focus;
-      hand.hidden = !scene.gesture;
       if (scene.focus) {
         const [left, top, width, height] = scene.focus;
         Object.assign(focus.style, { left: `${left}%`, top: `${top}%`, width: `${width}%`, height: `${height}%` });

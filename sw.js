@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v106-20261016-hide-tip`;
+const CACHE_VERSION = `${CACHE_PREFIX}v107-20261016-safety-reveal`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -9,7 +9,7 @@ const PRECACHE_URLS = [
   './',
   './index.html',
   './tv-media-timeline.js?v=20261016-continuous-v104',
-  './tv-compat.js?v=20261016-continuous-v104',
+  './tv-compat.js?v=20261016-safety-reveal-v107',
   './tv-compat.css?v=20261016-continuous-v104',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261016-subtitle-clock-v105',
@@ -17,11 +17,11 @@ const PRECACHE_URLS = [
   './manifest.webmanifest',
   './styles.css?v=20261016-hide-tip-v106',
   './app.js?v=20261016-continuous-v104',
-  './safety4cut.css?v=20261013-safety-title-v97',
+  './safety4cut.css?v=20261016-safety-reveal-v107',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css?v=20261006-recording-aspect-v95',
   './demo-recorder-v81.js?v=20261016-recording-v102',
-  './safety4cut.js?v=20261016-continuous-v104',
+  './safety4cut.js?v=20261016-safety-reveal-v107',
   './pwa.js?v=20261016-stable-v100',
   './assets/tv-v104/tour.mp4',
   './assets/audio/07-safety4cut-intro-v97.m4a',

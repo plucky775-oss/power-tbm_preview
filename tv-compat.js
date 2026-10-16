@@ -7,6 +7,7 @@
   const api = window.PowerTBMTV = { enabled };
   // The original screenshots can occupy hundreds of MB when all chapters
   // decode together. Attach only the current chapter; use scaled copies on TV.
+  // Keep the single safety menu ready so selecting it does not show an empty phone.
   const imageFor = source => enabled && /^assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(source)
     ? source.replace('assets/', 'assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : source;
   const images = [...document.querySelectorAll('[data-demo-src]')];
@@ -24,7 +25,7 @@
   let imagePage = '';
   const syncImage = image => {
     const pages = pageFor(image);
-    if (!pages.length || pages.includes(imagePage)) {
+    if (!pages.length || pages.includes(imagePage) || image.dataset.demoPreload === 'true') {
       const source = imageFor(image.dataset.demoSrc);
       if (image.getAttribute('src') !== source) image.src = source;
     } else if (image.getAttribute('src')) image.removeAttribute('src');
