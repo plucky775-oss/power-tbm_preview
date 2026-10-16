@@ -378,6 +378,45 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   const e=environment();e.click('weatherDemoPage');await e.tick(1000);let before=e.writes;await e.tick(1000,10);
   assert.ok(e.writes-before<=16*21);tap(e);before=e.writes;await e.tick(1000);assert.equal(e.writes,before);
  });
+ await test('TV hands and touch effects follow every display frame while scene work stays at 20Hz', async () => {
+  for(const page of ['weather','meeting','support']) {
+   const e=environment();
+   const animation=name=>({animationName:name,values:[],_time:0,pause(){},play(){},
+    get currentTime(){return this._time;},set currentTime(t){this._time=t;this.values.push(t);}});
+   const hand=animation(page+'-hand'),ripple=animation(page+'-ripple'),scene=animation(page+'-scene');
+   e.el(page+'Demo')._animations=[hand,ripple,scene];
+   e.click(page+'DemoPage');await e.tick(1000);
+   const m=e.el('demoNarration'),counts=[m.loadCount,m.playCount,m.pauseCount,m.seekCount];
+   hand.values=[];ripple.values=[];scene.values=[];
+   await e.tick(1008,16);
+   assert.ok(hand.values.length>=60,page+' hand is still limited by the 50ms scene clock');
+   assert.deepEqual(ripple.values,hand.values,'touch effects must follow the same clock as the hand');
+   assert.ok(scene.values.length<=21,'smoothing a hand must not increase full scene work');
+   assert.ok(hand.values.every((t,i)=>!i||t>hand.values[i-1]),'hand time must advance continuously');
+   assert.deepEqual([m.loadCount,m.playCount,m.pauseCount,m.seekCount],counts,'gestures must not restart media');
+   m.stall=true;const held=hand.currentTime;await e.tick(160,16);
+   assert.equal(hand.currentTime,held,'gesture must wait when the audio clock stalls');
+   m.seeking=true;m._time+=1;await e.tick(32,16);
+   assert.equal(hand.currentTime,held,'unfinished seeks must not move the hand');
+   m.seeking=false;m.stall=false;
+   tap(e);const writes=hand.values.length;await e.tick(160,16);assert.equal(hand.values.length,writes);
+   tap(e);await e.tick(160,16);assert.ok(hand.values.length>writes,'resume must restart the gesture clock');
+   e.document.hidden=true;e.document.dispatchEvent({type:'visibilitychange'});
+   const hidden=hand.values.length;await e.tick(160,16);assert.equal(hand.values.length,hidden);
+  }
+ });
+ await test('TV safety hand moves on intermediate frames without moving ahead of its screenshot', async () => {
+  const e=environment();e.click('safetyDemoPage');await e.tick(4300);
+  const r=e.el('safetyDemo'),hand=r.querySelector('.safety-hand'),positions=[];
+  for(let i=0;i<12;i++) {await e.tick(16,16);positions.push([hand.style.left,hand.style.top,hand.style.transform].join('|'));}
+  assert.equal(new Set(positions).size,12,'safety hand is still moving in 50ms steps');
+  assert.equal(hand.style.left,'0px');assert.equal(hand.style.top,'0px');
+  assert.match(hand.style.transform,/translate3d\(/,'TV hand travel should avoid per-frame layout changes');
+  tap(e);const held=hand.style.transform;await e.tick(160,16);assert.equal(hand.style.transform,held);
+  // A lightweight gesture update must never show the next gesture over the previous image.
+  e.window.PowerTBMSafety.renderGestureAt(8.3);
+  assert.equal(hand.style.transform,held);assert.equal(r.dataset.scene,'0');
+ });
  await test('TV detection, forced opt-out and normal browser retain their players', async () => {
   for (const [q,ua,on] of [['','Mozilla/5.0 (Web0S; Linux/SmartTV)',true],['?tv=0','Web0S',false],['?tv=1&frame=intro','Web0S',false],['','Chrome',false]]) {
    const e=environment(q,ua);assert.equal(e.window.PowerTBMTV.enabled,on);

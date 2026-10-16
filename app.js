@@ -417,6 +417,7 @@
   let bgmFrame = null;
   let bgmFadeToken = 0;
   let syncedAnimations = [];
+  let syncedGestureAnimations = [];
   let goldenRulesClockFrame = null;
   let goldenRulesVideoActive = false;
   let goldenRulesPlayPending = false;
@@ -807,6 +808,7 @@
       try { animation.play(); } catch (_) { /* animation may already be detached */ }
     });
     syncedAnimations = [];
+    syncedGestureAnimations = [];
   };
 
   const getAnimationsForRoot = (root) => {
@@ -837,6 +839,7 @@
     syncedAnimations.forEach((animation) => {
       try { animation.pause(); } catch (_) { /* keep the fallback timeline available */ }
     });
+    syncedGestureAnimations = syncedAnimations.filter(animation => /hand|ripple/.test(animation.animationName));
   };
 
   const mapNarrationTimeToVisual = (segment, seconds) => {
@@ -899,10 +902,10 @@
     const visualFrameInterval = tvMode ? 50 : document.body.classList.contains('demo-recording') ? 32 : coarsePointer ? 30 : 14;
     const tick = (now) => {
       if (token !== narrationRunToken || !narrationRequested || !demoNarration) return;
-      if (!narrationLastVisualUpdate || now - narrationLastVisualUpdate >= visualFrameInterval) {
+      const entry = tvMode ? tv.segmentAtTime() : null;
+      if ((!tvMode || entry) && (!narrationLastVisualUpdate || now - narrationLastVisualUpdate >= visualFrameInterval)) {
         narrationLastVisualUpdate = now;
         if (tvMode) {
-          const entry = tv.segmentAtTime();
           if (entry && demoNarration.dataset.segment !== entry.id) {
             // Advance only the UI. Keep the media decoder running across
             // chapter and voice boundaries without pause, seek, load or play.
@@ -918,6 +921,17 @@
         const seconds = tvMode ? tv.localTime(segment) : demoNarration.currentTime;
         applyNarrationVisualTime(segment, seconds);
         syncClosingBgmFade(segment, seconds);
+      } else if (tvMode && entry && entry.id === demoNarration.dataset.segment) {
+        // Keep expensive scene/subtitle work at 20Hz, but sample small gestures
+        // on every display frame. Always use media time: buffering freezes them.
+        const segment = narrationByPage[demoPage]?.[narrationSegmentIndex];
+        const visualTime = mapNarrationTimeToVisual(segment, tv.localTime(segment));
+        if (demoPage === 'safety') safety?.renderGestureAt(visualTime / 1000);
+        else syncedGestureAnimations.forEach(animation => {
+          try {
+            if (animation.currentTime !== visualTime) animation.currentTime = visualTime;
+          } catch (_) { /* a scene can detach during a soft transition */ }
+        });
       }
       if (!demoPaused && !document.hidden && !demoNarration.ended) narrationFrame = window.requestAnimationFrame(tick);
     };

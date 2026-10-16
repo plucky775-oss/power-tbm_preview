@@ -19,6 +19,9 @@
   const duration = 102.604;
   const videoOffset = 38.037;
   const pressScale = parseFloat(getComputedStyle(root).getPropertyValue('--demo-hand-press-scale')) || .74;
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let canvasWidth = 0;
+  let canvasHeight = 0;
   let current = -1;
   let frame = 0;
   let lastTime = 0;
@@ -41,6 +44,9 @@
       : Math.min(box.width, box.height * ratio);
     canvas.style.width = `${width}px`;
     canvas.style.height = `${width / ratio}px`;
+    canvasWidth = width;
+    canvasHeight = width / ratio;
+    renderGestureAt(lastTime);
     return true;
   }
   function revealImage() {
@@ -138,12 +144,18 @@
   }
 
   // Drive the finger and press from the same audio clock as the scene.
+  function renderGestureAt(seconds) {
+    const scene = scenes[current];
+    // The scene renderer must reveal the next screenshot before its gesture.
+    if (!scene?.gesture || seconds < scene.at || seconds >= (scenes[current + 1]?.at ?? duration)) return;
+    renderGesture(scene, seconds - scene.at);
+  }
   function renderGesture(scene, elapsed) {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const reduceMotion = motionPreference.matches
       && !document.body.classList.contains('demo-recording');
     const gesture = scene.gesture;
-    focus.classList.remove('is-tapping');
     if (!gesture) {
+      focus.classList.remove('is-tapping');
       root.dataset.gesture = 'none';
       return;
     }
@@ -155,9 +167,12 @@
     const tapping = !reduceMotion && tapProgress >= 0 && tapProgress <= 1;
     const press = tapping ? Math.sin(tapProgress * Math.PI) : 0;
     const fade = Math.min(1, Math.max(0, (elapsed - gesture.start) / .25), Math.max(0, (gesture.end - elapsed) / .35));
+    // Reuse geometry from fitCanvas(). TV travel only changes a transform;
+    // it does not move layout coordinates or measure the phone every frame.
+    const travelTransform = tvMode ? `translate3d(${x * canvasWidth / 100}px, ${y * canvasHeight / 100}px, 0) ` : '';
     Object.assign(hand.style, {
-      left: `${x}%`, top: `${y}%`, opacity: String(reduceMotion ? 1 : fade),
-      transform: `translate(-50%, -10%) rotate(${-10 + 4 * press}deg) scale(${1 - (1 - pressScale) * press})`
+      left: tvMode ? '0px' : `${x}%`, top: tvMode ? '0px' : `${y}%`, opacity: String(reduceMotion ? 1 : fade),
+      transform: `${travelTransform}translate(-50%, -10%) rotate(${-10 + 4 * press}deg) scale(${1 - (1 - pressScale) * press})`
     });
     hand.style.setProperty('--tap-opacity', String(tapping ? 1 - tapProgress : 0));
     hand.style.setProperty('--tap-scale', String(1 + Math.max(0, tapProgress) * .8));
@@ -204,7 +219,7 @@
     videoUnavailable = true;
     root.querySelector('#safetyCaption').textContent = '교육영상을 불러오지 못했습니다';
   });
-  window.PowerTBMSafety = { scenes, duration, videoOffset, render, pause, startFallback, reset,
+  window.PowerTBMSafety = { scenes, duration, videoOffset, render, renderGestureAt, pause, startFallback, reset,
     get time() { return lastTime; }, get videoEnded() { return tvMode
       ? window.PowerTBMTV.segmentEnded('08-safety4cut-example')
       : sample.ended; } };

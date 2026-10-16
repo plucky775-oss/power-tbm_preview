@@ -50,3 +50,11 @@
 .tbm-tv .cinematic-backdrop-lightning-flash { display: none; }
 .tbm-tv .launch-intro-video { object-fit: cover; }
 .tbm-tv #demoRecord { display: none !important; }
+/* Promote only the small gesture layers, not full-screen screenshots. */
+.tbm-tv .tour-stage .demo-hand,
+.tbm-tv .tour-stage .meeting-hand,
+.tbm-tv .tour-stage .meeting-ai-swipe-hand,
+.tbm-tv .tour-stage .support-hand,
+.tbm-tv .tour-stage .safety-hand {
+  will-change: transform, opacity !important;
+}
