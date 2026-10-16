@@ -1,16 +1,16 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v111-20261017-tv-background`;
+const CACHE_VERSION = `${CACHE_PREFIX}v112-20261017-opening-ready`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './tv-media-timeline.js?v=20261016-continuous-v104',
-  './tv-compat.js?v=20261017-tv-background-v111',
-  './tv-compat.css?v=20261017-tv-background-v111',
+  './tv-media-timeline.js?v=20261017-opening-ready-v112',
+  './tv-compat.js?v=20261017-opening-ready-v112',
+  './tv-compat.css?v=20261017-opening-ready-v112',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261016-subtitle-clock-v105',
   './subtitle-data.js?v=20261013-safety-title-v97',
@@ -23,7 +23,7 @@ const PRECACHE_URLS = [
   './demo-recorder-v81.js?v=20261016-recording-v102',
   './safety4cut.js?v=20261017-tv-gestures-v110',
   './pwa.js?v=20261016-stable-v100',
-  './assets/tv-v104/tour.mp4',
+  './assets/tv-v112/tour.mp4',
   './assets/audio/07-safety4cut-intro-v97.m4a',
   './assets/safety4cut/01-main-menu-v97.png',
   './assets/safety4cut/02-upload-v75.png',
@@ -114,10 +114,10 @@ const PRECACHE_URLS = [
 // Separate desktop narration, BGM and foreground clips remain unused on TV.
 const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
   .filter(path => !path.startsWith('./assets/audio/') &&
-    (!/\.mp4(?:\?|$)/.test(path) || path.includes('/tv-v104/') || path.startsWith('./assets/background/')))
+    (!/\.mp4(?:\?|$)/.test(path) || path.includes('/tv-v112/') || path.startsWith('./assets/background/')))
   .map(path => /^\.\/assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(path)
     ? path.replace('./assets/', './assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : path)
-  : PRECACHE_URLS.filter(path => !path.includes('/tv-v104/'));
+  : PRECACHE_URLS.filter(path => !path.includes('/tv-v112/'));
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
 const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data\.js|tv-compat\.(?:js|css)|tv-media-timeline\.js)(?:\?|$)/.test(path) || path === './';

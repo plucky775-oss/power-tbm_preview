@@ -61,7 +61,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   constructor(tag,attrs={}){super(tag,attrs);this.paused=true;this.muted='muted'in attrs;this.ended=false;this._time=0;this.seekCount=0;this.pauseCount=0;this.duration=8;this.volume=1;this.readyState=4;this.seeking=false;this.playCount=0;this.loadCount=0;mediaSet.add(this);}
   get currentTime(){return this._time;}set currentTime(value){this.seekCount++;this._time=value;this.ended=false;}
   get currentSrc(){return this.src;}
-  load(){this.loadCount++;this.currentTime=0;this.ended=false;this.paused=true;const key=Object.keys(durations).find(k=>this.src.includes(k));this.duration=this.src===timeline.src?timeline.duration:durations[key]||8;this.dispatchEvent({type:'emptied'});if(!this.preventMetadata)this.dispatchEvent({type:'loadedmetadata'});}
+  load(){this.loadCount++;this._time=0;this.ended=false;this.paused=true;const key=Object.keys(durations).find(k=>this.src.includes(k));this.duration=this.src===timeline.src?timeline.duration:durations[key]||8;this.dispatchEvent({type:'emptied'});if(!this.preventMetadata)this.dispatchEvent({type:'loadedmetadata'});}
   play(){mediaPlays++;this.playCount++;if(!this.src && !this.querySelector('source'))return Promise.reject(new Error('no source'));this.paused=false;this.ended=false;if(!this.permanentStall)this.stall=false;this.dispatchEvent({type:'play'});return Promise.resolve();}
   pause(){this.pauseCount++;this.paused=true;this.dispatchEvent({type:'pause'});}
  }
@@ -102,6 +102,21 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   e.document.dispatchEvent({type:'pointerdown',target,clientX:500,clientY:300});
   e.document.dispatchEvent({type:'click',target});
  };
+ await test('TV prepares the opening behind the start gate and starts without reloading or seeking', async () => {
+  for(const mode of ['on','off']) {
+   const e=environment(),m=e.el('demoNarration');
+   assert.equal(m.src,timeline.src,'the opening must load before the user presses start');
+   assert.equal(m.preload,'auto');assert.equal(m.loadCount,1);
+   await e.tick(1000);
+   assert.equal(m.paused,true);assert.equal(m.currentTime,0);assert.equal(m.playCount,0);
+   e.document.querySelector(`[data-launch-sound="${mode}"]`).click();
+   await e.tick(9000);
+   assert.equal(m.loadCount,1,'start must reuse the prepared stream');
+   assert.equal(m.seekCount,0,'seeking to an already prepared zero discards the first decoded frames');
+   assert.equal(m.muted,mode==='off');assert.equal(m.paused,false);
+   assert.equal(m.dataset.segment,'01-weather');
+  }
+ });
  await test('TV uses one narration player plus at most one muted background through every chapter', async () => {
   const e = environment();
   e.document.querySelector('[data-launch-sound="on"]').click();

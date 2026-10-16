@@ -103,7 +103,9 @@
   const seekToChapter = () => {
     if (pendingStart === null) return;
     try {
-      media.currentTime = pendingStart;
+      // Keep the first decoded frames when the prepared opening is already at
+      // zero. An unnecessary seek can flush the native TV decoder's queue.
+      if (Math.abs(media.currentTime - pendingStart) > .001) media.currentTime = pendingStart;
       pendingStart = null;
     } catch (_) { /* loadedmetadata will retry on older TV engines */ }
   };
@@ -262,6 +264,10 @@
   api.park = park;
   api.media = media;
   park();
+  // Buffer while the sound-choice gate is visible. Starting playback must reuse
+  // this same element/source; no autoplay, extra decoder or JavaScript Blob.
+  media.src = timeline.src;
+  media.load();
   window.addEventListener('resize', scheduleLayout, { passive: true });
   window.addEventListener('scroll', scheduleLayout, { passive: true });
   document.addEventListener('fullscreenchange', scheduleLayout);
