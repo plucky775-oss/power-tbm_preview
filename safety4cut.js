@@ -41,6 +41,7 @@
       : Math.min(box.width, box.height * ratio);
     canvas.style.width = `${width}px`;
     canvas.style.height = `${width / ratio}px`;
+    return true;
   }
   function revealImage() {
     const source = picture.getAttribute('src');
@@ -49,7 +50,7 @@
     const reveal = () => {
       if (request !== imageRequest || picture.getAttribute('src') !== source || !picture.complete || !picture.naturalWidth) return;
       decodedSource = source;
-      fitCanvas();
+      if (!fitCanvas()) return;
       root.classList.add('safety-image-ready');
       focus.hidden = !scenes[current].focus;
       hand.hidden = !scenes[current].gesture;
@@ -94,6 +95,9 @@
         if (picture.getAttribute('src') !== previousSource) decodedSource = '';
         picture.alt = `Safety 4-Cut ${scene.label} 실제 화면`;
         revealImage();
+        // reset() runs before the phone's active class changes. Fit the cached
+        // image again before painting, including TV engines without ResizeObserver.
+        if (!root.classList.contains('safety-image-ready')) requestAnimationFrame(revealImage);
       }
       if (scene.focus) {
         const [left, top, width, height] = scene.focus;

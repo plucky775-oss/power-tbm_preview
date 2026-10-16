@@ -229,6 +229,21 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
    assert.ok(e.el('supportDemo').querySelectorAll('img').every(i=>!i.getAttribute('src')));
   }
  });
+ await test('A prepared safety image waits for the newly visible phone layout', async () => {
+  for(const query of ['?tv=1','?tv=0']) {
+   const e=environment(query,'Chrome',true),r=e.el('safetyDemo'),viewport=r.querySelector('.safety-screen-viewport');
+   e.click('safetyDemoPage');await e.tick(500);
+   const visibleBox=viewport.getBoundingClientRect;
+   viewport.getBoundingClientRect=()=>({width:0,height:0});
+   e.window.PowerTBMSafety.reset();
+   assert.equal(r.classList.contains('safety-image-ready'),false,'do not reveal a cached image in an unfitted canvas');
+   assert.equal(r.querySelector('.safety-focus').hidden,true);
+   viewport.getBoundingClientRect=visibleBox;
+   await e.tick(50);
+   assert.equal(r.classList.contains('safety-image-ready'),true,'fit after activation even without ResizeObserver callbacks');
+   assert.equal(r.querySelector('.safety-focus').hidden,false);
+  }
+ });
  await test('TV prepares a full-size Golden Rules surface before its visible window', async () => {
   const e = environment(); e.click('supportDemoPage'); await e.tick(2000);
   const m = e.el('demoNarration');
