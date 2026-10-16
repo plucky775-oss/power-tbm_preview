@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v110-20261017-tv-gestures`;
+const CACHE_VERSION = `${CACHE_PREFIX}v111-20261017-tv-background`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -9,14 +9,14 @@ const PRECACHE_URLS = [
   './',
   './index.html',
   './tv-media-timeline.js?v=20261016-continuous-v104',
-  './tv-compat.js?v=20261016-support-reveal-v109',
-  './tv-compat.css?v=20261017-tv-gestures-v110',
+  './tv-compat.js?v=20261017-tv-background-v111',
+  './tv-compat.css?v=20261017-tv-background-v111',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261016-subtitle-clock-v105',
   './subtitle-data.js?v=20261013-safety-title-v97',
   './manifest.webmanifest',
   './styles.css?v=20261016-support-reveal-v109',
-  './app.js?v=20261017-tv-gestures-v110',
+  './app.js?v=20261017-tv-background-v111',
   './safety4cut.css?v=20261016-safety-reveal-v107',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css?v=20261006-recording-aspect-v95',
@@ -110,11 +110,11 @@ const PRECACHE_URLS = [
   './assets/video/power-tbm-opening-ansan-v77.mp4'
 ];
 
-// A TV never uses the separate desktop audio/background video streams.
-// Preserve a complete offline tour without downloading those unused files.
+// Keep the continuous narration and the five 640x360 silent backgrounds.
+// Separate desktop narration, BGM and foreground clips remain unused on TV.
 const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
   .filter(path => !path.startsWith('./assets/audio/') &&
-    (!/\.mp4(?:\?|$)/.test(path) || path.includes('/tv-v104/')))
+    (!/\.mp4(?:\?|$)/.test(path) || path.includes('/tv-v104/') || path.startsWith('./assets/background/')))
   .map(path => /^\.\/assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(path)
     ? path.replace('./assets/', './assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : path)
   : PRECACHE_URLS.filter(path => !path.includes('/tv-v104/'));

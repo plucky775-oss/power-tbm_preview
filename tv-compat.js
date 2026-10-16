@@ -1,4 +1,5 @@
-/* webOS uses one media pipeline. The entire tour shares one continuous file. */
+/* Narration and foreground clips share one continuous file; one muted video
+   supplies the current chapter's lightweight moving background. */
 (() => {
   'use strict';
   const params = new URLSearchParams(location.search);
@@ -120,8 +121,13 @@
   api.localTime = segment => Math.max(0, media.currentTime - entryFor(segment).start);
   api.segmentEnded = id => media.currentTime >= entryFor({ id }).end - .001;
 
+  const backgroundSources = {};
   document.querySelectorAll('video').forEach(video => {
     if (video === media || video.id === 'demoRecordPreview') return;
+    if (video.dataset.cinematicPage) {
+      const key = video.classList.contains('cinematic-backdrop-emergency') ? 'emergency' : video.dataset.cinematicPage;
+      backgroundSources[key] = video.getAttribute('src') || video.querySelector('source')?.getAttribute('src');
+    }
     const id = video.id;
     const placeholder = document.createElement('img');
     placeholder.id = id;
@@ -144,6 +150,70 @@
   bgm.removeAttribute('src');
   bgm.load();
   bgm.remove();
+
+  // Reuse a single background element. Inactive chapters keep only posters,
+  // so their original video elements cannot retain additional decoders.
+  const backdrop = document.getElementById('cinematicBackdrop');
+  const background = document.createElement('video');
+  background.id = 'tvBackdrop';
+  background.className = 'cinematic-backdrop-video';
+  background.muted = background.defaultMuted = true;
+  background.loop = true;
+  background.playsInline = true;
+  background.setAttribute('playsinline', '');
+  background.setAttribute('webkit-playsinline', '');
+  background.setAttribute('aria-hidden', 'true');
+  background.preload = 'none';
+  background.tabIndex = -1;
+  background.hidden = true;
+  backdrop.append(background);
+  let backgroundRequest = 0;
+  let backgroundPlayPending = false;
+  const showBackground = () => {
+    if (background.getAttribute('src') && background.readyState >= 2 && !background.error) {
+      backdrop.classList.add('tv-background-ready');
+    }
+  };
+  const failBackground = () => {
+    background.dataset.playbackFailed = 'true';
+    background.pause();
+    backdrop.classList.remove('tv-background-ready');
+  };
+  background.addEventListener('loadeddata', showBackground);
+  background.addEventListener('error', failBackground);
+  api.syncBackground = (page, { paused, emergency = false }) => {
+    const key = page === 'safety' ? 'meeting' : page === 'support' && emergency ? 'emergency' : page;
+    const source = backgroundSources[key] || '';
+    if ((background.getAttribute('src') || '') !== source) {
+      backgroundRequest++;
+      backgroundPlayPending = false;
+      background.pause();
+      backdrop.classList.remove('tv-background-ready');
+      background.dataset.playbackFailed = 'false';
+      if (source) background.src = source;
+      else background.removeAttribute('src');
+      background.load();
+    }
+    background.hidden = !source;
+    if (!source || paused) {
+      if (backgroundPlayPending || !background.paused) {
+        backgroundRequest++;
+        backgroundPlayPending = false;
+        background.pause();
+      }
+      return;
+    }
+    if (background.error || background.dataset.playbackFailed === 'true') return;
+    showBackground();
+    if (!background.paused || backgroundPlayPending) return;
+    const token = backgroundRequest;
+    backgroundPlayPending = true;
+    background.play().catch(error => {
+      if (token !== backgroundRequest || error?.name === 'AbortError') return;
+      failBackground();
+      console.warn('배경영상 재생을 시작하지 못했습니다.', error);
+    }).finally(() => { if (token === backgroundRequest) backgroundPlayPending = false; });
+  };
 
   let target = null;
   let layoutFrame = 0;

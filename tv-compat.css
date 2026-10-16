@@ -20,7 +20,7 @@
 .tbm-tv .guide-media > #openingDemoVideo { width: 100%; height: 100%; }
 /* A fixed native video plane cannot follow the entrance transform. */
 .tbm-tv .tour-stage { transform: none !important; transition: none !important; }
-.tbm-tv .tour-stage *, .tbm-tv .tour-stage *::before, .tbm-tv .tour-stage *::after {
+.tbm-tv .tour-stage, .tbm-tv .tour-stage *, .tbm-tv .tour-stage *::before, .tbm-tv .tour-stage *::after {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   filter: none !important;
@@ -46,7 +46,17 @@
 .tbm-tv .subtitle-word { transition: none; }
 .tbm-tv .support-golden-video-shell .tv-video-placeholder { width: 100%; height: 100%; object-fit: cover; }
 .tbm-tv .cinematic-backdrop-video { object-fit: cover; }
-.tbm-tv .cinematic-backdrop-intro { animation: none !important; }
+.tbm-tv .cinematic-backdrop.is-paused .cinematic-backdrop-intro { animation-play-state: paused; }
+.tbm-tv #tvBackdrop {
+  opacity: 0;
+  filter: none;
+  transform: none;
+  transition: none;
+  will-change: auto;
+}
+.tbm-tv #tvBackdrop[hidden] { display: none; }
+.tbm-tv .cinematic-backdrop.tv-background-ready #tvBackdrop { opacity: .58; }
+.tbm-tv .cinematic-backdrop.tv-background-ready .tv-video-placeholder { opacity: 0 !important; }
 .tbm-tv .cinematic-backdrop-lightning-flash { display: none; }
 .tbm-tv .launch-intro-video { object-fit: cover; }
 .tbm-tv #demoRecord { display: none !important; }

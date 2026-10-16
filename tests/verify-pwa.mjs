@@ -112,8 +112,9 @@ for (const url of tvPrecacheUrls) {
   const file = url === './' ? './index.html' : url.split('?')[0];
   tvPrecacheBytes += (await stat(path.join(siteRoot, file))).size;
   assert.doesNotMatch(url, /assets\/audio\//, 'TV must not precache separate narration and BGM');
-  if (/\.mp4$/.test(url)) assert.match(url, /tv-v104/, 'TV must not precache unused desktop videos');
+  if (/\.mp4$/.test(url)) assert.match(url, /assets\/(?:tv-v104|background)\//, 'TV must not precache unused desktop foreground videos');
 }
+assert.equal(tvPrecacheUrls.filter(url => /assets\/background\/.+\.mp4$/.test(url)).length, 5, 'all moving backgrounds must work offline');
 assert.ok(tvPrecacheBytes < 35 * 1024 * 1024, 'TV offline download exceeded its budget');
 
 const expectedBackgroundFiles = [
@@ -154,7 +155,7 @@ const coreUrls = [
   './index.html',
   './manifest.webmanifest',
   './styles.css?v=20261016-support-reveal-v109',
-  './app.js?v=20261017-tv-gestures-v110',
+  './app.js?v=20261017-tv-background-v111',
   './pwa.js?v=20261016-stable-v100',
   './subtitles.js?v=20261016-subtitle-clock-v105',
   './subtitle-data.js?v=20261013-safety-title-v97',
@@ -260,7 +261,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v110-20261017-tv-gestures/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v111-20261017-tv-background/);
 assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);

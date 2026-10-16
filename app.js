@@ -596,15 +596,23 @@
     if (!cinematicBackdrop) return;
     // Recording is an explicit request for moving footage, including on PCs
     // whose OS disables decorative motion or enables data saving.
-    const cinematicPlaybackAllowed = !tvMode && (document.body.classList.contains('demo-recording')
-      || (!reduceMotion && !navigator.connection?.saveData));
+    const cinematicPlaybackAllowed = tvMode || document.body.classList.contains('demo-recording')
+      || (!reduceMotion && !navigator.connection?.saveData);
     const previousPage = cinematicBackdrop.dataset.demoPage;
     const pageChanged = previousPage !== demoPage;
-    const playbackPaused = demoPaused || document.hidden || foregroundVideoActive;
+    const playbackPaused = demoPaused || document.hidden || (!tvMode && foregroundVideoActive);
     cinematicBackdrop.dataset.demoPage = demoPage;
     cinematicBackdrop.dataset.demoMode = demoMode;
     cinematicBackdrop.classList.toggle('is-paused', playbackPaused);
     cinematicBackdrop.classList.toggle('is-static', !cinematicPlaybackAllowed);
+
+    if (tvMode) {
+      tv.syncBackground(demoPage, {
+        paused: playbackPaused || !narrationRequested || ['blocked', 'error', 'complete'].includes(narrationState),
+        emergency: narrationByPage.support[narrationSegmentIndex]?.id === '05-emergency'
+      });
+      return;
+    }
 
     cinematicVideos.forEach((video) => {
       let active = video.dataset.cinematicPage === demoPage
@@ -643,7 +651,7 @@
 
   const updateDemoStateData = () => {
     if (!guideStage) return;
-    guideStage.dataset.playbackMode = tvMode ? 'tv-single-player' : 'standard';
+    guideStage.dataset.playbackMode = tvMode ? 'tv-continuous-background' : 'standard';
     guideStage.dataset.demoPage = demoPage;
     tv?.setPage(demoPage);
     guideStage.dataset.demoMode = demoMode;

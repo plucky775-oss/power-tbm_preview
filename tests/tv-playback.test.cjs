@@ -82,11 +82,15 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
  const tick=async(ms,step=50)=>{for(let elapsed=0;elapsed<ms;elapsed+=step){now+=step;
   for(const m of [...mediaSet]){if(!m.parentElement||m.paused||m.ended||m.stall||m.permanentStall||document.hidden)continue;
    if(m.id==='demoNarration')seen.add(m.getAttribute('src'));m._time=Math.min(m.duration,m.currentTime+step/1000);m.dispatchEvent({type:'timeupdate'});
-   if(m.currentTime>=m.duration){m.ended=true;m.paused=true;m.dispatchEvent({type:'ended'});}}
+   if(m.currentTime>=m.duration){if(m.loop){m._time=0;continue;}m.ended=true;m.paused=true;m.dispatchEvent({type:'ended'});}}
   for(const[id,t]of[...timers])if(t.at<=now){if(t.repeat)t.at=now+t.repeat;else timers.delete(id);t.fn();}
   const frames=[...raf.values()];raf.clear();for(const fn of frames)fn(now);
   await Promise.resolve();await Promise.resolve();
-  if(ctx.window.PowerTBMTV.enabled)assert.ok([...mediaSet].filter(m=>m.parentElement&&!m.paused&&!m.ended).length<=1,'TV starts multiple media players');
+  if(ctx.window.PowerTBMTV.enabled){
+   const playing=[...mediaSet].filter(m=>m.parentElement&&!m.paused&&!m.ended);
+   assert.ok(playing.length<=2,'TV may only run narration and one silent background');
+   assert.ok(playing.every(m=>m.id==='demoNarration'||(m.id==='tvBackdrop'&&m.muted)), 'unexpected TV media decoder');
+  }
  }};
  return {document,window,tick,seen,errors,get writes(){return writes;},get mediaPlays(){return mediaPlays;},el:id=>document.getElementById(id),click:id=>document.getElementById(id).click(),context:ctx};
 }
@@ -98,7 +102,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   e.document.dispatchEvent({type:'pointerdown',target,clientX:500,clientY:300});
   e.document.dispatchEvent({type:'click',target});
  };
- await test('TV uses one active player through all current chapters and loops', async () => {
+ await test('TV uses one narration player plus at most one muted background through every chapter', async () => {
   const e = environment();
   e.document.querySelector('[data-launch-sound="on"]').click();
   await e.tick(290000);
@@ -111,6 +115,43 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   for (const id of ['openingDemoVideo', 'safetyExample', 'goldenRulesVideo', 'launchIntroVideo']) {
    assert.equal(e.el(id).tagName, 'IMG', id + ' must not allocate another decoder');
   }
+ });
+ await test('TV moving backgrounds switch, loop and pause without restarting the narration', async () => {
+  const e=environment(),bg=e.el('tvBackdrop');
+  assert.ok(bg,'TV must retain a live background video');
+  assert.equal(bg.tagName,'VIDEO');assert.equal(bg.muted,true);assert.equal(bg.loop,true);
+  assert.equal(bg.getAttribute('src'),null,'background must not download before starting');
+  const expected={weather:'weather-powerlines',meeting:'tablet-review',support:'field-tools',safety:'tablet-review'};
+  for(const [page,source] of Object.entries(expected)) {
+   e.click(page+'DemoPage');await e.tick(500);
+   assert.ok(bg.src.includes(source),page+' selected the wrong background');
+   assert.equal(bg.paused,false);assert.ok(bg.currentTime>0);
+   const m=e.el('demoNarration'),loads=m.loadCount,play=m.playCount,seek=m.seekCount;
+   const loaded=bg.loadCount;
+   tap(e);const held=bg.currentTime;await e.tick(500);assert.equal(bg.currentTime,held);
+   tap(e);await e.tick(500);assert.ok(bg.currentTime>held);assert.equal(bg.loadCount,loaded);
+   assert.equal(m.loadCount,loads);assert.equal(m.seekCount,seek);assert.equal(m.playCount,play+1);
+   e.document.hidden=true;e.document.dispatchEvent({type:'visibilitychange'});
+   assert.equal(bg.paused,true);e.document.hidden=false;e.document.dispatchEvent({type:'visibilitychange'});
+   await e.tick(500);assert.equal(bg.paused,false);
+  }
+  e.click('supportDemoPage');await e.tick(17000);
+  assert.equal(e.el('demoNarration').dataset.surface,'support');assert.equal(bg.paused,false,'Golden Rules must keep the background moving');
+  await e.tick(16000);assert.ok(bg.src.includes('emergency-response'));
+  e.click('safetyDemoPage');await e.tick(40000);
+  assert.equal(e.el('demoNarration').dataset.surface,'safety');assert.equal(bg.paused,false,'4-cut playback must keep the background moving');
+  await e.tick(62000);assert.equal(bg.paused,false);assert.equal(e.el('tourStage').dataset.demoPage,'safety');
+  await e.tick(1500);assert.ok(bg.src.includes('tbm-guide-closing'));
+  await e.tick(8500);assert.equal(bg.paused,false,'short closing background must loop');
+ });
+ await test('TV background errors and buffering never stop the narration stream', async () => {
+  const e=environment();e.click('weatherDemoPage');await e.tick(1000);
+  const bg=e.el('tvBackdrop'),m=e.el('demoNarration'),time=m.currentTime,loads=m.loadCount;
+  bg.permanentStall=true;await e.tick(1000);assert.ok(m.currentTime>time);assert.equal(m.loadCount,loads);
+  bg.error=new Error('background decoder unavailable');bg.dispatchEvent({type:'error'});
+  assert.equal(bg.paused,true);assert.equal(e.el('cinematicBackdrop').classList.contains('tv-background-ready'),false);
+  const healthy=m.currentTime;await e.tick(1000);assert.ok(m.currentTime>healthy);assert.equal(m.paused,false);
+  assert.equal(m.loadCount,loads);assert.notEqual(e.el('tourStage').dataset.narrationState,'error');
  });
  await test('Every automatic voice/chapter change keeps the decoder and audio clock running', async () => {
   const e=environment();e.document.querySelector('[data-launch-sound="on"]').click();await e.tick(1000);
