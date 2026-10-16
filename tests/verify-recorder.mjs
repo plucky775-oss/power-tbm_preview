@@ -245,9 +245,9 @@ for (const options of [{ withAudio: false }, { failVideo: true }, { cancel: true
     const url = index.match(new RegExp(`(?:src|href)="(${name.replaceAll('.', '\\.')}\\?[^"\\s]+)"`))?.[1];
     assert(url, `${name} needs a versioned entry point`);
     assert(precache.includes('./' + url), `${name} entry point must match the offline cache`);
-    assert.match(url, /recording-aspect-v95/);
+    assert.match(url, name.endsWith('.js') ? /20261016-tv-v99/ : /recording-aspect-v95/);
   }
-  assert.match(vm.runInContext('CACHE_NAME', context), /v98-20261013-touch-pause$/);
+  assert.match(vm.runInContext('CACHE_NAME', context), /v99-20261016-tv$/);
   assert.match(index, /<option value="4:3" selected>/);
   assert.match(index, /<option value="16:9">/);
 }

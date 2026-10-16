@@ -136,9 +136,9 @@ const coreUrls = [
   './index.html',
   './manifest.webmanifest',
   './styles.css?v=20261013-touch-pause-v98',
-  './app.js?v=20261013-touch-pause-v98',
+  './app.js?v=20261016-tv-v99',
   './pwa.js?v=20260816-exhibition-type-v70',
-  './subtitles.js?v=20261006-recording-v92',
+  './subtitles.js?v=20261016-tv-v99',
   './subtitle-data.js?v=20261013-safety-title-v97',
   './subtitles.css?v=20261004-v87'
 ];
@@ -242,7 +242,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v98-20261013-touch-pause/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v99-20261016-tv/);
 assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
@@ -310,6 +310,7 @@ for (const relativeUrl of mediaUrls) {
   assert.match(response.headers.get('content-range') || '', /^bytes 10-29\/\d+$/);
   assert.equal(Number(response.headers.get('content-length')), 20);
   assert.equal((await response.arrayBuffer()).byteLength, 20);
+  assert.ok(vm.runInContext('rangeBufferCache.size', context) <= 3, 'repeated playback must not retain every media buffer');
 }
 
 const suffixResponse = await dispatchFetch(new Request(new URL(mediaUrls[0], baseUrl), {

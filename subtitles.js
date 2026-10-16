@@ -88,7 +88,11 @@
     }
     cue.words.forEach((word, index) => {
       const progress = Math.max(0, Math.min(1, (lastTime - word.start) / Math.max(.02, word.end - word.start)));
-      words[index].style.setProperty('--read', `${(progress * 100).toFixed(1)}%`);
+      const value = `${(progress * 100).toFixed(1)}%`;
+      if (words[index].dataset.read !== value) {
+        words[index].dataset.read = value;
+        words[index].style.setProperty('--read', value);
+      }
     });
   }
 

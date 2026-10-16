@@ -1,0 +1,47 @@
+/* Only active on webOS/SmartTV or with ?tv=1. */
+.tv-media-player {
+  position: fixed;
+  display: block;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  pointer-events: none;
+  background: #05141f;
+}
+.tbm-tv .safety-video-shell .tv-video-placeholder {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+.tbm-tv .tour-stage *, .tbm-tv .tour-stage *::before, .tbm-tv .tour-stage *::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.tbm-tv .tour-stage, .tbm-tv .phone-frame, .tbm-tv .support-golden-video-shell {
+  box-shadow: none !important;
+}
+.tbm-tv .support-golden-video-shell { transform: none !important; }
+.tbm-tv .demo-highlight-box {
+  box-shadow: 0 0 0 2px #fff !important;
+}
+/* Remove unused scenes from layout/paint instead of leaving transparent layers. */
+.tbm-tv .guide-phone:not(.demo-active) .weather-demo,
+.tbm-tv .guide-phone:not(.meeting-demo-active) .meeting-demo,
+.tbm-tv .guide-phone:not(.support-demo-active) .support-demo,
+.tbm-tv .guide-phone:not(.closing-demo-active) .closing-demo {
+  display: none !important;
+}
+.tbm-tv #tourStage[data-page-turn] { animation: none; transform: none; }
+.tbm-tv #tourStage[data-page-turn]::after { display: none; }
+.tbm-tv .tv-video-placeholder { transition: none !important; transform: none !important; }
+.tbm-tv .subtitle-word { transition: none; }
+.tbm-tv .support-golden-video-shell .tv-video-placeholder { width: 100%; height: 100%; object-fit: cover; }
+.tbm-tv .cinematic-backdrop-video { object-fit: cover; }
+.tbm-tv .cinematic-backdrop-intro { animation: none !important; }
+.tbm-tv .cinematic-backdrop-lightning-flash { display: none; }
+.tbm-tv .launch-intro-video { object-fit: cover; }
+.tbm-tv #demoRecord { display: none !important; }

@@ -1,23 +1,33 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v98-20261013-touch-pause`;
+const CACHE_NAME = `${CACHE_PREFIX}v99-20261016-tv`;
 const PRECACHE_CONCURRENCY = 3;
 const PRECACHE_URLS = [
   './',
   './index.html',
+  './tv-compat.js?v=20261016-tv-v99',
+  './tv-compat.css?v=20261016-tv-v99',
   './subtitles.css?v=20261004-v87',
-  './subtitles.js?v=20261006-recording-v92',
+  './subtitles.js?v=20261016-tv-v99',
   './subtitle-data.js?v=20261013-safety-title-v97',
   './manifest.webmanifest',
   './styles.css?v=20261013-touch-pause-v98',
-  './app.js?v=20261013-touch-pause-v98',
+  './app.js?v=20261016-tv-v99',
   './safety4cut.css?v=20261013-safety-title-v97',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css?v=20261006-recording-aspect-v95',
-  './demo-recorder-v81.js?v=20261006-recording-aspect-v95',
-  './safety4cut.js?v=20261013-safety-title-v97',
+  './demo-recorder-v81.js?v=20261016-tv-v99',
+  './safety4cut.js?v=20261016-tv-v99',
   './pwa.js?v=20260816-exhibition-type-v70',
+  './assets/tv-v99/00-opening.mp4',
+  './assets/tv-v99/01-weather.mp4',
+  './assets/tv-v99/02-tbm-basic.mp4',
+  './assets/tv-v99/03-ai-pdf.mp4',
+  './assets/tv-v99/04-safety-tools.mp4',
+  './assets/tv-v99/05-emergency.mp4',
+  './assets/tv-v99/06-closing.mp4',
+  './assets/tv-v99/07-safety4cut-intro.mp4',
   './assets/audio/07-safety4cut-intro-v97.m4a',
   './assets/safety4cut/01-main-menu-v97.png',
   './assets/safety4cut/02-upload-v75.png',
@@ -105,7 +115,7 @@ const PRECACHE_URLS = [
 ];
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
-const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data\.js)(?:\?|$)/.test(path) || path === './';
+const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data\.js|tv-compat\.(?:js|css))(?:\?|$)/.test(path) || path === './';
 
 const precacheInSmallBatches = async (cache) => {
   let nextIndex = 0;
@@ -165,6 +175,9 @@ const readRangeBuffer = (request, cachedResponse) => {
       rangeBufferCache.delete(cacheKey);
       throw error;
     });
+    // Bound memory across a repeating exhibition tour while retaining a few
+    // concurrent desktop streams (narration, music and the active background).
+    if (rangeBufferCache.size >= 3) rangeBufferCache.delete(rangeBufferCache.keys().next().value);
     rangeBufferCache.set(cacheKey, bufferTask);
   }
   return rangeBufferCache.get(cacheKey);

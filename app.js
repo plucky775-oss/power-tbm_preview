@@ -4,6 +4,8 @@
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
   let reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tv = window.PowerTBMTV;
+  const tvMode = Boolean(tv?.enabled);
   const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
   // Segoe UI's pointing hand is wider than Apple's glyph at the same font size.
   document.documentElement.classList.toggle('windows-hands', /^Win/i.test(navigator.userAgentData?.platform || navigator.platform || ''));
@@ -223,23 +225,23 @@
   const safety = window.PowerTBMSafety;
   const homeReset = $('#homeReset');
   const launchIntro = $('#launchIntro');
-  const launchIntroVideo = $('#launchIntroVideo');
+  const launchIntroVideo = tvMode ? null : $('#launchIntroVideo');
   const launchStartPanel = $('#launchStartPanel');
   const launchSoundChoices = $('#launchSoundChoices');
   const launchSoundButtons = $$('[data-launch-sound]', launchStartPanel || document);
-  const openingDemoVideo = $('#openingDemoVideo');
+  const openingDemoVideo = tvMode ? null : $('#openingDemoVideo');
   const narrationAudio = $('#demoNarration');
-  const safetyExample = $('#safetyExample');
+  const safetyExample = tvMode ? null : $('#safetyExample');
   let demoNarration = narrationAudio;
-  const demoBgm = $('#demoBgm');
+  const demoBgm = tvMode ? null : $('#demoBgm');
   const demoMute = $('#demoMute');
   const cinematicBackdrop = $('#cinematicBackdrop');
-  const cinematicVideos = $$('[data-cinematic-page]', cinematicBackdrop || document);
+  const cinematicVideos = tvMode ? [] : $$('[data-cinematic-page]', cinematicBackdrop || document);
   const weatherDemo = $('#weatherDemo');
   const meetingDemo = $('#meetingDemo');
   const supportDemo = $('#supportDemo');
   const goldenRulesVideoShell = $('.support-golden-video-shell');
-  const goldenRulesVideo = $('#goldenRulesVideo');
+  const goldenRulesVideo = tvMode ? null : $('#goldenRulesVideo');
   const closingDemo = $('#closingDemo');
 
   // The basic-information form is built with fixed-size DOM controls while the
@@ -587,8 +589,8 @@
     if (!cinematicBackdrop) return;
     // Recording is an explicit request for moving footage, including on PCs
     // whose OS disables decorative motion or enables data saving.
-    const cinematicPlaybackAllowed = document.body.classList.contains('demo-recording')
-      || (!reduceMotion && !navigator.connection?.saveData);
+    const cinematicPlaybackAllowed = !tvMode && (document.body.classList.contains('demo-recording')
+      || (!reduceMotion && !navigator.connection?.saveData));
     const previousPage = cinematicBackdrop.dataset.demoPage;
     const pageChanged = previousPage !== demoPage;
     const playbackPaused = demoPaused || document.hidden;
@@ -625,6 +627,7 @@
 
   const updateDemoStateData = () => {
     if (!guideStage) return;
+    guideStage.dataset.playbackMode = tvMode ? 'tv-single-player' : 'standard';
     guideStage.dataset.demoPage = demoPage;
     guideStage.dataset.demoMode = demoMode;
     guideStage.dataset.narrationState = narrationState;
@@ -838,6 +841,7 @@
   const applyNarrationVisualTime = (segment, seconds) => {
     if (!segment) return;
     window.PowerTBMSubtitles?.render(segment.id, seconds);
+    if (tvMode) tv.present(demoPage, segment, mapNarrationTimeToVisual(segment, seconds));
     if (demoPage === 'intro') {
       // Audio and video start, pause and resume together. Let the hardware
       // decoder advance naturally instead of seeking on every animation frame.
@@ -847,7 +851,7 @@
       // Intro narration and original MP4 audio have separate local clocks.
       const stageSeconds = mapNarrationTimeToVisual(segment, seconds) / 1000;
       safety?.render(stageSeconds, { paused: demoPaused || document.hidden,
-        mediaClock: demoNarration === safetyExample,
+        mediaClock: tvMode || demoNarration === safetyExample,
         finishing: segment.id === '08-safety4cut-example' && demoNarration.ended });
       if (demoBgm && safety && stageSeconds >= safety.videoOffset - .65) {
         cancelBgmFrame();
@@ -867,7 +871,7 @@
 
   const runNarrationVisualClock = (token) => {
     cancelNarrationFrame();
-    const visualFrameInterval = coarsePointer ? 30 : 14;
+    const visualFrameInterval = tvMode ? 50 : coarsePointer ? 30 : 14;
     const tick = (now) => {
       if (token !== narrationRunToken || !narrationRequested || !demoNarration) return;
       if (!narrationLastVisualUpdate || now - narrationLastVisualUpdate >= visualFrameInterval) {
@@ -898,7 +902,7 @@
   const handleNarrationFailure = (error, token) => {
     if (token !== narrationRunToken) return;
     if (error?.name === 'AbortError' && (demoPaused || document.hidden || stageTransitioning)) return;
-    if (demoPage === 'safety' || document.body.classList.contains('demo-recording')) {
+    if (tvMode || demoPage === 'safety' || document.body.classList.contains('demo-recording')) {
       // Keep the failed scene in place. A silent fallback used to restart the
       // 4-cut introduction when the original video's audio failed to load.
       cancelNarrationFrame();
@@ -933,16 +937,17 @@
     if (!demoNarration || !segment || token !== narrationRunToken) return;
     // Use the visible MP4 as the sole audio/video clock. Loading that MP4 into
     // a second <audio> element doubled decoding and allowed the clocks to split.
-    const player = segment.id === '08-safety4cut-example' ? safetyExample : narrationAudio;
+    const player = !tvMode && segment.id === '08-safety4cut-example' ? safetyExample : narrationAudio;
     if (player !== demoNarration) {
       demoNarration.dataset.narrationActive = 'false';
       demoNarration.pause();
       demoNarration = player;
     }
     demoNarration.dataset.narrationActive = 'true';
+    const source = tvMode ? tv.sourceFor(segment) : segment.src;
     const currentSource = demoNarration.getAttribute('src') || '';
-    if (currentSource !== segment.src) {
-      demoNarration.src = segment.src;
+    if (currentSource !== source) {
+      demoNarration.src = source;
       demoNarration.load();
     } else {
       try { demoNarration.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
@@ -1248,7 +1253,7 @@
     if (demoPage !== 'safety' || !narrationRequested || !demoNarration?.ended
       || narrationSegmentIndex !== narrationByPage.safety.length - 1) return false;
     if (!demoPaused && !document.hidden) {
-      safety?.render(safety.time, { finishing: true, mediaClock: demoNarration === safetyExample });
+      safety?.render(safety.time, { finishing: true, mediaClock: tvMode || demoNarration === safetyExample });
       advanceSequence();
     }
     updateDemoButton();
@@ -1535,7 +1540,8 @@
     safety?.pause();
     updateDemoPageButtons();
     const hasVisibleStage = stageActiveClasses.some((className) => guidePhone.classList.contains(className));
-    if (immediate || reduceMotion || !hasVisibleStage) {
+    if (tvMode) tv.park();
+    if (tvMode || immediate || reduceMotion || !hasVisibleStage) {
       applyDemoStage(page);
       return;
     }
@@ -1977,6 +1983,63 @@
     if (!narrationRequested || !demoNarration.currentSrc) return;
     handleNarrationFailure(demoNarration.error || new Error('내레이션 파일을 불러오지 못했습니다.'), narrationRunToken);
   }));
+
+  if (tvMode) {
+    let watchedSource = '';
+    let lastTime = -1;
+    let progressAt = performance.now();
+    let recoveries = 0;
+    let recoveredAt = -Infinity;
+    let reloadPending = false;
+    window.setInterval(() => {
+      const now = performance.now();
+      const source = demoNarration.getAttribute('src') || '';
+      const time = demoNarration.currentTime;
+      if (source !== watchedSource || (!reloadPending && time < lastTime - .2)) {
+        watchedSource = source;
+        recoveries = 0;
+        recoveredAt = -Infinity;
+        progressAt = now;
+        reloadPending = false;
+      }
+      if (!source || !narrationRequested || demoPaused || document.hidden || stageTransitioning ||
+          demoNarration.ended || demoNarration.seeking || ['blocked', 'error', 'complete'].includes(narrationState)) {
+        progressAt = now;
+        lastTime = time;
+        return;
+      }
+      if (Math.abs(time - lastTime) > .03) {
+        progressAt = now;
+        lastTime = time;
+        // A later independent stall gets a fresh retry budget after stable play.
+        if (now - recoveredAt > 30000) recoveries = 0;
+        return;
+      }
+      if (now - progressAt < 8000) return;
+      const token = narrationRunToken;
+      progressAt = now;
+      recoveredAt = now;
+      if (recoveries >= 2) {
+        handleNarrationFailure(new Error('TV media did not resume after two recovery attempts'), token);
+        return;
+      }
+      recoveries += 1;
+      guideStage.dataset.mediaRecoveries = String(recoveries);
+      if (recoveries === 1) {
+        demoNarration.play().catch(error => handleNarrationFailure(error, token));
+      } else {
+        const resumeAt = time;
+        reloadPending = true;
+        demoNarration.addEventListener('loadedmetadata', () => {
+          if (token !== narrationRunToken || source !== demoNarration.getAttribute('src') || demoPaused || document.hidden) return;
+          reloadPending = false;
+          demoNarration.currentTime = Math.min(resumeAt, Math.max(0, demoNarration.duration - .1));
+          demoNarration.play().catch(error => handleNarrationFailure(error, token));
+        }, { once: true });
+        demoNarration.load();
+      }
+    }, 1000);
+  }
 
   const video = $('#promoVideo');
   const videoToggle = $('#videoToggle');

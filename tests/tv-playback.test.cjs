@@ -1,0 +1,168 @@
+/* Deterministic controller tests. Media, layout and animation APIs are simulated.
+   This is not a webOS decoder/browser or a device performance test. */
+const fs = require('fs'), vm = require('vm'), path = require('path');
+const {execFileSync} = require('child_process');
+const assert = require('node:assert/strict');
+const root = path.resolve(__dirname, '..');
+const tree = JSON.parse(execFileSync('python3',[path.join(__dirname,'export-dom.py')],{encoding:'utf8'}));
+const durations = {'00-opening':8.166667,'01-weather':29.701,'02-tbm-basic':34.3,'03-ai-pdf':40.646,
+ '07-safety4cut-intro':38.037,'09-ai-example-v84':64.566667,'04-safety-tools':31.84325,'05-emergency':22,'06-closing':11.5};
+function environment(query='?tv=1', ua='Chrome', reduce=false) {
+ let now=0, nextId=1, writes=0, mediaPlays=0; const raf=new Map(), timers=new Map(), seen=new Set(), errors=[];
+ class Events {
+  constructor(){this.listeners={};}
+  addEventListener(type,fn,opt={}){(this.listeners[type]||=[]).push({fn,once:opt.once});}
+  removeEventListener(type,fn){this.listeners[type]=(this.listeners[type]||[]).filter(v=>v.fn!==fn);}
+  dispatchEvent(event){event.target||=this;event.preventDefault||=()=>{};
+   for(const item of [...(this.listeners[event.type]||[])]) {if(item.once)this.removeEventListener(event.type,item.fn);item.fn(event);}return true;}
+ }
+ class Element extends Events {
+  constructor(tag='div',attrs={}) {super();this.tagName=tag.toUpperCase();this.attrs={...attrs};this.children=[];this.parentElement=null;
+   this.style={setProperty(k,v){this[k]=v;}};this.dataset={};for(const[k,v]of Object.entries(attrs))if(k.startsWith('data-'))this.dataset[k.slice(5).replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]=v;
+   this._text='';this.hidden='hidden'in attrs;this.naturalWidth=512;this.naturalHeight=910;
+   this.classList={contains:c=>this.className.split(/\s+/).includes(c),add:(...cs)=>{this.className=[...new Set([...this.className.split(/\s+/).filter(Boolean),...cs])].join(' ');},remove:(...cs)=>{this.className=this.className.split(/\s+/).filter(c=>!cs.includes(c)).join(' ');},toggle:(c,force)=>{const b=force===undefined?!this.classList.contains(c):force;if(b)this.classList.add(c);else this.classList.remove(c);return b;}};
+   this.clientWidth=1000;this.offsetWidth=300;this.scrollHeight=1080;this._animations=null;
+  }
+  get id(){return this.attrs.id||'';}set id(v){this.attrs.id=v;}
+  get className(){return this.attrs.class||'';}set className(v){this.attrs.class=v;}
+  get src(){return this.attrs.src||'';}set src(v){this.attrs.src=v;}
+  get poster(){return this.attrs.poster||'';}
+  setAttribute(k,v){this.attrs[k]=String(v);}getAttribute(k){return this.attrs[k]??null;}removeAttribute(k){delete this.attrs[k];}
+  append(...nodes){for(let n of nodes){if(typeof n==='string'){const t=new Element('#text');t._text=n;n=t;}n.remove();this.children.push(n);n.parentElement=this;}}
+  appendChild(n){this.append(n);return n;}
+  remove(){if(this.parentElement){this.parentElement.children=this.parentElement.children.filter(n=>n!==this);this.parentElement=null;}}
+  replaceWith(n){const p=this.parentElement,i=p.children.indexOf(this);n.remove();p.children[i]=n;n.parentElement=p;this.parentElement=null;}
+  replaceChildren(...ns){this.children.forEach(n=>n.parentElement=null);this.children=[];this._text='';this.append(...ns);}
+  get textContent(){return this._text+this.children.map(n=>n.textContent).join('');}set textContent(v){this.replaceChildren();this._text=String(v);}
+  get innerHTML(){return this._text;}set innerHTML(v){this._text=v;}
+  getBoundingClientRect(){return {left:100,top:100,width:300,height:this.id==='safetyExample'?300:530,right:400,bottom:630};}
+  scrollIntoView(){}focus(){}setPointerCapture(){}releasePointerCapture(){}hasPointerCapture(){return false;}
+  click(){this.dispatchEvent({type:'click',target:this});}
+  matches(s){
+   if(s==='*')return true;
+   if(s.includes(':not('))return false;
+   const tag=s.match(/^[a-z][\w-]*/i);if(tag&&this.tagName!==tag[0].toUpperCase())return false;
+   for(const m of s.matchAll(/#([\w-]+)/g))if(this.id!==m[1])return false;
+   for(const m of s.matchAll(/\.([\w-]+)/g))if(!this.classList.contains(m[1]))return false;
+   for(const m of s.matchAll(/\[([\w-]+)(?:="([^"]*)")?\]/g))if(!(m[1]in this.attrs)||(m[2]!==undefined&&this.attrs[m[1]]!==m[2]))return false;
+   return true;
+  }
+  closest(s){for(let n=this;n;n=n.parentElement)if(s.split(',').some(v=>n.matches(v.trim())))return n;return null;}
+  querySelectorAll(s){const out=[];const parts=s.split(',').map(v=>v.trim().split(/\s+(?![^\[]*\])/));
+   const walk=n=>{for(const c of n.children){if(parts.some(chain=>{if(!c.matches(chain.at(-1)))return false;let p=c.parentElement;for(let i=chain.length-2;i>=0;i--){while(p&&!p.matches(chain[i]))p=p.parentElement;if(!p)return false;p=p.parentElement;}return true;}))out.push(c);walk(c);}};walk(this);return out;}
+  querySelector(s){return this.querySelectorAll(s)[0]||null;}
+  getAnimations(){if(!this._animations)this._animations=Array.from({length:4},(_,i)=>({animationName:'scene-'+i,playState:'running',_t:0,pause(){this.playState='paused';},play(){this.playState='running';},get currentTime(){return this._t;},set currentTime(v){writes++;this._t=v;}}));return this._animations;}
+ }
+ const mediaSet=new Set();
+ class Media extends Element {
+  constructor(tag,attrs={}){super(tag,attrs);this.paused=true;this.muted='muted'in attrs;this.ended=false;this.currentTime=0;this.duration=8;this.volume=1;this.readyState=4;this.seeking=false;this.playCount=0;this.loadCount=0;mediaSet.add(this);}
+  get currentSrc(){return this.src;}
+  load(){this.loadCount++;this.currentTime=0;this.ended=false;this.paused=true;const key=Object.keys(durations).find(k=>this.src.includes(k));this.duration=durations[key]||8;this.dispatchEvent({type:'emptied'});if(!this.preventMetadata)this.dispatchEvent({type:'loadedmetadata'});}
+  play(){mediaPlays++;this.playCount++;if(!this.src && !this.querySelector('source'))return Promise.reject(new Error('no source'));this.paused=false;this.ended=false;if(!this.permanentStall)this.stall=false;this.dispatchEvent({type:'play'});return Promise.resolve();}
+  pause(){this.paused=true;this.dispatchEvent({type:'pause'});}
+ }
+ const build=d=>{const n=['audio','video'].includes(d.tag)?new Media(d.tag,d.attrs):new Element(d.tag,d.attrs);n._text=d.text||'';for(const c of d.children||[])n.append(build(c));return n;};
+ const document=build(tree);document.documentElement=document.querySelector('html');document.body=document.querySelector('body');document.hidden=false;document.fonts={ready:Promise.resolve()};document.getElementById=id=>document.querySelector('#'+id);
+ document.createElement=tag=>['audio','video'].includes(tag)?new Media(tag):new Element(tag);document.createTextNode=text=>{const n=new Element('#text');n._text=text;return n;};
+ const window=new Events();const setTimer=(fn,delay,repeat=0)=>{const id=nextId++;timers.set(id,{fn,at:now+delay,repeat});return id;};
+ Object.assign(window,{innerWidth:1920,innerHeight:1080,scrollY:0,location:{search:query},matchMedia:()=>({matches:reduce}),requestAnimationFrame:fn=>{const id=nextId++;raf.set(id,fn);return id;},cancelAnimationFrame:id=>raf.delete(id),setTimeout:(fn,d=0)=>setTimer(fn,d),clearTimeout:id=>timers.delete(id),setInterval:(fn,d)=>setTimer(fn,d,d),clearInterval:id=>timers.delete(id)});
+ const ctx=vm.createContext({window,document,location:window.location,navigator:{userAgent:ua},URLSearchParams,Element,
+  performance:{now:()=>now},requestAnimationFrame:window.requestAnimationFrame,cancelAnimationFrame:window.cancelAnimationFrame,
+  setTimeout:window.setTimeout,clearTimeout:window.clearTimeout,Image:class extends Element {constructor(){super('img');}},
+  ResizeObserver:class{constructor(cb){this.cb=cb;}observe(){}},
+  CustomEvent:class{constructor(type,init={}){this.type=type;Object.assign(this,init);}},
+  getComputedStyle:()=>({borderRadius:'20px',getPropertyValue:key=>({'--demo-duration':'40s','--meeting-duration':'96s','--support-duration':'50s','--closing-duration':'11.494s'}[key]||'')}),
+  localStorage:{getItem(){return null;},setItem(){}},console:{warn:(...v)=>errors.push(v.map(String).join(' ')),log:()=>{}}
+ });
+ for(const file of ['tv-compat.js','safety4cut.js','subtitle-data.js','subtitles.js','app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
+ const tick=async(ms,step=50)=>{for(let elapsed=0;elapsed<ms;elapsed+=step){now+=step;
+  for(const m of [...mediaSet]){if(!m.parentElement||m.paused||m.ended||m.stall||m.permanentStall||document.hidden)continue;
+   if(m.id==='demoNarration')seen.add(m.getAttribute('src'));m.currentTime=Math.min(m.duration,m.currentTime+step/1000);m.dispatchEvent({type:'timeupdate'});
+   if(m.currentTime>=m.duration){m.ended=true;m.paused=true;m.dispatchEvent({type:'ended'});}}
+  for(const[id,t]of[...timers])if(t.at<=now){if(t.repeat)t.at=now+t.repeat;else timers.delete(id);t.fn();}
+  const frames=[...raf.values()];raf.clear();for(const fn of frames)fn(now);
+  await Promise.resolve();await Promise.resolve();
+  if(ctx.window.PowerTBMTV.enabled)assert.ok([...mediaSet].filter(m=>m.parentElement&&!m.paused&&!m.ended).length<=1,'TV starts multiple media players');
+ }};
+ return {document,window,tick,seen,errors,get writes(){return writes;},get mediaPlays(){return mediaPlays;},el:id=>document.getElementById(id),click:id=>document.getElementById(id).click(),context:ctx};
+}
+
+(async () => {
+ const test = async (name, fn) => { await fn(); console.log('PASS', name); };
+ const tap = e => {
+  const target=e.el('tourStage');
+  e.document.dispatchEvent({type:'pointerdown',target,clientX:500,clientY:300});
+  e.document.dispatchEvent({type:'click',target});
+ };
+ await test('TV uses one active player through all current chapters and loops', async () => {
+  const e = environment();
+  e.document.querySelector('[data-launch-sound="on"]').click();
+  await e.tick(290000);
+  assert.equal(e.seen.size, 9, 'eight TV mixes plus unchanged original safety video');
+  assert.equal(e.el('demoNarration').muted, false);
+  assert.equal(e.el('tourStage').dataset.narrationState, 'playing');
+  assert.equal(e.errors.length, 0);
+  assert.equal(e.el('demoBgm'), null);
+  for (const id of ['openingDemoVideo', 'safetyExample', 'goldenRulesVideo', 'launchIntroVideo']) {
+   assert.equal(e.el(id).tagName, 'IMG', id + ' must not allocate another decoder');
+  }
+ });
+ await test('Golden Rules and latest 4-cut use the same player, original media, and complete ending', async () => {
+  const e = environment(); e.click('supportDemoPage'); await e.tick(17000);
+  assert.equal(e.el('demoNarration').dataset.surface, 'support');
+  await e.tick(6000); assert.equal(e.el('demoNarration').dataset.surface, 'audio');
+  e.click('safetyDemoPage'); await e.tick(2000);
+  assert.match(e.el('demoNarration').src, /07-safety4cut-intro/);
+  assert.equal(e.el('demoNarration').dataset.surface, 'audio');
+  await e.tick(38000);
+  assert.equal(e.el('demoNarration').src, 'assets/safety4cut/09-ai-example-v84.mp4');
+  assert.equal(e.el('demoNarration').dataset.surface, 'safety');
+  await e.tick(62000); assert.equal(e.el('tourStage').dataset.demoPage, 'safety');
+  await e.tick(1500); assert.equal(e.el('tourStage').dataset.demoPage, 'closing');
+ });
+ await test('Central tap, drag guard, continuous menu playback, mute and both subtitle modes', async () => {
+  const e = environment(); e.click('weatherDemoPage'); await e.tick(1000);
+  const target = e.el('tourStage');
+  const tap = () => { e.document.dispatchEvent({type:'pointerdown',target,clientX:500,clientY:300}); e.document.dispatchEvent({type:'click',target}); };
+  tap(); const time = e.el('demoNarration').currentTime; await e.tick(9000);
+  assert.equal(e.el('demoNarration').currentTime, time);
+  tap(); await e.tick(1000); assert.ok(e.el('demoNarration').currentTime > time);
+  e.document.dispatchEvent({type:'pointerdown',target,clientX:500,clientY:300});
+  e.document.dispatchEvent({type:'pointermove',target,clientX:580,clientY:300});
+  e.document.dispatchEvent({type:'click',target}); assert.equal(e.el('demoNarration').paused, false);
+  e.click('demoMute'); assert.equal(e.el('demoNarration').muted, true);
+  e.click('demoMute'); assert.equal(e.el('demoNarration').muted, false);
+  const select=e.el('subtitleToggle'); select.value='bubble'; select.dispatchEvent({type:'change'});
+  assert.equal(e.el('narrationSubtitles').hidden, true);
+  await e.tick(2000); assert.equal(e.el('subtitleBubble').hidden, false);
+  select.value='karaoke'; select.dispatchEvent({type:'change'});
+  assert.equal(e.el('narrationSubtitles').hidden, false);
+  await e.tick(30000); assert.equal(e.el('tourStage').dataset.demoPage, 'meeting');
+ });
+ await test('Hidden and deliberately paused media stays paused; temporary stalls recover', async () => {
+  const e = environment(); e.click('meetingDemoPage'); await e.tick(1000);
+  const m=e.el('demoNarration'); e.document.hidden=true; e.document.dispatchEvent({type:'visibilitychange'});
+  const time=m.currentTime; await e.tick(10000); assert.equal(m.currentTime,time);
+  e.document.hidden=false; e.document.dispatchEvent({type:'visibilitychange'}); await e.tick(500); assert.ok(m.currentTime>time);
+  m.paused=true; const plays=m.playCount; await e.tick(10000); assert.ok(m.playCount>plays); assert.equal(m.paused,false);
+  tap(e); const paused=m.playCount; await e.tick(15000); assert.equal(m.playCount,paused); assert.equal(m.paused,true);
+ });
+ await test('Permanent stalls exhaust two retries and stay on the failed chapter', async () => {
+  const e=environment();e.click('weatherDemoPage');await e.tick(2000);
+  const m=e.el('demoNarration');m.permanentStall=true;m.preventMetadata=true;await e.tick(27000);
+  assert.equal(e.el('tourStage').dataset.narrationState,'error');
+  assert.equal(e.el('tourStage').dataset.mediaRecoveries,'2');
+  assert.equal(e.el('tourStage').dataset.demoPage,'weather'); assert.equal(m.paused,true);
+ });
+ await test('TV limits scene updates to 20Hz and stops writes while paused', async () => {
+  const e=environment();e.click('weatherDemoPage');await e.tick(1000);let before=e.writes;await e.tick(1000,10);
+  assert.ok(e.writes-before<=16*21);tap(e);before=e.writes;await e.tick(1000);assert.equal(e.writes,before);
+ });
+ await test('TV detection, forced opt-out and normal browser retain their players', async () => {
+  for (const [q,ua,on] of [['','Mozilla/5.0 (Web0S; Linux/SmartTV)',true],['?tv=0','Web0S',false],['?tv=1&frame=intro','Web0S',false],['','Chrome',false]]) {
+   const e=environment(q,ua);assert.equal(e.window.PowerTBMTV.enabled,on);
+   if(!on){assert.ok(e.el('demoBgm'));assert.equal(e.el('openingDemoVideo').tagName,'VIDEO');}
+  }
+ });
+ console.log('Simulated DOM/media checks only; real webOS decoding, sound and layout require a device check.');
+})().catch(error => {console.error(error);process.exitCode=1;});

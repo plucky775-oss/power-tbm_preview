@@ -3,7 +3,7 @@
 
   const button = document.getElementById('demoRecord');
   const dialog = document.getElementById('demoRecordDialog');
-  if (!button || !dialog) return;
+  if (!button || !dialog || window.PowerTBMTV?.enabled) return;
   // Feature detection also keeps the iPad / phone layout unchanged.
   if (!window.isSecureContext || !navigator.mediaDevices?.getDisplayMedia || !window.MediaRecorder) return;
 

@@ -1,0 +1,99 @@
+/* webOS uses one media pipeline. Keep video, narration and music in one file. */
+(() => {
+  'use strict';
+  const params = new URLSearchParams(location.search);
+  const enabled = !params.has('frame') && (params.get('tv') === '1' ||
+    (params.get('tv') !== '0' && /Web0S|webOS|NetCast|LG Browser|SmartTV/i.test(navigator.userAgent)));
+  const api = window.PowerTBMTV = { enabled };
+  if (!enabled) {
+    document.querySelectorAll('[data-standard-preload]').forEach(media => {
+      media.preload = media.dataset.standardPreload;
+    });
+    return;
+  }
+  document.documentElement.classList.add('tbm-tv');
+
+  const original = document.getElementById('demoNarration');
+  const media = document.createElement('video');
+  media.id = 'demoNarration';
+  media.className = 'tv-media-player';
+  media.preload = 'none';
+  media.playsInline = true;
+  media.setAttribute('playsinline', '');
+  media.setAttribute('aria-hidden', 'true');
+  media.tabIndex = -1;
+  original.replaceWith(media);
+  // Do not reparent the active player during playback: it can reset TV decoding.
+  document.body.append(media);
+
+  document.querySelectorAll('video').forEach(video => {
+    if (video === media || video.id === 'demoRecordPreview') return;
+    const id = video.id;
+    const placeholder = document.createElement('img');
+    placeholder.id = id;
+    placeholder.className = video.className + ' tv-video-placeholder';
+    placeholder.src = video.poster;
+    if (video.dataset.cinematicPage) placeholder.dataset.cinematicPage = video.dataset.cinematicPage;
+    placeholder.alt = '';
+    video.pause();
+    video.removeAttribute('src');
+    video.querySelectorAll('source').forEach(source => source.remove());
+    video.load();
+    video.replaceWith(placeholder);
+  });
+  const bgm = document.getElementById('demoBgm');
+  bgm.pause();
+  bgm.removeAttribute('src');
+  bgm.load();
+  bgm.remove();
+
+  let target = null;
+  let layoutFrame = 0;
+  let parked = false;
+  const park = () => {
+    target = null;
+    if (parked) return;
+    parked = true;
+    // Keep a small, in-viewport surface; display:none can suspend TV video.
+    Object.assign(media.style, { left: '0px', top: '0px', width: '2px', height: '2px', borderRadius: '0', zIndex: '0' });
+    media.dataset.surface = 'audio';
+  };
+  const layout = () => {
+    layoutFrame = 0;
+    if (!target) return;
+    const box = target.getBoundingClientRect();
+    if (box.width < 1 || box.height < 1) return;
+    Object.assign(media.style, {
+      left: `${box.left}px`, top: `${box.top}px`, width: `${box.width}px`, height: `${box.height}px`,
+      borderRadius: getComputedStyle(target).borderRadius, zIndex: '15'
+    });
+  };
+  const scheduleLayout = () => {
+    if (!layoutFrame) layoutFrame = requestAnimationFrame(layout);
+  };
+  api.present = (page, segment, visualTime) => {
+    const next = page === 'intro' ? document.getElementById('openingDemoVideo') :
+      segment.id === '08-safety4cut-example' ? document.getElementById('safetyExample') :
+      page === 'support' && visualTime >= 26100 && visualTime < 32600 ? document.getElementById('goldenRulesVideo') : null;
+    if (!next) { park(); return; }
+    if (next === target) return;
+    target = next;
+    parked = false;
+    media.dataset.surface = page;
+    media.style.objectFit = page === 'intro' ? 'cover' : 'contain';
+    layout();
+    scheduleLayout();
+  };
+  api.park = park;
+  api.sourceFor = segment => segment.id === '08-safety4cut-example'
+    ? segment.src : `assets/tv-v99/${segment.id}.mp4`;
+  api.media = media;
+  park();
+  window.addEventListener('resize', scheduleLayout, { passive: true });
+  window.addEventListener('scroll', scheduleLayout, { passive: true });
+  document.addEventListener('fullscreenchange', scheduleLayout);
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(scheduleLayout);
+    ['openingDemoVideo', 'safetyExample', 'goldenRulesVideo', 'tourStage'].forEach(id => observer.observe(document.getElementById(id)));
+  }
+})();

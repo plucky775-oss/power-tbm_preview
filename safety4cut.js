@@ -14,7 +14,8 @@
   const picture = root.querySelector('#safetyScreenshot');
   const focus = root.querySelector('.safety-focus');
   const hand = root.querySelector('.safety-hand');
-  const sample = root.querySelector('#safetyExample');
+  const tvMode = Boolean(window.PowerTBMTV?.enabled);
+  const sample = tvMode ? null : root.querySelector('#safetyExample');
   const duration = 102.604;
   const videoOffset = 38.037;
   const pressScale = parseFloat(getComputedStyle(root).getPropertyValue('--demo-hand-press-scale')) || .74;
@@ -85,6 +86,7 @@
       pauseVideo();
       return;
     }
+    if (!sample) return;
     // Only the automatic silent fallback uses this independent video clock.
     sample.muted = true;
     const target = Math.min(lastTime - videoOffset, Number.isFinite(sample.duration) ? Math.max(0, sample.duration - .025) : duration - videoOffset);
@@ -133,6 +135,7 @@
   }
 
   function pauseVideo() {
+    if (!sample) return;
     if (playPending || !sample.paused) playToken += 1;
     playPending = false;
     sample.pause();
@@ -162,15 +165,17 @@
     try { sample.currentTime = 0; } catch (_) { /* metadata may be loading */ }
     render(0, { paused: true });
   }
-  sample.addEventListener('loadedmetadata', () => render(lastTime, { paused, mediaClock }));
-  sample.addEventListener('ended', () => {
+  sample?.addEventListener('loadedmetadata', () => render(lastTime, { paused, mediaClock }));
+  sample?.addEventListener('ended', () => {
     root.dispatchEvent(new CustomEvent('safetyvideoended', { bubbles: true }));
   });
-  sample.addEventListener('error', () => {
+  sample?.addEventListener('error', () => {
     videoUnavailable = true;
     root.querySelector('#safetyCaption').textContent = '교육영상을 불러오지 못했습니다';
   });
   window.PowerTBMSafety = { scenes, duration, videoOffset, render, pause, startFallback, reset,
-    get time() { return lastTime; }, get videoEnded() { return sample.ended; } };
+    get time() { return lastTime; }, get videoEnded() { return tvMode
+      ? window.PowerTBMTV.media.dataset.segment === '08-safety4cut-example' && window.PowerTBMTV.media.ended
+      : sample.ended; } };
   reset();
 })();

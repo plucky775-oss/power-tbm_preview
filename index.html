@@ -26,26 +26,20 @@
   <link rel="preload" as="image" href="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg">
   <link rel="preload" as="image" href="assets/screens/guide/home-weather-alert-expanded-v48.jpeg">
   <link rel="preload" as="image" href="assets/video/power-tbm-button-click-poster.jpg">
-  <link rel="preload" as="audio" href="assets/audio/00-opening-taehyung.mp3" type="audio/mpeg">
-  <link rel="preload" as="audio" href="assets/audio/01-weather-jisoo.mp3" type="audio/mpeg">
-  <link rel="preload" as="audio" href="assets/audio/02-tbm-basic-taehyung.mp3" type="audio/mpeg">
-  <link rel="preload" as="audio" href="assets/audio/03-ai-pdf-jisoo.mp3" type="audio/mpeg">
-  <link rel="preload" as="audio" href="assets/audio/04-safety-tools-taehyung.mp3?v=20260922-audio-path-v74" type="audio/mpeg">
-  <link rel="preload" as="audio" href="assets/audio/05-emergency-jisoo.mp3" type="audio/mpeg">
-  <link rel="preload" as="audio" href="assets/audio/06-closing-jisoo.mp3" type="audio/mpeg">
-  <link rel="preload" as="audio" href="assets/audio/bgm-starcourt-mall-cc0.mp3" type="audio/mpeg">
   <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
   <link rel="preload" as="image" href="assets/background/power-tbm-lightning-opening-v62.webp" type="image/webp">
   <link rel="stylesheet" href="styles.css?v=20261013-touch-pause-v98">
   <link rel="stylesheet" href="safety4cut.css?v=20261013-safety-title-v97">
   <link rel="stylesheet" href="demo-hands-v80.css?v=20261006-windows-hand-v93">
   <link rel="stylesheet" href="demo-recorder-v81.css?v=20261006-recording-aspect-v95">
-  <script src="safety4cut.js?v=20261013-safety-title-v97" defer></script>
+  <link rel="stylesheet" href="tv-compat.css?v=20261016-tv-v99">
+  <script src="tv-compat.js?v=20261016-tv-v99" defer></script>
+  <script src="safety4cut.js?v=20261016-tv-v99" defer></script>
   <link rel="stylesheet" href="subtitles.css?v=20261004-v87">
   <script src="subtitle-data.js?v=20261013-safety-title-v97" defer></script>
-  <script src="subtitles.js?v=20261006-recording-v92" defer></script>
-  <script src="app.js?v=20261013-touch-pause-v98" defer></script>
-  <script src="demo-recorder-v81.js?v=20261006-recording-aspect-v95" defer></script>
+  <script src="subtitles.js?v=20261016-tv-v99" defer></script>
+  <script src="app.js?v=20261016-tv-v99" defer></script>
+  <script src="demo-recorder-v81.js?v=20261016-tv-v99" defer></script>
   <script src="pwa.js?v=20260816-exhibition-type-v70" defer></script>
   <noscript>
     <style>
@@ -63,7 +57,7 @@
       id="launchIntroVideo"
       muted
       playsinline
-      preload="auto"
+      preload="none" data-standard-preload="auto"
       poster="assets/video/power-tbm-button-click-poster.jpg"
       tabindex="-1"
     >
@@ -135,7 +129,7 @@
         <option value="4:3" selected>4:3 · 앱 화면 비율 (1440×1080)</option>
       </select>
     </label>
-    <video class="demo-record-preview" id="demoRecordPreview" controls playsinline preload="metadata" hidden></video>
+    <video class="demo-record-preview" id="demoRecordPreview" controls playsinline preload="none" data-standard-preload="metadata" hidden></video>
     <p class="demo-record-meta" id="demoRecordMeta" hidden></p>
     <div class="demo-record-actions">
       <button type="button" id="demoRecordClose">닫기</button>
@@ -149,19 +143,19 @@
     <section class="tour-section" id="tour">
       <div class="cinematic-backdrop" id="cinematicBackdrop" data-demo-page="intro" data-demo-mode="sequence" aria-hidden="true">
         <img class="cinematic-backdrop-image cinematic-backdrop-intro" src="assets/background/power-tbm-lightning-opening-v62.webp" alt="" width="1672" height="941" decoding="async">
-        <video class="cinematic-backdrop-video cinematic-backdrop-weather" data-cinematic-page="weather" muted playsinline preload="metadata" poster="assets/background/weather-powerlines-v60-poster.jpg" tabindex="-1" disablepictureinpicture>
+        <video class="cinematic-backdrop-video cinematic-backdrop-weather" data-cinematic-page="weather" muted playsinline preload="none" data-standard-preload="metadata" poster="assets/background/weather-powerlines-v60-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/weather-powerlines-v60.mp4" type="video/mp4">
         </video>
-        <video class="cinematic-backdrop-video cinematic-backdrop-meeting" data-cinematic-page="meeting" muted playsinline preload="metadata" poster="assets/background/tablet-review-v63-poster.jpg" tabindex="-1" disablepictureinpicture>
+        <video class="cinematic-backdrop-video cinematic-backdrop-meeting" data-cinematic-page="meeting" muted playsinline preload="none" data-standard-preload="metadata" poster="assets/background/tablet-review-v63-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/tablet-review-v63.mp4" type="video/mp4">
         </video>
-        <video class="cinematic-backdrop-video cinematic-backdrop-tools" data-cinematic-page="support" muted playsinline preload="metadata" poster="assets/background/field-tools-kepco-v68-poster.jpg" tabindex="-1" disablepictureinpicture>
+        <video class="cinematic-backdrop-video cinematic-backdrop-tools" data-cinematic-page="support" muted playsinline preload="none" data-standard-preload="metadata" poster="assets/background/field-tools-kepco-v68-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/field-tools-kepco-v68.mp4" type="video/mp4">
         </video>
-        <video class="cinematic-backdrop-video cinematic-backdrop-emergency" data-cinematic-page="support" muted playsinline preload="metadata" poster="assets/background/emergency-response-changwon119-v66-poster.jpg" tabindex="-1" disablepictureinpicture>
+        <video class="cinematic-backdrop-video cinematic-backdrop-emergency" data-cinematic-page="support" muted playsinline preload="none" data-standard-preload="metadata" poster="assets/background/emergency-response-changwon119-v66-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/emergency-response-changwon119-v66.mp4" type="video/mp4">
         </video>
-        <video class="cinematic-backdrop-video cinematic-backdrop-closing" data-cinematic-page="closing" muted playsinline preload="metadata" poster="assets/background/tbm-guide-closing-v69-poster.jpg" tabindex="-1" disablepictureinpicture>
+        <video class="cinematic-backdrop-video cinematic-backdrop-closing" data-cinematic-page="closing" muted playsinline preload="none" data-standard-preload="metadata" poster="assets/background/tbm-guide-closing-v69-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/tbm-guide-closing-v69.mp4" type="video/mp4">
         </video>
         <span class="cinematic-backdrop-lightning-flash"></span>
@@ -182,18 +176,18 @@
                   id="openingDemoVideo"
                   muted
                   playsinline
-                  preload="metadata"
+                  preload="none" data-standard-preload="metadata"
                   poster="assets/video/power-tbm-opening-ansan-v77-poster.jpg"
                   aria-hidden="true"
                 >
                   <source src="assets/video/power-tbm-opening-ansan-v77.mp4" type="video/mp4">
                 </video>
-                <audio id="demoNarration" preload="auto" playsinline aria-hidden="true"></audio>
+                <audio id="demoNarration" preload="none" data-standard-preload="auto" playsinline aria-hidden="true"></audio>
                 <audio
                   id="demoBgm"
                   loop
                   src="assets/audio/bgm-starcourt-mall-cc0.mp3"
-                  preload="auto"
+                  preload="none" data-standard-preload="auto"
                   playsinline
                   data-title="Soundtrack From the Starcourt Mall"
                   data-artist="Bryan Teoh"
@@ -423,7 +417,7 @@
                       muted
                       playsinline
                       webkit-playsinline
-                      preload="metadata"
+                      preload="none" data-standard-preload="metadata"
                       poster="assets/video/golden-rules-11-rule-1-poster.jpg"
                       disablepictureinpicture
                       disableremoteplayback
@@ -497,7 +491,7 @@
                   </div>
                   <div class="safety-video-shell">
                     <span>AI 추천 컷 · 위험 찾아보기</span>
-                    <video id="safetyExample" muted playsinline webkit-playsinline preload="metadata" poster="assets/safety4cut/09-ai-example-v79-poster.jpg" disablepictureinpicture aria-label="AI 추천 컷으로 만든 지상변압기 작업 시 감전 예방 교육영상">
+                    <video id="safetyExample" muted playsinline webkit-playsinline preload="none" data-standard-preload="metadata" poster="assets/safety4cut/09-ai-example-v79-poster.jpg" disablepictureinpicture aria-label="AI 추천 컷으로 만든 지상변압기 작업 시 감전 예방 교육영상">
                       <source src="assets/safety4cut/09-ai-example-v84.mp4" type="video/mp4">
                     </video>
                     <p>지상변압기 전원측 엘보 분리 작업 중<br>감전 예방</p>
