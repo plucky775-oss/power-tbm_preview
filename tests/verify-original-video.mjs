@@ -91,6 +91,16 @@ const finishMedia = h => {
   h.media.currentTime = h.media.duration; h.media.ended = true;
   h.media.dispatchEvent(new Event('ended'));
 };
+{
+  const h = harness(); h.api.prepare(1);
+  const source = h.video.querySelector('source');
+  source.src = 'assets/safety4cut/09-ai-example-v84.mp4';
+  let reloads = 0; h.video.load = () => reloads++;
+  h.api.start(); await settle();
+  assert.equal(reloads, 0, 'switching to a preloaded <source> must retain the prepared decoder');
+  assert.equal(h.media, h.video);
+  assert.equal(h.video.paused, false);
+}
 
 // Dispatch real registered surface listeners without depending on layout.
 const surfaceTarget = (control = false, inside = true) => ({
@@ -282,7 +292,7 @@ vm.runInContext(read('sw.js'), cacheContext);
 const cached = vm.runInContext('PRECACHE_URLS', cacheContext);
 assert(cached.includes('./assets/safety4cut/09-ai-example-v84.mp4'));
 assert(cached.includes('./assets/audio/07-safety4cut-intro-v97.m4a'));
-assert(cached.includes('./app.js?v=20261016-recording-v102'));
+assert(cached.includes('./app.js?v=20261016-preloaded-v103'));
 assert(cached.includes('./subtitles.js?v=20261016-stable-v100'));
 assert(cached.includes('./subtitles.css?v=20261004-v87'));
 assert(cached.includes('./subtitle-data.js?v=20261013-safety-title-v97'));

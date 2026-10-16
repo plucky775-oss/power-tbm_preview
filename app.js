@@ -971,7 +971,10 @@
     }
     demoNarration.dataset.narrationActive = 'true';
     const source = tvMode ? tv.sourceFor(segment) : segment.src;
-    const currentSource = demoNarration.getAttribute('src') || '';
+    // The original safety video is declared with <source>, not video.src.
+    // Re-loading that same URL discarded the decoder warmed up for recording.
+    const currentSource = demoNarration.getAttribute('src')
+      || demoNarration.querySelector('source')?.getAttribute('src') || '';
     if (currentSource !== source) {
       demoNarration.src = source;
       demoNarration.load();
