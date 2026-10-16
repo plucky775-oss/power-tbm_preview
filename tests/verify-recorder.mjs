@@ -238,16 +238,16 @@ for (const options of [{ withAudio: false }, { failVideo: true }, { cancel: true
 {
   const index = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
   const worker = readFileSync(new URL('../sw.js', import.meta.url), 'utf8');
-  const context = vm.createContext({ self: { addEventListener() {} }, URL, Map });
+  const context = vm.createContext({ self: { addEventListener() {}, location: { search: "" } }, URL, URLSearchParams, Map });
   vm.runInContext(worker, context);
   const precache = vm.runInContext('PRECACHE_URLS', context);
   for (const name of ['demo-recorder-v81.js', 'demo-recorder-v81.css']) {
     const url = index.match(new RegExp(`(?:src|href)="(${name.replaceAll('.', '\\.')}\\?[^"\\s]+)"`))?.[1];
     assert(url, `${name} needs a versioned entry point`);
     assert(precache.includes('./' + url), `${name} entry point must match the offline cache`);
-    assert.match(url, name.endsWith('.js') ? /20261016-tv-v99/ : /recording-aspect-v95/);
+    assert.match(url, name.endsWith('.js') ? /20261016-stable-v100/ : /recording-aspect-v95/);
   }
-  assert.match(vm.runInContext('CACHE_NAME', context), /v99-20261016-tv$/);
+  assert.match(vm.runInContext('CACHE_NAME', context), /v100-20261016-stable-standard$/);
   assert.match(index, /<option value="4:3" selected>/);
   assert.match(index, /<option value="16:9">/);
 }

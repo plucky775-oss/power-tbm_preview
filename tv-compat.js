@@ -6,6 +6,8 @@
     (params.get('tv') !== '0' && /Web0S|webOS|NetCast|LG Browser|SmartTV/i.test(navigator.userAgent)));
   const api = window.PowerTBMTV = { enabled };
   if (!enabled) {
+    document.querySelectorAll('[data-demo-src]').forEach(image => { image.src = image.dataset.demoSrc; });
+    document.querySelectorAll('[data-demo-poster]').forEach(media => { media.poster = media.dataset.demoPoster; });
     document.querySelectorAll('[data-standard-preload]').forEach(media => {
       media.preload = media.dataset.standardPreload;
     });
@@ -32,7 +34,9 @@
     const placeholder = document.createElement('img');
     placeholder.id = id;
     placeholder.className = video.className + ' tv-video-placeholder';
-    placeholder.src = video.poster;
+    const poster = video.dataset.demoPoster || video.getAttribute('poster') || '';
+    placeholder.dataset.demoSrc = poster;
+    placeholder.setAttribute('data-demo-src', poster);
     if (video.dataset.cinematicPage) placeholder.dataset.cinematicPage = video.dataset.cinematicPage;
     placeholder.alt = '';
     video.pause();
@@ -46,6 +50,41 @@
   bgm.removeAttribute('src');
   bgm.load();
   bgm.remove();
+
+  // The original screenshots can occupy hundreds of MB when all chapters
+  // decode together. Keep only the current chapter's scaled copies attached.
+  const imageFor = source => /^assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(source)
+    ? source.replace('assets/', 'assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : source;
+  const images = [...document.querySelectorAll('[data-demo-src]')];
+  const pageFor = image => {
+    if (image.dataset.cinematicPage) return image.dataset.cinematicPage === 'meeting' ? ['meeting', 'safety'] : [image.dataset.cinematicPage];
+    if (image.id === 'guideImage') return ['weather', 'manual'];
+    if (image.closest('#weatherDemo, .demo-explanations, .typhoon-compare')) return ['weather'];
+    if (image.closest('#meetingDemo, .meeting-explanations')) return ['meeting'];
+    if (image.closest('#safetyDemo, .safety-explanations')) return ['safety'];
+    if (image.closest('#supportDemo, .support-explanations')) return ['support'];
+    if (image.closest('#closingDemo, .closing-explanation')) return ['closing'];
+    if (image.id === 'openingDemoVideo' || image.closest('#launchIntro, .cinematic-backdrop, .opening-explanation')) return ['intro'];
+    return [];
+  };
+  let imagePage = '';
+  const syncImage = image => {
+    const pages = pageFor(image);
+    if (!pages.length || pages.includes(imagePage)) {
+      const source = imageFor(image.dataset.demoSrc);
+      if (image.getAttribute('src') !== source) image.src = source;
+    } else if (image.getAttribute('src')) image.removeAttribute('src');
+  };
+  api.setImage = (image, source) => {
+    image.dataset.demoSrc = source;
+    syncImage(image);
+  };
+  api.setPage = page => {
+    if (imagePage === page) return;
+    imagePage = page;
+    images.forEach(syncImage);
+  };
+  api.setPage('intro');
 
   let target = null;
   let layoutFrame = 0;

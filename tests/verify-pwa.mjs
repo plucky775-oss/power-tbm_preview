@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import vm from 'node:vm';
@@ -90,6 +90,7 @@ const context = vm.createContext({
   Response,
   Headers,
   URL,
+  URLSearchParams,
   fetch,
   console
 });
@@ -97,6 +98,21 @@ const context = vm.createContext({
 const workerSource = await readFile(path.join(siteRoot, 'sw.js'), 'utf8');
 vm.runInContext(workerSource, context, { filename: 'sw.js' });
 const precacheUrls = vm.runInContext('[...PRECACHE_URLS]', context);
+const tvHandlers = new Map();
+const tvContext = vm.createContext({ ...context, self: {
+  ...workerGlobal, location: { ...workerGlobal.location, search: '?tv=1' },
+  addEventListener: (type, handler) => tvHandlers.set(type, handler)
+} });
+vm.runInContext(workerSource, tvContext, { filename: 'sw.js?tv=1' });
+const tvPrecacheUrls = vm.runInContext('[...ACTIVE_PRECACHE_URLS]', tvContext);
+let tvPrecacheBytes = 0;
+for (const url of tvPrecacheUrls) {
+  const file = url === './' ? './index.html' : url.split('?')[0];
+  tvPrecacheBytes += (await stat(path.join(siteRoot, file))).size;
+  assert.doesNotMatch(url, /assets\/audio\//, 'TV must not precache separate narration and BGM');
+  if (/\.mp4$/.test(url)) assert.match(url, /tv-v99|09-ai-example-v84/, 'TV must not precache unused desktop videos');
+}
+assert.ok(tvPrecacheBytes < 35 * 1024 * 1024, 'TV offline download exceeded its budget');
 
 const expectedBackgroundFiles = [
   'ATTRIBUTION.md',
@@ -136,9 +152,9 @@ const coreUrls = [
   './index.html',
   './manifest.webmanifest',
   './styles.css?v=20261013-touch-pause-v98',
-  './app.js?v=20261016-tv-v99',
-  './pwa.js?v=20260816-exhibition-type-v70',
-  './subtitles.js?v=20261016-tv-v99',
+  './app.js?v=20261016-stable-v100',
+  './pwa.js?v=20261016-stable-v100',
+  './subtitles.js?v=20261016-stable-v100',
   './subtitle-data.js?v=20261013-safety-title-v97',
   './subtitles.css?v=20261004-v87'
 ];
@@ -207,8 +223,8 @@ assert.match(indexSource, /home-weather-alert-expanded-v48\.jpeg/);
 assert.match(indexSource, /meeting-hub-v48\.png/);
 assert.match(indexSource, /meeting-qr-signature-v48\.png/);
 assert.match(indexSource, /meeting-slide-qr-signature[\s\S]*?meeting-slide-sign-complete[\s\S]*?meeting-slide-pdf/);
-assert.match(indexSource, /meeting-slide-home" src="assets\/screens\/guide\/home-weather-alert-collapsed-v48\.jpeg/);
-assert.doesNotMatch(indexSource, /meeting-slide-home" src="assets\/screens\/guide\/meeting-home-v1\.jpeg/);
+assert.match(indexSource, /meeting-slide-home" data-demo-src="assets\/screens\/guide\/home-weather-alert-collapsed-v48\.jpeg/);
+assert.doesNotMatch(indexSource, /meeting-slide-home" data-demo-src="assets\/screens\/guide\/meeting-home-v1\.jpeg/);
 assert.doesNotMatch(indexSource, /demo-focus[^"\n]*demo-focus-links/);
 assert.match(indexSource, /QR 원격서명으로 김일용 서명을 먼저 받습니다/);
 assert.match(indexSource, /meeting-pdf-worker-name[\s\S]*?김일용[\s\S]*?meeting-pdf-worker-signature[\s\S]*?김일용/);
@@ -242,14 +258,14 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v99-20261016-tv/);
-assert.match(pwaSource, /serviceWorker\.register\('\.\/sw\.js'/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v100-20261016-stable/);
+assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
-assert.match(workerSource, /PRECACHE_CONCURRENCY\s*=\s*3/);
-assert.match(workerSource, /rangeBufferCache\s*=\s*new Map\(\)/);
+assert.match(workerSource, /PRECACHE_CONCURRENCY\s*=\s*1/);
+assert.doesNotMatch(workerSource, /rangeBufferCache/);
 assert.match(workerSource, /request\.mode\s*===\s*'navigate'[\s\S]*?cache:\s*'reload'/);
-assert.match(workerSource, /client\.navigate/);
+assert.doesNotMatch(workerSource, /client\.navigate/);
 
 const server = spawn('python3', ['-m', 'http.server', '8137', '--bind', '127.0.0.1'], {
   cwd: siteRoot,
@@ -280,15 +296,21 @@ try {
   let activateTask;
   handlers.get('activate')({ waitUntil(task) { activateTask = task; } });
   await activateTask;
-  assert.deepEqual(navigatedClientUrls, [baseUrl]);
+  assert.deepEqual(navigatedClientUrls, []);
+
+  tvHandlers.get('install')({ waitUntil(task) { installTask = task; } });
+  await installTask;
+  tvHandlers.get('activate')({ waitUntil(task) { activateTask = task; } });
+  await activateTask;
+  assert.deepEqual(navigatedClientUrls, [], 'switching cache profiles must not reload a live tour');
 } finally {
   server.kill('SIGTERM');
   await new Promise((resolve) => server.once('exit', resolve));
 }
 
-const dispatchFetch = async (request) => {
+const dispatchFetch = async (request, activeHandlers = handlers) => {
   let responseTask;
-  handlers.get('fetch')({
+  activeHandlers.get('fetch')({
     request,
     respondWith(task) { responseTask = task; }
   });
@@ -300,6 +322,14 @@ for (const relativeUrl of precacheUrls) {
   const response = await dispatchFetch(new Request(new URL(relativeUrl, baseUrl)));
   assert.equal(response.status, 200, `offline cache miss: ${relativeUrl}`);
 }
+for (const relativeUrl of tvPrecacheUrls) {
+  const media = /\.(?:mp4|m4a|mp3)(?:\?|$)/.test(relativeUrl);
+  const response = await dispatchFetch(new Request(new URL(relativeUrl, baseUrl), {
+    headers: media ? { Range: 'bytes=10-29' } : {}
+  }), tvHandlers);
+  assert.equal(response.status, media ? 206 : 200, `TV offline cache miss: ${relativeUrl}`);
+  if (media) assert.equal((await response.arrayBuffer()).byteLength, 20);
+}
 
 const mediaUrls = precacheUrls.filter((url) => /\.(?:mp3|mp4)$/.test(url));
 for (const relativeUrl of mediaUrls) {
@@ -310,7 +340,6 @@ for (const relativeUrl of mediaUrls) {
   assert.match(response.headers.get('content-range') || '', /^bytes 10-29\/\d+$/);
   assert.equal(Number(response.headers.get('content-length')), 20);
   assert.equal((await response.arrayBuffer()).byteLength, 20);
-  assert.ok(vm.runInContext('rangeBufferCache.size', context) <= 3, 'repeated playback must not retain every media buffer');
 }
 
 const suffixResponse = await dispatchFetch(new Request(new URL(mediaUrls[0], baseUrl), {
@@ -339,6 +368,8 @@ console.log(JSON.stringify({
   precachedUrls: precacheUrls.length,
   referencedAssets: referencedAssets.size,
   offlineMediaFiles: mediaUrls.length,
+  tvOfflineFiles: tvPrecacheUrls.length,
+  tvPrecacheMiB: Math.round(tvPrecacheBytes / 1048576 * 10) / 10,
   navigationFallback: true,
   rangeResponses: true
 }, null, 2));

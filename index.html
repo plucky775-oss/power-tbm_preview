@@ -23,24 +23,19 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/video-demo-icon-32-v1.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/video-demo-icon-192-v1.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/video-demo-icon-180-v1.png">
-  <link rel="preload" as="image" href="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg">
-  <link rel="preload" as="image" href="assets/screens/guide/home-weather-alert-expanded-v48.jpeg">
-  <link rel="preload" as="image" href="assets/video/power-tbm-button-click-poster.jpg">
-  <link rel="preload" as="image" href="assets/closing/power-tbm-field-tbm.jpeg">
-  <link rel="preload" as="image" href="assets/background/power-tbm-lightning-opening-v62.webp" type="image/webp">
   <link rel="stylesheet" href="styles.css?v=20261013-touch-pause-v98">
   <link rel="stylesheet" href="safety4cut.css?v=20261013-safety-title-v97">
   <link rel="stylesheet" href="demo-hands-v80.css?v=20261006-windows-hand-v93">
   <link rel="stylesheet" href="demo-recorder-v81.css?v=20261006-recording-aspect-v95">
-  <link rel="stylesheet" href="tv-compat.css?v=20261016-tv-v99">
-  <script src="tv-compat.js?v=20261016-tv-v99" defer></script>
-  <script src="safety4cut.js?v=20261016-tv-v99" defer></script>
+  <link rel="stylesheet" href="tv-compat.css?v=20261016-stable-v100">
+  <script src="tv-compat.js?v=20261016-stable-v100" defer></script>
+  <script src="safety4cut.js?v=20261016-stable-v100" defer></script>
   <link rel="stylesheet" href="subtitles.css?v=20261004-v87">
   <script src="subtitle-data.js?v=20261013-safety-title-v97" defer></script>
-  <script src="subtitles.js?v=20261016-tv-v99" defer></script>
-  <script src="app.js?v=20261016-tv-v99" defer></script>
-  <script src="demo-recorder-v81.js?v=20261016-tv-v99" defer></script>
-  <script src="pwa.js?v=20260816-exhibition-type-v70" defer></script>
+  <script src="subtitles.js?v=20261016-stable-v100" defer></script>
+  <script src="app.js?v=20261016-stable-v100" defer></script>
+  <script src="demo-recorder-v81.js?v=20261016-stable-v100" defer></script>
+  <script src="pwa.js?v=20261016-stable-v100" defer></script>
   <noscript>
     <style>
       .launch-intro { display: none !important; }
@@ -58,7 +53,7 @@
       muted
       playsinline
       preload="none" data-standard-preload="auto"
-      poster="assets/video/power-tbm-button-click-poster.jpg"
+      data-demo-poster="assets/video/power-tbm-button-click-poster.jpg"
       tabindex="-1"
     >
       <source src="assets/video/power-tbm-button-click-soft-v90.mp4" type="video/mp4">
@@ -86,7 +81,7 @@
   </div>
   <header class="demo-only-header">
     <button class="demo-only-brand" id="homeReset" type="button" aria-label="처음 화면으로 돌아가기" title="처음 화면으로 돌아가기">
-      <img src="assets/brand/power-tbm-icon.png" alt="" width="48" height="48">
+      <img data-demo-src="assets/brand/power-tbm-icon.png" alt="" width="48" height="48">
       <span><b>Power TBM</b></span>
     </button>
     <div class="demo-only-header-stack">
@@ -142,20 +137,20 @@
   <main id="main">
     <section class="tour-section" id="tour">
       <div class="cinematic-backdrop" id="cinematicBackdrop" data-demo-page="intro" data-demo-mode="sequence" aria-hidden="true">
-        <img class="cinematic-backdrop-image cinematic-backdrop-intro" src="assets/background/power-tbm-lightning-opening-v62.webp" alt="" width="1672" height="941" decoding="async">
-        <video class="cinematic-backdrop-video cinematic-backdrop-weather" data-cinematic-page="weather" muted playsinline preload="none" data-standard-preload="metadata" poster="assets/background/weather-powerlines-v60-poster.jpg" tabindex="-1" disablepictureinpicture>
+        <img class="cinematic-backdrop-image cinematic-backdrop-intro" data-demo-src="assets/background/power-tbm-lightning-opening-v62.webp" alt="" width="1672" height="941" decoding="async">
+        <video class="cinematic-backdrop-video cinematic-backdrop-weather" data-cinematic-page="weather" muted playsinline preload="none" data-standard-preload="metadata" data-demo-poster="assets/background/weather-powerlines-v60-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/weather-powerlines-v60.mp4" type="video/mp4">
         </video>
-        <video class="cinematic-backdrop-video cinematic-backdrop-meeting" data-cinematic-page="meeting" muted playsinline preload="none" data-standard-preload="metadata" poster="assets/background/tablet-review-v63-poster.jpg" tabindex="-1" disablepictureinpicture>
+        <video class="cinematic-backdrop-video cinematic-backdrop-meeting" data-cinematic-page="meeting" muted playsinline preload="none" data-standard-preload="metadata" data-demo-poster="assets/background/tablet-review-v63-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/tablet-review-v63.mp4" type="video/mp4">
         </video>
-        <video class="cinematic-backdrop-video cinematic-backdrop-tools" data-cinematic-page="support" muted playsinline preload="none" data-standard-preload="metadata" poster="assets/background/field-tools-kepco-v68-poster.jpg" tabindex="-1" disablepictureinpicture>
+        <video class="cinematic-backdrop-video cinematic-backdrop-tools" data-cinematic-page="support" muted playsinline preload="none" data-standard-preload="metadata" data-demo-poster="assets/background/field-tools-kepco-v68-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/field-tools-kepco-v68.mp4" type="video/mp4">
         </video>
-        <video class="cinematic-backdrop-video cinematic-backdrop-emergency" data-cinematic-page="support" muted playsinline preload="none" data-standard-preload="metadata" poster="assets/background/emergency-response-changwon119-v66-poster.jpg" tabindex="-1" disablepictureinpicture>
+        <video class="cinematic-backdrop-video cinematic-backdrop-emergency" data-cinematic-page="support" muted playsinline preload="none" data-standard-preload="metadata" data-demo-poster="assets/background/emergency-response-changwon119-v66-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/emergency-response-changwon119-v66.mp4" type="video/mp4">
         </video>
-        <video class="cinematic-backdrop-video cinematic-backdrop-closing" data-cinematic-page="closing" muted playsinline preload="none" data-standard-preload="metadata" poster="assets/background/tbm-guide-closing-v69-poster.jpg" tabindex="-1" disablepictureinpicture>
+        <video class="cinematic-backdrop-video cinematic-backdrop-closing" data-cinematic-page="closing" muted playsinline preload="none" data-standard-preload="metadata" data-demo-poster="assets/background/tbm-guide-closing-v69-poster.jpg" tabindex="-1" disablepictureinpicture>
           <source src="assets/background/tbm-guide-closing-v69.mp4" type="video/mp4">
         </video>
         <span class="cinematic-backdrop-lightning-flash"></span>
@@ -170,14 +165,14 @@
             <div class="phone-frame guide-phone">
               <span class="phone-dynamic-island" aria-hidden="true"></span>
               <div class="guide-media">
-                <img id="guideImage" src="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg" alt="Power TBM 홈 화면" width="709" height="1536">
+                <img id="guideImage" data-demo-src="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg" alt="Power TBM 홈 화면" width="709" height="1536">
                 <video
                   class="opening-demo-video"
                   id="openingDemoVideo"
                   muted
                   playsinline
                   preload="none" data-standard-preload="metadata"
-                  poster="assets/video/power-tbm-opening-ansan-v77-poster.jpg"
+                  data-demo-poster="assets/video/power-tbm-opening-ansan-v77-poster.jpg"
                   aria-hidden="true"
                 >
                   <source src="assets/video/power-tbm-opening-ansan-v77.mp4" type="video/mp4">
@@ -195,11 +190,11 @@
                   aria-hidden="true"
                 ></audio>
                 <div class="weather-demo" id="weatherDemo" role="img" aria-label="홈 화면의 기상특보를 먼저 펼쳐 조치사항을 확인하고 날씨 화면으로 들어간 뒤 태풍정보 다섯 개를 차례로 비교하는 자동 시연">
-                  <img class="weather-demo-home" src="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg" alt="" width="709" height="1536">
-                  <img class="weather-demo-alert" src="assets/screens/guide/home-weather-alert-expanded-v48.jpeg" alt="" width="709" height="1536">
+                  <img class="weather-demo-home" data-demo-src="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg" alt="" width="709" height="1536">
+                  <img class="weather-demo-alert" data-demo-src="assets/screens/guide/home-weather-alert-expanded-v48.jpeg" alt="" width="709" height="1536">
                   <div class="weather-demo-page" aria-hidden="true">
                     <div class="weather-demo-track">
-                      <img src="assets/screens/guide/weather-scroll-v3.webp" alt="" width="1179" height="6181">
+                      <img data-demo-src="assets/screens/guide/weather-scroll-v3.webp" alt="" width="1179" height="6181">
                     </div>
                   </div>
                   <span class="demo-ripple demo-ripple-alert" aria-hidden="true"></span>
@@ -235,8 +230,8 @@
                 </div>
 
                 <div class="meeting-demo" id="meetingDemo" role="img" aria-label="홈에서 TBM 회의록을 열고 기본정보와 공종을 입력한 뒤 회의, AI 검토, 서명, PDF 출력과 캘린더 저장까지 진행하는 자동 시연">
-                  <img class="meeting-slide meeting-slide-home" src="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg" alt="" width="709" height="1536">
-                  <img class="meeting-slide meeting-slide-menu" src="assets/screens/guide/meeting-hub-v48.png" alt="" width="1179" height="2556">
+                  <img class="meeting-slide meeting-slide-home" data-demo-src="assets/screens/guide/home-weather-alert-collapsed-v48.jpeg" alt="" width="709" height="1536">
+                  <img class="meeting-slide meeting-slide-menu" data-demo-src="assets/screens/guide/meeting-hub-v48.png" alt="" width="1179" height="2556">
 
                   <section class="meeting-slide meeting-basic-screen" aria-hidden="true">
                     <header><span>⬅️</span><i></i><div><b>TBM 회의록</b><small>기본정보 → 공종선택 → 회의진행 → 서명/PDF</small></div></header>
@@ -254,7 +249,7 @@
                   </section>
 
                   <div class="meeting-slide meeting-scene meeting-slide-workers" aria-hidden="true">
-                    <img src="assets/screens/guide/meeting-workers-v2.png" alt="" width="1179" height="2556">
+                    <img data-demo-src="assets/screens/guide/meeting-workers-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
                       <span class="meeting-worker-field meeting-worker-name"><b>김일용</b></span>
                       <span class="meeting-worker-field meeting-worker-role"><b>신호수</b></span>
@@ -268,7 +263,7 @@
                   </div>
 
                   <div class="meeting-slide meeting-scene meeting-slide-trade" aria-hidden="true">
-                    <img src="assets/screens/guide/meeting-trade-v2.png" alt="" width="1179" height="2556">
+                    <img data-demo-src="assets/screens/guide/meeting-trade-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
                       <span class="meeting-choice meeting-choice-trade-1"></span>
                       <span class="meeting-choice meeting-choice-trade-2"></span>
@@ -276,7 +271,7 @@
                   </div>
 
                   <div class="meeting-slide meeting-scene meeting-slide-health" aria-hidden="true">
-                    <img src="assets/screens/guide/meeting-health-v2.png" alt="" width="1179" height="2556">
+                    <img data-demo-src="assets/screens/guide/meeting-health-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
                       <span class="meeting-choice meeting-choice-health meeting-choice-health-ok"></span>
                       <span class="meeting-choice meeting-choice-health meeting-choice-helmet"></span>
@@ -285,7 +280,7 @@
                   </div>
 
                   <div class="meeting-slide meeting-scene meeting-slide-risk" aria-hidden="true">
-                    <img src="assets/screens/guide/meeting-risk-v2.png" alt="" width="1179" height="2556">
+                    <img data-demo-src="assets/screens/guide/meeting-risk-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
                       <span class="meeting-choice meeting-choice-risk"></span>
                       <span class="meeting-count meeting-risk-count">회의록 반영: 3개 선택</span>
@@ -293,13 +288,13 @@
                   </div>
 
                   <div class="meeting-slide meeting-scene meeting-slide-ai" aria-hidden="true">
-                    <img src="assets/screens/guide/meeting-ai-v2.png" alt="" width="1179" height="2556">
+                    <img data-demo-src="assets/screens/guide/meeting-ai-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-ai-scrolled-state" aria-hidden="true">
-                      <img class="meeting-ai-scroll-header" src="assets/screens/guide/meeting-ai-scroll-detail-v50.jpeg" alt="" width="672" height="1966">
+                      <img class="meeting-ai-scroll-header" data-demo-src="assets/screens/guide/meeting-ai-scroll-detail-v50.jpeg" alt="" width="672" height="1966">
                       <span class="meeting-ai-scroll-body">
-                        <img src="assets/screens/guide/meeting-ai-scroll-detail-v50.jpeg" alt="" width="672" height="1966">
+                        <img data-demo-src="assets/screens/guide/meeting-ai-scroll-detail-v50.jpeg" alt="" width="672" height="1966">
                       </span>
-                      <img class="meeting-ai-scroll-footer" src="assets/screens/guide/meeting-ai-scroll-detail-v50.jpeg" alt="" width="672" height="1966">
+                      <img class="meeting-ai-scroll-footer" data-demo-src="assets/screens/guide/meeting-ai-scroll-detail-v50.jpeg" alt="" width="672" height="1966">
                     </div>
                     <div class="meeting-scene-state">
                       <span class="meeting-ai-loading">
@@ -311,7 +306,7 @@
                   </div>
 
                   <div class="meeting-slide meeting-scene meeting-slide-focus" aria-hidden="true">
-                    <img src="assets/screens/guide/meeting-focus-v2.png" alt="" width="1179" height="2556">
+                    <img data-demo-src="assets/screens/guide/meeting-focus-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
                       <span class="meeting-choice meeting-choice-focus"></span>
                       <span class="meeting-count meeting-focus-count">선택: 0개</span>
@@ -319,7 +314,7 @@
                   </div>
 
                   <div class="meeting-slide meeting-scene meeting-slide-sign" aria-hidden="true">
-                    <img src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
+                    <img data-demo-src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
                       <span class="meeting-sign-status">서명 0/2명 · 서명 전</span>
                       <span class="meeting-sign-blank meeting-sign-blank-manager"></span>
@@ -327,10 +322,10 @@
                     </div>
                   </div>
 
-                  <img class="meeting-slide meeting-slide-qr-signature" src="assets/screens/guide/meeting-qr-signature-v48.png" alt="" width="1179" height="2556" aria-hidden="true">
+                  <img class="meeting-slide meeting-slide-qr-signature" data-demo-src="assets/screens/guide/meeting-qr-signature-v48.png" alt="" width="1179" height="2556" aria-hidden="true">
 
                   <div class="meeting-slide meeting-scene meeting-slide-sign-worker" aria-hidden="true">
-                    <img src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
+                    <img data-demo-src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
                       <span class="meeting-sign-status">서명 1/2명 · 책임자 대기</span>
                       <span class="meeting-saved-signature meeting-saved-signature-worker" aria-hidden="true">김일용</span>
@@ -339,7 +334,7 @@
                   </div>
 
                   <div class="meeting-slide meeting-scene meeting-slide-sign-pad" aria-hidden="true">
-                    <img src="assets/screens/guide/meeting-sign-pad-v2.png" alt="" width="1179" height="2556">
+                    <img data-demo-src="assets/screens/guide/meeting-sign-pad-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
                       <span class="meeting-signature-canvas" aria-hidden="true">
                         <b class="meeting-signature-name">최재혁</b>
@@ -348,19 +343,19 @@
                   </div>
 
                   <div class="meeting-slide meeting-scene meeting-slide-sign-complete" aria-hidden="true">
-                    <img src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
+                    <img data-demo-src="assets/screens/guide/meeting-sign-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
                       <span class="meeting-saved-signature"><b>최재혁</b></span>
                       <span class="meeting-saved-signature meeting-saved-signature-worker" aria-hidden="true">김일용</span>
                       <span class="meeting-sign-complete-toast">시공관리책임자 서명이 회의록에 반영되었습니다</span>
                     </div>
                   </div>
-                  <img class="meeting-slide meeting-slide-pdf" src="assets/screens/guide/meeting-pdf-v2.jpeg" alt="" width="709" height="1536">
+                  <img class="meeting-slide meeting-slide-pdf" data-demo-src="assets/screens/guide/meeting-pdf-v2.jpeg" alt="" width="709" height="1536">
                   <span class="meeting-pdf-signature" aria-hidden="true"><b>최재혁</b></span>
                   <span class="meeting-pdf-worker-name" aria-hidden="true"><b>김일용</b></span>
                   <span class="meeting-pdf-worker-signature" aria-hidden="true"><b>김일용</b></span>
 
-                  <img class="meeting-slide meeting-slide-calendar" src="assets/screens/guide/meeting-calendar-v1.png" alt="" width="1179" height="2556">
+                  <img class="meeting-slide meeting-slide-calendar" data-demo-src="assets/screens/guide/meeting-calendar-v1.png" alt="" width="1179" height="2556">
 
                   <div class="meeting-focus-layer" aria-hidden="true">
                     <span class="meeting-focus demo-highlight-box meeting-focus-home-card"></span>
@@ -405,11 +400,11 @@
                 </div>
 
                 <div class="support-demo" id="supportDemo" role="img" aria-label="안전가이드에서 위험요인과 안전대책, 골든룰스11을 확인하고 현장도구에서 가까운 응급의료시설을 조회하는 자동 시연">
-                  <img class="support-slide support-slide-home-safety" src="assets/screens/guide/stage3-home-main-v16.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
-                  <img class="support-slide support-slide-safety" src="assets/screens/guide/stage3-safety-guide.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
-                  <img class="support-slide support-slide-risk" src="assets/screens/guide/stage3-risk-safety.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
-                  <img class="support-slide support-slide-safety-return" src="assets/screens/guide/stage3-safety-guide.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
-                  <img class="support-slide support-slide-golden" src="assets/screens/guide/stage3-golden-rules.jpeg" alt="" width="709" height="1536" decoding="async" fetchpriority="low">
+                  <img class="support-slide support-slide-home-safety" data-demo-src="assets/screens/guide/stage3-home-main-v16.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
+                  <img class="support-slide support-slide-safety" data-demo-src="assets/screens/guide/stage3-safety-guide.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
+                  <img class="support-slide support-slide-risk" data-demo-src="assets/screens/guide/stage3-risk-safety.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
+                  <img class="support-slide support-slide-safety-return" data-demo-src="assets/screens/guide/stage3-safety-guide.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
+                  <img class="support-slide support-slide-golden" data-demo-src="assets/screens/guide/stage3-golden-rules.jpeg" alt="" width="709" height="1536" decoding="async" fetchpriority="low">
                   <div class="support-golden-video-shell" aria-hidden="true">
                     <video
                       class="support-golden-video"
@@ -418,7 +413,7 @@
                       playsinline
                       webkit-playsinline
                       preload="none" data-standard-preload="metadata"
-                      poster="assets/video/golden-rules-11-rule-1-poster.jpg"
+                      data-demo-poster="assets/video/golden-rules-11-rule-1-poster.jpg"
                       disablepictureinpicture
                       disableremoteplayback
                       tabindex="-1"
@@ -427,10 +422,10 @@
                     </video>
                     <span class="support-golden-progress"><i></i></span>
                   </div>
-                  <img class="support-slide support-slide-home-tools" src="assets/screens/guide/stage3-home-main-v16.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
-                  <img class="support-slide support-slide-tools" src="assets/screens/guide/stage3-field-tools.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
-                  <img class="support-slide support-slide-emergency" src="assets/screens/guide/stage3-emergency.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
-                  <img class="support-slide support-slide-location" src="assets/screens/guide/location-consent.webp" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
+                  <img class="support-slide support-slide-home-tools" data-demo-src="assets/screens/guide/stage3-home-main-v16.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
+                  <img class="support-slide support-slide-tools" data-demo-src="assets/screens/guide/stage3-field-tools.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
+                  <img class="support-slide support-slide-emergency" data-demo-src="assets/screens/guide/stage3-emergency.png" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
+                  <img class="support-slide support-slide-location" data-demo-src="assets/screens/guide/location-consent.webp" alt="" width="1179" height="2556" decoding="async" fetchpriority="low">
 
                   <div class="support-focus-layer" aria-hidden="true">
                     <span class="support-focus demo-highlight-box support-focus-home-safety"></span>
@@ -484,14 +479,14 @@
                 <div class="safety-demo safety-fullscreen-photo" id="safetyDemo" role="group" aria-label="안전 4컷 제작과 교육영상 자동 시연">
                   <div class="safety-screen-viewport">
                     <div class="safety-screen-canvas">
-                      <img id="safetyScreenshot" src="assets/safety4cut/01-main-menu-v97.png" alt="Power TBM 메인메뉴의 안전-4컷" width="1179" height="2556" decoding="async">
+                      <img id="safetyScreenshot" data-demo-src="assets/safety4cut/01-main-menu-v97.png" alt="Power TBM 메인메뉴의 안전-4컷" width="1179" height="2556" decoding="async">
                       <span class="safety-focus demo-highlight-box" aria-hidden="true"></span>
                       <span class="safety-hand" aria-hidden="true"><span class="demo-hand-glyph">👆🏻</span></span>
                     </div>
                   </div>
                   <div class="safety-video-shell">
                     <span>AI 추천 컷 · 위험 찾아보기</span>
-                    <video id="safetyExample" muted playsinline webkit-playsinline preload="none" data-standard-preload="metadata" poster="assets/safety4cut/09-ai-example-v79-poster.jpg" disablepictureinpicture aria-label="AI 추천 컷으로 만든 지상변압기 작업 시 감전 예방 교육영상">
+                    <video id="safetyExample" muted playsinline webkit-playsinline preload="none" data-standard-preload="metadata" data-demo-poster="assets/safety4cut/09-ai-example-v79-poster.jpg" disablepictureinpicture aria-label="AI 추천 컷으로 만든 지상변압기 작업 시 감전 예방 교육영상">
                       <source src="assets/safety4cut/09-ai-example-v84.mp4" type="video/mp4">
                     </video>
                     <p>지상변압기 전원측 엘보 분리 작업 중<br>감전 예방</p>
@@ -501,10 +496,10 @@
                 </div>
 
                 <div class="closing-demo" id="closingDemo" role="img" aria-label="작업자들이 태블릿으로 Power TBM 안전점검회의를 진행하는 실제 현장과 마무리 메시지">
-                  <img class="closing-photo" src="assets/closing/power-tbm-field-tbm.jpeg" alt="" width="1122" height="1402">
+                  <img class="closing-photo" data-demo-src="assets/closing/power-tbm-field-tbm.jpeg" alt="" width="1122" height="1402">
                   <span class="closing-photo-shade" aria-hidden="true"></span>
                   <div class="closing-brand" aria-hidden="true">
-                    <img src="assets/brand/power-tbm-icon.png" alt="" width="512" height="512">
+                    <img data-demo-src="assets/brand/power-tbm-icon.png" alt="" width="512" height="512">
                     <span><b>POWER TBM</b><small>현장 안전점검회의</small></span>
                   </div>
                   <div class="closing-screen-copy" aria-hidden="true">
@@ -655,11 +650,11 @@
                 <p>현재 위치에서 가까운 병원을 확인한 뒤 길찾기·병원 전화·119를 상황에 맞게 바로 실행합니다.</p>
                 <div class="support-action-visuals" aria-hidden="true">
                   <div class="support-action-card support-action-nearby">
-                    <span class="support-action-icon"><img src="assets/menu/emergency.png" alt="" width="256" height="256"></span>
+                    <span class="support-action-icon"><img data-demo-src="assets/menu/emergency.png" alt="" width="256" height="256"></span>
                     <span><small>응급의료시설</small><strong>가까운 병원부터 확인</strong><em>현재 위치 기준 · 거리순 조회</em></span>
                   </div>
                   <div class="support-action-card support-action-nav">
-                    <span class="support-action-icon"><img src="assets/menu/streetview.png" alt="" width="256" height="256"></span>
+                    <span class="support-action-icon"><img data-demo-src="assets/menu/streetview.png" alt="" width="256" height="256"></span>
                     <span><small>길찾기</small><strong>내비게이션 실행</strong><em>선택한 병원까지 경로 안내</em></span>
                   </div>
                   <div class="support-action-card support-action-call">
@@ -710,23 +705,23 @@
               </div>
               <div class="compare-viewport">
                 <figure class="compare-slide compare-slide-kma">
-                  <img src="assets/screens/guide/compare-kma-typhoon-v12.jpeg" alt="한국 기상청 태풍 예상 경로와 강도 정보 화면" width="1176" height="1745">
+                  <img data-demo-src="assets/screens/guide/compare-kma-typhoon-v12.jpeg" alt="한국 기상청 태풍 예상 경로와 강도 정보 화면" width="1176" height="1745">
                   <figcaption><span>01 / 05</span><b>한국 · KMA 태풍정보</b></figcaption>
                 </figure>
                 <figure class="compare-slide compare-slide-jtwc">
-                  <img src="assets/screens/guide/compare-jtwc-v4.webp" alt="미국 합동태풍경보센터 태풍 예상 경로" width="928" height="786">
+                  <img data-demo-src="assets/screens/guide/compare-jtwc-v4.webp" alt="미국 합동태풍경보센터 태풍 예상 경로" width="928" height="786">
                   <figcaption><span>02 / 05</span><b>미국 · JTWC 태풍정보</b></figcaption>
                 </figure>
                 <figure class="compare-slide compare-slide-jma">
-                  <img src="assets/screens/guide/compare-jma-detail-v11.webp" alt="일본 기상청 한국어 태풍 상세정보 화면" width="1200" height="900">
+                  <img data-demo-src="assets/screens/guide/compare-jma-detail-v11.webp" alt="일본 기상청 한국어 태풍 상세정보 화면" width="1200" height="900">
                   <figcaption><span>03 / 05</span><b>일본 · JMA 태풍 상세정보</b></figcaption>
                 </figure>
                 <figure class="compare-slide compare-slide-radar">
-                  <img src="assets/screens/guide/compare-radar-rotation-v13.jpeg" alt="한반도 회전형 강수레이더 영상" width="769" height="758">
+                  <img data-demo-src="assets/screens/guide/compare-radar-rotation-v13.jpeg" alt="한반도 회전형 강수레이더 영상" width="769" height="758">
                   <figcaption><span>04 / 05</span><b>강수레이더</b></figcaption>
                 </figure>
                 <figure class="compare-slide compare-slide-alert">
-                  <img src="assets/screens/guide/compare-alert-red-v13.jpeg" alt="태풍과 풍랑 구역이 표시된 기상특보 발효현황" width="1102" height="1067">
+                  <img data-demo-src="assets/screens/guide/compare-alert-red-v13.jpeg" alt="태풍과 풍랑 구역이 표시된 기상특보 발효현황" width="1102" height="1067">
                   <figcaption><span>05 / 05</span><b>기상특보 발효현황</b></figcaption>
                 </figure>
               </div>

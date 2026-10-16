@@ -7,7 +7,8 @@
 
   window.addEventListener('load', async () => {
     try {
-      const registration = await navigator.serviceWorker.register('./sw.js', {
+      const workerUrl = window.PowerTBMTV?.enabled ? './sw.js?tv=1' : './sw.js';
+      const registration = await navigator.serviceWorker.register(workerUrl, {
         scope: './',
         updateViaCache: 'none'
       });

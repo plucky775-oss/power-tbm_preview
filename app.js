@@ -629,6 +629,7 @@
     if (!guideStage) return;
     guideStage.dataset.playbackMode = tvMode ? 'tv-single-player' : 'standard';
     guideStage.dataset.demoPage = demoPage;
+    if (tvMode) tv.setPage(demoPage);
     guideStage.dataset.demoMode = demoMode;
     guideStage.dataset.narrationState = narrationState;
     guideStage.dataset.narrationMuted = String(narrationMuted);
@@ -1452,7 +1453,8 @@
     const item = guideData[0];
     currentGuide = 0;
     if (guideImage) {
-      guideImage.src = item.src;
+      if (tvMode) tv.setImage(guideImage, item.src);
+      else guideImage.src = item.src;
       guideImage.width = item.width;
       guideImage.height = item.height;
       guideImage.alt = item.alt;
@@ -1572,7 +1574,8 @@
     const apply = () => {
       const item = guideData[index];
       currentGuide = index;
-      guideImage.src = item.src;
+      if (tvMode) tv.setImage(guideImage, item.src);
+      else guideImage.src = item.src;
       guideImage.width = item.width;
       guideImage.height = item.height;
       guideImage.alt = item.alt;
@@ -1990,17 +1993,17 @@
     let progressAt = performance.now();
     let recoveries = 0;
     let recoveredAt = -Infinity;
-    let reloadPending = false;
+    let retryPending = false;
     window.setInterval(() => {
       const now = performance.now();
       const source = demoNarration.getAttribute('src') || '';
       const time = demoNarration.currentTime;
-      if (source !== watchedSource || (!reloadPending && time < lastTime - .2)) {
+      if (source !== watchedSource || time < lastTime - .2) {
         watchedSource = source;
         recoveries = 0;
         recoveredAt = -Infinity;
         progressAt = now;
-        reloadPending = false;
+        retryPending = false;
       }
       if (!source || !narrationRequested || demoPaused || document.hidden || stageTransitioning ||
           demoNarration.ended || demoNarration.seeking || ['blocked', 'error', 'complete'].includes(narrationState)) {
@@ -2015,6 +2018,13 @@
         if (now - recoveredAt > 30000) recoveries = 0;
         return;
       }
+      // A slow download is not a decoder failure. load() aborts that request
+      // and discards buffered bytes, making a weak connection stall forever.
+      // Only resume an unexpectedly paused player that already has data.
+      if (!demoNarration.paused || demoNarration.readyState < 3 || retryPending) {
+        progressAt = now;
+        return;
+      }
       if (now - progressAt < 8000) return;
       const token = narrationRunToken;
       progressAt = now;
@@ -2025,19 +2035,9 @@
       }
       recoveries += 1;
       guideStage.dataset.mediaRecoveries = String(recoveries);
-      if (recoveries === 1) {
-        demoNarration.play().catch(error => handleNarrationFailure(error, token));
-      } else {
-        const resumeAt = time;
-        reloadPending = true;
-        demoNarration.addEventListener('loadedmetadata', () => {
-          if (token !== narrationRunToken || source !== demoNarration.getAttribute('src') || demoPaused || document.hidden) return;
-          reloadPending = false;
-          demoNarration.currentTime = Math.min(resumeAt, Math.max(0, demoNarration.duration - .1));
-          demoNarration.play().catch(error => handleNarrationFailure(error, token));
-        }, { once: true });
-        demoNarration.load();
-      }
+      retryPending = true;
+      demoNarration.play().catch(error => handleNarrationFailure(error, token))
+        .finally(() => { if (token === narrationRunToken) retryPending = false; });
     }, 1000);
   }
 

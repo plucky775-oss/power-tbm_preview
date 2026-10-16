@@ -1,25 +1,27 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_NAME = `${CACHE_PREFIX}v99-20261016-tv`;
-const PRECACHE_CONCURRENCY = 3;
+const CACHE_VERSION = `${CACHE_PREFIX}v100-20261016-stable`;
+const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
+const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
+const PRECACHE_CONCURRENCY = 1;
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './tv-compat.js?v=20261016-tv-v99',
-  './tv-compat.css?v=20261016-tv-v99',
+  './tv-compat.js?v=20261016-stable-v100',
+  './tv-compat.css?v=20261016-stable-v100',
   './subtitles.css?v=20261004-v87',
-  './subtitles.js?v=20261016-tv-v99',
+  './subtitles.js?v=20261016-stable-v100',
   './subtitle-data.js?v=20261013-safety-title-v97',
   './manifest.webmanifest',
   './styles.css?v=20261013-touch-pause-v98',
-  './app.js?v=20261016-tv-v99',
+  './app.js?v=20261016-stable-v100',
   './safety4cut.css?v=20261013-safety-title-v97',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css?v=20261006-recording-aspect-v95',
-  './demo-recorder-v81.js?v=20261016-tv-v99',
-  './safety4cut.js?v=20261016-tv-v99',
-  './pwa.js?v=20260816-exhibition-type-v70',
+  './demo-recorder-v81.js?v=20261016-stable-v100',
+  './safety4cut.js?v=20261016-stable-v100',
+  './pwa.js?v=20261016-stable-v100',
   './assets/tv-v99/00-opening.mp4',
   './assets/tv-v99/01-weather.mp4',
   './assets/tv-v99/02-tbm-basic.mp4',
@@ -114,14 +116,23 @@ const PRECACHE_URLS = [
   './assets/video/power-tbm-opening-ansan-v77.mp4'
 ];
 
+// A TV never uses the separate desktop audio/background video streams.
+// Preserve a complete offline tour without downloading those unused files.
+const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
+  .filter(path => !path.startsWith('./assets/audio/') &&
+    (!/\.mp4(?:\?|$)/.test(path) || path.includes('/tv-v99/') || path.endsWith('/09-ai-example-v84.mp4')))
+  .map(path => /^\.\/assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(path)
+    ? path.replace('./assets/', './assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : path)
+  : PRECACHE_URLS;
+
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
 const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data\.js|tv-compat\.(?:js|css))(?:\?|$)/.test(path) || path === './';
 
 const precacheInSmallBatches = async (cache) => {
   let nextIndex = 0;
-  const workers = Array.from({ length: Math.min(PRECACHE_CONCURRENCY, PRECACHE_URLS.length) }, async () => {
-    while (nextIndex < PRECACHE_URLS.length) {
-      const path = PRECACHE_URLS[nextIndex];
+  const workers = Array.from({ length: Math.min(PRECACHE_CONCURRENCY, ACTIVE_PRECACHE_URLS.length) }, async () => {
+    while (nextIndex < ACTIVE_PRECACHE_URLS.length) {
+      const path = ACTIVE_PRECACHE_URLS[nextIndex];
       nextIndex += 1;
       const request = new Request(scopedUrl(path), {
         cache: isVersionedShellPath(path) ? 'reload' : 'default',
@@ -147,13 +158,10 @@ self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const cacheNames = await caches.keys();
     const staleCacheNames = cacheNames
-      .filter((name) => name.startsWith(CACHE_PREFIX) && name !== CACHE_NAME);
+      .filter((name) => name.startsWith(CACHE_PREFIX) && !name.startsWith(CACHE_VERSION + '-'));
     await Promise.all(staleCacheNames.map((name) => caches.delete(name)));
     await self.clients.claim();
-    if (staleCacheNames.length > 0) {
-      const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-      await Promise.all(windows.map((client) => client.navigate?.(client.url)));
-    }
+    // Apply new code on the next user navigation. Never restart a live tour.
   })());
 });
 
@@ -166,30 +174,14 @@ const rangeNotSatisfiable = (size) => new Response(null, {
   }
 });
 
-const rangeBufferCache = new Map();
-
-const readRangeBuffer = (request, cachedResponse) => {
-  const cacheKey = request.url;
-  if (!rangeBufferCache.has(cacheKey)) {
-    const bufferTask = cachedResponse.arrayBuffer().catch((error) => {
-      rangeBufferCache.delete(cacheKey);
-      throw error;
-    });
-    // Bound memory across a repeating exhibition tour while retaining a few
-    // concurrent desktop streams (narration, music and the active background).
-    if (rangeBufferCache.size >= 3) rangeBufferCache.delete(rangeBufferCache.keys().next().value);
-    rangeBufferCache.set(cacheKey, bufferTask);
-  }
-  return rangeBufferCache.get(cacheKey);
-};
-
 const createRangeResponse = async (request, cachedResponse) => {
   const rangeHeader = request.headers.get('range');
   const match = /^bytes=(\d*)-(\d*)$/i.exec(rangeHeader || '');
   if (!match || (!match[1] && !match[2])) return cachedResponse;
 
-  const buffer = await readRangeBuffer(request, cachedResponse);
-  const size = buffer.byteLength;
+  // Blob slices avoid copying a whole MP4 into the worker's JS heap.
+  const blob = await cachedResponse.blob();
+  const size = blob.size;
   let start;
   let end;
 
@@ -214,7 +206,7 @@ const createRangeResponse = async (request, cachedResponse) => {
   headers.set('Content-Range', `bytes ${start}-${end}/${size}`);
   headers.set('Content-Length', String(end - start + 1));
 
-  return new Response(buffer.slice(start, end + 1), {
+  return new Response(blob.slice(start, end + 1), {
     status: 206,
     statusText: 'Partial Content',
     headers
@@ -229,6 +221,18 @@ self.addEventListener('fetch', (event) => {
   if (requestUrl.origin !== self.location.origin) return;
 
   event.respondWith((async () => {
+    // Let the browser/CDN stream media and handle byte ranges natively online.
+    // Cloning then awaiting cache.put buffers the unread playback branch in full.
+    if (/\.(?:mp4|mp3|m4a)$/i.test(requestUrl.pathname)) {
+      try {
+        const response = await fetch(request);
+        if (response.ok) return response;
+      } catch (_) { /* Use the prepared offline copy when disconnected. */ }
+      const cache = await caches.open(CACHE_NAME);
+      const cached = await cache.match(request);
+      if (cached) return request.headers.has('range') ? createRangeResponse(request, cached) : cached;
+      return new Response('', { status: 504, statusText: 'Offline' });
+    }
     const cache = await caches.open(CACHE_NAME);
 
     if (request.mode === 'navigate') {

@@ -256,14 +256,14 @@ console.log('PASS: central tap, resume position, controls excluded, drag/cancel 
 const original = readFileSync(new URL('assets/safety4cut/09-ai-example-v84.mp4', root));
 assert.equal(createHash('sha256').update(original).digest('hex'),
   '981c8cf85a52abab0bc976528c7675026582762f506d0e4aa2cd0740a5c05509');
-const cacheContext = vm.createContext({ self: { addEventListener() {} }, URL, Map });
+const cacheContext = vm.createContext({ self: { addEventListener() {}, location: { search: "" } }, URL, URLSearchParams, Map });
 vm.runInContext(read('sw.js'), cacheContext);
 const cached = vm.runInContext('PRECACHE_URLS', cacheContext);
 assert(cached.includes('./assets/safety4cut/09-ai-example-v84.mp4'));
 assert(cached.includes('./assets/audio/07-safety4cut-intro-v97.m4a'));
-assert(cached.includes('./app.js?v=20261016-tv-v99'));
-assert(cached.includes('./subtitles.js?v=20261016-tv-v99'));
+assert(cached.includes('./app.js?v=20261016-stable-v100'));
+assert(cached.includes('./subtitles.js?v=20261016-stable-v100'));
 assert(cached.includes('./subtitles.css?v=20261004-v87'));
 assert(cached.includes('./subtitle-data.js?v=20261013-safety-title-v97'));
-assert(cached.includes('./safety4cut.js?v=20261016-tv-v99'));
+assert(cached.includes('./safety4cut.js?v=20261016-stable-v100'));
 console.log('PASS: original bytes, single video/audio clock, intro handoff, no rewind on error, stale events, mute, pause/resume, hidden tab, fallback, recording motion, Golden Rules retry, cache paths');

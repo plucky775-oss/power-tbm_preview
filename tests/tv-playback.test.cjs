@@ -26,7 +26,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
   get id(){return this.attrs.id||'';}set id(v){this.attrs.id=v;}
   get className(){return this.attrs.class||'';}set className(v){this.attrs.class=v;}
   get src(){return this.attrs.src||'';}set src(v){this.attrs.src=v;}
-  get poster(){return this.attrs.poster||'';}
+  get poster(){return this.attrs.poster||'';}set poster(value){this.attrs.poster=value;}
   setAttribute(k,v){this.attrs[k]=String(v);}getAttribute(k){return this.attrs[k]??null;}removeAttribute(k){delete this.attrs[k];}
   append(...nodes){for(let n of nodes){if(typeof n==='string'){const t=new Element('#text');t._text=n;n=t;}n.remove();this.children.push(n);n.parentElement=this;}}
   appendChild(n){this.append(n);return n;}
@@ -147,12 +147,42 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
   m.paused=true; const plays=m.playCount; await e.tick(10000); assert.ok(m.playCount>plays); assert.equal(m.paused,false);
   tap(e); const paused=m.playCount; await e.tick(15000); assert.equal(m.playCount,paused); assert.equal(m.paused,true);
  });
- await test('Permanent stalls exhaust two retries and stay on the failed chapter', async () => {
+ await test('Slow buffering keeps the current request and resumes without resetting the chapter', async () => {
   const e=environment();e.click('weatherDemoPage');await e.tick(2000);
-  const m=e.el('demoNarration');m.permanentStall=true;m.preventMetadata=true;await e.tick(27000);
-  assert.equal(e.el('tourStage').dataset.narrationState,'error');
-  assert.equal(e.el('tourStage').dataset.mediaRecoveries,'2');
-  assert.equal(e.el('tourStage').dataset.demoPage,'weather'); assert.equal(m.paused,true);
+  const m=e.el('demoNarration'), loads=m.loadCount, time=m.currentTime, plays=m.playCount;
+  m.permanentStall=true;m.readyState=2;await e.tick(40000);
+  assert.equal(m.loadCount,loads,'buffering must not abort and reload the download');
+  assert.equal(m.playCount,plays,'do not pile play promises onto a buffering request');
+  assert.equal(m.currentTime,time);assert.equal(e.el('tourStage').dataset.demoPage,'weather');
+  assert.notEqual(e.el('tourStage').dataset.narrationState,'error');
+  m.permanentStall=false;m.readyState=4;await e.tick(1000);assert.ok(m.currentTime>time);
+ });
+ await test('TV loads only the active chapter images and releases previous sources', async () => {
+  const e=environment();
+  const meeting=e.el('meetingDemo').querySelectorAll('img'), support=e.el('supportDemo').querySelectorAll('img');
+  assert.ok(meeting.every(i=>!i.getAttribute('src')),'inactive meeting images loaded on launch');
+  e.click('meetingDemoPage');await e.tick(500);
+  assert.ok(meeting.every(i=>i.getAttribute('src')?.includes('/tv-v100/images/')));
+  assert.ok(support.every(i=>!i.getAttribute('src')));
+  e.click('supportDemoPage');await e.tick(500);
+  assert.ok(meeting.every(i=>!i.getAttribute('src')));
+  assert.ok(support.every(i=>i.getAttribute('src')));
+ });
+ await test('All active TV images exist and stay below a 90 MiB decoded-pixel budget', async () => {
+  const sizes=JSON.parse(execFileSync('python3',['-c',
+   "from pathlib import Path\nfrom PIL import Image\nimport json\nsizes={}\nfor p in Path('assets').rglob('*'):\n if p.suffix.lower() in ('.png','.jpg','.jpeg','.webp'):\n  with Image.open(p) as i: sizes[str(p)]=i.width*i.height*4\nprint(json.dumps(sizes))"
+  ],{cwd:root,encoding:'utf8'}));
+  const e=environment();let maximum=0;
+  for(const page of ['weather','meeting','support','safety']) {
+   e.click(page+'DemoPage');await e.tick(500);
+   let bytes=0;
+   for(const image of e.document.querySelectorAll('img')) {
+    const source=image.getAttribute('src');if(!source)continue;
+    assert.ok(sizes[source], 'missing or invalid image: '+source);bytes+=sizes[source];
+   }
+   maximum=Math.max(maximum,bytes);assert.ok(bytes<90*1024*1024,page+' image pixel budget exceeded');
+  }
+  console.log('  Maximum active image pixels:',(maximum/1048576).toFixed(1),'MiB RGBA (not a heap measurement)');
  });
  await test('TV limits scene updates to 20Hz and stops writes while paused', async () => {
   const e=environment();e.click('weatherDemoPage');await e.tick(1000);let before=e.writes;await e.tick(1000,10);
@@ -161,7 +191,11 @@ function environment(query='?tv=1', ua='Chrome', reduce=false) {
  await test('TV detection, forced opt-out and normal browser retain their players', async () => {
   for (const [q,ua,on] of [['','Mozilla/5.0 (Web0S; Linux/SmartTV)',true],['?tv=0','Web0S',false],['?tv=1&frame=intro','Web0S',false],['','Chrome',false]]) {
    const e=environment(q,ua);assert.equal(e.window.PowerTBMTV.enabled,on);
-   if(!on){assert.ok(e.el('demoBgm'));assert.equal(e.el('openingDemoVideo').tagName,'VIDEO');}
+   if(!on){
+    assert.ok(e.el('demoBgm'));assert.equal(e.el('openingDemoVideo').tagName,'VIDEO');
+    for(const image of e.document.querySelectorAll('[data-demo-src]'))assert.equal(image.src,image.dataset.demoSrc);
+    for(const media of e.document.querySelectorAll('[data-demo-poster]'))assert.equal(media.poster,media.dataset.demoPoster);
+   }
   }
  });
  console.log('Simulated DOM/media checks only; real webOS decoding, sound and layout require a device check.');

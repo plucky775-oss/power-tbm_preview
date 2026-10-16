@@ -62,7 +62,8 @@
       document.querySelector('#safetySceneLabel').textContent = `${index + 1} / ${scenes.length} · ${scene.label}`;
       root.querySelector('#safetyCaption').textContent = scene.caption;
       if (scene.src) {
-        picture.src = `assets/safety4cut/${scene.src}`;
+        if (tvMode) window.PowerTBMTV.setImage(picture, `assets/safety4cut/${scene.src}`);
+        else picture.src = `assets/safety4cut/${scene.src}`;
         picture.alt = `Safety 4-Cut ${scene.label} 실제 화면`;
         fitCanvas();
       }

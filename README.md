@@ -1,5 +1,16 @@
 # Power TBM 자동 시연 홈페이지
 
+## 2026-10-16 재생 중 튕김·끊김 수정 (v100)
+
+- 캐시 업데이트 때 재생 중인 창을 강제로 새로고침하던 동작을 제거했습니다.
+- 온라인 영상은 브라우저의 스트리밍·Range 요청을 그대로 사용합니다. 파일 전체를 JavaScript 메모리에 읽거나 재생 응답을 복제해 캐시 저장이 끝날 때까지 기다리지 않습니다. 오프라인 영상은 Blob 범위로 응답합니다.
+- TV에서 버퍼링이 길어져도 `load()`로 다운로드를 다시 시작하지 않습니다. 데이터가 있는 영상이 의도치 않게 일시정지된 경우에만 재생을 다시 요청합니다.
+- TV는 현재 장면의 축소 이미지만 읽고 이전 장면의 이미지 소스를 해제합니다. 장면별 이미지 픽셀 용량은 최대 66.4 MiB RGBA로 제한했습니다(실제 기기 메모리 측정값은 아님). PC 원본 이미지와 안전-4컷 원본 영상은 유지합니다.
+- TV 오프라인 파일은 34.1 MiB이며 한 번에 한 파일씩 저장합니다. PC용 별도 음성·배경영상은 TV에서 미리 다운로드하지 않습니다.
+- 수정: `app.js`, `tv-compat.js`, `index.html`, `safety4cut.js`, `pwa.js`, `sw.js`, 관련 테스트. 추가: `assets/tv-v100/images/`, `scripts/build-tv-images.py`, `tests/verify-streaming.mjs`. 원본 이미지 변경 후 Python/Pillow로 `python3 scripts/build-tv-images.py`를 실행합니다.
+
+검증: `node tests/tv-playback.test.cjs`, `node tests/verify-streaming.mjs`, `node tests/verify-pwa.mjs`, `node tests/verify-original-video.mjs`, `node tests/verify-recorder.mjs`, `node tests/verify-subtitle-modes.mjs`. 버퍼링 중 재로드·캐시 업그레이드 중 새로고침·영상 전체 메모리 복사를 수정 전 실패하는 검사로 재현했습니다. 실제 webOS 장치의 디코더·스피커 출력과 장시간 반복 재생은 별도 확인이 필요합니다.
+
 ## 2026-10-16 스탠바이미 호환 재생 (v99)
 
 - 10월 13일 최신 소스에 호환 수정을 통합했습니다. 중앙 터치 일시정지·연속 재생, 최신 안전-4컷 소개·원본 교육영상, 기존/말풍선 자막, PC 녹화 비율 선택을 유지합니다.
