@@ -17,7 +17,7 @@
 | 배포 주소 | 확인한 버전 |
 | --- | --- |
 | [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/) | v104 반영 완료 |
-| [Vercel](https://power-tbm-preview.vercel.app/) | v103 — v104 배포 미완료 |
+| [Vercel](https://power-tbm-preview.vercel.app/) | v104 반영 완료 |
 
 GitHub의 README 변경 이력과 실제 실행 파일의 버전은 별개입니다. 실행 파일은 `index.html`의 `20261016-continuous-v104` 참조와 `sw.js`의 `v104-20261016-continuous` 캐시 버전으로 확인할 수 있습니다.
 
