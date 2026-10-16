@@ -153,7 +153,7 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './styles.css?v=20261016-hide-tip-v106',
+  './styles.css?v=20261016-support-reveal-v109',
   './app.js?v=20261016-continuous-v104',
   './pwa.js?v=20261016-stable-v100',
   './subtitles.js?v=20261016-subtitle-clock-v105',
@@ -260,7 +260,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v108-20261016-safety-reveal/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v109-20261016-support-reveal/);
 assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);

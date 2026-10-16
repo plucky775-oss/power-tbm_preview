@@ -11,6 +11,31 @@
   const imageFor = source => enabled && /^assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(source)
     ? source.replace('assets/', 'assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : source;
   const images = [...document.querySelectorAll('[data-demo-src]')];
+  // A screenshot and its highlights share readiness, independently of the
+  // narration clock. Late loads must not reveal overlays on a blank phone.
+  const imageReadiness = new Map();
+  images.filter(image => image.dataset.demoImage).forEach(image => {
+    const views = [...document.querySelectorAll(`[data-demo-image="${image.dataset.demoImage}"]`)];
+    let request = 0;
+    const clear = () => {
+      request++;
+      views.forEach(view => view.classList.remove('demo-image-ready'));
+    };
+    const prepare = () => {
+      const source = image.getAttribute('src');
+      if (!source || !image.complete || !image.naturalWidth) return;
+      const token = request;
+      const reveal = () => {
+        if (token !== request || image.getAttribute('src') !== source || !image.complete || !image.naturalWidth) return;
+        views.forEach(view => view.classList.add('demo-image-ready'));
+      };
+      if (typeof image.decode !== 'function') reveal();
+      else image.decode().then(reveal, () => { /* Leave failed screenshots and overlays hidden. */ });
+    };
+    image.addEventListener('load', prepare);
+    image.addEventListener('error', clear);
+    imageReadiness.set(image, { clear, prepare });
+  });
   const pageFor = image => {
     if (image.dataset.cinematicPage) return image.dataset.cinematicPage === 'meeting' ? ['meeting', 'safety'] : [image.dataset.cinematicPage];
     if (image.id === 'guideImage') return ['weather', 'manual'];
@@ -25,10 +50,18 @@
   let imagePage = '';
   const syncImage = image => {
     const pages = pageFor(image);
-    if (!pages.length || pages.includes(imagePage) || image.dataset.demoPreload === 'true') {
+    const preload = (image.dataset.demoPreload || '').split(/\s+/);
+    if (!pages.length || pages.includes(imagePage) || preload.includes('true') || preload.includes(imagePage)) {
       const source = imageFor(image.dataset.demoSrc);
-      if (image.getAttribute('src') !== source) image.src = source;
-    } else if (image.getAttribute('src')) image.removeAttribute('src');
+      if (image.getAttribute('src') !== source) {
+        imageReadiness.get(image)?.clear();
+        image.src = source;
+        imageReadiness.get(image)?.prepare();
+      }
+    } else if (image.getAttribute('src')) {
+      imageReadiness.get(image)?.clear();
+      image.removeAttribute('src');
+    }
   };
   api.setImage = (image, source) => {
     image.dataset.demoSrc = source;

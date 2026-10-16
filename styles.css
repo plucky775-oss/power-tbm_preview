@@ -3135,7 +3135,7 @@ button { color: inherit; }
   z-index: 6;
   overflow: hidden;
   border-radius: inherit;
-  background: #edf4f8;
+  background: #081d37;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -3165,6 +3165,9 @@ button { color: inherit; }
   background: #edf4f8;
   opacity: 0;
 }
+
+/* Each phone screenshot reveals its own effects only after image decoding. */
+.support-demo [data-demo-image]:not(.demo-image-ready) { visibility: hidden; }
 
 .support-golden-video-shell {
   position: absolute;

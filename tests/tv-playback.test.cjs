@@ -254,6 +254,61 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   assert.equal(m.dataset.surface, 'support');
   assert.deepEqual([m.style.left, m.style.top, m.style.width, m.style.height], geometry);
  });
+ await test('Support screenshots reveal their own highlights only after decoding', async () => {
+  for(const query of ['?tv=1','?tv=0']) {
+   const e=environment(query,'Chrome',true,false),root=e.el('supportDemo');
+   e.click('supportDemoPage');await e.tick(500);
+   const cases=[
+    ['home-safety',['.support-focus-home-safety','.support-hand-safety','.support-ripple-safety']],
+    ['safety',['.support-focus-safety-menu','.support-hand-risk','.support-ripple-risk']],
+    ['risk',['.support-focus-risk-card','.support-hand-back','.support-ripple-back']],
+    ['safety-return',['.support-focus-golden-menu','.support-hand-golden','.support-ripple-golden']],
+    ['golden',['.support-focus-golden-video']],
+    ['home-tools',['.support-focus-home-tools','.support-hand-tools','.support-ripple-tools']],
+    ['tools',['.support-focus-tool-notice','.support-focus-tool-voice','.support-focus-tool-street','.support-focus-tool-emergency','.support-focus-tool-contact','.support-hand-emergency','.support-ripple-emergency']],
+    ['emergency',['.support-focus-emergency-nearby','.support-focus-emergency-nav','.support-focus-emergency-call','.support-focus-emergency-119']],
+    ['location',['.support-focus-location-consent']]
+   ];
+   for(const[name,selectors]of cases) {
+    const picture=root.querySelector('.support-slide-'+name),views=[picture,...selectors.map(s=>root.querySelector(s))];
+    let finish;picture.decode=()=>new Promise(resolve=>{finish=resolve;});
+    assert.ok(picture.dataset.demoImage,'missing readiness group for '+name);
+    assert.ok(views.every(v=>v.dataset.demoImage===picture.dataset.demoImage),'highlight must be tied to its own screenshot: '+name);
+    assert.ok(views.every(v=>!v.classList.contains('demo-image-ready')));
+    picture.complete=true;picture.naturalWidth=640;picture.dispatchEvent({type:'load'});
+    assert.ok(views.every(v=>!v.classList.contains('demo-image-ready')),'load must wait for decode: '+name);
+    finish();await Promise.resolve();
+    assert.ok(views.every(v=>v.classList.contains('demo-image-ready')),'image and overlays must reveal together: '+name);
+    picture.dispatchEvent({type:'error'});
+    assert.ok(views.every(v=>!v.classList.contains('demo-image-ready')),'failed image must hide its overlays');
+   }
+   const picture=root.querySelector('.support-slide-risk'),focus=root.querySelector('.support-focus-risk-card');
+   let oldDecode;picture.decode=()=>new Promise(resolve=>{oldDecode=resolve;});picture.dispatchEvent({type:'load'});
+   e.click('weatherDemoPage');await e.tick(500);
+   assert.equal(picture.getAttribute('src'),null,'inactive risk screenshot must be released');
+   picture.complete=false;e.click('supportDemoPage');await e.tick(500);
+   picture.complete=true;oldDecode();await Promise.resolve();
+   assert.equal(focus.classList.contains('demo-image-ready'),false,'old decode must not reveal a reattached source');
+   picture.decode=()=>Promise.reject(new Error('decode failed'));picture.dispatchEvent({type:'load'});
+   await Promise.resolve();await Promise.resolve();assert.equal(focus.classList.contains('demo-image-ready'),false);
+   picture.decode=undefined;picture.dispatchEvent({type:'load'});
+   assert.equal(focus.classList.contains('demo-image-ready'),true,'older engines still reveal after a real load');
+  }
+ });
+ await test('Meeting preloads only the first two support screenshots before the automatic boundary', async () => {
+  const e=environment(),support=e.el('supportDemo').querySelectorAll('img');
+  assert.ok(support.every(p=>!p.getAttribute('src')));
+  e.click('meetingDemoPage');await e.tick(1000);
+  const prepared=support.filter(p=>p.getAttribute('src'));
+  assert.equal(prepared.length,2,'prepare home and safety guide without loading the whole next chapter');
+  assert.ok(prepared.every(p=>p.classList.contains('demo-image-ready')));
+  const m=e.el('demoNarration'),counts=[m.loadCount,m.playCount,m.pauseCount,m.seekCount];
+  const start=timeline.segments.find(s=>s.page==='support').start;
+  await e.tick(Math.ceil((start+.2-m.currentTime)*1000));
+  assert.equal(e.el('tourStage').dataset.demoPage,'support');
+  assert.ok(prepared.every(p=>p.classList.contains('demo-image-ready')),'ready images must stay ready across activation');
+  assert.deepEqual([m.loadCount,m.playCount,m.pauseCount,m.seekCount],counts,'preparation must not interrupt continuous audio/video');
+ });
  await test('Central tap, drag guard, continuous menu playback, mute and both subtitle modes', async () => {
   const e = environment(); e.click('weatherDemoPage'); await e.tick(1000);
   const target = e.el('tourStage');
@@ -291,13 +346,14 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   assert.notEqual(e.el('tourStage').dataset.narrationState,'error');
   m.permanentStall=false;m.readyState=4;await e.tick(1000);assert.ok(m.currentTime>time);
  });
- await test('TV loads only the active chapter images and releases previous sources', async () => {
+ await test('TV limits images to the active chapter and its two prepared entry screens', async () => {
   const e=environment();
   const meeting=e.el('meetingDemo').querySelectorAll('img'), support=e.el('supportDemo').querySelectorAll('img');
   assert.ok(meeting.every(i=>!i.getAttribute('src')),'inactive meeting images loaded on launch');
   e.click('meetingDemoPage');await e.tick(500);
   assert.ok(meeting.every(i=>i.getAttribute('src')?.includes('/tv-v100/images/')));
-  assert.ok(support.every(i=>!i.getAttribute('src')));
+  assert.equal(support.filter(i=>i.getAttribute('src')).length,2);
+  assert.ok(support.every(i=>i.dataset.demoPreload==='meeting'||!i.getAttribute('src')),'later support scenes must stay unloaded during the meeting');
   e.click('supportDemoPage');await e.tick(500);
   assert.ok(meeting.every(i=>!i.getAttribute('src')));
   assert.ok(support.every(i=>i.getAttribute('src')));
