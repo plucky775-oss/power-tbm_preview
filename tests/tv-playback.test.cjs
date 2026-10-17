@@ -131,6 +131,40 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   assert.equal(e.el('launchIntroVideo').paused,true);
   assert.equal(e.el('demoNarration').paused,true);
  });
+ await test('Cold TV launch prepares weather images before leaving the splash', async () => {
+  const e=environment('?tv=1','Chrome',false,false);
+  const pictures=[e.el('guideImage'),...e.el('weatherDemo').querySelectorAll('img')];
+  assert.ok(pictures.every(image=>image.getAttribute('src')?.includes('/tv-v100/images/')));
+  assert.ok(e.el('meetingDemo').querySelectorAll('img').every(image=>!image.getAttribute('src')));
+ });
+ await test('Cold splash handoff does not allocate a background decoder until weather playback is stable', async () => {
+  const e=environment();e.document.querySelector('[data-launch-sound="on"]').click();
+  const m=e.el('demoNarration'),bg=e.el('tvBackdrop');
+  await e.tick(8300);assert.equal(m.dataset.segment,'01-weather');
+  assert.equal(bg.getAttribute('src'),null,'first weather paint must not start another decoder');
+  m.readyState=2;m.permanentStall=true;await e.tick(2000);
+  assert.equal(bg.getAttribute('src'),null,'buffering must retain priority over background decoding');
+  m.readyState=4;m.permanentStall=false;await e.tick(1600);
+  assert.ok(bg.src.includes('weather-powerlines'));assert.equal(bg.paused,false);
+  assert.equal(m.loadCount,1);assert.equal(m.seekCount,0);
+ });
+ await test('Deferred background startup is cancelled by pause and follows the latest selected page', async () => {
+  const e=environment(),bg=e.el('tvBackdrop');e.click('weatherDemoPage');await e.tick(200);
+  tap(e);await e.tick(2000);assert.equal(bg.getAttribute('src'),null);
+  tap(e);e.click('meetingDemoPage');await e.tick(1400);
+  assert.ok(bg.src.includes('tablet-review'));assert.equal(bg.paused,false);
+ });
+ await test('TV voice entry and resume ramp gently without changing time or mute choice', async () => {
+  const e=environment();e.click('weatherDemoPage');const m=e.el('demoNarration');
+  await e.tick(50);const first=m.volume;assert.ok(first>0&&first<.6);
+  await e.tick(150);assert.ok(m.volume>first&&m.volume<1);
+  await e.tick(400);assert.equal(m.volume,1);
+  m.dispatchEvent({type:'playing'});await e.tick(50);assert.ok(m.volume<.6);
+  await e.tick(400);assert.equal(m.volume,1);
+  const time=m.currentTime;tap(e);await e.tick(500);assert.equal(m.currentTime,time);
+  tap(e);await e.tick(50);assert.ok(m.volume<.6);assert.ok(m.currentTime>time);
+  e.click('demoMute');await e.tick(500);assert.equal(m.muted,true);
+ });
  await test('TV prepares the opening behind the start gate and starts without reloading or seeking', async () => {
   for(const mode of ['on','off']) {
    const e=environment(),m=e.el('demoNarration');
@@ -167,7 +201,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   assert.equal(bg.getAttribute('src'),null,'background must not download before starting');
   const expected={weather:'weather-powerlines',meeting:'tablet-review',support:'field-tools',safety:'tablet-review'};
   for(const [page,source] of Object.entries(expected)) {
-   e.click(page+'DemoPage');await e.tick(500);
+   e.click(page+'DemoPage');await e.tick(1400);
    assert.ok(bg.src.includes(source),page+' selected the wrong background');
    assert.equal(bg.paused,false);assert.ok(bg.currentTime>0);
    const m=e.el('demoNarration'),loads=m.loadCount,play=m.playCount,seek=m.seekCount;
@@ -185,11 +219,11 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   e.click('safetyDemoPage');await e.tick(40000);
   assert.equal(e.el('demoNarration').dataset.surface,'safety');assert.equal(bg.paused,false,'4-cut playback must keep the background moving');
   await e.tick(62000);assert.equal(bg.paused,false);assert.equal(e.el('tourStage').dataset.demoPage,'safety');
-  await e.tick(1500);assert.ok(bg.src.includes('tbm-guide-closing'));
+  await e.tick(2200);assert.ok(bg.src.includes('tbm-guide-closing'));
   await e.tick(8500);assert.equal(bg.paused,false,'short closing background must loop');
  });
  await test('TV background errors and buffering never stop the narration stream', async () => {
-  const e=environment();e.click('weatherDemoPage');await e.tick(1000);
+  const e=environment();e.click('weatherDemoPage');await e.tick(1400);
   const bg=e.el('tvBackdrop'),m=e.el('demoNarration'),time=m.currentTime,loads=m.loadCount;
   bg.permanentStall=true;await e.tick(1000);assert.ok(m.currentTime>time);assert.equal(m.loadCount,loads);
   bg.error=new Error('background decoder unavailable');bg.dispatchEvent({type:'error'});
@@ -477,8 +511,9 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
    "from pathlib import Path\nfrom PIL import Image\nimport json\nsizes={}\nfor p in Path('assets').rglob('*'):\n if p.suffix.lower() in ('.png','.jpg','.jpeg','.webp'):\n  with Image.open(p) as i: sizes[str(p)]=i.width*i.height*4\nprint(json.dumps(sizes))"
   ],{cwd:root,encoding:'utf8'}));
   const e=environment();let maximum=0;
-  for(const page of ['weather','meeting','support','safety']) {
-   e.click(page+'DemoPage');await e.tick(500);
+  for(const page of ['intro','weather','meeting','support','safety']) {
+   if(page !== 'intro') e.click(page+'DemoPage');
+   await e.tick(500);
    let bytes=0;
    for(const image of e.document.querySelectorAll('img')) {
     const source=image.getAttribute('src');if(!source)continue;

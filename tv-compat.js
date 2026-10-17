@@ -52,11 +52,14 @@
   const syncImage = image => {
     const pages = pageFor(image);
     const preload = (image.dataset.demoPreload || '').split(/\s+/);
-    if (!pages.length || pages.includes(imagePage) || preload.includes('true') || preload.includes(imagePage)) {
+    const prepareWeather = enabled && imagePage === 'intro' && pages.includes('weather');
+    if (!pages.length || pages.includes(imagePage) || preload.includes('true') || preload.includes(imagePage) || prepareWeather) {
       const source = imageFor(image.dataset.demoSrc);
       if (image.getAttribute('src') !== source) {
         imageReadiness.get(image)?.clear();
+        image.decoding = 'async';
         image.src = source;
+        if (prepareWeather && typeof image.decode === 'function') image.decode().catch(() => {});
         imageReadiness.get(image)?.prepare();
       }
     } else if (image.getAttribute('src')) {
@@ -123,6 +126,21 @@
   api.localTime = segment => Math.max(0, media.currentTime - entryFor(segment).start);
   api.segmentEnded = id => media.currentTime >= entryFor({ id }).end - .001;
 
+  // Follow media time, not a timer: buffering must not consume the fade before
+  // a word is heard. Keep the beginning audible and preserve the mute choice.
+  let voiceFadeStart = 0;
+  const beginVoiceFade = () => {
+    voiceFadeStart = media.currentTime;
+    media.volume = .2;
+  };
+  media.addEventListener('play', beginVoiceFade);
+  media.addEventListener('playing', beginVoiceFade);
+  const softenVoiceEntry = segment => {
+    const elapsed = Math.max(0, Math.min(api.localTime(segment), media.currentTime - voiceFadeStart));
+    const volume = .2 + .8 * Math.min(1, elapsed / .35);
+    if (Math.abs(media.volume - volume) > .005) media.volume = volume;
+  };
+
   const backgroundSources = {};
   document.querySelectorAll('video').forEach(video => {
     if (video === media || video.id === 'demoRecordPreview') return;
@@ -171,8 +189,10 @@
   backdrop.append(background);
   let backgroundRequest = 0;
   let backgroundPlayPending = false;
+  let backgroundStartTimer = 0;
   const showBackground = () => {
     if (background.getAttribute('src') && background.readyState >= 2 && !background.error) {
+      backdrop.classList.remove('tv-background-fallback');
       backdrop.classList.add('tv-background-ready');
     }
   };
@@ -190,6 +210,7 @@
   api.releaseBackground = () => {
     if (backgroundReleased || !background.getAttribute('src')) return;
     backgroundReleased = true;
+    window.clearTimeout(backgroundStartTimer);
     backgroundRequest++;
     backgroundPlayPending = false;
     background.pause();
@@ -200,6 +221,7 @@
     backdrop.classList.add('tv-background-fallback');
   };
   api.syncBackground = (page, { paused, emergency = false }) => {
+    window.clearTimeout(backgroundStartTimer);
     const key = page === 'safety' ? 'meeting' : page === 'support' && emergency ? 'emergency' : page;
     images.filter(image => image.dataset.cinematicPage).forEach(image => {
       const imageKey = image.classList.contains('cinematic-backdrop-emergency') ? 'emergency' : image.dataset.cinematicPage;
@@ -207,6 +229,29 @@
     });
     if (backgroundReleased) return;
     const source = backgroundSources[key] || '';
+    // First paint, screenshot decode, native video-plane change and a second
+    // decoder used to happen together at the splash boundary. Let the main
+    // clock advance for one second before loading the optional background.
+    const entry = api.segmentAtTime();
+    const canStart = entry && entry.page === page && media.currentTime - entry.start >= 1
+      && media.readyState >= 3 && !media.paused && !document.hidden;
+    if (source && (background.getAttribute('src') || '') !== source && (paused || !canStart)) {
+      if (background.getAttribute('src')) {
+        backgroundRequest++;
+        backgroundPlayPending = false;
+        background.pause();
+        background.removeAttribute('src');
+        background.load();
+      }
+      background.hidden = true;
+      backdrop.classList.remove('tv-background-ready');
+      backdrop.classList.add('tv-background-fallback');
+      if (!paused && !document.hidden) {
+        backgroundStartTimer = window.setTimeout(() => api.syncBackground(page, { paused, emergency }), 200);
+      }
+      return;
+    }
+
     if ((background.getAttribute('src') || '') !== source) {
       backgroundRequest++;
       backgroundPlayPending = false;
@@ -265,6 +310,7 @@
     if (!layoutFrame) layoutFrame = requestAnimationFrame(layout);
   };
   api.present = (page, segment, visualTime) => {
+    softenVoiceEntry(segment);
     // Every embedded clip is precomposed into the same phone-sized frame.
     // Changing source dimensions or resizing the video plane interrupts webOS.
     const next = document.querySelector('.guide-media');

@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v114-20261017-tv-recovery`;
+const CACHE_VERSION = `${CACHE_PREFIX}v115-20261017-tv-startup`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -9,7 +9,7 @@ const PRECACHE_URLS = [
   './',
   './index.html',
   './tv-media-timeline.js?v=20261017-opening-ready-v112',
-  './tv-compat.js?v=20261017-tv-recovery-v114',
+  './tv-compat.js?v=20261017-tv-startup-v115',
   './tv-compat.css?v=20261017-tv-recovery-v114',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261016-subtitle-clock-v105',
@@ -22,7 +22,7 @@ const PRECACHE_URLS = [
   './demo-recorder-v81.css?v=20261017-recording-start-v113',
   './demo-recorder-v81.js?v=20261017-recording-start-v113',
   './safety4cut.js?v=20261017-tv-gestures-v110',
-  './pwa.js?v=20261016-stable-v100',
+  './pwa.js?v=20261017-tv-startup-v115',
   './assets/tv-v112/tour.mp4',
   './assets/audio/07-safety4cut-intro-v97.m4a',
   './assets/safety4cut/01-main-menu-v97.png',
