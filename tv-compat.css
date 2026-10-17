@@ -71,19 +71,15 @@
   will-change: transform, opacity !important;
 }
 
-/* Keep gentle movement without a second decoder on constrained TVs. */
-.tbm-tv .cinematic-backdrop.tv-background-fallback .tv-video-placeholder[data-cinematic-page] {
-  opacity: 0;
-  animation: none;
+/* Canvas crop surfaces stay in the DOM layout; the native decoder never moves. */
+.tbm-tv #tvPhoneVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 15;
+  border-radius: inherit;
+  pointer-events: none;
 }
-.tbm-tv .cinematic-backdrop.tv-background-fallback .tv-video-placeholder.tv-fallback-active {
-  opacity: .58;
-  animation: tv-backdrop-drift 24s ease-in-out infinite alternate;
-}
-.tbm-tv .tv-background-fallback.is-paused .tv-video-placeholder {
-  animation-play-state: paused;
-}
-@keyframes tv-backdrop-drift {
-  from { transform: scale(1.04) translateX(-.6%); }
-  to { transform: scale(1.04) translateX(.6%); }
-}
+.tbm-tv #tvPhoneVideo[hidden] { display: none; }
+.tbm-tv .cinematic-backdrop.tv-background-ready .cinematic-backdrop-image { opacity: 0 !important; }

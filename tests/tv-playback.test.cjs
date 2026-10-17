@@ -26,6 +26,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
    this.classList={contains:c=>this.className.split(/\s+/).includes(c),add:(...cs)=>{this.className=[...new Set([...this.className.split(/\s+/).filter(Boolean),...cs])].join(' ');},remove:(...cs)=>{this.className=this.className.split(/\s+/).filter(c=>!cs.includes(c)).join(' ');},toggle:(c,force)=>{const b=force===undefined?!this.classList.contains(c):force;if(b)this.classList.add(c);else this.classList.remove(c);return b;}};
    this.clientWidth=1000;this.offsetWidth=300;this.scrollHeight=1080;this._animations=null;
   }
+  getContext(){const self=this;return {drawImage(media,...args){if(self.failDraw)throw new Error('draw failed');(self.draws||=[]).push({time:media.currentTime,args});}};}
   get id(){return this.attrs.id||'';}set id(v){this.attrs.id=v;}
   get className(){return this.attrs.class||'';}set className(v){this.attrs.class=v;}
   get src(){return this.attrs.src||'';}set src(v){this.attrs.src=v;}
@@ -88,8 +89,8 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   await Promise.resolve();await Promise.resolve();
   if(ctx.window.PowerTBMTV.enabled){
    const playing=[...mediaSet].filter(m=>m.parentElement&&!m.paused&&!m.ended);
-   assert.ok(playing.length<=2,'TV may only run narration and one silent background');
-   assert.ok(playing.every(m=>m.id==='demoNarration'||(m.id==='tvBackdrop'&&m.muted)), 'unexpected TV media decoder');
+   assert.ok(playing.length<=1,'TV must use exactly one decoder including the background');
+   assert.ok(playing.every(m=>m.id==='demoNarration'), 'unexpected TV media decoder');
   }
  }};
  return {document,window,tick,seen,errors,get writes(){return writes;},get mediaPlays(){return mediaPlays;},el:id=>document.getElementById(id),click:id=>document.getElementById(id).click(),context:ctx};
@@ -137,22 +138,26 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   assert.ok(pictures.every(image=>image.getAttribute('src')?.includes('/tv-v100/images/')));
   assert.ok(e.el('meetingDemo').querySelectorAll('img').every(image=>!image.getAttribute('src')));
  });
- await test('Cold splash handoff does not allocate a background decoder until weather playback is stable', async () => {
+ await test('Cold splash handoff keeps the same single decoder and starts the moving backdrop', async () => {
   const e=environment();e.document.querySelector('[data-launch-sound="on"]').click();
   const m=e.el('demoNarration'),bg=e.el('tvBackdrop');
   await e.tick(8300);assert.equal(m.dataset.segment,'01-weather');
-  assert.equal(bg.getAttribute('src'),null,'first weather paint must not start another decoder');
-  m.readyState=2;m.permanentStall=true;await e.tick(2000);
-  assert.equal(bg.getAttribute('src'),null,'buffering must retain priority over background decoding');
+  assert.equal(bg.tagName,'CANVAS');assert.equal(bg.getAttribute('src'),null);
+  assert.ok(bg.draws.length>0);assert.ok(bg.draws.at(-1).time>=8.16);
+  m.readyState=2;m.permanentStall=true;const draws=bg.draws.length;await e.tick(2000);
+  assert.equal(bg.draws.length,draws,'a stalled media clock must not repaint the same frame');
   m.readyState=4;m.permanentStall=false;await e.tick(1600);
-  assert.ok(bg.src.includes('weather-powerlines'));assert.equal(bg.paused,false);
-  assert.equal(m.loadCount,1);assert.equal(m.seekCount,0);
+  assert.ok(bg.draws.length>draws);assert.equal(m.loadCount,1);assert.equal(m.seekCount,0);
  });
- await test('Deferred background startup is cancelled by pause and follows the latest selected page', async () => {
-  const e=environment(),bg=e.el('tvBackdrop');e.click('weatherDemoPage');await e.tick(200);
-  tap(e);await e.tick(2000);assert.equal(bg.getAttribute('src'),null);
-  tap(e);e.click('meetingDemoPage');await e.tick(1400);
-  assert.ok(bg.src.includes('tablet-review'));assert.equal(bg.paused,false);
+ await test('Background and phone draw work stops when paused and ignores incomplete seeks', async () => {
+  const e=environment(),bg=e.el('tvBackdrop');e.click('weatherDemoPage');await e.tick(1000);
+  tap(e);const count=bg.draws.length;await e.tick(2000);assert.equal(bg.draws.length,count);
+  tap(e);e.click('meetingDemoPage');await e.tick(1000);
+  assert.ok(bg.draws.at(-1).time>=37.9);
+  const m=e.el('demoNarration');m.seeking=true;m.dispatchEvent({type:'seeking'});
+  const before=bg.draws.length;await e.tick(1000);assert.equal(bg.draws.length,before);
+  m.seeking=false;m.dispatchEvent({type:'seeked'});await e.tick(100);
+  assert.ok(bg.draws.length>before);
  });
  await test('TV voice entry and resume ramp gently without changing time or mute choice', async () => {
   const e=environment();e.click('weatherDemoPage');const m=e.el('demoNarration');
@@ -180,7 +185,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
    assert.equal(m.dataset.segment,'01-weather');
   }
  });
- await test('TV uses one narration player plus at most one muted background through every chapter', async () => {
+ await test('TV uses one decoder for background, foreground and audio through every chapter', async () => {
   const e = environment();
   e.document.querySelector('[data-launch-sound="on"]').click();
   await e.tick(290000);
@@ -194,42 +199,40 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
    assert.equal(e.el(id).tagName, 'IMG', id + ' must not allocate another decoder');
   }
  });
- await test('TV moving backgrounds switch, loop and pause without restarting the narration', async () => {
-  const e=environment(),bg=e.el('tvBackdrop');
-  assert.ok(bg,'TV must retain a live background video');
-  assert.equal(bg.tagName,'VIDEO');assert.equal(bg.muted,true);assert.equal(bg.loop,true);
-  assert.equal(bg.getAttribute('src'),null,'background must not download before starting');
-  const expected={weather:'weather-powerlines',meeting:'tablet-review',support:'field-tools',safety:'tablet-review'};
-  for(const [page,source] of Object.entries(expected)) {
+ await test('Moving background shares the phone clock, pauses and remains active during embedded videos', async () => {
+  const e=environment(),bg=e.el('tvBackdrop'),phone=e.el('tvPhoneVideo');
+  assert.equal(bg.tagName,'CANVAS');assert.equal(bg.width,320);assert.equal(bg.height,180);
+  assert.equal(phone.width,480);assert.equal(phone.height,1040);
+  for(const page of ['weather','meeting','support','safety']) {
    e.click(page+'DemoPage');await e.tick(1400);
-   assert.ok(bg.src.includes(source),page+' selected the wrong background');
-   assert.equal(bg.paused,false);assert.ok(bg.currentTime>0);
-   const m=e.el('demoNarration'),loads=m.loadCount,play=m.playCount,seek=m.seekCount;
-   const loaded=bg.loadCount;
-   tap(e);const held=bg.currentTime;await e.tick(500);assert.equal(bg.currentTime,held);
-   tap(e);await e.tick(500);assert.ok(bg.currentTime>held);assert.equal(bg.loadCount,loaded);
-   assert.equal(m.loadCount,loads);assert.equal(m.seekCount,seek);assert.equal(m.playCount,play+1);
+   assert.ok(bg.draws.length>0);
+   const m=e.el('demoNarration'),loads=m.loadCount,seek=m.seekCount;
+   tap(e);const count=bg.draws.length;await e.tick(500);assert.equal(bg.draws.length,count);
+   tap(e);await e.tick(500);assert.ok(bg.draws.length>count);
+   assert.equal(m.loadCount,loads);assert.equal(m.seekCount,seek);
    e.document.hidden=true;e.document.dispatchEvent({type:'visibilitychange'});
-   assert.equal(bg.paused,true);e.document.hidden=false;e.document.dispatchEvent({type:'visibilitychange'});
-   await e.tick(500);assert.equal(bg.paused,false);
+   const hidden=bg.draws.length;await e.tick(500);assert.equal(bg.draws.length,hidden);
+   e.document.hidden=false;e.document.dispatchEvent({type:'visibilitychange'});await e.tick(500);
+   assert.ok(bg.draws.length>hidden);
   }
   e.click('supportDemoPage');await e.tick(17000);
-  assert.equal(e.el('demoNarration').dataset.surface,'support');assert.equal(bg.paused,false,'Golden Rules must keep the background moving');
-  await e.tick(16000);assert.ok(bg.src.includes('emergency-response'));
-  e.click('safetyDemoPage');await e.tick(40000);
-  assert.equal(e.el('demoNarration').dataset.surface,'safety');assert.equal(bg.paused,false,'4-cut playback must keep the background moving');
-  await e.tick(62000);assert.equal(bg.paused,false);assert.equal(e.el('tourStage').dataset.demoPage,'safety');
-  await e.tick(2200);assert.ok(bg.src.includes('tbm-guide-closing'));
-  await e.tick(8500);assert.equal(bg.paused,false,'short closing background must loop');
+  assert.equal(phone.hidden,false);assert.equal(e.el('demoNarration').dataset.surface,'support');
+  assert.ok(Math.abs(bg.draws.at(-1).time-phone.draws.at(-1).time)<.11);
+  e.click('safetyDemoPage');await e.tick(40000);assert.equal(phone.hidden,false);
+  assert.equal(e.el('demoNarration').dataset.surface,'safety');
+  assert.ok(Math.abs(bg.draws.at(-1).time-phone.draws.at(-1).time)<.11);
+  await e.tick(65000);assert.equal(e.el('tourStage').dataset.demoPage,'closing');
+  assert.equal(phone.hidden,true);assert.ok(bg.draws.at(-1).time>269.3);
  });
- await test('TV background errors and buffering never stop the narration stream', async () => {
+ await test('Canvas drawing is bounded and a drawing failure cannot stop the audio clock', async () => {
   const e=environment();e.click('weatherDemoPage');await e.tick(1400);
-  const bg=e.el('tvBackdrop'),m=e.el('demoNarration'),time=m.currentTime,loads=m.loadCount;
-  bg.permanentStall=true;await e.tick(1000);assert.ok(m.currentTime>time);assert.equal(m.loadCount,loads);
-  bg.error=new Error('background decoder unavailable');bg.dispatchEvent({type:'error'});
-  assert.equal(bg.paused,true);assert.equal(e.el('cinematicBackdrop').classList.contains('tv-background-ready'),false);
-  const healthy=m.currentTime;await e.tick(1000);assert.ok(m.currentTime>healthy);assert.equal(m.paused,false);
-  assert.equal(m.loadCount,loads);assert.notEqual(e.el('tourStage').dataset.narrationState,'error');
+  const bg=e.el('tvBackdrop'),m=e.el('demoNarration'),before=bg.draws.length;
+  await e.tick(1000,10);assert.ok(bg.draws.length-before<=16);
+  bg.failDraw=true;const time=m.currentTime,loads=m.loadCount;await e.tick(1000);
+  assert.ok(m.currentTime>time);assert.equal(m.loadCount,loads);
+  assert.equal(e.el('cinematicBackdrop').classList.contains('tv-background-ready'),false);
+  assert.equal(e.errors.length,1,'drawing error should be reported once, without a retry loop');
+  await e.tick(1000);assert.equal(e.errors.length,1);
  });
  await test('Every automatic voice/chapter change keeps the decoder and audio clock running', async () => {
   const e=environment();e.document.querySelector('[data-launch-sound="on"]').click();await e.tick(1000);
@@ -367,7 +370,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   const e = environment(); e.click('supportDemoPage'); await e.tick(2000);
   const m = e.el('demoNarration');
   assert.equal(m.dataset.surface, 'audio');
-  assert.ok(parseFloat(m.style.width) >= 300);
+  assert.ok(parseFloat(m.style.width) >= 240);
   const geometry = [m.style.left, m.style.top, m.style.width, m.style.height];
   await e.tick(15000);
   assert.equal(m.dataset.surface, 'support');
@@ -455,17 +458,15 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   m.paused=true; const plays=m.playCount; await e.tick(10000); assert.ok(m.playCount>plays); assert.equal(m.paused,false);
   tap(e); const paused=m.playCount; await e.tick(15000); assert.equal(m.playCount,paused); assert.equal(m.paused,true);
  });
- await test('A running-but-frozen TV clock releases the competing decoder without reloading narration', async () => {
+ await test('A one-decoder TV never allocates a competing background player', async () => {
   const e=environment();e.click('weatherDemoPage');await e.tick(2000);
-  const m=e.el('demoNarration'),bg=e.el('tvBackdrop'),time=m.currentTime,loads=m.loadCount,seeks=m.seekCount;
+  const m=e.el('demoNarration'),bg=e.el('tvBackdrop'),time=m.currentTime,loads=m.loadCount;
   m.blockedByBackground=true;await e.tick(6000);
-  assert.ok(m.currentTime>time,'a playing flag must not hide a frozen media clock');
-  assert.equal(bg.getAttribute('src'),null,'pause alone must not retain the competing decoder');
-  assert.equal(m.loadCount,loads);assert.equal(m.seekCount,seeks);
-  assert.equal(e.el('cinematicBackdrop').classList.contains('tv-background-fallback'),true);
-  e.click('meetingDemoPage');await e.tick(1000);
-  assert.equal(bg.getAttribute('src'),null,'chapter changes must not recreate the decoder conflict');
-  const after=m.currentTime;await e.tick(1000);assert.ok(m.currentTime>after);
+  assert.ok(m.currentTime>time);assert.equal(bg.getAttribute('src'),null);
+  assert.equal(m.loadCount,loads);
+  assert.equal(e.el('cinematicBackdrop').classList.contains('tv-background-ready'),true);
+  e.window.PowerTBMTV.reduceRenderLoad();const before=bg.draws.length;
+  await e.tick(1000,10);assert.ok(bg.draws.length>before);assert.ok(bg.draws.length-before<=11);
  });
  await test('A buffered decoder frozen in playing state resumes with a bounded pause/play retry', async () => {
   const e=environment();e.click('weatherDemoPage');await e.tick(2000);

@@ -15,7 +15,7 @@ def probe(*args):
 
 info = probe('-show_streams')
 video, audio = info['streams']
-assert (video['codec_name'], video['profile'], video['width'], video['height']) == ('h264', 'Main', 480, 1040)
+assert (video['codec_name'], video['profile'], video['width'], video['height']) == ('h264', 'Main', 480, 1232)
 assert audio['codec_name'] == 'aac' and audio['sample_rate'] == '48000'
 assert abs(float(video['duration']) - timeline['duration']) < .001
 assert abs(float(audio['duration']) - timeline['duration']) < .001
@@ -40,10 +40,10 @@ for packet in opening_packets:
 assert max(per_second.values()) * 8 < 1_200_000, 'opening bitrate burst exceeds its startup budget'
 print(f'PASS opening retains 245 frames; largest one-second video payload {max(per_second.values()) * 8 / 1000:.0f} kbps')
 
-# This release changes only the opening. Protect later clips, their precomposed
-# Korean labels, and the continuous audio against accidental rebuild changes.
+# Background composition re-encodes picture frames, but the continuous AAC
+# packets and timestamps must remain byte-identical to the previous release.
 base = ROOT / 'assets/tv-v104/tour.mp4'
-for stream in ['v:0', 'a:0']:
+for stream in ['a:0']:
     tracks = []
     for file in [base, movie]:
         packets = json.loads(subprocess.check_output([
@@ -56,7 +56,7 @@ for stream in ['v:0', 'a:0']:
     assert len(tracks[0]) == len(tracks[1]), stream + ' lost packets'
     assert all(a['data_hash'] == b['data_hash'] and abs(float(a['pts_time']) - float(b['pts_time'])) < .001
                for a, b in zip(*tracks)), stream + ' changed outside the opening'
-print('PASS every later video packet and the complete AAC track are unchanged')
+print('PASS complete AAC track and timestamps unchanged')
 
 assert hashlib.sha256(original.read_bytes()).hexdigest() == '981c8cf85a52abab0bc976528c7675026582762f506d0e4aa2cd0740a5c05509'
 example = next(entry for entry in timeline['segments'] if entry['id'] == '08-safety4cut-example')
@@ -64,9 +64,30 @@ start, end = round(example['start'] * 30), round(example['end'] * 30)
 assert end - start == 1937, 'the complete original must occupy 1937 frames'
 # Compare every decoded frame, including the final frame, against the original.
 result = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', str(movie), '-i', str(original),
-    '-filter_complex', f'[0:v]trim=start_frame={start}:end_frame={end},crop=480:480:0:250,settb=1/30,setpts=N[a];'
+    '-filter_complex', f'[0:v]trim=start_frame={start}:end_frame={end},crop=480:480:0:442,settb=1/30,setpts=N[a];'
     '[1:v]scale=480:480,settb=1/30,setpts=N[b];[a][b]ssim', '-an', '-f', 'null', '-'], capture_output=True, text=True, check=True)
 score = float(re.search(r'All:([0-9.]+)', result.stderr)[1])
 assert score > .98, f'original safety content differs: SSIM {score}'
 assert re.search(r'frame=\s*1937\b', result.stderr), 'comparison did not reach the original final frame'
 print(f'PASS original file unchanged; all 1937 safety frames retained, SSIM {score:.6f}')
+
+# The exact v112 phone composition survives in its own atlas rectangle.
+result = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', str(movie), '-i', str(ROOT / 'assets/tv-v112/tour.mp4'),
+    '-filter_complex', '[0:v]crop=480:1040:0:192,settb=1/30,setpts=N[a];'
+    '[1:v]settb=1/30,setpts=N[b];[a][b]ssim', '-an', '-f', 'null', '-'], capture_output=True, text=True, check=True)
+score = float(re.search(r'All:([0-9.]+)', result.stderr)[1])
+assert score > .98, f'phone composition differs: SSIM {score}'
+print(f'PASS all phone frames retain their original layout/content; SSIM {score:.6f}')
+
+# Check real motion inside the packed background, not just currentTime changes.
+from PIL import Image, ImageChops, ImageStat
+import io
+for entry in timeline['segments'][1:]:
+    frames = []
+    for offset in [1, 2]:
+        png = subprocess.check_output(['ffmpeg', '-v', 'error', '-ss', str(entry['start'] + offset), '-i', str(movie),
+            '-frames:v', '1', '-vf', 'crop=320:180:0:0,scale=160:90', '-f', 'image2pipe', '-vcodec', 'png', '-threads', '1', '-'])
+        frames.append(Image.open(io.BytesIO(png)).convert('RGB'))
+    difference = sum(ImageStat.Stat(ImageChops.difference(*frames)).mean) / 3
+    assert difference > .5, f"background is still at {entry['id']}: {difference}"
+    print(f"PASS moving background {entry['id']}: pixel difference {difference:.2f}")
