@@ -42,7 +42,8 @@
 }
 .tbm-tv #tourStage[data-page-turn] { animation: none; transform: none; }
 .tbm-tv #tourStage[data-page-turn]::after { display: none; }
-.tbm-tv .tv-video-placeholder { transition: none !important; transform: none !important; }
+.tbm-tv .tv-video-placeholder { transition: none !important; }
+.tbm-tv .tv-video-placeholder:not([data-cinematic-page]) { transform: none !important; }
 .tbm-tv .subtitle-word { transition: none; }
 .tbm-tv .support-golden-video-shell .tv-video-placeholder { width: 100%; height: 100%; object-fit: cover; }
 .tbm-tv .cinematic-backdrop-video { object-fit: cover; }
@@ -68,4 +69,21 @@
 .tbm-tv .tour-stage .support-hand,
 .tbm-tv .tour-stage .safety-hand {
   will-change: transform, opacity !important;
+}
+
+/* Keep gentle movement without a second decoder on constrained TVs. */
+.tbm-tv .cinematic-backdrop.tv-background-fallback .tv-video-placeholder[data-cinematic-page] {
+  opacity: 0;
+  animation: none;
+}
+.tbm-tv .cinematic-backdrop.tv-background-fallback .tv-video-placeholder.tv-fallback-active {
+  opacity: .58;
+  animation: tv-backdrop-drift 24s ease-in-out infinite alternate;
+}
+.tbm-tv .tv-background-fallback.is-paused .tv-video-placeholder {
+  animation-play-state: paused;
+}
+@keyframes tv-backdrop-drift {
+  from { transform: scale(1.04) translateX(-.6%); }
+  to { transform: scale(1.04) translateX(.6%); }
 }

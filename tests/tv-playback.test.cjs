@@ -80,7 +80,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
  });
  for(const file of ['tv-media-timeline.js','tv-compat.js','safety4cut.js','subtitle-data.js','subtitles.js','app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
  const tick=async(ms,step=50)=>{for(let elapsed=0;elapsed<ms;elapsed+=step){now+=step;
-  for(const m of [...mediaSet]){if(!m.parentElement||m.paused||m.ended||m.stall||m.permanentStall||document.hidden)continue;
+  for(const m of [...mediaSet]){if(!m.parentElement||m.paused||m.ended||m.stall||m.permanentStall||document.hidden||(m.blockedByBackground && document.getElementById('tvBackdrop')?.getAttribute('src')))continue;
    if(m.id==='demoNarration')seen.add(m.getAttribute('src'));m._time=Math.min(m.duration,m.currentTime+step/1000);m.dispatchEvent({type:'timeupdate'});
    if(m.currentTime>=m.duration){if(m.loop){m._time=0;continue;}m.ended=true;m.paused=true;m.dispatchEvent({type:'ended'});}}
   for(const[id,t]of[...timers])if(t.at<=now){if(t.repeat)t.at=now+t.repeat;else timers.delete(id);t.fn();}
@@ -420,6 +420,35 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   e.document.hidden=false; e.document.dispatchEvent({type:'visibilitychange'}); await e.tick(500); assert.ok(m.currentTime>time);
   m.paused=true; const plays=m.playCount; await e.tick(10000); assert.ok(m.playCount>plays); assert.equal(m.paused,false);
   tap(e); const paused=m.playCount; await e.tick(15000); assert.equal(m.playCount,paused); assert.equal(m.paused,true);
+ });
+ await test('A running-but-frozen TV clock releases the competing decoder without reloading narration', async () => {
+  const e=environment();e.click('weatherDemoPage');await e.tick(2000);
+  const m=e.el('demoNarration'),bg=e.el('tvBackdrop'),time=m.currentTime,loads=m.loadCount,seeks=m.seekCount;
+  m.blockedByBackground=true;await e.tick(6000);
+  assert.ok(m.currentTime>time,'a playing flag must not hide a frozen media clock');
+  assert.equal(bg.getAttribute('src'),null,'pause alone must not retain the competing decoder');
+  assert.equal(m.loadCount,loads);assert.equal(m.seekCount,seeks);
+  assert.equal(e.el('cinematicBackdrop').classList.contains('tv-background-fallback'),true);
+  e.click('meetingDemoPage');await e.tick(1000);
+  assert.equal(bg.getAttribute('src'),null,'chapter changes must not recreate the decoder conflict');
+  const after=m.currentTime;await e.tick(1000);assert.ok(m.currentTime>after);
+ });
+ await test('A buffered decoder frozen in playing state resumes with a bounded pause/play retry', async () => {
+  const e=environment();e.click('weatherDemoPage');await e.tick(2000);
+  const m=e.el('demoNarration'),time=m.currentTime,loads=m.loadCount,seeks=m.seekCount;
+  m.stall=true;await e.tick(11000);
+  assert.ok(m.currentTime>time);assert.equal(m.loadCount,loads);assert.equal(m.seekCount,seeks);
+  m.permanentStall=true;await e.tick(27000);
+  assert.equal(e.el('tourStage').dataset.narrationState,'error');
+  const plays=m.playCount;await e.tick(20000);assert.equal(m.playCount,plays);
+ });
+ await test('Recording lifecycle events cannot reset or pause a TV tour', async () => {
+  const e=environment();e.click('weatherDemoPage');await e.tick(1000);
+  const m=e.el('demoNarration'),time=m.currentTime,loads=m.loadCount,seeks=m.seekCount;
+  for(const type of ['prepare','start','stop']) e.document.dispatchEvent({type:'power-tbm:recording-'+type});
+  await e.tick(1000);
+  assert.equal(e.el('tourStage').dataset.demoPage,'weather');assert.ok(m.currentTime>time);
+  assert.equal(m.loadCount,loads);assert.equal(m.seekCount,seeks);
  });
  await test('Slow buffering keeps the current request and resumes without resetting the chapter', async () => {
   const e=environment();e.click('weatherDemoPage');await e.tick(2000);

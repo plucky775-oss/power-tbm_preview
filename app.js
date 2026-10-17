@@ -1753,6 +1753,7 @@
   });
   allDemoPage?.addEventListener('click', () => activateSequence({ userInitiated: true }));
   document.addEventListener('power-tbm:recording-prepare', () => {
+    if (tvMode) return;
     reduceMotion = false;
     launchChoiceMade = true;
     enableNarrationFromGesture({ muted: false });
@@ -1762,6 +1763,7 @@
     recordingPrepared = true;
   });
   document.addEventListener('power-tbm:recording-start', () => {
+    if (tvMode) return;
     if (recordingPrepared) {
       recordingPrepared = false;
       // The encoder already holds the button clip's first frame. Resume it
@@ -1775,6 +1777,7 @@
     activateSequence({ userInitiated: true });
   });
   document.addEventListener('power-tbm:recording-stop', () => {
+    if (tvMode) return;
     reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (recordingPrepared) {
       recordingPrepared = false;
@@ -2110,14 +2113,13 @@
         if (now - recoveredAt > 30000) recoveries = 0;
         return;
       }
-      // A slow download is not a decoder failure. load() aborts that request
-      // and discards buffered bytes, making a weak connection stall forever.
-      // Only resume an unexpectedly paused player that already has data.
-      if (!demoNarration.paused || demoNarration.readyState < 3 || retryPending) {
-        progressAt = now;
-        return;
-      }
-      if (now - progressAt < 8000) return;
+      const stalledFor = now - progressAt;
+      // paused=false only describes intent: a decoder can be frozen while
+      // reporting playback. Free the optional background before retrying.
+      if (stalledFor >= 4000) tv.releaseBackground();
+      // Keep the in-flight download and buffered bytes on a slow connection.
+      // Do not queue play promises or reload/seek while waiting for data.
+      if (demoNarration.readyState < 3 || retryPending || stalledFor < 8000) return;
       const token = narrationRunToken;
       progressAt = now;
       recoveredAt = now;
@@ -2128,6 +2130,7 @@
       recoveries += 1;
       guideStage.dataset.mediaRecoveries = String(recoveries);
       retryPending = true;
+      if (!demoNarration.paused) demoNarration.pause();
       demoNarration.play().catch(error => handleNarrationFailure(error, token))
         .finally(() => { if (token === narrationRunToken) retryPending = false; });
     }, 1000);

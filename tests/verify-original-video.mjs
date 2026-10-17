@@ -292,7 +292,7 @@ vm.runInContext(read('sw.js'), cacheContext);
 const cached = vm.runInContext('PRECACHE_URLS', cacheContext);
 assert(cached.includes('./assets/safety4cut/09-ai-example-v84.mp4'));
 assert(cached.includes('./assets/audio/07-safety4cut-intro-v97.m4a'));
-assert(cached.includes('./app.js?v=20261017-recording-start-v113'));
+assert(cached.includes('./app.js?v=20261017-tv-recovery-v114'));
 assert(cached.includes('./subtitles.js?v=20261016-subtitle-clock-v105'));
 assert(cached.includes('./subtitles.css?v=20261004-v87'));
 assert(cached.includes('./subtitle-data.js?v=20261013-safety-title-v97'));

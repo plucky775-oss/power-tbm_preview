@@ -183,8 +183,29 @@
   };
   background.addEventListener('loadeddata', showBackground);
   background.addEventListener('error', failBackground);
+  // Some TVs cannot keep both video decoders advancing even though play()
+  // succeeds. Release the optional decoder for this session if the main clock
+  // stops; chapter changes must not immediately allocate it again.
+  let backgroundReleased = false;
+  api.releaseBackground = () => {
+    if (backgroundReleased || !background.getAttribute('src')) return;
+    backgroundReleased = true;
+    backgroundRequest++;
+    backgroundPlayPending = false;
+    background.pause();
+    background.removeAttribute('src');
+    background.load();
+    background.hidden = true;
+    backdrop.classList.remove('tv-background-ready');
+    backdrop.classList.add('tv-background-fallback');
+  };
   api.syncBackground = (page, { paused, emergency = false }) => {
     const key = page === 'safety' ? 'meeting' : page === 'support' && emergency ? 'emergency' : page;
+    images.filter(image => image.dataset.cinematicPage).forEach(image => {
+      const imageKey = image.classList.contains('cinematic-backdrop-emergency') ? 'emergency' : image.dataset.cinematicPage;
+      image.classList.toggle('tv-fallback-active', imageKey === key);
+    });
+    if (backgroundReleased) return;
     const source = backgroundSources[key] || '';
     if ((background.getAttribute('src') || '') !== source) {
       backgroundRequest++;
