@@ -1,4 +1,5 @@
-/* Background, phone clips and audio share ONE continuous file and decoder. */
+/* Narration and foreground clips share one continuous file; one muted video
+   supplies the current chapter's lightweight moving background. */
 (() => {
   'use strict';
   const params = new URLSearchParams(location.search);
@@ -140,8 +141,13 @@
     if (Math.abs(media.volume - volume) > .005) media.volume = volume;
   };
 
+  const backgroundSources = {};
   document.querySelectorAll('video').forEach(video => {
     if (video === media || video.id === 'demoRecordPreview') return;
+    if (video.dataset.cinematicPage) {
+      const key = video.classList.contains('cinematic-backdrop-emergency') ? 'emergency' : video.dataset.cinematicPage;
+      backgroundSources[key] = video.getAttribute('src') || video.querySelector('source')?.getAttribute('src');
+    }
     const id = video.id;
     const placeholder = document.createElement('img');
     placeholder.id = id;
@@ -165,120 +171,176 @@
   bgm.load();
   bgm.remove();
 
-  // Two small drawing surfaces read rectangles from the SAME decoded frame.
-  // No video cloning, captureStream, pixel readback or full-screen canvas buffer.
+  // Reuse a single background element. Inactive chapters keep only posters,
+  // so their original video elements cannot retain additional decoders.
   const backdrop = document.getElementById('cinematicBackdrop');
-  const background = document.createElement('canvas');
+  const background = document.createElement('video');
   background.id = 'tvBackdrop';
   background.className = 'cinematic-backdrop-video';
-  background.width = timeline.surfaces.background[2];
-  background.height = timeline.surfaces.background[3];
+  background.muted = background.defaultMuted = true;
+  background.loop = true;
+  background.playsInline = true;
+  background.setAttribute('playsinline', '');
+  background.setAttribute('webkit-playsinline', '');
   background.setAttribute('aria-hidden', 'true');
+  background.preload = 'none';
+  background.tabIndex = -1;
+  background.hidden = true;
   backdrop.append(background);
-  const phone = document.createElement('canvas');
-  phone.id = 'tvPhoneVideo';
-  phone.width = 480;
-  phone.height = 1040;
-  phone.hidden = true;
-  phone.setAttribute('aria-hidden', 'true');
-  document.querySelector('.guide-media').append(phone);
-  const backgroundContext = background.getContext('2d', { alpha: false });
-  const phoneContext = phone.getContext('2d', { alpha: false });
-  let foregroundVisible = false;
-  let backgroundPaused = true;
-  let frame = 0;
-  let lastBackgroundTime = -Infinity;
-  let lastPhoneTime = -1;
-  let backgroundInterval = 1 / 15;
-  let drawingFailed = false;
-  // Keep one constant in-viewport native surface under the page. Resizing or
-  // reparenting the decoder at splash/chapter boundaries used to stall webOS.
-  Object.assign(media.style, { left: '0px', top: '0px', width: '240px', height: '616px', zIndex: '-1' });
-  const draw = (context, surface, rectangle) => {
-    if (!context) throw new Error('TV canvas is unavailable');
-    context.drawImage(media, ...rectangle, 0, 0, surface.width, surface.height);
-  };
-  const paint = () => {
-    if (drawingFailed || document.hidden || media.readyState < 2 || media.seeking || pendingStart !== null) return;
-    const time = media.currentTime;
-    try {
-      if (!backgroundPaused && (Math.abs(time - lastBackgroundTime) >= backgroundInterval)) {
-        draw(backgroundContext, background, timeline.surfaces.background);
-        lastBackgroundTime = time;
-        backdrop.classList.add('tv-background-ready');
-      }
-      if (foregroundVisible && Math.floor(time * 30) !== lastPhoneTime) {
-        draw(phoneContext, phone, timeline.surfaces.phone);
-        lastPhoneTime = Math.floor(time * 30);
-        phone.hidden = false;
-      }
-    } catch (error) {
-      drawingFailed = true;
-      phone.hidden = true;
-      backdrop.classList.remove('tv-background-ready');
-      console.warn('TV 영상 화면을 표시하지 못했습니다.', error);
+  let backgroundRequest = 0;
+  let backgroundPlayPending = false;
+  let backgroundStartTimer = 0;
+  const showBackground = () => {
+    if (background.getAttribute('src') && background.readyState >= 2 && !background.error) {
+      backdrop.classList.remove('tv-background-fallback');
+      backdrop.classList.add('tv-background-ready');
     }
   };
-  const stopFrames = () => {
-    if (frame) window.cancelAnimationFrame(frame);
-    frame = 0;
-  };
-  const startFrames = () => {
-    if (frame || media.paused || media.ended || document.hidden || drawingFailed) return;
-    frame = window.requestAnimationFrame(() => {
-      frame = 0;
-      paint();
-      startFrames();
-    });
-  };
-  const invalidateFrames = () => {
-    lastBackgroundTime = -Infinity;
-    lastPhoneTime = -1;
-    phone.hidden = true;
+  const failBackground = () => {
+    background.dataset.playbackFailed = 'true';
+    background.pause();
     backdrop.classList.remove('tv-background-ready');
   };
-  media.addEventListener('play', startFrames);
-  media.addEventListener('playing', startFrames);
-  media.addEventListener('pause', () => { paint(); stopFrames(); });
-  media.addEventListener('ended', stopFrames);
-  media.addEventListener('seeking', invalidateFrames);
-  media.addEventListener('seeked', () => { paint(); startFrames(); });
-  media.addEventListener('loadeddata', () => { paint(); startFrames(); });
-  media.addEventListener('error', () => { invalidateFrames(); stopFrames(); });
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stopFrames();
-    else startFrames();
-  });
-  // A stalled clock must not permanently discard moving footage. Reduce only
-  // drawing frequency; the bounded media retry remains in app.js.
-  api.reduceRenderLoad = () => { backgroundInterval = 1 / 10; };
-  api.syncBackground = (page, { paused }) => {
-    backgroundPaused = paused;
-    // Posters remain behind the canvas while the shared stream buffers.
-    if (!paused) { paint(); startFrames(); }
+  background.addEventListener('loadeddata', showBackground);
+  background.addEventListener('error', failBackground);
+  // Some TVs cannot keep both video decoders advancing even though play()
+  // succeeds. Release the optional decoder for this session if the main clock
+  // stops; chapter changes must not immediately allocate it again.
+  let backgroundReleased = false;
+  api.releaseBackground = () => {
+    if (backgroundReleased || !background.getAttribute('src')) return;
+    backgroundReleased = true;
+    window.clearTimeout(backgroundStartTimer);
+    backgroundRequest++;
+    backgroundPlayPending = false;
+    background.pause();
+    background.removeAttribute('src');
+    background.load();
+    background.hidden = true;
+    backdrop.classList.remove('tv-background-ready');
+    backdrop.classList.add('tv-background-fallback');
+  };
+  api.syncBackground = (page, { paused, emergency = false }) => {
+    window.clearTimeout(backgroundStartTimer);
+    const key = page === 'safety' ? 'meeting' : page === 'support' && emergency ? 'emergency' : page;
+    images.filter(image => image.dataset.cinematicPage).forEach(image => {
+      const imageKey = image.classList.contains('cinematic-backdrop-emergency') ? 'emergency' : image.dataset.cinematicPage;
+      image.classList.toggle('tv-fallback-active', imageKey === key);
+    });
+    if (backgroundReleased) return;
+    const source = backgroundSources[key] || '';
+    // First paint, screenshot decode, native video-plane change and a second
+    // decoder used to happen together at the splash boundary. Let the main
+    // clock advance for one second before loading the optional background.
+    const entry = api.segmentAtTime();
+    const canStart = entry && entry.page === page && media.currentTime - entry.start >= 1
+      && media.readyState >= 3 && !media.paused && !document.hidden;
+    if (source && (background.getAttribute('src') || '') !== source && (paused || !canStart)) {
+      if (background.getAttribute('src')) {
+        backgroundRequest++;
+        backgroundPlayPending = false;
+        background.pause();
+        background.removeAttribute('src');
+        background.load();
+      }
+      background.hidden = true;
+      backdrop.classList.remove('tv-background-ready');
+      backdrop.classList.add('tv-background-fallback');
+      if (!paused && !document.hidden) {
+        backgroundStartTimer = window.setTimeout(() => api.syncBackground(page, { paused, emergency }), 200);
+      }
+      return;
+    }
+
+    if ((background.getAttribute('src') || '') !== source) {
+      backgroundRequest++;
+      backgroundPlayPending = false;
+      background.pause();
+      backdrop.classList.remove('tv-background-ready');
+      background.dataset.playbackFailed = 'false';
+      if (source) background.src = source;
+      else background.removeAttribute('src');
+      background.load();
+    }
+    background.hidden = !source;
+    if (!source || paused) {
+      if (backgroundPlayPending || !background.paused) {
+        backgroundRequest++;
+        backgroundPlayPending = false;
+        background.pause();
+      }
+      return;
+    }
+    if (background.error || background.dataset.playbackFailed === 'true') return;
+    showBackground();
+    if (!background.paused || backgroundPlayPending) return;
+    const token = backgroundRequest;
+    backgroundPlayPending = true;
+    background.play().catch(error => {
+      if (token !== backgroundRequest || error?.name === 'AbortError') return;
+      failBackground();
+      console.warn('배경영상 재생을 시작하지 못했습니다.', error);
+    }).finally(() => { if (token === backgroundRequest) backgroundPlayPending = false; });
+  };
+
+  let target = null;
+  let layoutFrame = 0;
+  let parked = false;
+  const park = () => {
+    target = null;
+    if (parked) return;
+    parked = true;
+    // Keep the existing decoded surface behind the page. Shrinking it to 2px
+    // forced webOS to resize the native video plane at the next visible frame.
+    if (!media.style.width) Object.assign(media.style, { left: '0px', top: '0px', width: '320px', height: '180px' });
+    media.style.zIndex = '-1';
+    media.dataset.surface = 'audio';
+  };
+  const layout = () => {
+    layoutFrame = 0;
+    if (!target) return;
+    const box = target.getBoundingClientRect();
+    if (box.width < 1 || box.height < 1) return;
+    Object.assign(media.style, {
+      left: `${box.left}px`, top: `${box.top}px`, width: `${box.width}px`, height: `${box.height}px`,
+      borderRadius: getComputedStyle(target).borderRadius
+    });
+  };
+  const scheduleLayout = () => {
+    if (!layoutFrame) layoutFrame = requestAnimationFrame(layout);
   };
   api.present = (page, segment, visualTime) => {
     softenVoiceEntry(segment);
+    // Every embedded clip is precomposed into the same phone-sized frame.
+    // Changing source dimensions or resizing the video plane interrupts webOS.
+    const next = document.querySelector('.guide-media');
+    if (!next) { park(); return; }
     const visible = page === 'intro' || segment.id === '08-safety4cut-example' ||
       (segment.id === '04-safety-tools' && visualTime >= 26100 && visualTime < 32600);
-    if (foregroundVisible !== visible) {
-      foregroundVisible = visible;
-      lastPhoneTime = -1;
-      phone.hidden = true;
+    const surface = visible ? page : 'audio';
+    if (media.dataset.surface !== surface) {
+      media.dataset.surface = surface;
+      media.style.zIndex = visible ? '15' : '-1';
     }
-    media.dataset.surface = visible ? page : 'audio';
-    paint();
-    startFrames();
+    if (next === target) return;
+    target = next;
+    parked = false;
+    layout();
+    scheduleLayout();
   };
-  api.park = () => {
-    foregroundVisible = false;
-    phone.hidden = true;
-    media.dataset.surface = 'audio';
-  };
+  api.park = park;
   api.media = media;
-  api.park();
-  // Buffer while the sound-choice gate is visible. Reuse this element/source
-  // on start and at every automatic chapter boundary.
+  park();
+  // Buffer while the sound-choice gate is visible. Starting playback must reuse
+  // this same element/source; no autoplay, extra decoder or JavaScript Blob.
   media.src = timeline.src;
   media.load();
+  window.addEventListener('resize', scheduleLayout, { passive: true });
+  window.addEventListener('scroll', scheduleLayout, { passive: true });
+  document.addEventListener('fullscreenchange', scheduleLayout);
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(scheduleLayout);
+    observer.observe(document.querySelector('.guide-media'));
+    observer.observe(document.getElementById('tourStage'));
+  }
 })();

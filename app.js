@@ -652,7 +652,7 @@
 
   const updateDemoStateData = () => {
     if (!guideStage) return;
-    guideStage.dataset.playbackMode = tvMode ? 'tv-single-stream-background' : 'standard';
+    guideStage.dataset.playbackMode = tvMode ? 'tv-continuous-background' : 'standard';
     guideStage.dataset.demoPage = demoPage;
     tv?.setPage(demoPage);
     guideStage.dataset.demoMode = demoMode;
@@ -2115,8 +2115,8 @@
       }
       const stalledFor = now - progressAt;
       // paused=false only describes intent: a decoder can be frozen while
-      // reporting playback. Reduce background drawing work before retrying.
-      if (stalledFor >= 4000) tv.reduceRenderLoad();
+      // reporting playback. Free the optional background before retrying.
+      if (stalledFor >= 4000) tv.releaseBackground();
       // Keep the in-flight download and buffered bytes on a slow connection.
       // Do not queue play promises or reload/seek while waiting for data.
       if (demoNarration.readyState < 3 || retryPending || stalledFor < 8000) return;

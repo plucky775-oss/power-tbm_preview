@@ -1,29 +1,29 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v116-20261017-single-stream`;
+const CACHE_VERSION = `${CACHE_PREFIX}v115-20261017-tv-startup`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './tv-media-timeline.js?v=20261017-single-stream-v116',
-  './tv-compat.js?v=20261017-single-stream-v116',
-  './tv-compat.css?v=20261017-single-stream-v116',
+  './tv-media-timeline.js?v=20261017-opening-ready-v112',
+  './tv-compat.js?v=20261017-tv-startup-v115',
+  './tv-compat.css?v=20261017-tv-recovery-v114',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261016-subtitle-clock-v105',
   './subtitle-data.js?v=20261013-safety-title-v97',
   './manifest.webmanifest',
   './styles.css?v=20261016-support-reveal-v109',
-  './app.js?v=20261017-single-stream-v116',
+  './app.js?v=20261017-tv-recovery-v114',
   './safety4cut.css?v=20261016-safety-reveal-v107',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',
   './demo-recorder-v81.js?v=20261017-recording-start-v113',
   './safety4cut.js?v=20261017-tv-gestures-v110',
   './pwa.js?v=20261017-tv-startup-v115',
-  './assets/tv-v116/tour.mp4',
+  './assets/tv-v112/tour.mp4',
   './assets/audio/07-safety4cut-intro-v97.m4a',
   './assets/safety4cut/01-main-menu-v97.png',
   './assets/safety4cut/02-upload-v75.png',
@@ -110,14 +110,14 @@ const PRECACHE_URLS = [
   './assets/video/power-tbm-opening-ansan-v77.mp4'
 ];
 
-// Cache only the single combined TV stream; no separate background downloads.
+// Keep the continuous narration and the five 640x360 silent backgrounds.
 // Separate desktop narration, BGM and foreground clips remain unused on TV.
 const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
   .filter(path => !path.startsWith('./assets/audio/') &&
-    (!/\.mp4(?:\?|$)/.test(path) || path.includes('/tv-v116/')))
+    (!/\.mp4(?:\?|$)/.test(path) || path.includes('/tv-v112/') || path.startsWith('./assets/background/')))
   .map(path => /^\.\/assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(path)
     ? path.replace('./assets/', './assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : path)
-  : PRECACHE_URLS.filter(path => !path.includes('/tv-v116/'));
+  : PRECACHE_URLS.filter(path => !path.includes('/tv-v112/'));
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
 const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data\.js|tv-compat\.(?:js|css)|tv-media-timeline\.js)(?:\?|$)/.test(path) || path === './';
