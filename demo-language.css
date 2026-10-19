@@ -1,0 +1,85 @@
+/* Language is chosen on the existing first-screen playback panel. */
+.launch-start-panel {
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px - env(safe-area-inset-top));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 5px;
+}
+.launch-language-choices {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 14px 17px;
+  border: 1px solid #ffffff3d;
+  border-radius: 18px;
+  background: #051621;
+  text-align: left;
+}
+.launch-language-choices > p {
+  grid-column: 1 / -1;
+  margin: 0 0 2px;
+  color: #ffffffbf;
+  font-size: 12px;
+  font-weight: 800;
+}
+.launch-language-choices > button {
+  min-height: 48px;
+  padding: 11px 14px;
+  border: 1px solid #ffffff40;
+  border-radius: 12px;
+  background: #ffffff12;
+  color: #fff;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.launch-language-choices > button[aria-pressed="true"] {
+  border-color: #ffd649;
+  background: #ffd649;
+  color: #082033;
+}
+.launch-language-choices > button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+html[lang="en"] .launch-start-copy > small { line-height: 1.5; }
+html[lang="en"] .tour-detail,
+html[lang="en"] .subtitle-line,
+html[lang="en"] .subtitle-bubble {
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+html[lang="en"] .demo-only-page .tour-detail h3 {
+  font-size: clamp(32px, 4.8vh, 52px);
+  line-height: 1.15;
+  letter-spacing: -.025em;
+}
+html[lang="en"] .demo-only-page .demo-explain > p,
+html[lang="en"] .demo-only-page .meeting-explain > p,
+html[lang="en"] .demo-only-page .support-explain > p {
+  font-size: clamp(18px, 2.1vh, 22px);
+  line-height: 1.5;
+}
+html[lang="en"] .demo-explain-points { flex-wrap: wrap; }
+html[lang="en"] .demo-only-page .demo-page-switch button b {
+  white-space: normal;
+  line-height: 1.15;
+}
+html[lang="en"] .opening-flow { flex-wrap: wrap; }
+html[lang="en"] .subtitle-line { letter-spacing: -.01em; }
+@media (max-width: 760px) {
+  .launch-start-panel { gap: 10px; }
+  .launch-language-choices { padding: 11px 13px; border-radius: 16px; }
+  .launch-language-choices > button { font-size: 16px; }
+}
+@media (max-height: 500px) {
+  .launch-start-panel { gap: 8px; bottom: max(10px, env(safe-area-inset-bottom)); }
+  .launch-start-copy > span { display: none; }
+  .launch-language-choices { padding-top: 8px; padding-bottom: 8px; }
+  .launch-sound-choices { padding-top: 8px; padding-bottom: 8px; }
+  .launch-sound-choice { min-height: 70px; padding-top: 9px; padding-bottom: 9px; }
+}

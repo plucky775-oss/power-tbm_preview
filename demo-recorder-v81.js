@@ -48,12 +48,15 @@
       ? `녹화 중 ${elapsedText(recordedDuration(session))} · 클릭하여 종료 및 저장`
       : '시연 영상 녹화';
     button.setAttribute('aria-label', recording ? '녹화 중지 및 영상 저장' : '시연 영상 녹화');
+    window.PowerTBMLanguage?.apply(button);
   };
   const showError = (text) => {
     errorText.textContent = text;
     errorText.hidden = !text;
+    window.PowerTBMLanguage?.apply(errorText);
   };
   const openDialog = () => {
+    window.PowerTBMLanguage?.apply(dialog);
     if (!dialog.open) dialog.showModal();
   };
   const showSetup = (error = '') => {

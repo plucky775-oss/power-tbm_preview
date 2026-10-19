@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v115-20261017-tv-startup`;
+const CACHE_VERSION = `${CACHE_PREFIX}v117-20261020-language`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -12,16 +12,20 @@ const PRECACHE_URLS = [
   './tv-compat.js?v=20261017-tv-startup-v115',
   './tv-compat.css?v=20261017-tv-recovery-v114',
   './subtitles.css?v=20261004-v87',
-  './subtitles.js?v=20261016-subtitle-clock-v105',
+  './subtitles.js?v=20261020-language-v117',
   './subtitle-data.js?v=20261013-safety-title-v97',
+  './subtitle-data.en.js?v=20261020-language-v117',
+  './demo-translations.js?v=20261020-language-v117',
+  './demo-language.js?v=20261020-language-v117',
+  './demo-language.css?v=20261020-language-v117',
   './manifest.webmanifest',
   './styles.css?v=20261016-support-reveal-v109',
-  './app.js?v=20261017-tv-recovery-v114',
+  './app.js?v=20261020-language-v117',
   './safety4cut.css?v=20261016-safety-reveal-v107',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',
-  './demo-recorder-v81.js?v=20261017-recording-start-v113',
-  './safety4cut.js?v=20261017-tv-gestures-v110',
+  './demo-recorder-v81.js?v=20261020-language-v117',
+  './safety4cut.js?v=20261020-language-v117',
   './pwa.js?v=20261017-tv-startup-v115',
   './assets/tv-v112/tour.mp4',
   './assets/audio/07-safety4cut-intro-v97.m4a',
@@ -120,7 +124,7 @@ const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
   : PRECACHE_URLS.filter(path => !path.includes('/tv-v112/'));
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
-const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data\.js|tv-compat\.(?:js|css)|tv-media-timeline\.js)(?:\?|$)/.test(path) || path === './';
+const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data(?:\.en)?\.js|demo-translations\.js|demo-language\.(?:js|css)|tv-compat\.(?:js|css)|tv-media-timeline\.js)(?:\?|$)/.test(path) || path === './';
 
 const precacheInSmallBatches = async (cache) => {
   let nextIndex = 0;

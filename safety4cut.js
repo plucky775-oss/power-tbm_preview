@@ -9,6 +9,8 @@
   ];
   const root = document.querySelector('#safetyDemo');
   if (!root) return;
+  const language = window.PowerTBMLanguage;
+  const caption = root.querySelector('#safetyCaption');
   const canvas = root.querySelector('.safety-screen-canvas');
   const viewport = root.querySelector('.safety-screen-viewport');
   const picture = root.querySelector('#safetyScreenshot');
@@ -33,6 +35,13 @@
   let mediaClock = false;
   let imageRequest = 0;
   let decodedSource = '';
+
+  function setCaption(text) {
+    const translated = language?.translate(text) || text;
+    if (caption.textContent === translated) return;
+    caption.textContent = text;
+    language?.apply(caption);
+  }
 
   function fitCanvas() {
     if (!picture.naturalWidth || !picture.naturalHeight) return;
@@ -93,13 +102,15 @@
       document.querySelector('#safetyDescription').textContent = scene.description;
       document.querySelector('#safetyPoints').innerHTML = scene.points.map(point => `<b>${point}</b>`).join('');
       document.querySelector('#safetySceneLabel').textContent = `${index + 1} / ${scenes.length} · ${scene.label}`;
-      root.querySelector('#safetyCaption').textContent = scene.caption;
+      setCaption(scene.caption);
+      language?.apply(document.querySelector('.safety-explanations'));
       if (scene.src) {
         const previousSource = picture.getAttribute('src');
         if (window.PowerTBMTV?.setImage) window.PowerTBMTV.setImage(picture, `assets/safety4cut/${scene.src}`);
         else picture.src = `assets/safety4cut/${scene.src}`;
         if (picture.getAttribute('src') !== previousSource) decodedSource = '';
         picture.alt = `Safety 4-Cut ${scene.label} 실제 화면`;
+        language?.apply(picture);
         revealImage();
         // reset() runs before the phone's active class changes. Fit the cached
         // image again before painting, including TV engines without ResizeObserver.
@@ -116,7 +127,7 @@
     // app.js owns play/pause, mute and the clock when this visible video is
     // also the narration player. Never seek or mute it from its own clock.
     if (scene.video && mediaClock) {
-      root.querySelector('#safetyCaption').textContent = scene.caption;
+      setCaption(scene.caption);
       return;
     }
     if (!scene.video || paused || document.hidden) {
@@ -138,7 +149,7 @@
       sample.play().catch((error) => {
         if (token !== playToken || error?.name === 'AbortError') return;
         videoUnavailable = true;
-        root.querySelector('#safetyCaption').textContent = '교육영상 재생을 시작하지 못했습니다';
+        setCaption('교육영상 재생을 시작하지 못했습니다');
       }).finally(() => { if (token === playToken) playPending = false; });
     }
   }
@@ -217,7 +228,7 @@
   });
   sample?.addEventListener('error', () => {
     videoUnavailable = true;
-    root.querySelector('#safetyCaption').textContent = '교육영상을 불러오지 못했습니다';
+    setCaption('교육영상을 불러오지 못했습니다');
   });
   window.PowerTBMSafety = { scenes, duration, videoOffset, render, renderGestureAt, pause, startFallback, reset,
     get time() { return lastTime; }, get videoEnded() { return tvMode

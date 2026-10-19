@@ -59,7 +59,9 @@
     lastId = id || '';
     lastTime = Math.max(0, Number(seconds) || 0);
     if (mode === 'off') return;
-    const cues = window.PowerTBMSubtitleData?.[lastId] || [];
+    const data = window.PowerTBMLanguage?.get() === 'en'
+      ? window.PowerTBMSubtitleDataEn : window.PowerTBMSubtitleData;
+    const cues = data?.[lastId] || [];
     const cue = cues.find(item => lastTime >= item.start && lastTime < item.end);
     if (mode === 'bubble') {
       if (!cue) { bubble.hidden = true; bubble.textContent = ''; return; }
@@ -104,6 +106,15 @@
     toggle.value = mode;
     render(lastId, lastTime);
   }
+  function syncLanguage() {
+    const english = window.PowerTBMLanguage?.get() === 'en';
+    panel.setAttribute('aria-label', english ? 'Narration subtitles' : '음성 자막');
+    bubble.setAttribute('aria-label', english ? 'Speech bubble captions' : '말풍선 자막');
+    clear();
+    render(lastId, lastTime);
+    requestLayout();
+  }
+  window.addEventListener('power-tbm:languagechange', syncLanguage);
   toggle.addEventListener('change', () => {
     if (!modes.includes(toggle.value)) return;
     mode = toggle.value;
@@ -139,4 +150,5 @@
     clear: () => { lastId = ''; lastTime = 0; clear(); }
   };
   syncPreference();
+  syncLanguage();
 })();

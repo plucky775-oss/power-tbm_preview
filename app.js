@@ -3,6 +3,7 @@
 
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const language = window.PowerTBMLanguage;
   let reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const tv = window.PowerTBMTV;
   const tvMode = Boolean(tv?.enabled);
@@ -28,12 +29,14 @@
     if (!menuButton || !mobileMenu) return;
     menuButton.setAttribute('aria-expanded', 'false');
     menuButton.setAttribute('aria-label', '메뉴 열기');
+    language?.apply(menuButton);
     mobileMenu.hidden = true;
   };
   menuButton?.addEventListener('click', () => {
     const open = menuButton.getAttribute('aria-expanded') === 'true';
     menuButton.setAttribute('aria-expanded', String(!open));
     menuButton.setAttribute('aria-label', open ? '메뉴 열기' : '메뉴 닫기');
+    language?.apply(menuButton);
     if (mobileMenu) mobileMenu.hidden = open;
   });
   $$('#mobileMenu a').forEach((link) => link.addEventListener('click', closeMenu));
@@ -680,6 +683,7 @@
     demoMute.setAttribute('aria-label', actionLabel);
     demoMute.title = actionLabel;
     demoMute.innerHTML = `<span class="demo-sound-icon" aria-hidden="true">${icon}</span><span class="demo-sound-label">${visibleLabel}</span>`;
+    language?.apply(demoMute);
   };
 
   const setNarrationState = (state) => {
@@ -978,7 +982,10 @@
       setNarrationState(error?.name === 'NotAllowedError' ? 'blocked' : 'error');
       updateDemoButton();
       const message = '영상·음성 재생이 중단되었습니다. 계속 재생을 눌러 다시 시도해 주세요.';
-      if (demoPage === 'safety') $('#safetyCaption').textContent = message;
+      if (demoPage === 'safety') {
+        $('#safetyCaption').textContent = message;
+        language?.apply($('#safetyCaption'));
+      }
       document.dispatchEvent(new CustomEvent('power-tbm:playback-error', { detail: { message } }));
       return;
     }
@@ -1123,7 +1130,10 @@
   };
 
   const focusLaunchSoundChoice = () => {
-    window.requestAnimationFrame(() => launchSoundButtons[0]?.focus({ preventScroll: true }));
+    window.requestAnimationFrame(() => {
+      const choice = $('#launchLanguageChoices [aria-pressed="true"]') || launchSoundButtons[0];
+      choice?.focus({ preventScroll: true });
+    });
   };
 
   const showLaunchGate = ({ resetVideo = true, focus = true } = {}) => {
@@ -1360,6 +1370,7 @@
     demoToggle.setAttribute('aria-pressed', String(demoPaused));
     const playingLabel = demoMode === 'sequence' ? '전체 시연 일시정지' : '시연 일시정지';
     demoToggle.innerHTML = `<span aria-hidden="true">${demoPaused ? '▶' : 'Ⅱ'}</span> ${demoPaused ? '계속 재생' : playingLabel}`;
+    language?.apply(guideStage);
   };
 
   const updateDemoPageButtons = () => {
@@ -1532,6 +1543,8 @@
     if (guideCheck) guideCheck.textContent = item.check;
     if (guideWhen) guideWhen.textContent = item.when;
     if (guideTip) guideTip.textContent = item.tip;
+    language?.apply(guideImage);
+    language?.apply($('.tour-copy'));
     guideTabs.forEach((tab, tabIndex) => {
       const selected = tabIndex === 0;
       tab.classList.toggle('active', selected);
@@ -1657,6 +1670,8 @@
       if (guideCheck) guideCheck.textContent = item.check;
       if (guideWhen) guideWhen.textContent = item.when;
       if (guideTip) guideTip.textContent = item.tip;
+      language?.apply(guideImage);
+      language?.apply($('.tour-copy'));
       guideTabs.forEach((tab, tabIndex) => {
         const selected = tabIndex === index;
         tab.classList.toggle('active', selected);

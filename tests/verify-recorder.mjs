@@ -348,9 +348,9 @@ for (const options of [{ withAudio: false }, { failVideo: true }, { cancel: true
     const url = index.match(new RegExp(`(?:src|href)="(${name.replaceAll('.', '\\.')}\\?[^"\\s]+)"`))?.[1];
     assert(url, `${name} needs a versioned entry point`);
     assert(precache.includes('./' + url), `${name} entry point must match the offline cache`);
-    assert.match(url, /20261017-recording-start-v113/);
+    assert.ok(url.endsWith(name.endsWith('.js') ? '20261020-language-v117' : '20261017-recording-start-v113'));
   }
-  assert.match(vm.runInContext('CACHE_NAME', context), /v115-20261017-tv-startup-standard$/);
+  assert.match(vm.runInContext('CACHE_NAME', context), /v117-20261020-language-standard$/);
   assert.match(index, /<option value="4:3" selected>/);
   assert.match(index, /<option value="16:9">/);
 }
