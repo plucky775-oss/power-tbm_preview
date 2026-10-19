@@ -1366,11 +1366,12 @@
     guideStage?.setAttribute('aria-label', demoPaused
       ? '시연 일시정지 중. 터치하거나 스페이스 키를 누르면 계속 재생합니다.'
       : '자동 시연. 터치하거나 스페이스 키를 누르면 일시정지합니다.');
+    language?.apply(guideStage);
     if (!demoToggle) return;
     demoToggle.setAttribute('aria-pressed', String(demoPaused));
     const playingLabel = demoMode === 'sequence' ? '전체 시연 일시정지' : '시연 일시정지';
     demoToggle.innerHTML = `<span aria-hidden="true">${demoPaused ? '▶' : 'Ⅱ'}</span> ${demoPaused ? '계속 재생' : playingLabel}`;
-    language?.apply(guideStage);
+    language?.apply(demoToggle);
   };
 
   const updateDemoPageButtons = () => {

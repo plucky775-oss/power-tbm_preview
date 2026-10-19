@@ -4,7 +4,7 @@
 
 배포 주소: [Vercel](https://power-tbm-preview.vercel.app/) · [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/)
 
-최신 수정본은 `index.html`의 `demo-language.js?v=20261020-language-v117` 참조와 `sw.js`의 `v117-20261020-language` 캐시 버전으로 확인할 수 있습니다.
+최신 수정본은 `index.html`의 `demo-language.js?v=20261020-language-v117`·`app.js?v=20261020-language-v117a` 참조와 `sw.js`의 `v117-20261020-language-a11y` 캐시 버전으로 확인할 수 있습니다.
 
 ## 2026-10-20 첫 화면 한국어·영어 선택 (v117)
 
@@ -14,6 +14,8 @@
 - 음성은 기존 한국어 내레이션을 사용합니다. 스크린샷과 원본 영상에 포함된 한글은 그대로입니다. v115의 스탠바이미 연속 재생·움직이는 배경·정체 복구 경로와 원본 미디어를 유지하며, 언어 파일도 오프라인 캐시에 포함합니다.
 - 추가: `demo-language.js`, `demo-language.css`, `demo-translations.js`, `subtitle-data.en.js`, `tests/verify-language.mjs`. 수정: `index.html`, `app.js`, `subtitles.js`, `safety4cut.js`, `demo-recorder-v81.js`, `sw.js`, 관련 캐시 검사와 이 문서.
 - 검증: 실제 DOM에서 첫 화면 선택·저장·한영 복원·장면별 설명·전체 자막·미디어 재시작 없음·소리/무음 시작 흐름, 기존 TV 재생·녹화·원본 영상·PWA 오프라인 캐시 검사. `node tests/verify-language.mjs`는 별도 설치한 `jsdom`을 사용하며 `JSDOM_PATH`로 설치 경로를 지정할 수 있습니다. 실제 스탠바이미의 영상 디코딩·음성 출력은 실기기에서 별도로 확인해야 합니다.
+- 실제 배포된 Chrome 화면에서도 첫 화면 영어 선택, 무음 시작, 영어 우측 설명·일반/말풍선 자막, 안전 4컷 설명, 처음 화면 복귀·한국어 복원을 확인했습니다. 재생·일시정지의 화면 읽기 안내도 선택 언어를 유지합니다.
+- 기존 표시 동작: 기상정보의 설명 keyframe 사이에는 짧은 공백이 있어 전환 순간 일시정지하면 우측 설명이 빈 상태로 멈출 수 있습니다. v115의 설명 타이밍이며 이번 언어 기능에서는 수정하지 않았습니다.
 
 ## 2026-10-17 TV 첫 기상정보 전환 및 음성 진입 개선 (v115)
 
