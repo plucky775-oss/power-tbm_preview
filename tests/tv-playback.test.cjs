@@ -106,6 +106,31 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   e.document.dispatchEvent({type:'pointerdown',target,clientX:500,clientY:300});
   e.document.dispatchEvent({type:'click',target});
  };
+ await test('TV sizes the splash behind the opaque gate before its first frame, including delayed UI frames', async () => {
+  for (const lang of ['ko', 'en']) for (const [width,height] of [[1920,1080],[1080,1920],[820,1180]]) {
+   const e=environment('?tv=1','Chrome',false,true,lang),m=e.el('demoNarration');
+   e.window.innerWidth=width;e.window.innerHeight=height;
+   const phone=e.document.querySelector('.guide-media');
+   const box={left:width/4,top:80,width:Math.min(300,width/3),height:530};
+   phone.getBoundingClientRect=()=>box;
+   e.document.querySelector('[data-launch-sound="on"]').click();
+   const counts=[m.loadCount,m.playCount,m.pauseCount,m.seekCount];
+   await e.tick(3200);
+   assert.ok(m.currentTime<3.5,'inspect the last button frames before the splash starts');
+   assert.equal(m.style.width,`${box.width}px`,'the splash must not inherit the full-screen button size');
+   assert.equal(m.style.height,`${box.height}px`);
+   assert.ok(Number(m.style.zIndex)<2000,'resize must happen under the opaque launch gate');
+   assert.equal(e.el('launchIntro').classList.contains('is-active'),true);
+   // The decoder can submit the splash before the next JS animation callback.
+   m._time=3.6;
+   assert.equal(m.style.width,`${box.width}px`,'a delayed UI callback must not expose an enlarged splash');
+   await e.tick(100);
+   assert.equal(e.el('tourStage').dataset.launchState,'complete');
+   assert.equal(m.dataset.surface,'intro');assert.equal(m.style.opacity,'1');
+   assert.deepEqual([m.loadCount,m.playCount,m.pauseCount,m.seekCount],counts,'handoff must keep the decoder running');
+   assert.equal(e.errors.length,0);
+  }
+ });
  await test('Recording prepares a paused button clip from any scene, then resumes without seeking', async () => {
   for(const page of ['weatherDemoPage','supportDemoPage','safetyDemoPage']) {
    const e=environment('?tv=0');e.click(page);await e.tick(2000);

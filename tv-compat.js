@@ -296,6 +296,7 @@
     // forced webOS to resize the native video plane at the next visible frame.
     if (!media.style.width) Object.assign(media.style, { left: '0px', top: '0px', width: '320px', height: '180px' });
     media.style.zIndex = '-1';
+    media.style.opacity = '1';
     media.dataset.surface = 'audio';
   };
   const layout = () => {
@@ -322,12 +323,23 @@
     if (!layoutFrame) layoutFrame = requestAnimationFrame(layout);
   };
   api.presentPrelude = () => {
-    if (media.dataset.surface === 'prelude') return;
-    target = document.getElementById('launchIntro');
-    parked = false;
-    media.dataset.surface = 'prelude';
-    media.style.zIndex = '2001';
-    layout();
+    // The native decoder can present the 3.5s splash frame before the next JS
+    // callback. Fade the button and resize UNDER the opaque gate 400ms early;
+    // never wait for the first splash frame to shrink the full-screen plane.
+    const resizeAt = (timeline.preludeDuration || 0) - .4;
+    if (media.currentTime >= resizeAt) {
+      api.present('intro', { id: '00-opening' }, 0);
+      return;
+    }
+    if (media.dataset.surface !== 'prelude') {
+      target = document.getElementById('launchIntro');
+      parked = false;
+      media.dataset.surface = 'prelude';
+      media.style.zIndex = '2001';
+      layout();
+    }
+    const opacity = String(Math.min(1, (resizeAt - media.currentTime) / .57));
+    if (media.style.opacity !== opacity) media.style.opacity = opacity;
   };
   api.present = (page, segment, visualTime) => {
     // Every embedded clip is precomposed into the same phone-sized frame.
@@ -337,6 +349,7 @@
     const visible = page === 'intro' || segment.id === '08-safety4cut-example' ||
       (segment.id === '04-safety-tools' && visualTime >= 26100 && visualTime < 32600);
     const surface = visible ? page : 'audio';
+    if (media.style.opacity !== '1') media.style.opacity = '1';
     if (media.dataset.surface !== surface) {
       media.dataset.surface = surface;
       media.style.zIndex = visible ? '15' : '-1';

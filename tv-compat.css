@@ -20,6 +20,8 @@
 .tbm-tv .guide-media > #openingDemoVideo { width: 100%; height: 100%; }
 /* A fixed native video plane cannot follow the entrance transform. */
 .tbm-tv .tour-stage { transform: none !important; transition: none !important; }
+/* The fixed native plane must match the phone before and after launch reveal. */
+.tbm-tv .demo-only-page > #main { transform: none; }
 .tbm-tv .tour-stage, .tbm-tv .tour-stage *, .tbm-tv .tour-stage *::before, .tbm-tv .tour-stage *::after {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;

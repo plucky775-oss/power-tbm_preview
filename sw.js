@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v130-20261021-launch-poster`;
+const CACHE_VERSION = `${CACHE_PREFIX}v131-20261021-launch-handoff`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -10,8 +10,8 @@ const PRECACHE_URLS = [
   './index.html',
   './tv-media-timeline.js?v=20261021-weather-ending-v129',
   './english-narration.js?v=20261021-balanced-v128',
-  './tv-compat.js?v=20261021-balanced-v128',
-  './tv-compat.css?v=20261021-launch-poster-v130',
+  './tv-compat.js?v=20261021-launch-handoff-v131',
+  './tv-compat.css?v=20261021-launch-handoff-v131',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261020-language-v117',
   './subtitle-data.js?v=20261021-weather-ending-v129',
