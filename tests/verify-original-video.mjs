@@ -296,5 +296,5 @@ assert(cached.includes('./app.js?v=20261021-english-audio-v119'));
 assert(cached.includes('./subtitles.js?v=20261020-language-v117'));
 assert(cached.includes('./subtitles.css?v=20261004-v87'));
 assert(cached.includes('./subtitle-data.js?v=20261021-weather-sources-v118'));
-assert(cached.includes('./safety4cut.js?v=20261020-language-v117'));
+assert(cached.includes('./safety4cut.js?v=20261021-korean-phone-v120'));
 console.log('PASS: original bytes, single video/audio clock, intro handoff, no rewind on error, stale events, mute, pause/resume, hidden tab, fallback, recording motion, Golden Rules retry, cache paths');

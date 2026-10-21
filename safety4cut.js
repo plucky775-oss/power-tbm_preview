@@ -37,10 +37,9 @@
   let decodedSource = '';
 
   function setCaption(text) {
-    const translated = language?.translate(text) || text;
-    if (caption.textContent === translated) return;
+    // The app screen inside the phone stays Korean in either narration mode.
+    if (caption.textContent === text) return;
     caption.textContent = text;
-    language?.apply(caption);
   }
 
   function fitCanvas() {

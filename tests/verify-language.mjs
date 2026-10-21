@@ -67,6 +67,8 @@ const { window, document } = h;
 const api = window.PowerTBMLanguage;
 const detail = document.querySelector('.tour-detail');
 const originalDetail = detail.textContent;
+const phone = document.querySelector('.guide-phone');
+const originalPhone = phone.textContent;
 const originalMedia = [...document.querySelectorAll('audio, video')];
 const originalEmphasis = [...detail.querySelectorAll('em, br')];
 const narration = document.getElementById('demoNarration');
@@ -95,6 +97,8 @@ assert.equal(example.currentTime, 13.5);
 assert.deepEqual([...document.querySelectorAll('audio, video')], originalMedia, 'existing media elements remain intact');
 assert.deepEqual([...detail.querySelectorAll('em, br')], originalEmphasis, 'headings retain their emphasis and line breaks');
 assert.doesNotMatch(detail.textContent, /[가-힣]/, 'every right-hand explanation is available in English');
+assert.equal(phone.textContent, originalPhone, 'the complete phone screen stays Korean with English narration');
+assert.equal(phone.lang, 'ko', 'the phone declares its own Korean content language');
 assert.doesNotMatch(document.querySelector('#launchStartTitle').textContent, /[가-힣]/);
 assert.doesNotMatch(document.querySelector('#subtitleToggle').textContent, /[가-힣]/);
 api.set('invalid');
@@ -149,9 +153,10 @@ console.log('PASS: dynamically created and updated DOM text, original node/liste
 // production renders, including the embedded-video branch that runs per frame.
 for (const scene of window.PowerTBMSafety.scenes) {
   window.PowerTBMSafety.render(scene.at + .2, { paused: true, mediaClock: true });
-  for (const id of ['safetyTitle', 'safetyDescription', 'safetyPoints', 'safetySceneLabel', 'safetyCaption']) {
+  for (const id of ['safetyTitle', 'safetyDescription', 'safetyPoints', 'safetySceneLabel']) {
     assert.doesNotMatch(document.getElementById(id).textContent, /[가-힣]/, `English dynamic safety scene: ${scene.label} / ${id}`);
   }
+  assert.equal(document.getElementById('safetyCaption').textContent, scene.caption, 'dynamic phone captions stay Korean with English narration');
   const time = window.PowerTBMSafety.time;
   h.chooseLanguage('ko');
   assert.equal(document.getElementById('safetyDescription').textContent, scene.description);
@@ -160,8 +165,8 @@ for (const scene of window.PowerTBMSafety.scenes) {
   h.chooseLanguage('en');
 }
 example.dispatchEvent(new window.Event('error'));
-assert.doesNotMatch(document.getElementById('safetyCaption').textContent, /[가-힣]/, 'video failure message follows the selected language');
-console.log('PASS: all five dynamic Safety 4-Cut scenes, video branch, clock preservation and translated video error');
+assert.equal(document.getElementById('safetyCaption').textContent, '교육영상을 불러오지 못했습니다', 'phone video failure message stays Korean');
+console.log('PASS: all five dynamic Safety 4-Cut scenes, Korean phone captions/error, English explanations and clock preservation');
 
 const koData = window.PowerTBMSubtitleData;
 const enData = window.PowerTBMSubtitleDataEn;
@@ -260,6 +265,7 @@ console.log('PASS: English and Korean subtitles for all 9 tracks / 82 cues, inde
 for (const options of [{ savedLanguage: 'en' }, { savedLanguage: 'invalid' }, { storageUnavailable: true }]) {
   const reopened = setup(options);
   assert.equal(reopened.window.PowerTBMLanguage.get(), options.savedLanguage === 'en' ? 'en' : 'ko');
+  assert.equal(reopened.document.querySelector('.guide-phone').textContent, originalPhone, 'phone stays Korean when reopening with a saved language');
   if (options.savedLanguage === 'en') assert.doesNotMatch(reopened.document.querySelector('.tour-detail').textContent, /[가-힣]/, 'stored English applies through app initialization');
   reopened.chooseLanguage('en');
   assert.equal(reopened.window.PowerTBMLanguage.get(), 'en');
