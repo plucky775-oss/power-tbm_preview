@@ -8,7 +8,7 @@ window.PowerTBMEnglish = {
   "본문으로 바로가기": "Skip to content",
   "자동시연을 시작합니다": "Start the demonstration",
   "원하는 재생 모드를 한 번 눌러 시작하세요.": "Choose a playback mode to begin.",
-  "시작 언어를 선택하세요. 전체 시연은 한국어와 영어로 번갈아 반복됩니다.": "Choose the starting language. Full demos alternate between Korean and English.",
+  "한국어·영어 단독 재생 또는 한·영 교차 반복을 선택하세요.": "Choose Korean only, English only, or alternating full tours in Korean and English.",
   "재생 모드 선택": "Playback mode",
   "사운드 모드 선택": "Sound mode",
   "소리로 재생": "Play with sound",

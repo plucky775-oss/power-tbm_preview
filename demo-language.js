@@ -8,9 +8,12 @@
   const excluded = 'script, style, noscript, textarea, [data-language-fixed], #subtitleLine, #subtitleBubble';
   const choices = [...document.querySelectorAll('[data-demo-language]')];
   const pageTitle = document.title;
+  const modes = ['ko', 'en', 'alternate'];
+  let mode = 'ko';
   let language = 'ko';
   try {
-    if (localStorage.getItem(key) === 'en') language = 'en';
+    const saved = localStorage.getItem(key);
+    if (modes.includes(saved)) mode = saved;
   } catch (_) { /* Language selection also works without storage. */ }
 
   function translate(source) {
@@ -53,19 +56,22 @@
   }
 
   function set(next, { persist = true, restartPlayback = true } = {}) {
-    if (next !== 'ko' && next !== 'en') return;
-    language = next;
+    if (!modes.includes(next)) return;
+    // A menu choice selects the repeat mode. Automatic tour transitions change
+    // only the current language and leave the selected/saved mode intact.
+    if (persist) mode = next;
+    language = next === 'en' ? 'en' : 'ko';
     document.documentElement.lang = language;
     document.title = translate(pageTitle);
-    choices.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.demoLanguage === language)));
+    choices.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.demoLanguage === mode)));
     apply();
     if (persist) {
-      try { localStorage.setItem(key, language); } catch (_) { /* No storage required. */ }
+      try { localStorage.setItem(key, mode); } catch (_) { /* No storage required. */ }
     }
     window.dispatchEvent(new CustomEvent('power-tbm:languagechange', { detail: { language, restartPlayback } }));
   }
 
-  window.PowerTBMLanguage = { get: () => language, set, apply, translate };
+  window.PowerTBMLanguage = { get: () => language, getMode: () => mode, set, apply, translate };
   choices.forEach(button => button.addEventListener('click', () => set(button.dataset.demoLanguage)));
-  set(language, { persist: false });
+  set(mode, { persist: false });
 })();

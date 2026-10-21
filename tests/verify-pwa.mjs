@@ -156,14 +156,14 @@ const coreUrls = [
   './manifest.webmanifest',
   './english-narration.js?v=20261021-english-audio-v119',
   './styles.css?v=20261016-support-reveal-v109',
-  './app.js?v=20261021-alternating-language-v124',
+  './app.js?v=20261021-language-menu-v125',
   './pwa.js?v=20261017-tv-startup-v115',
   './subtitles.js?v=20261020-language-v117',
   './subtitle-data.js?v=20261021-weather-sources-v118',
   './subtitle-data.en.js?v=20261021-english-audio-v119',
-  './demo-translations.js?v=20261021-alternating-language-v124',
-  './demo-language.js?v=20261021-alternating-language-v124',
-  './demo-language.css?v=20261020-language-v117',
+  './demo-translations.js?v=20261021-language-menu-v125',
+  './demo-language.js?v=20261021-language-menu-v125',
+  './demo-language.css?v=20261021-language-menu-v125',
   './subtitles.css?v=20261004-v87'
 ];
 for (const url of coreUrls) assert.equal(precacheSet.has(url), true, `core URL missing from precache: ${url}`);
@@ -266,7 +266,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v124-20261021-alternating-language/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v125-20261021-language-menu/);
 assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);

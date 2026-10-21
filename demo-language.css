@@ -42,6 +42,9 @@
   background: #ffd649;
   color: #082033;
 }
+.launch-language-choices > button[data-demo-language="alternate"] {
+  grid-column: 1 / -1;
+}
 .launch-language-choices > button:focus-visible {
   outline: 3px solid #fff;
   outline-offset: 2px;

@@ -1352,7 +1352,8 @@
       document.dispatchEvent(completed);
       if (!completed.defaultPrevented) activateIntroPage({
         keepMode: true,
-        nextLanguage: language?.get() === 'en' ? 'ko' : 'en'
+        nextLanguage: language?.getMode() === 'alternate'
+          ? (language.get() === 'en' ? 'ko' : 'en') : undefined
       });
     }
   };

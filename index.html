@@ -30,16 +30,16 @@
   <link rel="stylesheet" href="tv-compat.css?v=20261017-tv-recovery-v114">
   <script src="tv-media-timeline.js?v=20261021-weather-sources-v118" defer></script>
   <script src="english-narration.js?v=20261021-english-audio-v119" defer></script>
-  <script src="demo-translations.js?v=20261021-alternating-language-v124" defer></script>
-  <script src="demo-language.js?v=20261021-alternating-language-v124" defer></script>
+  <script src="demo-translations.js?v=20261021-language-menu-v125" defer></script>
+  <script src="demo-language.js?v=20261021-language-menu-v125" defer></script>
   <script src="tv-compat.js?v=20261021-english-audio-v119" defer></script>
   <script src="safety4cut.js?v=20261021-safety-caption-v121" defer></script>
   <link rel="stylesheet" href="subtitles.css?v=20261004-v87">
-  <link rel="stylesheet" href="demo-language.css?v=20261020-language-v117">
+  <link rel="stylesheet" href="demo-language.css?v=20261021-language-menu-v125">
   <script src="subtitle-data.js?v=20261021-weather-sources-v118" defer></script>
   <script src="subtitle-data.en.js?v=20261021-english-audio-v119" defer></script>
   <script src="subtitles.js?v=20261020-language-v117" defer></script>
-  <script src="app.js?v=20261021-alternating-language-v124" defer></script>
+  <script src="app.js?v=20261021-language-menu-v125" defer></script>
   <script src="demo-recorder-v81.js?v=20261020-language-v117" defer></script>
   <script src="pwa.js?v=20261017-tv-startup-v115" defer></script>
   <noscript>
@@ -68,12 +68,13 @@
       <div class="launch-start-copy">
         <span>POWER TBM · AUTO DEMO</span>
         <strong id="launchStartTitle">자동시연을 시작합니다</strong>
-        <small>시작 언어를 선택하세요. 전체 시연은 한국어와 영어로 번갈아 반복됩니다.</small>
+        <small>한국어·영어 단독 재생 또는 한·영 교차 반복을 선택하세요.</small>
       </div>
       <div class="launch-language-choices" id="launchLanguageChoices" role="group" aria-labelledby="launchLanguageTitle" data-language-fixed>
-        <p id="launchLanguageTitle">언어 / Language</p>
-        <button type="button" data-demo-language="ko" lang="ko" aria-pressed="true">한국어</button>
-        <button type="button" data-demo-language="en" lang="en" aria-pressed="false">English</button>
+        <p id="launchLanguageTitle">재생 언어 / Playback language</p>
+        <button type="button" data-demo-language="ko" lang="ko" aria-pressed="true">한국어만</button>
+        <button type="button" data-demo-language="en" lang="en" aria-pressed="false">English only</button>
+        <button type="button" data-demo-language="alternate" lang="ko" aria-pressed="false">한·영 교차 반복 <span lang="en">/ KO ↔ EN</span></button>
       </div>
       <div class="launch-sound-choices" id="launchSoundChoices" role="group" aria-label="사운드 모드 선택">
         <p>재생 모드 선택</p>

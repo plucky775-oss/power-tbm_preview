@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v124-20261021-alternating-language`;
+const CACHE_VERSION = `${CACHE_PREFIX}v125-20261021-language-menu`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -16,12 +16,12 @@ const PRECACHE_URLS = [
   './subtitles.js?v=20261020-language-v117',
   './subtitle-data.js?v=20261021-weather-sources-v118',
   './subtitle-data.en.js?v=20261021-english-audio-v119',
-  './demo-translations.js?v=20261021-alternating-language-v124',
-  './demo-language.js?v=20261021-alternating-language-v124',
-  './demo-language.css?v=20261020-language-v117',
+  './demo-translations.js?v=20261021-language-menu-v125',
+  './demo-language.js?v=20261021-language-menu-v125',
+  './demo-language.css?v=20261021-language-menu-v125',
   './manifest.webmanifest',
   './styles.css?v=20261016-support-reveal-v109',
-  './app.js?v=20261021-alternating-language-v124',
+  './app.js?v=20261021-language-menu-v125',
   './safety4cut.css?v=20261016-safety-reveal-v107',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',

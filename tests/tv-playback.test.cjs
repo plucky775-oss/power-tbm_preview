@@ -12,7 +12,7 @@ const english = timelineContext.window.PowerTBMEnglishNarration;
 const tree = JSON.parse(execFileSync('python3',[path.join(__dirname,'export-dom.py')],{encoding:'utf8'}));
 const durations = {'00-opening':8.166667,'01-weather':29.701,'02-tbm-basic':34.3,'03-ai-pdf':40.646,
  '07-safety4cut-intro':38.037,'09-ai-example-v84':64.566667,'04-safety-tools':31.84325,'05-emergency':22,'06-closing':11.5};
-function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true, selectedLanguage='ko') {
+function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true, selectedLanguage='ko', selectedMode=selectedLanguage) {
  let now=0, nextId=1, writes=0, mediaPlays=0; const raf=new Map(), timers=new Map(), seen=new Set(), errors=[];
  class Events {
   constructor(){this.listeners={};}
@@ -71,7 +71,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
  const document=build(tree);document.documentElement=document.querySelector('html');document.body=document.querySelector('body');document.hidden=false;document.fonts={ready:Promise.resolve()};document.getElementById=id=>document.querySelector('#'+id);
  document.createElement=tag=>['audio','video'].includes(tag)?new Media(tag):new Element(tag);document.createTextNode=text=>{const n=new Element('#text');n._text=text;return n;};
  const window=new Events();
- window.PowerTBMLanguage={get:()=>selectedLanguage,apply(){},translate:text=>text,set(value,{restartPlayback=true}={}){selectedLanguage=value;window.dispatchEvent({type:'power-tbm:languagechange',detail:{language:value,restartPlayback}});}};
+ window.PowerTBMLanguage={get:()=>selectedLanguage,getMode:()=>selectedMode,apply(){},translate:text=>text,set(value,{persist=true,restartPlayback=true}={}){if(persist)selectedMode=value;selectedLanguage=value;window.dispatchEvent({type:'power-tbm:languagechange',detail:{language:value,restartPlayback}});}};
  const setTimer=(fn,delay,repeat=0)=>{const id=nextId++;timers.set(id,{fn,at:now+delay,repeat});return id;};
  Object.assign(window,{innerWidth:1920,innerHeight:1080,scrollY:0,location:{search:query},matchMedia:()=>({matches:reduce}),requestAnimationFrame:fn=>{const id=nextId++;raf.set(id,fn);return id;},cancelAnimationFrame:id=>raf.delete(id),setTimeout:(fn,d=0)=>setTimer(fn,d),clearTimeout:id=>timers.delete(id),setInterval:(fn,d)=>setTimer(fn,d,d),clearInterval:id=>timers.delete(id)});
  const ctx=vm.createContext({window,document,location:window.location,navigator:{userAgent:ua},URLSearchParams,Element,
@@ -184,8 +184,24 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
    assert.equal(m.dataset.segment,'01-weather');
   }
  });
- await test('TV keeps one player through every chapter and alternates its source only between full tours', async () => {
-  const e = environment();
+ await test('TV repeats the selected single language without reloading its stream', async () => {
+  for (const language of ['ko', 'en']) {
+   const e = environment('?tv=1', 'Chrome', false, true, language);
+   const m = e.el('demoNarration');
+   const stream = language === 'en' ? english.tv : timeline;
+   e.document.querySelector('[data-launch-sound="off"]').click();
+   await e.tick(Math.ceil((stream.duration + 15) * 1000), 250);
+   assert.equal(e.window.PowerTBMLanguage.get(), language);
+   assert.equal(m.src, stream.src);
+   assert.equal(e.seen.size, 1);
+   assert.equal(m.loadCount, 1, 'same-language repeats reuse the already loaded stream');
+   assert.equal(m.muted, true);
+   assert.equal(m.dataset.segment, '01-weather', 'the next tour is playing in the selected language');
+   assert.equal(e.errors.length, 0);
+  }
+ });
+ await test('TV alternates its source only between full tours when alternating mode is selected', async () => {
+  const e = environment('?tv=1', 'Chrome', false, true, 'ko', 'alternate');
   const m = e.el('demoNarration');
   e.document.querySelector('[data-launch-sound="on"]').click();
   await e.tick(Math.floor((timeline.duration - 1) * 1000));
