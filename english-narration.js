@@ -556,7 +556,7 @@ window.PowerTBMEnglishNarration = {
       ]
     },
     "07-safety4cut-intro": {
-      "src": "assets/audio/en-v119/07-safety4cut-intro.m4a",
+      "src": "assets/audio/en-v127/07-safety4cut-intro.m4a",
       "duration": 39.333333333333336,
       "cues": [
         [
@@ -901,7 +901,7 @@ window.PowerTBMEnglishNarration = {
     }
   },
   "tv": {
-    "src": "assets/tv-en-v126/tour.mp4",
+    "src": "assets/tv-en-v127/tour.mp4",
     "width": 480,
     "height": 1040,
     "segments": [

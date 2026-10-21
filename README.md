@@ -1,10 +1,16 @@
 # Power TBM 자동 시연 홈페이지
 
-**현재 코드 버전은 v125입니다.** 아래 v124 이하 항목은 이전 변경 이력입니다.
+**현재 코드 버전은 v127입니다.** 아래 항목은 변경 이력입니다.
 
 배포 주소: [Vercel](https://power-tbm-preview.vercel.app/) · [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/)
 
-최신 수정본은 `index.html`의 `app.js?v=20261021-language-menu-v125` 참조와 `sw.js`의 `v125-20261021-language-menu` 캐시 버전으로 확인할 수 있습니다.
+최신 수정본은 `index.html`의 `english-narration.js?v=20261021-ai-pronunciation-v127` 참조와 `sw.js`의 `v127-20261021-ai-pronunciation` 캐시 버전으로 확인할 수 있습니다.
+
+## 2026-10-21 안전-4컷 영어 AI 발음 교정 (v127)
+
+- “AI can also analyze the incident…”의 첫 발음을 같은 Will 목소리의 기존 “AI” 녹음으로 교정했습니다. 자막에는 기존 `AI` 표기를 유지합니다.
+- 일반 재생은 `assets/audio/en-v127/07-safety4cut-intro.m4a`, 스탠바이미는 `assets/tv-en-v127/tour.mp4`를 사용합니다. 약 0.6초의 발음과 주변 AAC 프레임만 교체했고, 모든 영상 프레임·그 밖의 음성 패킷·재생 시간·화면 전환·자막 시간은 유지합니다.
+- 교정된 문장과 편집 구간은 `assets/audio/en-v127/`에 보관했습니다. 외부 음성을 새로 합성하지 않고 동일 목소리의 녹음을 재사용했습니다. 기존 설치본도 새 파일을 받도록 캐시 버전을 갱신했습니다.
 
 ## 2026-10-21 재생 언어 메뉴 추가 (v125)
 

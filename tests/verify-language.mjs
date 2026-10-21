@@ -380,7 +380,7 @@ for (const [mode, sound] of [['ko', 'on'], ['en', 'off'], ['alternate', 'off']])
       assert.equal(lang.get(), currentLanguage, 'keep one language through every chapter and the closing');
       assert.equal(active().dataset.segment, id);
       assert.equal(active().muted, sound === 'off', 'repeating preserves the sound choice');
-      assert.equal(/(?:en-v119|02-tbm-basic-en\.m4a)/.test(active().src), currentLanguage === 'en', `${id} uses the current language's audio`);
+      assert.equal(/(?:en-v119|en-v127|02-tbm-basic-en\.m4a)/.test(active().src), currentLanguage === 'en', `${id} uses the current language's audio`);
       if (id === '06-closing' && cycle === 2) stopAtEnd = true;
       finish();
     }

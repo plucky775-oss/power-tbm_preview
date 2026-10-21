@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v126-20261021-meeting-sequence`;
+const CACHE_VERSION = `${CACHE_PREFIX}v127-20261021-ai-pronunciation`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -9,7 +9,7 @@ const PRECACHE_URLS = [
   './',
   './index.html',
   './tv-media-timeline.js?v=20261021-meeting-sequence-v126',
-  './english-narration.js?v=20261021-meeting-sequence-v126',
+  './english-narration.js?v=20261021-ai-pronunciation-v127',
   './tv-compat.js?v=20261021-english-audio-v119',
   './tv-compat.css?v=20261017-tv-recovery-v114',
   './subtitles.css?v=20261004-v87',
@@ -29,7 +29,7 @@ const PRECACHE_URLS = [
   './safety4cut.js?v=20261021-safety-caption-v121',
   './pwa.js?v=20261017-tv-startup-v115',
   './assets/tv-v126/tour.mp4',
-  './assets/tv-en-v126/tour.mp4',
+  './assets/tv-en-v127/tour.mp4',
   './assets/audio/en-v119/00-opening.m4a',
   './assets/audio/en-v119/01-weather.m4a',
   './assets/audio/meeting-v126/02-tbm-basic-en.m4a',
@@ -37,7 +37,7 @@ const PRECACHE_URLS = [
   './assets/audio/en-v119/04-safety-tools.m4a',
   './assets/audio/en-v119/05-emergency.m4a',
   './assets/audio/en-v119/06-closing.m4a',
-  './assets/audio/en-v119/07-safety4cut-intro.m4a',
+  './assets/audio/en-v127/07-safety4cut-intro.m4a',
   './assets/safety4cut/09-ai-example-en-v119.mp4',
   './assets/audio/07-safety4cut-intro-v97.m4a',
   './assets/safety4cut/01-main-menu-v97.png',
@@ -129,10 +129,10 @@ const PRECACHE_URLS = [
 // Separate desktop narration, BGM and foreground clips remain unused on TV.
 const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
   .filter(path => !path.startsWith('./assets/audio/') &&
-    (!/\.mp4(?:\?|$)/.test(path) || /\/tv-(?:v126|en-v126)\//.test(path) || path.startsWith('./assets/background/')))
+    (!/\.mp4(?:\?|$)/.test(path) || /\/tv-(?:v126|en-v127)\//.test(path) || path.startsWith('./assets/background/')))
   .map(path => /^\.\/assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(path)
     ? path.replace('./assets/', './assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : path)
-  : PRECACHE_URLS.filter(path => !/\/tv-(?:v126|en-v126)\//.test(path));
+  : PRECACHE_URLS.filter(path => !/\/tv-(?:v126|en-v127)\//.test(path));
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
 const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data(?:\.en)?\.js|demo-translations\.js|demo-language\.(?:js|css)|english-narration\.js|tv-compat\.(?:js|css)|tv-media-timeline\.js)(?:\?|$)/.test(path) || path === './';

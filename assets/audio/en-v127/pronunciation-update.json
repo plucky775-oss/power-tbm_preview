@@ -1,0 +1,51 @@
+{
+  "voice": "Will",
+  "voiceId": "bIHbv24MWmeRgasZH58o",
+  "text": "AI can also analyze the incident and recommend the ideal panel count to create comics and videos.",
+  "pronunciation": "A.I. (ay eye / 에이아이)",
+  "method": "Reuse the same Will recording; no new external synthesis.",
+  "originalSource": "assets/audio/en-v119/source/07-safety4cut-intro-05.mp3",
+  "donorSource": "assets/audio/en-v119/source/07-safety4cut-intro-06.mp3",
+  "donorSeconds": [
+    1.74,
+    2.14
+  ],
+  "sourceReplacementSeconds": [
+    0,
+    0.62
+  ],
+  "sourceDonorStart": 0.16,
+  "edgeFadeSeconds": 0.005,
+  "sourceTrimStart": 0.03,
+  "sourceGain": 2.3994623827790194,
+  "trackPatchSeconds": [
+    27.19333333333333,
+    27.78333333333333
+  ],
+  "media": [
+    {
+      "base": "assets/audio/en-v119/07-safety4cut-intro.m4a",
+      "output": "assets/audio/en-v127/07-safety4cut-intro.m4a",
+      "patchSeconds": [
+        27.19333333333333,
+        27.78333333333333
+      ],
+      "replacedAACFrames": [
+        1272,
+        1306
+      ]
+    },
+    {
+      "base": "assets/tv-en-v126/tour.mp4",
+      "output": "assets/tv-en-v127/tour.mp4",
+      "patchSeconds": [
+        210.22666633333333,
+        210.81666633333333
+      ],
+      "replacedAACFrames": [
+        9852,
+        9886
+      ]
+    }
+  ]
+}
