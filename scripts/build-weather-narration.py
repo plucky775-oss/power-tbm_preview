@@ -125,67 +125,72 @@ def restore_audio_timestamps(base, output):
                                for kind, payload in atoms(content)))
 
 
-with tempfile.TemporaryDirectory(prefix='weather-narration-') as folder:
-    work = Path(folder)
-    old_voice = decode(ROOT / 'assets/audio/01-weather-jisoo.mp3')
-    voice = np.zeros((round(DURATION * RATE), 1), dtype=np.float32)
-    voice[:len(old_voice)] = old_voice
-    voice[round(PATCH_START * RATE):round(PATCH_END * RATE)] = 0
-    target_rms = np.sqrt(np.mean(old_voice[round(16.8 * RATE):round(27.0 * RATE)] ** 2))
-    for name, start, trim, length in PHRASES:
-        phrase = decode(SOURCES / f'{name}.mp3', filters=f'atrim=end={trim},atempo={trim / length:.9f}')
-        phrase *= target_rms / max(1e-6, np.sqrt(np.mean(phrase ** 2)))
-        # Limit the synthesized peaks without changing unrelated narration.
-        raw = work / f'{name}.wav'
-        encode_raw(phrase, raw, '-af', 'alimiter=limit=0.68:level=0:latency=1', '-c:a', 'pcm_f32le')
-        phrase = decode(raw)
-        count = round(length * RATE)
-        phrase = np.pad(phrase[:count], ((0, max(0, count - len(phrase))), (0, 0)))
-        fade = round(.005 * RATE)
-        phrase[:fade] *= np.linspace(0, 1, fade).reshape(-1, 1)
-        phrase[-fade:] *= np.linspace(1, 0, fade).reshape(-1, 1)
-        first = round(start * RATE)
-        voice[first:first + count] = phrase
-    voice_file = ROOT / 'assets/audio/01-weather-jisoo-v118.m4a'
-    encode_raw(voice, voice_file, '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart')
+def main():
+    with tempfile.TemporaryDirectory(prefix='weather-narration-') as folder:
+        work = Path(folder)
+        old_voice = decode(ROOT / 'assets/audio/01-weather-jisoo.mp3')
+        voice = np.zeros((round(DURATION * RATE), 1), dtype=np.float32)
+        voice[:len(old_voice)] = old_voice
+        voice[round(PATCH_START * RATE):round(PATCH_END * RATE)] = 0
+        target_rms = np.sqrt(np.mean(old_voice[round(16.8 * RATE):round(27.0 * RATE)] ** 2))
+        for name, start, trim, length in PHRASES:
+            phrase = decode(SOURCES / f'{name}.mp3', filters=f'atrim=end={trim},atempo={trim / length:.9f}')
+            phrase *= target_rms / max(1e-6, np.sqrt(np.mean(phrase ** 2)))
+            # Limit the synthesized peaks without changing unrelated narration.
+            raw = work / f'{name}.wav'
+            encode_raw(phrase, raw, '-af', 'alimiter=limit=0.68:level=0:latency=1', '-c:a', 'pcm_f32le')
+            phrase = decode(raw)
+            count = round(length * RATE)
+            phrase = np.pad(phrase[:count], ((0, max(0, count - len(phrase))), (0, 0)))
+            fade = round(.005 * RATE)
+            phrase[:fade] *= np.linspace(0, 1, fade).reshape(-1, 1)
+            phrase[-fade:] *= np.linspace(1, 0, fade).reshape(-1, 1)
+            first = round(start * RATE)
+            voice[first:first + count] = phrase
+        voice_file = ROOT / 'assets/audio/01-weather-jisoo-v118.m4a'
+        encode_raw(voice, voice_file, '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart')
 
-    # Reproduce the existing weather music offset and mix. The rest of the tour
-    # uses the original PCM and, after encoding, its original AAC packet bytes.
-    music = decode(ROOT / 'assets/audio/bgm-starcourt-mall-cc0.mp3', 2,
-                   f'atrim=start=8.150204:duration={DURATION},asetpts=PTS-STARTPTS')
-    music = music[:len(voice)] * .065
-    mixed = music + np.repeat(voice[:len(music)], 2, axis=1)
-    base = ROOT / 'assets/tv-v112/tour.mp4'
-    tour = decode(base, 2)
-    start = round((WEATHER_START + PATCH_START) * RATE)
-    end = round((WEATHER_START + PATCH_END) * RATE)
-    replacement = mixed[round(PATCH_START * RATE):round(PATCH_START * RATE) + end - start]
-    weight = np.ones((end - start, 1), dtype=np.float32)
-    fade = round(.03 * RATE)
-    weight[:fade] = np.linspace(0, 1, fade).reshape(-1, 1)
-    weight[-fade:] = np.linspace(1, 0, fade).reshape(-1, 1)
-    tour[start:end] = tour[start:end] * (1 - weight) + replacement * weight
-    encode_raw(tour, work / 'new.aac', '-c:a', 'aac', '-b:a', '160k', '-f', 'adts')
-    original_frames = adts_frames(ffmpeg('-i', base, '-map', '0:a:0', '-c:a', 'copy', '-f', 'adts', '-'))
-    new_frames = adts_frames((work / 'new.aac').read_bytes())
-    assert len(original_frames) == len(new_frames), (len(original_frames), len(new_frames))
-    # Include two overlap frames on either side for AAC's transform window.
-    first = max(0, int(start / 1024) - 2)
-    last = min(len(original_frames), int(np.ceil(end / 1024)) + 3)
-    stitched = original_frames[:first] + new_frames[first:last] + original_frames[last:]
-    (work / 'stitched.aac').write_bytes(b''.join(stitched))
-    output = ROOT / 'assets/tv-v118'
-    output.mkdir(exist_ok=True)
-    ffmpeg('-i', base, '-itsoffset', -1024 / RATE, '-i', work / 'stitched.aac',
-           '-map', '0:v:0', '-map', '1:a:0', '-c', 'copy', '-t', TOUR_DURATION,
-           '-video_track_timescale', 16000, '-movflags', '+faststart', output / 'tour.mp4')
-    restore_audio_timestamps(base, output / 'tour.mp4')
-    manifest = {
-        'voice': 'Jisoo', 'voiceId': 'iWLjl1zCuqXRkW6494ve',
-        'text': '한국 기상청, 미국 합동태풍경보센터, 일본 기상청의 태풍 경로와 한국의 레이더 영상 및 기상특보를 한곳에서 확인하세요.',
-        'weatherPatch': [PATCH_START, PATCH_END],
-        'replacedAACFrames': [first, last],
-        'base': 'assets/tv-v112/tour.mp4', 'duration': TOUR_DURATION,
-    }
-    (output / 'narration-update.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
-    print(f'Updated weather voice and TV AAC frames {first}..{last - 1}; all video packets copied.')
+        # Reproduce the existing weather music offset and mix. The rest of the tour
+        # uses the original PCM and, after encoding, its original AAC packet bytes.
+        music = decode(ROOT / 'assets/audio/bgm-starcourt-mall-cc0.mp3', 2,
+                       f'atrim=start=8.150204:duration={DURATION},asetpts=PTS-STARTPTS')
+        music = music[:len(voice)] * .065
+        mixed = music + np.repeat(voice[:len(music)], 2, axis=1)
+        base = ROOT / 'assets/tv-v112/tour.mp4'
+        tour = decode(base, 2)
+        start = round((WEATHER_START + PATCH_START) * RATE)
+        end = round((WEATHER_START + PATCH_END) * RATE)
+        replacement = mixed[round(PATCH_START * RATE):round(PATCH_START * RATE) + end - start]
+        weight = np.ones((end - start, 1), dtype=np.float32)
+        fade = round(.03 * RATE)
+        weight[:fade] = np.linspace(0, 1, fade).reshape(-1, 1)
+        weight[-fade:] = np.linspace(1, 0, fade).reshape(-1, 1)
+        tour[start:end] = tour[start:end] * (1 - weight) + replacement * weight
+        encode_raw(tour, work / 'new.aac', '-c:a', 'aac', '-b:a', '160k', '-f', 'adts')
+        original_frames = adts_frames(ffmpeg('-i', base, '-map', '0:a:0', '-c:a', 'copy', '-f', 'adts', '-'))
+        new_frames = adts_frames((work / 'new.aac').read_bytes())
+        assert len(original_frames) == len(new_frames), (len(original_frames), len(new_frames))
+        # Include two overlap frames on either side for AAC's transform window.
+        first = max(0, int(start / 1024) - 2)
+        last = min(len(original_frames), int(np.ceil(end / 1024)) + 3)
+        stitched = original_frames[:first] + new_frames[first:last] + original_frames[last:]
+        (work / 'stitched.aac').write_bytes(b''.join(stitched))
+        output = ROOT / 'assets/tv-v118'
+        output.mkdir(exist_ok=True)
+        ffmpeg('-i', base, '-itsoffset', -1024 / RATE, '-i', work / 'stitched.aac',
+               '-map', '0:v:0', '-map', '1:a:0', '-c', 'copy', '-t', TOUR_DURATION,
+               '-video_track_timescale', 16000, '-movflags', '+faststart', output / 'tour.mp4')
+        restore_audio_timestamps(base, output / 'tour.mp4')
+        manifest = {
+            'voice': 'Jisoo', 'voiceId': 'iWLjl1zCuqXRkW6494ve',
+            'text': '한국 기상청, 미국 합동태풍경보센터, 일본 기상청의 태풍 경로와 한국의 레이더 영상 및 기상특보를 한곳에서 확인하세요.',
+            'weatherPatch': [PATCH_START, PATCH_END],
+            'replacedAACFrames': [first, last],
+            'base': 'assets/tv-v112/tour.mp4', 'duration': TOUR_DURATION,
+        }
+        (output / 'narration-update.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
+        print(f'Updated weather voice and TV AAC frames {first}..{last - 1}; all video packets copied.')
+
+
+if __name__ == '__main__':
+    main()

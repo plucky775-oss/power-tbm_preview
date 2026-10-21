@@ -1,10 +1,18 @@
 # Power TBM 자동 시연 홈페이지
 
-**현재 코드 버전은 v128입니다.** 아래 항목은 변경 이력입니다.
+**현재 코드 버전은 v129입니다.** 아래 항목은 변경 이력입니다.
 
 배포 주소: [Vercel](https://power-tbm-preview.vercel.app/) · [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/)
 
-최신 수정본은 `index.html`의 `20261021-balanced-v128` 참조와 `sw.js`의 `v128-20261021-balanced-playback` 캐시 버전으로 확인할 수 있습니다.
+최신 수정본은 `index.html`의 `20261021-weather-ending-v129` 참조와 `sw.js`의 `v129-20261021-weather-ending` 캐시 버전으로 확인할 수 있습니다.
+
+## 2026-10-21 기상 안내 마지막 문장 발음 복원 (v129)
+
+- “한 곳에서 확인할 수 있습니다.”의 편집점이 원본 발음 중간에 걸려 앞말의 끝음이 섞이고 마지막 “다”가 빠지는 문제를 수정했습니다. 단어 인식 시간 대신 실제 음성의 여유 구간을 기준으로 같은 Jisoo 원본을 다시 연결했습니다.
+- “한”, “서”, “다”의 온전한 파형을 보존하고 접합부의 음량을 맞췄습니다. 뒤의 “다음은 TBM 회의록입니다.”를 0.15초 옮겨 문장 사이 간격을 확보했으며, 챕터 길이는 유지했습니다.
+- 일반 음성은 `assets/audio/weather-v129/01-weather.m4a`, 한국어 TV는 `assets/tv-ko-v129/tour.mp4`입니다. TV 영상 패킷과 모든 음성·영상 타임스탬프, 수정 구간 바깥의 AAC 패킷은 그대로입니다. 관련 자막과 오프라인 캐시도 갱신했습니다.
+- 재생성: `python3 scripts/build-weather-ending.py`. `scripts/build-weather-narration.py`의 기존 AAC 보존 함수를 안전하게 가져오도록 실행 진입점을 분리했습니다. 교정 구간과 보존 기록은 `assets/audio/weather-v129/repair.json`에 있습니다.
+- 검증: `tests/verify-weather-ending.py`에서 온전한 발음 파형, TV 패킷·타임스탬프 보존, 일반 -16.00 LUFS / TV -16.02 LUFS를 확인했습니다. 인코딩된 PC·TV 음성 모두 문장 재인식, TV 재생·언어 전환·오프라인 캐시 검사를 통과했습니다. 실제 스탠바이미 스피커 청취는 확인하지 못했습니다.
 
 ## 2026-10-21 음량 통일·기상 멘트·스탠바이미 시작 장면 수정 (v128)
 
