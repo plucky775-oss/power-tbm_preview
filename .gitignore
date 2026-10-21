@@ -1,0 +1,12 @@
+# Optional historical TV sources; restore only when rebuilding/comparing media.
+# See docs/tv-asset-archive.md. Current playback folders are not ignored.
+/assets/tv-en-v119/
+/assets/tv-en-v126/
+/assets/tv-en-v127/
+/assets/tv-ko-v128/
+/assets/tv-ko-v129/
+/assets/tv-v99/
+/assets/tv-v104/
+/assets/tv-v112/
+/assets/tv-v118/
+/assets/tv-v126/
