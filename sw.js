@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v120-20261021-korean-phone`;
+const CACHE_VERSION = `${CACHE_PREFIX}v121-20261021-safety-caption`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -21,12 +21,12 @@ const PRECACHE_URLS = [
   './demo-language.css?v=20261020-language-v117',
   './manifest.webmanifest',
   './styles.css?v=20261016-support-reveal-v109',
-  './app.js?v=20261021-english-audio-v119',
+  './app.js?v=20261021-safety-caption-v121',
   './safety4cut.css?v=20261016-safety-reveal-v107',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',
   './demo-recorder-v81.js?v=20261020-language-v117',
-  './safety4cut.js?v=20261021-korean-phone-v120',
+  './safety4cut.js?v=20261021-safety-caption-v121',
   './pwa.js?v=20261017-tv-startup-v115',
   './assets/tv-v118/tour.mp4',
   './assets/tv-en-v119/tour.mp4',

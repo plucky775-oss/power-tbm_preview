@@ -11,6 +11,7 @@
   if (!root) return;
   const language = window.PowerTBMLanguage;
   const caption = root.querySelector('#safetyCaption');
+  let captionSource = caption.textContent;
   const canvas = root.querySelector('.safety-screen-canvas');
   const viewport = root.querySelector('.safety-screen-viewport');
   const picture = root.querySelector('#safetyScreenshot');
@@ -37,10 +38,15 @@
   let decodedSource = '';
 
   function setCaption(text) {
-    // The app screen inside the phone stays Korean in either narration mode.
-    if (caption.textContent === text) return;
-    caption.textContent = text;
+    // Only this explanatory caption follows narration; the app screen stays Korean.
+    captionSource = text;
+    const selectedLanguage = language?.get() || 'ko';
+    const translated = language?.translate(text) || text;
+    if (caption.lang !== selectedLanguage) caption.lang = selectedLanguage;
+    if (caption.textContent === translated) return;
+    caption.textContent = translated;
   }
+  window.addEventListener('power-tbm:languagechange', () => setCaption(captionSource));
 
   function fitCanvas() {
     if (!picture.naturalWidth || !picture.naturalHeight) return;
@@ -229,7 +235,7 @@
     videoUnavailable = true;
     setCaption('교육영상을 불러오지 못했습니다');
   });
-  window.PowerTBMSafety = { scenes, duration, videoOffset, render, renderGestureAt, pause, startFallback, reset,
+  window.PowerTBMSafety = { scenes, duration, videoOffset, render, renderGestureAt, pause, startFallback, reset, setCaption,
     get time() { return lastTime; }, get videoEnded() { return tvMode
       ? window.PowerTBMTV.segmentEnded('08-safety4cut-example')
       : sample.ended; } };

@@ -1000,8 +1000,7 @@
       updateDemoButton();
       const message = '영상·음성 재생이 중단되었습니다. 계속 재생을 눌러 다시 시도해 주세요.';
       if (demoPage === 'safety') {
-        $('#safetyCaption').textContent = message;
-        language?.apply($('#safetyCaption'));
+        safety?.setCaption(message);
       }
       document.dispatchEvent(new CustomEvent('power-tbm:playback-error', { detail: { message } }));
       return;

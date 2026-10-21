@@ -68,7 +68,12 @@ const api = window.PowerTBMLanguage;
 const detail = document.querySelector('.tour-detail');
 const originalDetail = detail.textContent;
 const phone = document.querySelector('.guide-phone');
-const originalPhone = phone.textContent;
+const phoneAppText = element => {
+  const copy = element.cloneNode(true);
+  copy.querySelector('#safetyCaption').remove();
+  return copy.textContent;
+};
+const originalPhone = phoneAppText(phone);
 const originalMedia = [...document.querySelectorAll('audio, video')];
 const originalEmphasis = [...detail.querySelectorAll('em, br')];
 const narration = document.getElementById('demoNarration');
@@ -97,7 +102,7 @@ assert.equal(example.currentTime, 13.5);
 assert.deepEqual([...document.querySelectorAll('audio, video')], originalMedia, 'existing media elements remain intact');
 assert.deepEqual([...detail.querySelectorAll('em, br')], originalEmphasis, 'headings retain their emphasis and line breaks');
 assert.doesNotMatch(detail.textContent, /[가-힣]/, 'every right-hand explanation is available in English');
-assert.equal(phone.textContent, originalPhone, 'the complete phone screen stays Korean with English narration');
+assert.equal(phoneAppText(phone), originalPhone, 'the phone app screen stays Korean with English narration');
 assert.equal(phone.lang, 'ko', 'the phone declares its own Korean content language');
 assert.doesNotMatch(document.querySelector('#launchStartTitle').textContent, /[가-힣]/);
 assert.doesNotMatch(document.querySelector('#subtitleToggle').textContent, /[가-힣]/);
@@ -156,17 +161,20 @@ for (const scene of window.PowerTBMSafety.scenes) {
   for (const id of ['safetyTitle', 'safetyDescription', 'safetyPoints', 'safetySceneLabel']) {
     assert.doesNotMatch(document.getElementById(id).textContent, /[가-힣]/, `English dynamic safety scene: ${scene.label} / ${id}`);
   }
-  assert.equal(document.getElementById('safetyCaption').textContent, scene.caption, 'dynamic phone captions stay Korean with English narration');
+  assert.equal(document.getElementById('safetyCaption').textContent, api.translate(scene.caption), 'the bottom Safety 4-Cut explanation follows English narration');
+  assert.equal(document.getElementById('safetyCaption').lang, 'en');
   const time = window.PowerTBMSafety.time;
   h.chooseLanguage('ko');
   assert.equal(document.getElementById('safetyDescription').textContent, scene.description);
   assert.equal(document.getElementById('safetyCaption').textContent, scene.caption);
+  assert.equal(document.getElementById('safetyCaption').lang, 'ko');
   assert.equal(window.PowerTBMSafety.time, time, 'language changes preserve the safety scene clock');
   h.chooseLanguage('en');
+  assert.equal(document.getElementById('safetyCaption').textContent, api.translate(scene.caption), 'a paused caption switches back to English immediately');
 }
 example.dispatchEvent(new window.Event('error'));
-assert.equal(document.getElementById('safetyCaption').textContent, '교육영상을 불러오지 못했습니다', 'phone video failure message stays Korean');
-console.log('PASS: all five dynamic Safety 4-Cut scenes, Korean phone captions/error, English explanations and clock preservation');
+assert.equal(document.getElementById('safetyCaption').textContent, api.translate('교육영상을 불러오지 못했습니다'), 'the bottom video failure message follows the selected language');
+console.log('PASS: all five dynamic Safety 4-Cut scenes, translated bottom captions/errors, Korean app screen and clock preservation');
 
 const koData = window.PowerTBMSubtitleData;
 const enData = window.PowerTBMSubtitleDataEn;
@@ -265,7 +273,7 @@ console.log('PASS: English and Korean subtitles for all 9 tracks / 82 cues, inde
 for (const options of [{ savedLanguage: 'en' }, { savedLanguage: 'invalid' }, { storageUnavailable: true }]) {
   const reopened = setup(options);
   assert.equal(reopened.window.PowerTBMLanguage.get(), options.savedLanguage === 'en' ? 'en' : 'ko');
-  assert.equal(reopened.document.querySelector('.guide-phone').textContent, originalPhone, 'phone stays Korean when reopening with a saved language');
+  assert.equal(phoneAppText(reopened.document.querySelector('.guide-phone')), originalPhone, 'phone app stays Korean when reopening with a saved language');
   if (options.savedLanguage === 'en') assert.doesNotMatch(reopened.document.querySelector('.tour-detail').textContent, /[가-힣]/, 'stored English applies through app initialization');
   reopened.chooseLanguage('en');
   assert.equal(reopened.window.PowerTBMLanguage.get(), 'en');

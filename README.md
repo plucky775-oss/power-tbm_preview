@@ -1,10 +1,16 @@
 # Power TBM 자동 시연 홈페이지
 
-**현재 코드 버전은 v120입니다.** 아래 v119 이하 항목은 이전 변경 이력입니다.
+**현재 코드 버전은 v121입니다.** 아래 v120 이하 항목은 이전 변경 이력입니다.
 
 배포 주소: [Vercel](https://power-tbm-preview.vercel.app/) · [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/)
 
-최신 수정본은 `index.html`의 `safety4cut.js?v=20261021-korean-phone-v120` 참조와 `sw.js`의 `v120-20261021-korean-phone` 캐시 버전으로 확인할 수 있습니다.
+최신 수정본은 `index.html`의 `safety4cut.js?v=20261021-safety-caption-v121` 참조와 `sw.js`의 `v121-20261021-safety-caption` 캐시 버전으로 확인할 수 있습니다.
+
+## 2026-10-21 안전-4컷 하단 설명 언어 적용 (v121)
+
+- 안전-4컷 스마트폰 화면 아래쪽 안내 문구만 선택 언어를 따릅니다. English에서는 영어, 한국어에서는 한글로 표시하며 일시정지 중 언어를 바꿔도 즉시 적용합니다.
+- 스마트폰의 나머지 앱 화면은 한글로 유지합니다. 기존 영어 음성·자막·우측 설명과 모든 재생 시간은 그대로 사용합니다.
+- 오프라인 캐시를 v121로 갱신합니다.
 
 ## 2026-10-21 스마트폰 내부 화면 한글 고정 (v120)
 
