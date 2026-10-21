@@ -1,10 +1,14 @@
 # Power TBM 자동 시연 홈페이지
 
-**현재 코드 버전은 v122입니다.** 아래 v121 이하 항목은 이전 변경 이력입니다.
+**현재 코드 버전은 v123입니다.** 아래 v122 이하 항목은 이전 변경 이력입니다.
 
 배포 주소: [Vercel](https://power-tbm-preview.vercel.app/) · [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/)
 
-최신 수정본은 `index.html`의 `demo-translations.js?v=20261021-developer-label-v122` 참조와 `sw.js`의 `v122-20261021-developer-label` 캐시 버전으로 확인할 수 있습니다.
+최신 수정본은 `index.html`의 `demo-translations.js?v=20261021-short-credit-v123` 참조와 `sw.js`의 `v123-20261021-short-credit` 캐시 버전으로 확인할 수 있습니다.
+
+## 2026-10-21 영어 개발자 표기 간소화 (v123)
+
+- 영어 개발자 표기에서 소속 괄호를 제외해 `Developer: Jaehyeok Choi, Senior Manager`로 표시합니다. 한국어 표기는 유지하며 오프라인 캐시를 v123으로 갱신합니다.
 
 ## 2026-10-21 영어 개발자 표기 (v122)
 
