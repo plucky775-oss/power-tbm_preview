@@ -100,9 +100,21 @@
   // Do not reparent the active player during playback: it can reset TV decoding.
   document.body.append(media);
 
-  const timeline = window.PowerTBMTVTimeline;
+  const timelineForLanguage = language => language === 'en'
+    ? window.PowerTBMEnglishNarration.tv : window.PowerTBMTVTimeline;
+  let timeline = timelineForLanguage(window.PowerTBMLanguage?.get());
   const entryFor = segment => timeline.segments.find(entry => entry.id === segment.id);
   let pendingStart = null;
+  api.setLanguage = language => {
+    const next = timelineForLanguage(language);
+    if (next === timeline) return;
+    media.pause();
+    timeline = next;
+    pendingStart = null;
+    media.dataset.segment = '';
+    media.src = timeline.src;
+    media.load();
+  };
   const seekToChapter = () => {
     if (pendingStart === null) return;
     try {

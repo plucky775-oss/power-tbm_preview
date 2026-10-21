@@ -1,10 +1,20 @@
 # Power TBM 자동 시연 홈페이지
 
-**현재 코드 버전은 v118입니다.** 아래 v117 이하 항목은 이전 변경 이력입니다.
+**현재 코드 버전은 v119입니다.** 아래 v118 이하 항목은 이전 변경 이력입니다.
 
 배포 주소: [Vercel](https://power-tbm-preview.vercel.app/) · [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/)
 
-최신 수정본은 `index.html`의 `app.js?v=20261021-weather-sources-v118` 참조와 `sw.js`의 `v118-20261021-weather-sources` 캐시 버전으로 확인할 수 있습니다.
+최신 수정본은 `index.html`의 `app.js?v=20261021-english-audio-v119` 참조와 `sw.js`의 `v119-20261021-english-audio` 캐시 버전으로 확인할 수 있습니다.
+
+## 2026-10-21 영어 음성 및 언어별 시연 시간 (v119)
+
+- 첫 화면에서 English를 선택하면 안내·자막과 함께 영어 음성이 재생됩니다. 남성은 Will, 여성은 Sarah이며, 오프닝부터 안전-4컷 예시 영상과 마무리까지 9개 구간에 적용합니다. 소리/무음 선택과 자막 표시 방식은 기존대로 동작합니다.
+- 영어 음성을 빠르게 압축하지 않고 문장 길이에 맞춘 별도 시간을 사용합니다. `english-narration.js`가 영어 음성, 화면 전환 및 TV 구간의 기준입니다. 한국어의 기존 음성·자막·화면 시간과 v118 TV 영상은 변경하지 않습니다.
+- 일반 기기는 `assets/audio/en-v119/`와 `assets/safety4cut/09-ai-example-en-v119.mp4`를 재생합니다. 스탠바이미는 영어를 선택했을 때 `assets/tv-en-v119/tour.mp4` 한 파일을 재생하며, 구간 전환 시 디코더를 다시 불러오지 않습니다.
+- 안전-4컷 영어 예시는 기존 영상의 장면 순서를 유지하며 영어 대사 길이에 따라 늘어납니다. 영어 음성·기존 배경음·말소리가 없는 사고 효과 구간을 미리 합쳤으므로 한국어 대사가 겹쳐 나오지 않습니다. 한국어 예시 원본은 그대로 사용합니다.
+- 음성은 미리 생성한 파일입니다. 시연 중 음성 생성 API를 호출하지 않으며 두 언어가 오프라인 캐시에 포함됩니다. 영어 자막의 단어 강조는 녹음된 문장 구간에 맞춘 읽기 안내이며 정밀한 단어 강제 정렬은 아닙니다.
+- 재빌드: `python3 scripts/build-english-narration.py`. 저장된 52개 음성 조각과 `assets/audio/en-v119/script.json`을 사용하며 Python/numpy/ffmpeg/ffprobe가 필요합니다. API 키는 필요하지 않습니다.
+- 검증: `tests/verify-language.mjs`, `tests/tv-playback.test.cjs`, `tests/verify-english-media.py`, `tests/verify-original-video.mjs`, `tests/verify-pwa.mjs`. 시뮬레이션과 파일 검증은 실제 webOS 기기의 디코딩·음질·성능 검사를 대신하지 않습니다.
 
 ## 2026-10-21 기상자료 제공 범위 및 한국어 음성 교정 (v118)
 

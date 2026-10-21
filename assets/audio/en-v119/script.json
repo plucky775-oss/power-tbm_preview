@@ -1,0 +1,4578 @@
+{
+  "version": 119,
+  "language": "en",
+  "voices": {
+    "will": "bIHbv24MWmeRgasZH58o",
+    "sarah": "EXAVITQu4vr4xnSDxMaL"
+  },
+  "tracks": [
+    {
+      "id": "00-opening",
+      "page": "intro",
+      "index": 0,
+      "start": 0.0,
+      "duration": 8.166666666666666,
+      "end": 8.166666666666666,
+      "chunks": [
+        {
+          "id": "00-opening-00",
+          "cueIndices": [
+            0,
+            1
+          ],
+          "start": 0,
+          "end": 7.96,
+          "text": "From weather checks to AI safety reviews, signatures and records. Meet Power TBM, a new standard for pre-work safety briefings.",
+          "speech": "From weather checks to A I safety reviews, signatures and records. Meet Power T B M, a new standard for pre-work safety briefings.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/00-opening-00.mp3"
+        }
+      ],
+      "originalSubtitles": [
+        {
+          "start": 0,
+          "end": 3.86,
+          "words": [
+            {
+              "text": "From",
+              "start": 0,
+              "end": 0.298931
+            },
+            {
+              "text": "weather",
+              "start": 0.298931,
+              "end": 0.741211
+            },
+            {
+              "text": "checks",
+              "start": 0.741211,
+              "end": 1.138252
+            },
+            {
+              "text": "to",
+              "start": 1.138252,
+              "end": 1.322265
+            },
+            {
+              "text": "AI",
+              "start": 1.322265,
+              "end": 1.506279
+            },
+            {
+              "text": "safety",
+              "start": 1.506279,
+              "end": 1.903319
+            },
+            {
+              "text": "reviews,",
+              "start": 1.903319,
+              "end": 2.3456
+            },
+            {
+              "text": "signatures",
+              "start": 2.3456,
+              "end": 2.913313
+            },
+            {
+              "text": "and",
+              "start": 2.913313,
+              "end": 3.15772
+            },
+            {
+              "text": "records,",
+              "start": 3.15772,
+              "end": 3.6
+            }
+          ]
+        },
+        {
+          "start": 3.86,
+          "end": 7.96,
+          "words": [
+            {
+              "text": "Meet",
+              "start": 3.98,
+              "end": 4.293107
+            },
+            {
+              "text": "Power",
+              "start": 4.293107,
+              "end": 4.659147
+            },
+            {
+              "text": "TBM,",
+              "start": 4.659147,
+              "end": 4.915144
+            },
+            {
+              "text": "a",
+              "start": 4.915144,
+              "end": 5.107884
+            },
+            {
+              "text": "new",
+              "start": 5.107884,
+              "end": 5.363881
+            },
+            {
+              "text": "standard",
+              "start": 5.363881,
+              "end": 5.872524
+            },
+            {
+              "text": "for",
+              "start": 5.872524,
+              "end": 6.128521
+            },
+            {
+              "text": "pre-work",
+              "start": 6.128521,
+              "end": 6.591775
+            },
+            {
+              "text": "safety",
+              "start": 6.591775,
+              "end": 7.007643
+            },
+            {
+              "text": "briefings.",
+              "start": 7.007643,
+              "end": 7.56
+            }
+          ]
+        }
+      ],
+      "originalDuration": 8.150204,
+      "originalCues": [
+        [
+          0,
+          0
+        ],
+        [
+          8,
+          8000
+        ],
+        [
+          8.150204,
+          8000
+        ]
+      ]
+    },
+    {
+      "id": "01-weather",
+      "page": "weather",
+      "index": 0,
+      "start": 8.166666666666666,
+      "duration": 29.733333333333334,
+      "end": 37.9,
+      "chunks": [
+        {
+          "id": "01-weather-00",
+          "cueIndices": [
+            0,
+            1
+          ],
+          "start": 0,
+          "end": 5.7,
+          "text": "First, open weather alerts for your location and review the recommended actions for workplaces.",
+          "speech": "First, open weather alerts for your location and review the recommended actions for workplaces.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/01-weather-00.mp3"
+        },
+        {
+          "id": "01-weather-01",
+          "cueIndices": [
+            2
+          ],
+          "start": 5.72,
+          "end": 10.46,
+          "text": "The weather card shows feels-like temperature and hourly forecasts.",
+          "speech": "The weather card shows feels-like temperature and hourly forecasts.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/01-weather-01.mp3"
+        },
+        {
+          "id": "01-weather-02",
+          "cueIndices": [
+            3,
+            4
+          ],
+          "start": 10.58,
+          "end": 16.62,
+          "text": "Scroll up to check PM10 and PM2.5 levels, along with medium-range weather forecasts.",
+          "speech": "Scroll up to check P M ten and P M two point five levels, along with medium-range weather forecasts.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/01-weather-02.mp3"
+        },
+        {
+          "id": "01-weather-03",
+          "cueIndices": [
+            5,
+            6,
+            7
+          ],
+          "start": 16.66,
+          "end": 27.02,
+          "text": "View typhoon tracks from Korea’s KMA, the U.S. JTWC, and Japan’s JMA, along with radar imagery and weather alerts for Korea— all in one place.",
+          "speech": "View typhoon tracks from Korea’s K M A, the U.S. J T W C, and Japan’s J M A, along with radar imagery and weather alerts for Korea— all in one place.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/01-weather-03.mp3"
+        },
+        {
+          "id": "01-weather-04",
+          "cueIndices": [
+            8
+          ],
+          "start": 27.02,
+          "end": 29.42,
+          "text": "Next, let's look at TBM Records.",
+          "speech": "Next, let's look at T B M Records.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/01-weather-04.mp3"
+        }
+      ],
+      "originalSubtitles": [
+        {
+          "start": 0,
+          "end": 2.54,
+          "words": [
+            {
+              "text": "First,",
+              "start": 0,
+              "end": 0.352708
+            },
+            {
+              "text": "open",
+              "start": 0.352708,
+              "end": 0.654409
+            },
+            {
+              "text": "weather",
+              "start": 0.654409,
+              "end": 1.100789
+            },
+            {
+              "text": "alerts",
+              "start": 1.100789,
+              "end": 1.50151
+            },
+            {
+              "text": "for",
+              "start": 1.50151,
+              "end": 1.748182
+            },
+            {
+              "text": "your",
+              "start": 1.748182,
+              "end": 2.049884
+            },
+            {
+              "text": "location",
+              "start": 2.049884,
+              "end": 2.54
+            }
+          ]
+        },
+        {
+          "start": 2.54,
+          "end": 5.7,
+          "words": [
+            {
+              "text": "and",
+              "start": 2.66,
+              "end": 2.894875
+            },
+            {
+              "text": "review",
+              "start": 2.894875,
+              "end": 3.276432
+            },
+            {
+              "text": "the",
+              "start": 3.276432,
+              "end": 3.511307
+            },
+            {
+              "text": "recommended",
+              "start": 3.511307,
+              "end": 4.09452
+            },
+            {
+              "text": "actions",
+              "start": 4.09452,
+              "end": 4.519552
+            },
+            {
+              "text": "for",
+              "start": 4.519552,
+              "end": 4.754427
+            },
+            {
+              "text": "workplaces.",
+              "start": 4.754427,
+              "end": 5.3
+            }
+          ]
+        },
+        {
+          "start": 5.72,
+          "end": 10.46,
+          "words": [
+            {
+              "text": "The",
+              "start": 5.84,
+              "end": 6.123498
+            },
+            {
+              "text": "weather",
+              "start": 6.123498,
+              "end": 6.636517
+            },
+            {
+              "text": "card",
+              "start": 6.636517,
+              "end": 6.983259
+            },
+            {
+              "text": "shows",
+              "start": 6.983259,
+              "end": 7.388622
+            },
+            {
+              "text": "feels-like",
+              "start": 7.388622,
+              "end": 8.000317
+            },
+            {
+              "text": "temperature",
+              "start": 8.000317,
+              "end": 8.704264
+            },
+            {
+              "text": "and",
+              "start": 8.704264,
+              "end": 8.987762
+            },
+            {
+              "text": "hourly",
+              "start": 8.987762,
+              "end": 9.448305
+            },
+            {
+              "text": "forecasts.",
+              "start": 9.448305,
+              "end": 10.06
+            }
+          ]
+        },
+        {
+          "start": 10.58,
+          "end": 13.780000000000001,
+          "words": [
+            {
+              "text": "Scroll",
+              "start": 10.7,
+              "end": 11.185791
+            },
+            {
+              "text": "up",
+              "start": 11.185791,
+              "end": 11.410937
+            },
+            {
+              "text": "to",
+              "start": 11.410937,
+              "end": 11.636083
+            },
+            {
+              "text": "check",
+              "start": 11.636083,
+              "end": 12.063668
+            },
+            {
+              "text": "PM10",
+              "start": 12.063668,
+              "end": 12.429419
+            },
+            {
+              "text": "and",
+              "start": 12.429419,
+              "end": 12.728458
+            },
+            {
+              "text": "PM2.5",
+              "start": 12.728458,
+              "end": 13.094209
+            },
+            {
+              "text": "levels,",
+              "start": 13.094209,
+              "end": 13.58
+            }
+          ]
+        },
+        {
+          "start": 13.780000000000001,
+          "end": 16.62,
+          "words": [
+            {
+              "text": "along",
+              "start": 13.9,
+              "end": 14.264404
+            },
+            {
+              "text": "with",
+              "start": 14.264404,
+              "end": 14.576111
+            },
+            {
+              "text": "medium-range",
+              "start": 14.576111,
+              "end": 15.20893
+            },
+            {
+              "text": "weather",
+              "start": 15.20893,
+              "end": 15.670112
+            },
+            {
+              "text": "forecasts.",
+              "start": 15.670112,
+              "end": 16.22
+            }
+          ]
+        },
+        {
+          "start": 16.66,
+          "end": 22.2,
+          "words": [
+            {
+              "text": "View",
+              "start": 16.8071,
+              "end": 17.176
+            },
+            {
+              "text": "typhoon",
+              "start": 17.176,
+              "end": 17.8215
+            },
+            {
+              "text": "tracks",
+              "start": 17.8215,
+              "end": 18.3749
+            },
+            {
+              "text": "from",
+              "start": 18.3749,
+              "end": 18.7437
+            },
+            {
+              "text": "Korea’s",
+              "start": 18.7437,
+              "end": 19.3893
+            },
+            {
+              "text": "KMA,",
+              "start": 19.3893,
+              "end": 19.7582
+            },
+            {
+              "text": "the",
+              "start": 19.7582,
+              "end": 20.0348
+            },
+            {
+              "text": "U.S.",
+              "start": 20.0348,
+              "end": 20.4037
+            },
+            {
+              "text": "JTWC,",
+              "start": 20.4037,
+              "end": 20.8648
+            },
+            {
+              "text": "and",
+              "start": 20.8648,
+              "end": 21.1415
+            },
+            {
+              "text": "Japan’s",
+              "start": 21.1415,
+              "end": 21.787
+            },
+            {
+              "text": "JMA,",
+              "start": 21.787,
+              "end": 22.1559
+            }
+          ]
+        },
+        {
+          "start": 22.2,
+          "end": 25.15,
+          "words": [
+            {
+              "text": "along",
+              "start": 22.32,
+              "end": 22.6229
+            },
+            {
+              "text": "with",
+              "start": 22.6229,
+              "end": 22.8653
+            },
+            {
+              "text": "radar",
+              "start": 22.8653,
+              "end": 23.1682
+            },
+            {
+              "text": "imagery",
+              "start": 23.1682,
+              "end": 23.5923
+            },
+            {
+              "text": "and",
+              "start": 23.5923,
+              "end": 23.7741
+            },
+            {
+              "text": "weather",
+              "start": 23.7741,
+              "end": 24.1982
+            },
+            {
+              "text": "alerts",
+              "start": 24.1982,
+              "end": 24.5617
+            },
+            {
+              "text": "for",
+              "start": 24.5617,
+              "end": 24.7435
+            },
+            {
+              "text": "Korea—",
+              "start": 24.7435,
+              "end": 25.107
+            }
+          ]
+        },
+        {
+          "start": 25.15,
+          "end": 27.02,
+          "words": [
+            {
+              "text": "all",
+              "start": 25.27,
+              "end": 25.6067
+            },
+            {
+              "text": "in",
+              "start": 25.6067,
+              "end": 25.8311
+            },
+            {
+              "text": "one",
+              "start": 25.8311,
+              "end": 26.1678
+            },
+            {
+              "text": "place.",
+              "start": 26.1678,
+              "end": 26.8412
+            }
+          ]
+        },
+        {
+          "start": 27.02,
+          "end": 29.42,
+          "words": [
+            {
+              "text": "Next,",
+              "start": 27.14,
+              "end": 27.457959
+            },
+            {
+              "text": "let's",
+              "start": 27.457959,
+              "end": 27.775918
+            },
+            {
+              "text": "look",
+              "start": 27.775918,
+              "end": 28.093876
+            },
+            {
+              "text": "at",
+              "start": 28.093876,
+              "end": 28.289603
+            },
+            {
+              "text": "TBM",
+              "start": 28.289603,
+              "end": 28.549567
+            },
+            {
+              "text": "Records.",
+              "start": 28.549567,
+              "end": 29.02
+            }
+          ]
+        }
+      ],
+      "originalDuration": 29.701224,
+      "originalCues": [
+        [
+          0,
+          0
+        ],
+        [
+          5.42,
+          4000
+        ],
+        [
+          10.28,
+          9200
+        ],
+        [
+          16.44,
+          19600
+        ],
+        [
+          27.16,
+          36400
+        ],
+        [
+          29.701224,
+          36400
+        ]
+      ]
+    },
+    {
+      "id": "02-tbm-basic",
+      "page": "meeting",
+      "index": 0,
+      "start": 37.9,
+      "duration": 34.3,
+      "end": 72.2,
+      "chunks": [
+        {
+          "id": "02-tbm-basic-00",
+          "cueIndices": [
+            0
+          ],
+          "start": 0,
+          "end": 2.48,
+          "text": "Select TBM Records on the home screen.",
+          "speech": "Select T B M Records on the home screen.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/02-tbm-basic-00.mp3"
+        },
+        {
+          "id": "02-tbm-basic-01",
+          "cueIndices": [
+            1
+          ],
+          "start": 2.52,
+          "end": 7.24,
+          "text": "Open Create Record to start a new pre-work safety briefing.",
+          "speech": "Open Create Record to start a new pre-work safety briefing.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/02-tbm-basic-01.mp3"
+        },
+        {
+          "id": "02-tbm-basic-02",
+          "cueIndices": [
+            2,
+            3
+          ],
+          "start": 7.36,
+          "end": 12.9,
+          "text": "Enter the project name, work location and site supervisor, and complete the remaining basic information.",
+          "speech": "Enter the project name, work location and site supervisor, and complete the remaining basic information.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/02-tbm-basic-02.mp3"
+        },
+        {
+          "id": "02-tbm-basic-03",
+          "cueIndices": [
+            4,
+            5
+          ],
+          "start": 13.08,
+          "end": 18.32,
+          "text": "For today's temporary workers, enter each name and role to add them to the attendance list.",
+          "speech": "For today's temporary workers, enter each name and role to add them to the attendance list.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/02-tbm-basic-03.mp3"
+        },
+        {
+          "id": "02-tbm-basic-04",
+          "cueIndices": [
+            6
+          ],
+          "start": 18.56,
+          "end": 23.14,
+          "text": "Select the work types: overhead lines, underground cables or building wiring.",
+          "speech": "Select the work types: overhead lines, underground cables or building wiring.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/02-tbm-basic-04.mp3"
+        },
+        {
+          "id": "02-tbm-basic-05",
+          "cueIndices": [
+            7,
+            8
+          ],
+          "start": 23.439999999999998,
+          "end": 28.24,
+          "text": "During the briefing, check workers' health and use of protective equipment.",
+          "speech": "During the briefing, check workers' health and use of protective equipment.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/02-tbm-basic-05.mp3"
+        },
+        {
+          "id": "02-tbm-basic-06",
+          "cueIndices": [
+            9,
+            10
+          ],
+          "start": 28.24,
+          "end": 34.22,
+          "text": "Based on the selected work types, hazards and safety measures are generated automatically.",
+          "speech": "Based on the selected work types, hazards and safety measures are generated automatically.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/02-tbm-basic-06.mp3"
+        }
+      ],
+      "originalSubtitles": [
+        {
+          "start": 0,
+          "end": 2.48,
+          "words": [
+            {
+              "text": "Select",
+              "start": 0,
+              "end": 0.374003
+            },
+            {
+              "text": "TBM",
+              "start": 0.374003,
+              "end": 0.604229
+            },
+            {
+              "text": "Records",
+              "start": 0.604229,
+              "end": 1.020848
+            },
+            {
+              "text": "on",
+              "start": 1.020848,
+              "end": 1.194184
+            },
+            {
+              "text": "the",
+              "start": 1.194184,
+              "end": 1.42441
+            },
+            {
+              "text": "home",
+              "start": 1.42441,
+              "end": 1.705997
+            },
+            {
+              "text": "screen.",
+              "start": 1.705997,
+              "end": 2.08
+            }
+          ]
+        },
+        {
+          "start": 2.52,
+          "end": 7.24,
+          "words": [
+            {
+              "text": "Open",
+              "start": 2.64,
+              "end": 3.011469
+            },
+            {
+              "text": "Create",
+              "start": 3.011469,
+              "end": 3.504855
+            },
+            {
+              "text": "Record",
+              "start": 3.504855,
+              "end": 3.998241
+            },
+            {
+              "text": "to",
+              "start": 3.998241,
+              "end": 4.226907
+            },
+            {
+              "text": "start",
+              "start": 4.226907,
+              "end": 4.661177
+            },
+            {
+              "text": "a",
+              "start": 4.661177,
+              "end": 4.889843
+            },
+            {
+              "text": "new",
+              "start": 4.889843,
+              "end": 5.193557
+            },
+            {
+              "text": "pre-work",
+              "start": 5.193557,
+              "end": 5.743161
+            },
+            {
+              "text": "safety",
+              "start": 5.743161,
+              "end": 6.236547
+            },
+            {
+              "text": "briefing.",
+              "start": 6.236547,
+              "end": 6.84
+            }
+          ]
+        },
+        {
+          "start": 7.36,
+          "end": 10.0,
+          "words": [
+            {
+              "text": "Enter",
+              "start": 7.48,
+              "end": 7.752593
+            },
+            {
+              "text": "the",
+              "start": 7.752593,
+              "end": 7.943235
+            },
+            {
+              "text": "project",
+              "start": 7.943235,
+              "end": 8.288223
+            },
+            {
+              "text": "name,",
+              "start": 8.288223,
+              "end": 8.521395
+            },
+            {
+              "text": "work",
+              "start": 8.521395,
+              "end": 8.754568
+            },
+            {
+              "text": "location",
+              "start": 8.754568,
+              "end": 9.133357
+            },
+            {
+              "text": "and",
+              "start": 9.133357,
+              "end": 9.324
+            },
+            {
+              "text": "site",
+              "start": 9.324,
+              "end": 9.557172
+            },
+            {
+              "text": "supervisor,",
+              "start": 9.557172,
+              "end": 10.0
+            }
+          ]
+        },
+        {
+          "start": 10.0,
+          "end": 12.9,
+          "words": [
+            {
+              "text": "and",
+              "start": 10.12,
+              "end": 10.356639
+            },
+            {
+              "text": "complete",
+              "start": 10.356639,
+              "end": 10.826819
+            },
+            {
+              "text": "the",
+              "start": 10.826819,
+              "end": 11.063458
+            },
+            {
+              "text": "remaining",
+              "start": 11.063458,
+              "end": 11.574047
+            },
+            {
+              "text": "basic",
+              "start": 11.574047,
+              "end": 11.912408
+            },
+            {
+              "text": "information.",
+              "start": 11.912408,
+              "end": 12.5
+            }
+          ]
+        },
+        {
+          "start": 13.08,
+          "end": 15.600000000000001,
+          "words": [
+            {
+              "text": "For",
+              "start": 13.2,
+              "end": 13.389112
+            },
+            {
+              "text": "today's",
+              "start": 13.389112,
+              "end": 13.696325
+            },
+            {
+              "text": "temporary",
+              "start": 13.696325,
+              "end": 14.104366
+            },
+            {
+              "text": "workers,",
+              "start": 14.104366,
+              "end": 14.446584
+            },
+            {
+              "text": "enter",
+              "start": 14.446584,
+              "end": 14.716988
+            },
+            {
+              "text": "each",
+              "start": 14.716988,
+              "end": 14.948288
+            },
+            {
+              "text": "name",
+              "start": 14.948288,
+              "end": 15.179588
+            },
+            {
+              "text": "and",
+              "start": 15.179588,
+              "end": 15.3687
+            },
+            {
+              "text": "role",
+              "start": 15.3687,
+              "end": 15.6
+            }
+          ]
+        },
+        {
+          "start": 15.600000000000001,
+          "end": 18.32,
+          "words": [
+            {
+              "text": "to",
+              "start": 15.72,
+              "end": 15.920171
+            },
+            {
+              "text": "add",
+              "start": 15.920171,
+              "end": 16.186039
+            },
+            {
+              "text": "them",
+              "start": 16.186039,
+              "end": 16.511219
+            },
+            {
+              "text": "to",
+              "start": 16.511219,
+              "end": 16.71139
+            },
+            {
+              "text": "the",
+              "start": 16.71139,
+              "end": 16.977258
+            },
+            {
+              "text": "attendance",
+              "start": 16.977258,
+              "end": 17.594821
+            },
+            {
+              "text": "list.",
+              "start": 17.594821,
+              "end": 17.92
+            }
+          ]
+        },
+        {
+          "start": 18.56,
+          "end": 23.14,
+          "words": [
+            {
+              "text": "Select",
+              "start": 18.68,
+              "end": 19.064216
+            },
+            {
+              "text": "the",
+              "start": 19.064216,
+              "end": 19.300728
+            },
+            {
+              "text": "work",
+              "start": 19.300728,
+              "end": 19.590003
+            },
+            {
+              "text": "types:",
+              "start": 19.590003,
+              "end": 19.928183
+            },
+            {
+              "text": "overhead",
+              "start": 19.928183,
+              "end": 20.398112
+            },
+            {
+              "text": "lines,",
+              "start": 20.398112,
+              "end": 20.736292
+            },
+            {
+              "text": "underground",
+              "start": 20.736292,
+              "end": 21.32357
+            },
+            {
+              "text": "cables",
+              "start": 21.32357,
+              "end": 21.707786
+            },
+            {
+              "text": "or",
+              "start": 21.707786,
+              "end": 21.885856
+            },
+            {
+              "text": "building",
+              "start": 21.885856,
+              "end": 22.355784
+            },
+            {
+              "text": "wiring.",
+              "start": 22.355784,
+              "end": 22.74
+            }
+          ]
+        },
+        {
+          "start": 23.439999999999998,
+          "end": 26.259999999999998,
+          "words": [
+            {
+              "text": "During",
+              "start": 23.56,
+              "end": 24.022901
+            },
+            {
+              "text": "the",
+              "start": 24.022901,
+              "end": 24.30785
+            },
+            {
+              "text": "briefing,",
+              "start": 24.30785,
+              "end": 24.874017
+            },
+            {
+              "text": "check",
+              "start": 24.874017,
+              "end": 25.281455
+            },
+            {
+              "text": "workers'",
+              "start": 25.281455,
+              "end": 25.797099
+            },
+            {
+              "text": "health",
+              "start": 25.797099,
+              "end": 26.259999999999998
+            }
+          ]
+        },
+        {
+          "start": 26.259999999999998,
+          "end": 28.24,
+          "words": [
+            {
+              "text": "and",
+              "start": 26.38,
+              "end": 26.637141
+            },
+            {
+              "text": "use",
+              "start": 26.637141,
+              "end": 26.894282
+            },
+            {
+              "text": "of",
+              "start": 26.894282,
+              "end": 27.087883
+            },
+            {
+              "text": "protective",
+              "start": 27.087883,
+              "end": 27.685175
+            },
+            {
+              "text": "equipment.",
+              "start": 27.685175,
+              "end": 28.24
+            }
+          ]
+        },
+        {
+          "start": 28.24,
+          "end": 31.3,
+          "words": [
+            {
+              "text": "Based",
+              "start": 28.36,
+              "end": 28.89739
+            },
+            {
+              "text": "on",
+              "start": 28.89739,
+              "end": 29.180354
+            },
+            {
+              "text": "the",
+              "start": 29.180354,
+              "end": 29.556187
+            },
+            {
+              "text": "selected",
+              "start": 29.556187,
+              "end": 30.302934
+            },
+            {
+              "text": "work",
+              "start": 30.302934,
+              "end": 30.76261
+            },
+            {
+              "text": "types,",
+              "start": 30.76261,
+              "end": 31.3
+            }
+          ]
+        },
+        {
+          "start": 31.3,
+          "end": 34.22,
+          "words": [
+            {
+              "text": "hazards",
+              "start": 31.42,
+              "end": 31.771102
+            },
+            {
+              "text": "and",
+              "start": 31.771102,
+              "end": 31.965123
+            },
+            {
+              "text": "safety",
+              "start": 31.965123,
+              "end": 32.280311
+            },
+            {
+              "text": "measures",
+              "start": 32.280311,
+              "end": 32.665813
+            },
+            {
+              "text": "are",
+              "start": 32.665813,
+              "end": 32.859834
+            },
+            {
+              "text": "generated",
+              "start": 32.859834,
+              "end": 33.278468
+            },
+            {
+              "text": "automatically.",
+              "start": 33.278468,
+              "end": 33.82
+            }
+          ]
+        }
+      ],
+      "originalDuration": 34.29875,
+      "originalCues": [
+        [
+          0,
+          0
+        ],
+        [
+          2.57,
+          5664
+        ],
+        [
+          6.99,
+          11424
+        ],
+        [
+          12.67,
+          20160
+        ],
+        [
+          18.27,
+          28800
+        ],
+        [
+          23.77,
+          37056
+        ],
+        [
+          28.98,
+          46176
+        ],
+        [
+          34.29875,
+          55296
+        ]
+      ]
+    },
+    {
+      "id": "03-ai-pdf",
+      "page": "meeting",
+      "index": 1,
+      "start": 72.2,
+      "duration": 40.666666666666664,
+      "end": 112.86666666666666,
+      "chunks": [
+        {
+          "id": "03-ai-pdf-00",
+          "cueIndices": [
+            0,
+            1
+          ],
+          "start": 0,
+          "end": 9.52,
+          "text": "AI reviews the selected work types, weather, similar incidents and workers' conditions to suggest additional hazards and safety measures.",
+          "speech": "A I reviews the selected work types, weather, similar incidents and workers' conditions to suggest additional hazards and safety measures.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/03-ai-pdf-00.mp3"
+        },
+        {
+          "id": "03-ai-pdf-01",
+          "cueIndices": [
+            2,
+            3
+          ],
+          "start": 9.58,
+          "end": 16.06,
+          "text": "The site supervisor reviews these suggestions and confirms today's priority hazards.",
+          "speech": "The site supervisor reviews these suggestions and confirms today's priority hazards.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/03-ai-pdf-01.mp3"
+        },
+        {
+          "id": "03-ai-pdf-02",
+          "cueIndices": [
+            4,
+            5
+          ],
+          "start": 16.119999999999997,
+          "end": 23.04,
+          "text": "Supervisors and workers confirm attendance by signing on the device, via QR code or remotely.",
+          "speech": "Supervisors and workers confirm attendance by signing on the device, via Q R code or remotely.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/03-ai-pdf-02.mp3"
+        },
+        {
+          "id": "03-ai-pdf-03",
+          "cueIndices": [
+            6
+          ],
+          "start": 23.119999999999997,
+          "end": 27.919999999999998,
+          "text": "Tap the signature field, sign with your finger and save.",
+          "speech": "Tap the signature field, sign with your finger and save.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/03-ai-pdf-03.mp3"
+        },
+        {
+          "id": "03-ai-pdf-04",
+          "cueIndices": [
+            7
+          ],
+          "start": 27.919999999999998,
+          "end": 31.84,
+          "text": "The saved signature appears in the meeting record immediately.",
+          "speech": "The saved signature appears in the meeting record immediately.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/03-ai-pdf-04.mp3"
+        },
+        {
+          "id": "03-ai-pdf-05",
+          "cueIndices": [
+            8
+          ],
+          "start": 31.84,
+          "end": 36.0,
+          "text": "Completed PDF records are filed by date in the calendar.",
+          "speech": "Completed P D F records are filed by date in the calendar.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/03-ai-pdf-05.mp3"
+        },
+        {
+          "id": "03-ai-pdf-06",
+          "cueIndices": [
+            9
+          ],
+          "start": 36.0,
+          "end": 40.36,
+          "text": "You can save all records for a chosen period at once.",
+          "speech": "You can save all records for a chosen period at once.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/03-ai-pdf-06.mp3"
+        }
+      ],
+      "originalSubtitles": [
+        {
+          "start": 0,
+          "end": 4.78,
+          "words": [
+            {
+              "text": "AI",
+              "start": 0,
+              "end": 0.257443
+            },
+            {
+              "text": "reviews",
+              "start": 0.257443,
+              "end": 0.876211
+            },
+            {
+              "text": "the",
+              "start": 0.876211,
+              "end": 1.218147
+            },
+            {
+              "text": "selected",
+              "start": 1.218147,
+              "end": 1.897542
+            },
+            {
+              "text": "work",
+              "start": 1.897542,
+              "end": 2.315759
+            },
+            {
+              "text": "types,",
+              "start": 2.315759,
+              "end": 2.804679
+            },
+            {
+              "text": "weather,",
+              "start": 2.804679,
+              "end": 3.423448
+            },
+            {
+              "text": "similar",
+              "start": 3.423448,
+              "end": 4.042216
+            },
+            {
+              "text": "incidents",
+              "start": 4.042216,
+              "end": 4.78
+            }
+          ]
+        },
+        {
+          "start": 4.78,
+          "end": 9.52,
+          "words": [
+            {
+              "text": "and",
+              "start": 4.9,
+              "end": 5.15671
+            },
+            {
+              "text": "workers'",
+              "start": 5.15671,
+              "end": 5.621255
+            },
+            {
+              "text": "conditions",
+              "start": 5.621255,
+              "end": 6.217546
+            },
+            {
+              "text": "to",
+              "start": 6.217546,
+              "end": 6.410823
+            },
+            {
+              "text": "suggest",
+              "start": 6.410823,
+              "end": 6.875367
+            },
+            {
+              "text": "additional",
+              "start": 6.875367,
+              "end": 7.471658
+            },
+            {
+              "text": "hazards",
+              "start": 7.471658,
+              "end": 7.936202
+            },
+            {
+              "text": "and",
+              "start": 7.936202,
+              "end": 8.192913
+            },
+            {
+              "text": "safety",
+              "start": 8.192913,
+              "end": 8.60994
+            },
+            {
+              "text": "measures.",
+              "start": 8.60994,
+              "end": 9.12
+            }
+          ]
+        },
+        {
+          "start": 9.58,
+          "end": 12.56,
+          "words": [
+            {
+              "text": "The",
+              "start": 9.7,
+              "end": 9.978523
+            },
+            {
+              "text": "site",
+              "start": 9.978523,
+              "end": 10.319181
+            },
+            {
+              "text": "supervisor",
+              "start": 10.319181,
+              "end": 10.966139
+            },
+            {
+              "text": "reviews",
+              "start": 10.966139,
+              "end": 11.470156
+            },
+            {
+              "text": "these",
+              "start": 11.470156,
+              "end": 11.868406
+            },
+            {
+              "text": "suggestions",
+              "start": 11.868406,
+              "end": 12.56
+            }
+          ]
+        },
+        {
+          "start": 12.56,
+          "end": 16.06,
+          "words": [
+            {
+              "text": "and",
+              "start": 12.68,
+              "end": 13.034427
+            },
+            {
+              "text": "confirms",
+              "start": 13.034427,
+              "end": 13.738642
+            },
+            {
+              "text": "today's",
+              "start": 13.738642,
+              "end": 14.314411
+            },
+            {
+              "text": "priority",
+              "start": 14.314411,
+              "end": 15.018627
+            },
+            {
+              "text": "hazards.",
+              "start": 15.018627,
+              "end": 15.66
+            }
+          ]
+        },
+        {
+          "start": 16.119999999999997,
+          "end": 19.3,
+          "words": [
+            {
+              "text": "Supervisors",
+              "start": 16.24,
+              "end": 16.873839
+            },
+            {
+              "text": "and",
+              "start": 16.873839,
+              "end": 17.129103
+            },
+            {
+              "text": "workers",
+              "start": 17.129103,
+              "end": 17.591029
+            },
+            {
+              "text": "confirm",
+              "start": 17.591029,
+              "end": 18.052955
+            },
+            {
+              "text": "attendance",
+              "start": 18.052955,
+              "end": 18.645886
+            },
+            {
+              "text": "by",
+              "start": 18.645886,
+              "end": 18.838074
+            },
+            {
+              "text": "signing",
+              "start": 18.838074,
+              "end": 19.3
+            }
+          ]
+        },
+        {
+          "start": 19.3,
+          "end": 23.04,
+          "words": [
+            {
+              "text": "on",
+              "start": 19.42,
+              "end": 19.686609
+            },
+            {
+              "text": "the",
+              "start": 19.686609,
+              "end": 20.04072
+            },
+            {
+              "text": "device,",
+              "start": 20.04072,
+              "end": 20.615975
+            },
+            {
+              "text": "via",
+              "start": 20.615975,
+              "end": 20.970086
+            },
+            {
+              "text": "QR",
+              "start": 20.970086,
+              "end": 21.236696
+            },
+            {
+              "text": "code",
+              "start": 21.236696,
+              "end": 21.669804
+            },
+            {
+              "text": "or",
+              "start": 21.669804,
+              "end": 21.936414
+            },
+            {
+              "text": "remotely.",
+              "start": 21.936414,
+              "end": 22.64
+            }
+          ]
+        },
+        {
+          "start": 23.119999999999997,
+          "end": 27.919999999999998,
+          "words": [
+            {
+              "text": "Tap",
+              "start": 23.24,
+              "end": 23.569661
+            },
+            {
+              "text": "the",
+              "start": 23.569661,
+              "end": 23.899321
+            },
+            {
+              "text": "signature",
+              "start": 23.899321,
+              "end": 24.61062
+            },
+            {
+              "text": "field,",
+              "start": 24.61062,
+              "end": 25.08199
+            },
+            {
+              "text": "sign",
+              "start": 25.08199,
+              "end": 25.485193
+            },
+            {
+              "text": "with",
+              "start": 25.485193,
+              "end": 25.888397
+            },
+            {
+              "text": "your",
+              "start": 25.888397,
+              "end": 26.2916
+            },
+            {
+              "text": "finger",
+              "start": 26.2916,
+              "end": 26.827136
+            },
+            {
+              "text": "and",
+              "start": 26.827136,
+              "end": 27.156796
+            },
+            {
+              "text": "save.",
+              "start": 27.156796,
+              "end": 27.56
+            }
+          ]
+        },
+        {
+          "start": 27.919999999999998,
+          "end": 31.84,
+          "words": [
+            {
+              "text": "The",
+              "start": 28.04,
+              "end": 28.310132
+            },
+            {
+              "text": "saved",
+              "start": 28.310132,
+              "end": 28.696382
+            },
+            {
+              "text": "signature",
+              "start": 28.696382,
+              "end": 29.279237
+            },
+            {
+              "text": "appears",
+              "start": 29.279237,
+              "end": 29.768068
+            },
+            {
+              "text": "in",
+              "start": 29.768068,
+              "end": 29.97145
+            },
+            {
+              "text": "the",
+              "start": 29.97145,
+              "end": 30.241581
+            },
+            {
+              "text": "meeting",
+              "start": 30.241581,
+              "end": 30.730413
+            },
+            {
+              "text": "record",
+              "start": 30.730413,
+              "end": 31.169243
+            },
+            {
+              "text": "immediately.",
+              "start": 31.169243,
+              "end": 31.84
+            }
+          ]
+        },
+        {
+          "start": 31.84,
+          "end": 36.0,
+          "words": [
+            {
+              "text": "Completed",
+              "start": 31.96,
+              "end": 32.624763
+            },
+            {
+              "text": "PDF",
+              "start": 32.624763,
+              "end": 32.932855
+            },
+            {
+              "text": "records",
+              "start": 32.932855,
+              "end": 33.490382
+            },
+            {
+              "text": "are",
+              "start": 33.490382,
+              "end": 33.798475
+            },
+            {
+              "text": "filed",
+              "start": 33.798475,
+              "end": 34.239005
+            },
+            {
+              "text": "by",
+              "start": 34.239005,
+              "end": 34.470968
+            },
+            {
+              "text": "date",
+              "start": 34.470968,
+              "end": 34.847792
+            },
+            {
+              "text": "in",
+              "start": 34.847792,
+              "end": 35.079754
+            },
+            {
+              "text": "the",
+              "start": 35.079754,
+              "end": 35.387847
+            },
+            {
+              "text": "calendar.",
+              "start": 35.387847,
+              "end": 36.0
+            }
+          ]
+        },
+        {
+          "start": 36.0,
+          "end": 40.36,
+          "words": [
+            {
+              "text": "You",
+              "start": 36.12,
+              "end": 36.415144
+            },
+            {
+              "text": "can",
+              "start": 36.415144,
+              "end": 36.710289
+            },
+            {
+              "text": "save",
+              "start": 36.710289,
+              "end": 37.071276
+            },
+            {
+              "text": "all",
+              "start": 37.071276,
+              "end": 37.36642
+            },
+            {
+              "text": "records",
+              "start": 37.36642,
+              "end": 37.900515
+            },
+            {
+              "text": "for",
+              "start": 37.900515,
+              "end": 38.195659
+            },
+            {
+              "text": "a",
+              "start": 38.195659,
+              "end": 38.417873
+            },
+            {
+              "text": "chosen",
+              "start": 38.417873,
+              "end": 38.897336
+            },
+            {
+              "text": "period",
+              "start": 38.897336,
+              "end": 39.376799
+            },
+            {
+              "text": "at",
+              "start": 39.376799,
+              "end": 39.599013
+            },
+            {
+              "text": "once.",
+              "start": 39.599013,
+              "end": 39.96
+            }
+          ]
+        }
+      ],
+      "originalDuration": 40.646531,
+      "originalCues": [
+        [
+          0,
+          55296
+        ],
+        [
+          12.81,
+          62880
+        ],
+        [
+          18.79,
+          70080
+        ],
+        [
+          22.86,
+          77280
+        ],
+        [
+          27.78,
+          84000
+        ],
+        [
+          31.58,
+          88416
+        ],
+        [
+          36.19,
+          92736
+        ],
+        [
+          40.646531,
+          94944
+        ]
+      ]
+    },
+    {
+      "id": "04-safety-tools",
+      "page": "support",
+      "index": 0,
+      "start": 112.86666666666666,
+      "duration": 31.866666666666667,
+      "end": 144.73333333333332,
+      "chunks": [
+        {
+          "id": "04-safety-tools-00",
+          "cueIndices": [
+            0
+          ],
+          "start": 0,
+          "end": 3.88,
+          "text": "Next, let's explore the Safety Guide and Field Tools.",
+          "speech": "Next, let's explore the Safety Guide and Field Tools.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/04-safety-tools-00.mp3"
+        },
+        {
+          "id": "04-safety-tools-01",
+          "cueIndices": [
+            1,
+            2
+          ],
+          "start": 3.88,
+          "end": 12.82,
+          "text": "The Safety Guide covers electric shock, falls and caught-in hazards with task-specific safety checks you can review on site.",
+          "speech": "The Safety Guide covers electric shock, falls and caught-in hazards with task-specific safety checks you can review on site.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/04-safety-tools-01.mp3"
+        },
+        {
+          "id": "04-safety-tools-02",
+          "cueIndices": [
+            3
+          ],
+          "start": 12.82,
+          "end": 16.82,
+          "text": "Share key safety practices with the 11 Golden Rules video.",
+          "speech": "Share key safety practices with the 11 Golden Rules video.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/04-safety-tools-02.mp3"
+        },
+        {
+          "id": "04-safety-tools-03",
+          "cueIndices": [
+            4,
+            5
+          ],
+          "start": 16.88,
+          "end": 22.68,
+          "text": "Find recent workplace incidents and the TBM guide, plus resources on serious workplace accidents.",
+          "speech": "Find recent workplace incidents and the T B M guide, plus resources on serious workplace accidents.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/04-safety-tools-03.mp3"
+        },
+        {
+          "id": "04-safety-tools-04",
+          "cueIndices": [
+            6
+          ],
+          "start": 22.68,
+          "end": 24.599999999999998,
+          "text": "Now, open Field Tools.",
+          "speech": "Now, open Field Tools.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/04-safety-tools-04.mp3"
+        },
+        {
+          "id": "04-safety-tools-05",
+          "cueIndices": [
+            7,
+            8
+          ],
+          "start": 24.599999999999998,
+          "end": 31.8,
+          "text": "Use notices, voice memos, street view and emergency contacts, along with other tools for work on site.",
+          "speech": "Use notices, voice memos, street view and emergency contacts, along with other tools for work on site.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/04-safety-tools-05.mp3"
+        }
+      ],
+      "originalSubtitles": [
+        {
+          "start": 0,
+          "end": 3.88,
+          "words": [
+            {
+              "text": "Next,",
+              "start": 0,
+              "end": 0.377885
+            },
+            {
+              "text": "let's",
+              "start": 0.377885,
+              "end": 0.755769
+            },
+            {
+              "text": "explore",
+              "start": 0.755769,
+              "end": 1.314864
+            },
+            {
+              "text": "the",
+              "start": 1.314864,
+              "end": 1.623824
+            },
+            {
+              "text": "Safety",
+              "start": 1.623824,
+              "end": 2.125731
+            },
+            {
+              "text": "Guide",
+              "start": 2.125731,
+              "end": 2.5675
+            },
+            {
+              "text": "and",
+              "start": 2.5675,
+              "end": 2.87646
+            },
+            {
+              "text": "Field",
+              "start": 2.87646,
+              "end": 3.31823
+            },
+            {
+              "text": "Tools.",
+              "start": 3.31823,
+              "end": 3.76
+            }
+          ]
+        },
+        {
+          "start": 3.88,
+          "end": 8.48,
+          "words": [
+            {
+              "text": "The",
+              "start": 4.0,
+              "end": 4.29239
+            },
+            {
+              "text": "Safety",
+              "start": 4.29239,
+              "end": 4.767378
+            },
+            {
+              "text": "Guide",
+              "start": 4.767378,
+              "end": 5.185455
+            },
+            {
+              "text": "covers",
+              "start": 5.185455,
+              "end": 5.660443
+            },
+            {
+              "text": "electric",
+              "start": 5.660443,
+              "end": 6.241395
+            },
+            {
+              "text": "shock,",
+              "start": 6.241395,
+              "end": 6.659472
+            },
+            {
+              "text": "falls",
+              "start": 6.659472,
+              "end": 7.077549
+            },
+            {
+              "text": "and",
+              "start": 7.077549,
+              "end": 7.369938
+            },
+            {
+              "text": "caught-in",
+              "start": 7.369938,
+              "end": 7.95089
+            },
+            {
+              "text": "hazards",
+              "start": 7.95089,
+              "end": 8.48
+            }
+          ]
+        },
+        {
+          "start": 8.48,
+          "end": 12.82,
+          "words": [
+            {
+              "text": "with",
+              "start": 8.6,
+              "end": 8.975251
+            },
+            {
+              "text": "task-specific",
+              "start": 8.975251,
+              "end": 9.784918
+            },
+            {
+              "text": "safety",
+              "start": 9.784918,
+              "end": 10.283326
+            },
+            {
+              "text": "checks",
+              "start": 10.283326,
+              "end": 10.781734
+            },
+            {
+              "text": "you",
+              "start": 10.781734,
+              "end": 11.088541
+            },
+            {
+              "text": "can",
+              "start": 11.088541,
+              "end": 11.395347
+            },
+            {
+              "text": "review",
+              "start": 11.395347,
+              "end": 11.893755
+            },
+            {
+              "text": "on",
+              "start": 11.893755,
+              "end": 12.124749
+            },
+            {
+              "text": "site.",
+              "start": 12.124749,
+              "end": 12.5
+            }
+          ]
+        },
+        {
+          "start": 12.82,
+          "end": 16.82,
+          "words": [
+            {
+              "text": "Share",
+              "start": 12.94,
+              "end": 13.303943
+            },
+            {
+              "text": "key",
+              "start": 13.303943,
+              "end": 13.558473
+            },
+            {
+              "text": "safety",
+              "start": 13.558473,
+              "end": 13.971959
+            },
+            {
+              "text": "practices",
+              "start": 13.971959,
+              "end": 14.521151
+            },
+            {
+              "text": "with",
+              "start": 14.521151,
+              "end": 14.832463
+            },
+            {
+              "text": "the",
+              "start": 14.832463,
+              "end": 15.086993
+            },
+            {
+              "text": "11",
+              "start": 15.086993,
+              "end": 15.278628
+            },
+            {
+              "text": "Golden",
+              "start": 15.278628,
+              "end": 15.692114
+            },
+            {
+              "text": "Rules",
+              "start": 15.692114,
+              "end": 16.056057
+            },
+            {
+              "text": "video.",
+              "start": 16.056057,
+              "end": 16.42
+            }
+          ]
+        },
+        {
+          "start": 16.88,
+          "end": 19.64,
+          "words": [
+            {
+              "text": "Find",
+              "start": 17.0,
+              "end": 17.25743
+            },
+            {
+              "text": "recent",
+              "start": 17.25743,
+              "end": 17.599349
+            },
+            {
+              "text": "workplace",
+              "start": 17.599349,
+              "end": 18.053485
+            },
+            {
+              "text": "incidents",
+              "start": 18.053485,
+              "end": 18.507622
+            },
+            {
+              "text": "and",
+              "start": 18.507622,
+              "end": 18.718098
+            },
+            {
+              "text": "the",
+              "start": 18.718098,
+              "end": 18.928573
+            },
+            {
+              "text": "TBM",
+              "start": 18.928573,
+              "end": 19.139049
+            },
+            {
+              "text": "guide,",
+              "start": 19.139049,
+              "end": 19.44
+            }
+          ]
+        },
+        {
+          "start": 19.64,
+          "end": 22.68,
+          "words": [
+            {
+              "text": "plus",
+              "start": 19.76,
+              "end": 20.065217
+            },
+            {
+              "text": "resources",
+              "start": 20.065217,
+              "end": 20.603657
+            },
+            {
+              "text": "on",
+              "start": 20.603657,
+              "end": 20.79154
+            },
+            {
+              "text": "serious",
+              "start": 20.79154,
+              "end": 21.243121
+            },
+            {
+              "text": "workplace",
+              "start": 21.243121,
+              "end": 21.781561
+            },
+            {
+              "text": "accidents.",
+              "start": 21.781561,
+              "end": 22.32
+            }
+          ]
+        },
+        {
+          "start": 22.68,
+          "end": 24.599999999999998,
+          "words": [
+            {
+              "text": "Now,",
+              "start": 22.8,
+              "end": 23.154135
+            },
+            {
+              "text": "open",
+              "start": 23.154135,
+              "end": 23.587272
+            },
+            {
+              "text": "Field",
+              "start": 23.587272,
+              "end": 24.093636
+            },
+            {
+              "text": "Tools.",
+              "start": 24.093636,
+              "end": 24.599999999999998
+            }
+          ]
+        },
+        {
+          "start": 24.599999999999998,
+          "end": 28.64,
+          "words": [
+            {
+              "text": "Use",
+              "start": 24.72,
+              "end": 25.006938
+            },
+            {
+              "text": "notices,",
+              "start": 25.006938,
+              "end": 25.526182
+            },
+            {
+              "text": "voice",
+              "start": 25.526182,
+              "end": 25.936463
+            },
+            {
+              "text": "memos,",
+              "start": 25.936463,
+              "end": 26.346745
+            },
+            {
+              "text": "street",
+              "start": 26.346745,
+              "end": 26.812876
+            },
+            {
+              "text": "view",
+              "start": 26.812876,
+              "end": 27.163826
+            },
+            {
+              "text": "and",
+              "start": 27.163826,
+              "end": 27.450764
+            },
+            {
+              "text": "emergency",
+              "start": 27.450764,
+              "end": 28.069881
+            },
+            {
+              "text": "contacts,",
+              "start": 28.069881,
+              "end": 28.64
+            }
+          ]
+        },
+        {
+          "start": 28.64,
+          "end": 31.8,
+          "words": [
+            {
+              "text": "along",
+              "start": 28.76,
+              "end": 29.148688
+            },
+            {
+              "text": "with",
+              "start": 29.148688,
+              "end": 29.481166
+            },
+            {
+              "text": "other",
+              "start": 29.481166,
+              "end": 29.869854
+            },
+            {
+              "text": "tools",
+              "start": 29.869854,
+              "end": 30.258542
+            },
+            {
+              "text": "for",
+              "start": 30.258542,
+              "end": 30.530378
+            },
+            {
+              "text": "work",
+              "start": 30.530378,
+              "end": 30.862857
+            },
+            {
+              "text": "on",
+              "start": 30.862857,
+              "end": 31.067521
+            },
+            {
+              "text": "site.",
+              "start": 31.067521,
+              "end": 31.4
+            }
+          ]
+        }
+      ],
+      "originalDuration": 31.84325,
+      "originalCues": [
+        [
+          0,
+          0
+        ],
+        [
+          3.26,
+          5700
+        ],
+        [
+          12.35,
+          19600
+        ],
+        [
+          16.12,
+          25950
+        ],
+        [
+          22.25,
+          32600
+        ],
+        [
+          24.59,
+          36100
+        ],
+        [
+          30.772188,
+          42250
+        ],
+        [
+          31.84325,
+          42250
+        ]
+      ]
+    },
+    {
+      "id": "05-emergency",
+      "page": "support",
+      "index": 1,
+      "start": 144.73333333333332,
+      "duration": 22.0,
+      "end": 166.73333333333332,
+      "chunks": [
+        {
+          "id": "05-emergency-00",
+          "cueIndices": [
+            0,
+            1
+          ],
+          "start": 0,
+          "end": 6.46,
+          "text": "Emergency Medical Facilities uses your current location to show nearby hospitals and their distances.",
+          "speech": "Emergency Medical Facilities uses your current location to show nearby hospitals and their distances.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/05-emergency-00.mp3"
+        },
+        {
+          "id": "05-emergency-01",
+          "cueIndices": [
+            2,
+            3
+          ],
+          "start": 6.46,
+          "end": 13.42,
+          "text": "Tap Directions to open your map app, or Call to contact the hospital directly.",
+          "speech": "Tap Directions to open your map app, or Call to contact the hospital directly.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/05-emergency-01.mp3"
+        },
+        {
+          "id": "05-emergency-02",
+          "cueIndices": [
+            4
+          ],
+          "start": 13.48,
+          "end": 17.6,
+          "text": "In an emergency, call 119, Korea's emergency number, immediately.",
+          "speech": "In an emergency, call one one nine, Korea's emergency number, immediately.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/05-emergency-02.mp3"
+        },
+        {
+          "id": "05-emergency-03",
+          "cueIndices": [
+            5
+          ],
+          "start": 17.84,
+          "end": 21.84,
+          "text": "Your location is used only with your consent.",
+          "speech": "Your location is used only with your consent.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/05-emergency-03.mp3"
+        }
+      ],
+      "originalSubtitles": [
+        {
+          "start": 0,
+          "end": 2.94,
+          "words": [
+            {
+              "text": "Emergency",
+              "start": 0,
+              "end": 0.506157
+            },
+            {
+              "text": "Medical",
+              "start": 0.506157,
+              "end": 0.930662
+            },
+            {
+              "text": "Facilities",
+              "start": 0.930662,
+              "end": 1.47556
+            },
+            {
+              "text": "uses",
+              "start": 1.47556,
+              "end": 1.762478
+            },
+            {
+              "text": "your",
+              "start": 1.762478,
+              "end": 2.049395
+            },
+            {
+              "text": "current",
+              "start": 2.049395,
+              "end": 2.473901
+            },
+            {
+              "text": "location",
+              "start": 2.473901,
+              "end": 2.94
+            }
+          ]
+        },
+        {
+          "start": 2.94,
+          "end": 6.46,
+          "words": [
+            {
+              "text": "to",
+              "start": 3.06,
+              "end": 3.278322
+            },
+            {
+              "text": "show",
+              "start": 3.278322,
+              "end": 3.632988
+            },
+            {
+              "text": "nearby",
+              "start": 3.632988,
+              "end": 4.104055
+            },
+            {
+              "text": "hospitals",
+              "start": 4.104055,
+              "end": 4.729727
+            },
+            {
+              "text": "and",
+              "start": 4.729727,
+              "end": 5.019703
+            },
+            {
+              "text": "their",
+              "start": 5.019703,
+              "end": 5.434328
+            },
+            {
+              "text": "distances.",
+              "start": 5.434328,
+              "end": 6.06
+            }
+          ]
+        },
+        {
+          "start": 6.46,
+          "end": 9.700000000000001,
+          "words": [
+            {
+              "text": "Tap",
+              "start": 6.58,
+              "end": 6.946116
+            },
+            {
+              "text": "Directions",
+              "start": 6.946116,
+              "end": 7.796537
+            },
+            {
+              "text": "to",
+              "start": 7.796537,
+              "end": 8.072185
+            },
+            {
+              "text": "open",
+              "start": 8.072185,
+              "end": 8.519976
+            },
+            {
+              "text": "your",
+              "start": 8.519976,
+              "end": 8.967768
+            },
+            {
+              "text": "map",
+              "start": 8.967768,
+              "end": 9.333884
+            },
+            {
+              "text": "app,",
+              "start": 9.333884,
+              "end": 9.7
+            }
+          ]
+        },
+        {
+          "start": 9.700000000000001,
+          "end": 13.42,
+          "words": [
+            {
+              "text": "or",
+              "start": 9.82,
+              "end": 10.07328
+            },
+            {
+              "text": "Call",
+              "start": 10.07328,
+              "end": 10.484734
+            },
+            {
+              "text": "to",
+              "start": 10.484734,
+              "end": 10.738013
+            },
+            {
+              "text": "contact",
+              "start": 10.738013,
+              "end": 11.346776
+            },
+            {
+              "text": "the",
+              "start": 11.346776,
+              "end": 11.683182
+            },
+            {
+              "text": "hospital",
+              "start": 11.683182,
+              "end": 12.351591
+            },
+            {
+              "text": "directly.",
+              "start": 12.351591,
+              "end": 13.02
+            }
+          ]
+        },
+        {
+          "start": 13.48,
+          "end": 17.6,
+          "words": [
+            {
+              "text": "In",
+              "start": 13.6,
+              "end": 13.796746
+            },
+            {
+              "text": "an",
+              "start": 13.796746,
+              "end": 13.993492
+            },
+            {
+              "text": "emergency,",
+              "start": 13.993492,
+              "end": 14.55733
+            },
+            {
+              "text": "call",
+              "start": 14.55733,
+              "end": 14.876945
+            },
+            {
+              "text": "119,",
+              "start": 14.876945,
+              "end": 15.138263
+            },
+            {
+              "text": "Korea's",
+              "start": 15.138263,
+              "end": 15.562776
+            },
+            {
+              "text": "emergency",
+              "start": 15.562776,
+              "end": 16.126614
+            },
+            {
+              "text": "number,",
+              "start": 16.126614,
+              "end": 16.551127
+            },
+            {
+              "text": "immediately.",
+              "start": 16.551127,
+              "end": 17.2
+            }
+          ]
+        },
+        {
+          "start": 17.84,
+          "end": 21.84,
+          "words": [
+            {
+              "text": "Your",
+              "start": 17.96,
+              "end": 18.3591
+            },
+            {
+              "text": "location",
+              "start": 18.3591,
+              "end": 19.00744
+            },
+            {
+              "text": "is",
+              "start": 19.00744,
+              "end": 19.253115
+            },
+            {
+              "text": "used",
+              "start": 19.253115,
+              "end": 19.652215
+            },
+            {
+              "text": "only",
+              "start": 19.652215,
+              "end": 20.051315
+            },
+            {
+              "text": "with",
+              "start": 20.051315,
+              "end": 20.450415
+            },
+            {
+              "text": "your",
+              "start": 20.450415,
+              "end": 20.849516
+            },
+            {
+              "text": "consent.",
+              "start": 20.849516,
+              "end": 21.44
+            }
+          ]
+        }
+      ],
+      "originalDuration": 21.995102,
+      "originalCues": [
+        [
+          0,
+          42450
+        ],
+        [
+          6.19,
+          43800
+        ],
+        [
+          13.1,
+          45500
+        ],
+        [
+          17.41,
+          47000
+        ],
+        [
+          21.995102,
+          49000
+        ]
+      ]
+    },
+    {
+      "id": "07-safety4cut-intro",
+      "page": "safety",
+      "index": 0,
+      "start": 166.73333333333332,
+      "duration": 38.06666666666667,
+      "end": 204.8,
+      "chunks": [
+        {
+          "id": "07-safety4cut-intro-00",
+          "cueIndices": [
+            0
+          ],
+          "start": 0,
+          "end": 3.82,
+          "text": "Finally, meet Safety 4-Cut for accident prevention training.",
+          "speech": "Finally, meet Safety 4-Cut for accident prevention training.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/07-safety4cut-intro-00.mp3"
+        },
+        {
+          "id": "07-safety4cut-intro-01",
+          "cueIndices": [
+            1
+          ],
+          "start": 3.92,
+          "end": 6.7,
+          "text": "Select Safety 4-Cut from the main menu.",
+          "speech": "Select Safety 4-Cut from the main menu.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/07-safety4cut-intro-01.mp3"
+        },
+        {
+          "id": "07-safety4cut-intro-02",
+          "cueIndices": [
+            2,
+            3
+          ],
+          "start": 8.32,
+          "end": 17.36,
+          "text": "Enter an incident case to create four-panel comics and engaging safety training videos with narration and sound effects.",
+          "speech": "Enter an incident case to create four-panel comics and engaging safety training videos with narration and sound effects.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/07-safety4cut-intro-02.mp3"
+        },
+        {
+          "id": "07-safety4cut-intro-03",
+          "cueIndices": [
+            4,
+            5
+          ],
+          "start": 17.72,
+          "end": 22.74,
+          "text": "This cartoon-style training example is based on a real workplace incident.",
+          "speech": "This cartoon-style training example is based on a real workplace incident.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/07-safety4cut-intro-03.mp3"
+        },
+        {
+          "id": "07-safety4cut-intro-04",
+          "cueIndices": [
+            6
+          ],
+          "start": 23.5,
+          "end": 26.099999999999998,
+          "text": "You can also create a realistic version.",
+          "speech": "You can also create a realistic version.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/07-safety4cut-intro-04.mp3"
+        },
+        {
+          "id": "07-safety4cut-intro-05",
+          "cueIndices": [
+            7,
+            8
+          ],
+          "start": 26.099999999999998,
+          "end": 34.02,
+          "text": "AI can also analyze the incident and recommend the ideal panel count to create comics and videos.",
+          "speech": "A I can also analyze the incident and recommend the ideal panel count to create comics and videos.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/07-safety4cut-intro-05.mp3"
+        },
+        {
+          "id": "07-safety4cut-intro-06",
+          "cueIndices": [
+            9
+          ],
+          "start": 34.02,
+          "end": 37.46,
+          "text": "Next is a video made with AI-recommended panels.",
+          "speech": "Next is a video made with A I-recommended panels.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/07-safety4cut-intro-06.mp3"
+        }
+      ],
+      "originalSubtitles": [
+        {
+          "start": 0,
+          "end": 3.82,
+          "words": [
+            {
+              "text": "Finally,",
+              "start": 0,
+              "end": 0.469673
+            },
+            {
+              "text": "meet",
+              "start": 0.469673,
+              "end": 0.787119
+            },
+            {
+              "text": "Safety",
+              "start": 0.787119,
+              "end": 1.208751
+            },
+            {
+              "text": "4-Cut",
+              "start": 1.208751,
+              "end": 1.526196
+            },
+            {
+              "text": "for",
+              "start": 1.526196,
+              "end": 1.785741
+            },
+            {
+              "text": "accident",
+              "start": 1.785741,
+              "end": 2.301433
+            },
+            {
+              "text": "prevention",
+              "start": 2.301433,
+              "end": 2.904308
+            },
+            {
+              "text": "training.",
+              "start": 2.904308,
+              "end": 3.42
+            }
+          ]
+        },
+        {
+          "start": 3.92,
+          "end": 6.7,
+          "words": [
+            {
+              "text": "Select",
+              "start": 4.04,
+              "end": 4.441623
+            },
+            {
+              "text": "Safety",
+              "start": 4.441623,
+              "end": 4.843247
+            },
+            {
+              "text": "4-Cut",
+              "start": 4.843247,
+              "end": 5.145628
+            },
+            {
+              "text": "from",
+              "start": 5.145628,
+              "end": 5.448009
+            },
+            {
+              "text": "the",
+              "start": 5.448009,
+              "end": 5.695237
+            },
+            {
+              "text": "main",
+              "start": 5.695237,
+              "end": 5.997619
+            },
+            {
+              "text": "menu.",
+              "start": 5.997619,
+              "end": 6.3
+            }
+          ]
+        },
+        {
+          "start": 8.32,
+          "end": 12.64,
+          "words": [
+            {
+              "text": "Enter",
+              "start": 8.44,
+              "end": 8.959845
+            },
+            {
+              "text": "an",
+              "start": 8.959845,
+              "end": 9.233571
+            },
+            {
+              "text": "incident",
+              "start": 9.233571,
+              "end": 9.955937
+            },
+            {
+              "text": "case",
+              "start": 9.955937,
+              "end": 10.400606
+            },
+            {
+              "text": "to",
+              "start": 10.400606,
+              "end": 10.674332
+            },
+            {
+              "text": "create",
+              "start": 10.674332,
+              "end": 11.264942
+            },
+            {
+              "text": "four-panel",
+              "start": 11.264942,
+              "end": 12.04939
+            },
+            {
+              "text": "comics",
+              "start": 12.04939,
+              "end": 12.64
+            }
+          ]
+        },
+        {
+          "start": 12.64,
+          "end": 17.36,
+          "words": [
+            {
+              "text": "and",
+              "start": 12.76,
+              "end": 13.0251
+            },
+            {
+              "text": "engaging",
+              "start": 13.0251,
+              "end": 13.551831
+            },
+            {
+              "text": "safety",
+              "start": 13.551831,
+              "end": 13.982488
+            },
+            {
+              "text": "training",
+              "start": 13.982488,
+              "end": 14.509219
+            },
+            {
+              "text": "videos",
+              "start": 14.509219,
+              "end": 14.939876
+            },
+            {
+              "text": "with",
+              "start": 14.939876,
+              "end": 15.264116
+            },
+            {
+              "text": "narration",
+              "start": 15.264116,
+              "end": 15.836115
+            },
+            {
+              "text": "and",
+              "start": 15.836115,
+              "end": 16.101216
+            },
+            {
+              "text": "sound",
+              "start": 16.101216,
+              "end": 16.480273
+            },
+            {
+              "text": "effects.",
+              "start": 16.480273,
+              "end": 16.96
+            }
+          ]
+        },
+        {
+          "start": 17.72,
+          "end": 20.0,
+          "words": [
+            {
+              "text": "This",
+              "start": 17.84,
+              "end": 18.184953
+            },
+            {
+              "text": "cartoon-style",
+              "start": 18.184953,
+              "end": 18.929249
+            },
+            {
+              "text": "training",
+              "start": 18.929249,
+              "end": 19.489628
+            },
+            {
+              "text": "example",
+              "start": 19.489628,
+              "end": 20.0
+            }
+          ]
+        },
+        {
+          "start": 20.0,
+          "end": 22.74,
+          "words": [
+            {
+              "text": "is",
+              "start": 20.12,
+              "end": 20.304562
+            },
+            {
+              "text": "based",
+              "start": 20.304562,
+              "end": 20.655072
+            },
+            {
+              "text": "on",
+              "start": 20.655072,
+              "end": 20.839634
+            },
+            {
+              "text": "a",
+              "start": 20.839634,
+              "end": 21.024195
+            },
+            {
+              "text": "real",
+              "start": 21.024195,
+              "end": 21.324017
+            },
+            {
+              "text": "workplace",
+              "start": 21.324017,
+              "end": 21.852938
+            },
+            {
+              "text": "incident.",
+              "start": 21.852938,
+              "end": 22.34
+            }
+          ]
+        },
+        {
+          "start": 23.5,
+          "end": 26.099999999999998,
+          "words": [
+            {
+              "text": "You",
+              "start": 23.62,
+              "end": 23.879204
+            },
+            {
+              "text": "can",
+              "start": 23.879204,
+              "end": 24.138407
+            },
+            {
+              "text": "also",
+              "start": 24.138407,
+              "end": 24.455436
+            },
+            {
+              "text": "create",
+              "start": 24.455436,
+              "end": 24.876514
+            },
+            {
+              "text": "a",
+              "start": 24.876514,
+              "end": 25.071668
+            },
+            {
+              "text": "realistic",
+              "start": 25.071668,
+              "end": 25.630944
+            },
+            {
+              "text": "version.",
+              "start": 25.630944,
+              "end": 26.099999999999998
+            }
+          ]
+        },
+        {
+          "start": 26.099999999999998,
+          "end": 30.4,
+          "words": [
+            {
+              "text": "AI",
+              "start": 26.22,
+              "end": 26.507929
+            },
+            {
+              "text": "can",
+              "start": 26.507929,
+              "end": 26.890357
+            },
+            {
+              "text": "also",
+              "start": 26.890357,
+              "end": 27.358099
+            },
+            {
+              "text": "analyze",
+              "start": 27.358099,
+              "end": 28.050142
+            },
+            {
+              "text": "the",
+              "start": 28.050142,
+              "end": 28.43257
+            },
+            {
+              "text": "incident",
+              "start": 28.43257,
+              "end": 29.19242
+            },
+            {
+              "text": "and",
+              "start": 29.19242,
+              "end": 29.574847
+            },
+            {
+              "text": "recommend",
+              "start": 29.574847,
+              "end": 30.4
+            }
+          ]
+        },
+        {
+          "start": 30.4,
+          "end": 34.02,
+          "words": [
+            {
+              "text": "the",
+              "start": 30.52,
+              "end": 30.808688
+            },
+            {
+              "text": "ideal",
+              "start": 30.808688,
+              "end": 31.221471
+            },
+            {
+              "text": "panel",
+              "start": 31.221471,
+              "end": 31.634254
+            },
+            {
+              "text": "count",
+              "start": 31.634254,
+              "end": 32.047037
+            },
+            {
+              "text": "to",
+              "start": 32.047037,
+              "end": 32.26439
+            },
+            {
+              "text": "create",
+              "start": 32.26439,
+              "end": 32.733364
+            },
+            {
+              "text": "comics",
+              "start": 32.733364,
+              "end": 33.202338
+            },
+            {
+              "text": "and",
+              "start": 33.202338,
+              "end": 33.491026
+            },
+            {
+              "text": "videos.",
+              "start": 33.491026,
+              "end": 33.96
+            }
+          ]
+        },
+        {
+          "start": 34.02,
+          "end": 37.46,
+          "words": [
+            {
+              "text": "Next",
+              "start": 34.14,
+              "end": 34.464069
+            },
+            {
+              "text": "is",
+              "start": 34.464069,
+              "end": 34.663557
+            },
+            {
+              "text": "a",
+              "start": 34.663557,
+              "end": 34.863045
+            },
+            {
+              "text": "video",
+              "start": 34.863045,
+              "end": 35.241902
+            },
+            {
+              "text": "made",
+              "start": 35.241902,
+              "end": 35.565971
+            },
+            {
+              "text": "with",
+              "start": 35.565971,
+              "end": 35.89004
+            },
+            {
+              "text": "AI-recommended",
+              "start": 35.89004,
+              "end": 36.629571
+            },
+            {
+              "text": "panels.",
+              "start": 36.629571,
+              "end": 37.06
+            }
+          ]
+        }
+      ],
+      "originalDuration": 38.037,
+      "originalCues": [
+        [
+          0,
+          0
+        ],
+        [
+          38.037,
+          38037
+        ]
+      ]
+    },
+    {
+      "id": "08-safety4cut-example",
+      "page": "safety",
+      "index": 1,
+      "start": 204.8,
+      "duration": 64.56666666666666,
+      "end": 269.3666666666667,
+      "chunks": [
+        {
+          "id": "08-safety4cut-example-00",
+          "cueIndices": [
+            0,
+            1
+          ],
+          "start": 0,
+          "end": 6.24,
+          "text": "May 17, 2025. A company employee suffered a workplace injury.",
+          "speech": "May 17, 2025. A company employee suffered a workplace injury.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-00.mp3"
+        },
+        {
+          "id": "08-safety4cut-example-01",
+          "cueIndices": [
+            2,
+            3
+          ],
+          "start": 6.24,
+          "end": 13.88,
+          "text": "While disconnecting a pad-mounted transformer's supply-side elbow connector, the worker assumed it was de-energized, touched it barehanded and was shocked.",
+          "speech": "While disconnecting a pad-mounted transformer's supply-side elbow connector, the worker assumed it was de-energized, touched it barehanded and was shocked.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-01.mp3"
+        },
+        {
+          "id": "08-safety4cut-example-02",
+          "cueIndices": [
+            4,
+            5
+          ],
+          "start": 13.88,
+          "end": 18.06,
+          "text": "Disconnect the supply-side elbow connector and fit the transformer's insulating cap.",
+          "speech": "Disconnect the supply-side elbow connector and fit the transformer's insulating cap.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-02.mp3"
+        },
+        {
+          "id": "08-safety4cut-example-03",
+          "cueIndices": [
+            6
+          ],
+          "start": 18.119999999999997,
+          "end": 21.9,
+          "text": "Did you verify the absence of voltage with a tester before starting?",
+          "speech": "Did you verify the absence of voltage with a tester before starting?",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-03.mp3"
+        },
+        {
+          "id": "08-safety4cut-example-04",
+          "cueIndices": [
+            7,
+            8
+          ],
+          "start": 21.98,
+          "end": 26.56,
+          "text": "Approaching live terminals barehanded without checking for voltage is extremely dangerous.",
+          "speech": "Approaching live terminals barehanded without checking for voltage is extremely dangerous.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-04.mp3"
+        },
+        {
+          "id": "08-safety4cut-example-05",
+          "cueIndices": [
+            9,
+            10
+          ],
+          "start": 26.88,
+          "end": 33.44,
+          "text": "Touching live parts barehanded without checking for voltage can cause an electric shock.",
+          "speech": "Touching live parts barehanded without checking for voltage can cause an electric shock.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-05.mp3"
+        },
+        {
+          "id": "08-safety4cut-example-06",
+          "cueIndices": [
+            11,
+            12
+          ],
+          "start": 37.7,
+          "end": 42.96,
+          "text": "Conflicting data led to a false de-energized assumption. Without voltage testing, barehanded work caused a shock.",
+          "speech": "Conflicting data led to a false de-energized assumption. Without voltage testing, barehanded work caused a shock.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-06.mp3"
+        },
+        {
+          "id": "08-safety4cut-example-07",
+          "cueIndices": [
+            13,
+            14
+          ],
+          "start": 42.96,
+          "end": 47.24,
+          "text": "Wear insulating gloves and use a voltage tester to verify absence of voltage before starting.",
+          "speech": "Wear insulating gloves and use a voltage tester to verify absence of voltage before starting.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-07.mp3"
+        },
+        {
+          "id": "08-safety4cut-example-08",
+          "cueIndices": [
+            15
+          ],
+          "start": 47.24,
+          "end": 48.940000000000005,
+          "text": "Why did this happen?",
+          "speech": "Why did this happen?",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-08.mp3"
+        },
+        {
+          "id": "08-safety4cut-example-09",
+          "cueIndices": [
+            16,
+            17
+          ],
+          "start": 48.940000000000005,
+          "end": 55.56,
+          "text": "Conflicting data led to a false de-energized assumption. Without voltage testing, barehanded work caused a shock.",
+          "speech": "Conflicting data led to a false de-energized assumption. Without voltage testing, barehanded work caused a shock.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-09.mp3"
+        },
+        {
+          "id": "08-safety4cut-example-10",
+          "cueIndices": [
+            18
+          ],
+          "start": 55.800000000000004,
+          "end": 57.82,
+          "text": "Here's how to prevent it.",
+          "speech": "Here's how to prevent it.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-10.mp3"
+        },
+        {
+          "id": "08-safety4cut-example-11",
+          "cueIndices": [
+            19,
+            20
+          ],
+          "start": 57.82,
+          "end": 63.12,
+          "text": "Wear insulating gloves and use a voltage tester to verify absence of voltage before starting.",
+          "speech": "Wear insulating gloves and use a voltage tester to verify absence of voltage before starting.",
+          "voice": "will",
+          "file": "assets/audio/en-v119/source/08-safety4cut-example-11.mp3"
+        }
+      ],
+      "originalSubtitles": [
+        {
+          "start": 0,
+          "end": 2.7399999999999998,
+          "words": [
+            {
+              "text": "May",
+              "start": 0.08,
+              "end": 0.94694
+            },
+            {
+              "text": "17,",
+              "start": 0.94694,
+              "end": 1.599657
+            },
+            {
+              "text": "2025.",
+              "start": 1.599657,
+              "end": 2.66
+            }
+          ]
+        },
+        {
+          "start": 2.7399999999999998,
+          "end": 6.24,
+          "words": [
+            {
+              "text": "A",
+              "start": 2.86,
+              "end": 3.070812
+            },
+            {
+              "text": "company",
+              "start": 3.070812,
+              "end": 3.577503
+            },
+            {
+              "text": "employee",
+              "start": 3.577503,
+              "end": 4.133839
+            },
+            {
+              "text": "suffered",
+              "start": 4.133839,
+              "end": 4.690176
+            },
+            {
+              "text": "a",
+              "start": 4.690176,
+              "end": 4.900988
+            },
+            {
+              "text": "workplace",
+              "start": 4.900988,
+              "end": 5.505137
+            },
+            {
+              "text": "injury.",
+              "start": 5.505137,
+              "end": 5.96
+            }
+          ]
+        },
+        {
+          "start": 6.24,
+          "end": 9.74,
+          "words": [
+            {
+              "text": "While",
+              "start": 6.36,
+              "end": 6.664993
+            },
+            {
+              "text": "disconnecting",
+              "start": 6.664993,
+              "end": 7.260342
+            },
+            {
+              "text": "a",
+              "start": 7.260342,
+              "end": 7.420937
+            },
+            {
+              "text": "pad-mounted",
+              "start": 7.420937,
+              "end": 7.916399
+            },
+            {
+              "text": "transformer's",
+              "start": 7.916399,
+              "end": 8.479308
+            },
+            {
+              "text": "supply-side",
+              "start": 8.479308,
+              "end": 8.974771
+            },
+            {
+              "text": "elbow",
+              "start": 8.974771,
+              "end": 9.279764
+            },
+            {
+              "text": "connector,",
+              "start": 9.279764,
+              "end": 9.74
+            }
+          ]
+        },
+        {
+          "start": 9.74,
+          "end": 13.88,
+          "words": [
+            {
+              "text": "the",
+              "start": 9.86,
+              "end": 10.08459
+            },
+            {
+              "text": "worker",
+              "start": 10.08459,
+              "end": 10.449436
+            },
+            {
+              "text": "assumed",
+              "start": 10.449436,
+              "end": 10.855855
+            },
+            {
+              "text": "it",
+              "start": 10.855855,
+              "end": 11.024948
+            },
+            {
+              "text": "was",
+              "start": 11.024948,
+              "end": 11.249537
+            },
+            {
+              "text": "de-energized,",
+              "start": 11.249537,
+              "end": 11.80721
+            },
+            {
+              "text": "touched",
+              "start": 11.80721,
+              "end": 12.213629
+            },
+            {
+              "text": "it",
+              "start": 12.213629,
+              "end": 12.382722
+            },
+            {
+              "text": "barehanded",
+              "start": 12.382722,
+              "end": 12.904402
+            },
+            {
+              "text": "and",
+              "start": 12.904402,
+              "end": 13.128992
+            },
+            {
+              "text": "was",
+              "start": 13.128992,
+              "end": 13.353582
+            },
+            {
+              "text": "shocked.",
+              "start": 13.353582,
+              "end": 13.76
+            }
+          ]
+        },
+        {
+          "start": 13.88,
+          "end": 15.8,
+          "words": [
+            {
+              "text": "Disconnect",
+              "start": 14.0,
+              "end": 14.452832
+            },
+            {
+              "text": "the",
+              "start": 14.452832,
+              "end": 14.647781
+            },
+            {
+              "text": "supply-side",
+              "start": 14.647781,
+              "end": 15.100613
+            },
+            {
+              "text": "elbow",
+              "start": 15.100613,
+              "end": 15.379364
+            },
+            {
+              "text": "connector",
+              "start": 15.379364,
+              "end": 15.8
+            }
+          ]
+        },
+        {
+          "start": 15.8,
+          "end": 18.06,
+          "words": [
+            {
+              "text": "and",
+              "start": 15.92,
+              "end": 16.114157
+            },
+            {
+              "text": "fit",
+              "start": 16.114157,
+              "end": 16.308313
+            },
+            {
+              "text": "the",
+              "start": 16.308313,
+              "end": 16.50247
+            },
+            {
+              "text": "transformer's",
+              "start": 16.50247,
+              "end": 17.014853
+            },
+            {
+              "text": "insulating",
+              "start": 17.014853,
+              "end": 17.465843
+            },
+            {
+              "text": "cap.",
+              "start": 17.465843,
+              "end": 17.66
+            }
+          ]
+        },
+        {
+          "start": 18.119999999999997,
+          "end": 21.9,
+          "words": [
+            {
+              "text": "Did",
+              "start": 18.24,
+              "end": 18.441129
+            },
+            {
+              "text": "you",
+              "start": 18.441129,
+              "end": 18.642258
+            },
+            {
+              "text": "verify",
+              "start": 18.642258,
+              "end": 18.968992
+            },
+            {
+              "text": "the",
+              "start": 18.968992,
+              "end": 19.170121
+            },
+            {
+              "text": "absence",
+              "start": 19.170121,
+              "end": 19.534085
+            },
+            {
+              "text": "of",
+              "start": 19.534085,
+              "end": 19.685514
+            },
+            {
+              "text": "voltage",
+              "start": 19.685514,
+              "end": 20.049478
+            },
+            {
+              "text": "with",
+              "start": 20.049478,
+              "end": 20.295476
+            },
+            {
+              "text": "a",
+              "start": 20.295476,
+              "end": 20.446906
+            },
+            {
+              "text": "tester",
+              "start": 20.446906,
+              "end": 20.77364
+            },
+            {
+              "text": "before",
+              "start": 20.77364,
+              "end": 21.100375
+            },
+            {
+              "text": "starting?",
+              "start": 21.100375,
+              "end": 21.5
+            }
+          ]
+        },
+        {
+          "start": 21.98,
+          "end": 24.02,
+          "words": [
+            {
+              "text": "Approaching",
+              "start": 22.1,
+              "end": 22.682351
+            },
+            {
+              "text": "live",
+              "start": 22.682351,
+              "end": 22.9692
+            },
+            {
+              "text": "terminals",
+              "start": 22.9692,
+              "end": 23.475234
+            },
+            {
+              "text": "barehanded",
+              "start": 23.475234,
+              "end": 24.02
+            }
+          ]
+        },
+        {
+          "start": 24.02,
+          "end": 26.56,
+          "words": [
+            {
+              "text": "without",
+              "start": 24.14,
+              "end": 24.453114
+            },
+            {
+              "text": "checking",
+              "start": 24.453114,
+              "end": 24.796906
+            },
+            {
+              "text": "for",
+              "start": 24.796906,
+              "end": 24.969935
+            },
+            {
+              "text": "voltage",
+              "start": 24.969935,
+              "end": 25.283049
+            },
+            {
+              "text": "is",
+              "start": 25.283049,
+              "end": 25.413322
+            },
+            {
+              "text": "extremely",
+              "start": 25.413322,
+              "end": 25.786661
+            },
+            {
+              "text": "dangerous.",
+              "start": 25.786661,
+              "end": 26.16
+            }
+          ]
+        },
+        {
+          "start": 26.88,
+          "end": 29.52,
+          "words": [
+            {
+              "text": "Touching",
+              "start": 27.0,
+              "end": 27.719122
+            },
+            {
+              "text": "live",
+              "start": 27.719122,
+              "end": 28.161793
+            },
+            {
+              "text": "parts",
+              "start": 28.161793,
+              "end": 28.679303
+            },
+            {
+              "text": "barehanded",
+              "start": 28.679303,
+              "end": 29.52
+            }
+          ]
+        },
+        {
+          "start": 29.52,
+          "end": 33.44,
+          "words": [
+            {
+              "text": "without",
+              "start": 29.64,
+              "end": 30.105911
+            },
+            {
+              "text": "checking",
+              "start": 30.105911,
+              "end": 30.617472
+            },
+            {
+              "text": "for",
+              "start": 30.617472,
+              "end": 30.874937
+            },
+            {
+              "text": "voltage",
+              "start": 30.874937,
+              "end": 31.340848
+            },
+            {
+              "text": "can",
+              "start": 31.340848,
+              "end": 31.598314
+            },
+            {
+              "text": "cause",
+              "start": 31.598314,
+              "end": 31.966454
+            },
+            {
+              "text": "an",
+              "start": 31.966454,
+              "end": 32.160299
+            },
+            {
+              "text": "electric",
+              "start": 32.160299,
+              "end": 32.67186
+            },
+            {
+              "text": "shock.",
+              "start": 32.67186,
+              "end": 33.04
+            }
+          ]
+        },
+        {
+          "start": 37.7,
+          "end": 40.120000000000005,
+          "words": [
+            {
+              "text": "Conflicting",
+              "start": 37.82,
+              "end": 38.278805
+            },
+            {
+              "text": "data",
+              "start": 38.278805,
+              "end": 38.504798
+            },
+            {
+              "text": "led",
+              "start": 38.504798,
+              "end": 38.689571
+            },
+            {
+              "text": "to",
+              "start": 38.689571,
+              "end": 38.828686
+            },
+            {
+              "text": "a",
+              "start": 38.828686,
+              "end": 38.967801
+            },
+            {
+              "text": "false",
+              "start": 38.967801,
+              "end": 39.232001
+            },
+            {
+              "text": "de-energized",
+              "start": 39.232001,
+              "end": 39.690806
+            },
+            {
+              "text": "assumption.",
+              "start": 39.690806,
+              "end": 40.12
+            }
+          ]
+        },
+        {
+          "start": 40.120000000000005,
+          "end": 42.96,
+          "words": [
+            {
+              "text": "Without",
+              "start": 40.24,
+              "end": 40.602431
+            },
+            {
+              "text": "voltage",
+              "start": 40.602431,
+              "end": 40.964862
+            },
+            {
+              "text": "testing,",
+              "start": 40.964862,
+              "end": 41.327293
+            },
+            {
+              "text": "barehanded",
+              "start": 41.327293,
+              "end": 41.792512
+            },
+            {
+              "text": "work",
+              "start": 41.792512,
+              "end": 42.037474
+            },
+            {
+              "text": "caused",
+              "start": 42.037474,
+              "end": 42.362833
+            },
+            {
+              "text": "a",
+              "start": 42.362833,
+              "end": 42.513625
+            },
+            {
+              "text": "shock.",
+              "start": 42.513625,
+              "end": 42.8
+            }
+          ]
+        },
+        {
+          "start": 42.96,
+          "end": 44.86,
+          "words": [
+            {
+              "text": "Wear",
+              "start": 43.08,
+              "end": 43.271689
+            },
+            {
+              "text": "insulating",
+              "start": 43.271689,
+              "end": 43.635735
+            },
+            {
+              "text": "gloves",
+              "start": 43.635735,
+              "end": 43.890336
+            },
+            {
+              "text": "and",
+              "start": 43.890336,
+              "end": 44.047062
+            },
+            {
+              "text": "use",
+              "start": 44.047062,
+              "end": 44.203788
+            },
+            {
+              "text": "a",
+              "start": 44.203788,
+              "end": 44.321786
+            },
+            {
+              "text": "voltage",
+              "start": 44.321786,
+              "end": 44.605398
+            },
+            {
+              "text": "tester",
+              "start": 44.605398,
+              "end": 44.86
+            }
+          ]
+        },
+        {
+          "start": 44.86,
+          "end": 47.24,
+          "words": [
+            {
+              "text": "to",
+              "start": 44.98,
+              "end": 45.141321
+            },
+            {
+              "text": "verify",
+              "start": 45.141321,
+              "end": 45.489398
+            },
+            {
+              "text": "absence",
+              "start": 45.489398,
+              "end": 45.877136
+            },
+            {
+              "text": "of",
+              "start": 45.877136,
+              "end": 46.038457
+            },
+            {
+              "text": "voltage",
+              "start": 46.038457,
+              "end": 46.426195
+            },
+            {
+              "text": "before",
+              "start": 46.426195,
+              "end": 46.774272
+            },
+            {
+              "text": "starting.",
+              "start": 46.774272,
+              "end": 47.2
+            }
+          ]
+        },
+        {
+          "start": 47.24,
+          "end": 48.940000000000005,
+          "words": [
+            {
+              "text": "Why",
+              "start": 47.36,
+              "end": 47.640552
+            },
+            {
+              "text": "did",
+              "start": 47.640552,
+              "end": 47.921103
+            },
+            {
+              "text": "this",
+              "start": 47.921103,
+              "end": 48.264242
+            },
+            {
+              "text": "happen?",
+              "start": 48.264242,
+              "end": 48.72
+            }
+          ]
+        },
+        {
+          "start": 48.940000000000005,
+          "end": 52.220000000000006,
+          "words": [
+            {
+              "text": "Conflicting",
+              "start": 49.06,
+              "end": 49.690358
+            },
+            {
+              "text": "data",
+              "start": 49.690358,
+              "end": 50.000853
+            },
+            {
+              "text": "led",
+              "start": 50.000853,
+              "end": 50.254715
+            },
+            {
+              "text": "to",
+              "start": 50.254715,
+              "end": 50.445847
+            },
+            {
+              "text": "a",
+              "start": 50.445847,
+              "end": 50.636979
+            },
+            {
+              "text": "false",
+              "start": 50.636979,
+              "end": 50.999967
+            },
+            {
+              "text": "de-energized",
+              "start": 50.999967,
+              "end": 51.630325
+            },
+            {
+              "text": "assumption.",
+              "start": 51.630325,
+              "end": 52.22
+            }
+          ]
+        },
+        {
+          "start": 52.220000000000006,
+          "end": 55.56,
+          "words": [
+            {
+              "text": "Without",
+              "start": 52.34,
+              "end": 52.739241
+            },
+            {
+              "text": "voltage",
+              "start": 52.739241,
+              "end": 53.138481
+            },
+            {
+              "text": "testing,",
+              "start": 53.138481,
+              "end": 53.537722
+            },
+            {
+              "text": "barehanded",
+              "start": 53.537722,
+              "end": 54.050189
+            },
+            {
+              "text": "work",
+              "start": 54.050189,
+              "end": 54.32003
+            },
+            {
+              "text": "caused",
+              "start": 54.32003,
+              "end": 54.678433
+            },
+            {
+              "text": "a",
+              "start": 54.678433,
+              "end": 54.844539
+            },
+            {
+              "text": "shock.",
+              "start": 54.844539,
+              "end": 55.16
+            }
+          ]
+        },
+        {
+          "start": 55.800000000000004,
+          "end": 57.82,
+          "words": [
+            {
+              "text": "Here's",
+              "start": 55.92,
+              "end": 56.32318
+            },
+            {
+              "text": "how",
+              "start": 56.32318,
+              "end": 56.605152
+            },
+            {
+              "text": "to",
+              "start": 56.605152,
+              "end": 56.817447
+            },
+            {
+              "text": "prevent",
+              "start": 56.817447,
+              "end": 57.327704
+            },
+            {
+              "text": "it.",
+              "start": 57.327704,
+              "end": 57.54
+            }
+          ]
+        },
+        {
+          "start": 57.82,
+          "end": 60.28,
+          "words": [
+            {
+              "text": "Wear",
+              "start": 57.94,
+              "end": 58.191996
+            },
+            {
+              "text": "insulating",
+              "start": 58.191996,
+              "end": 58.670572
+            },
+            {
+              "text": "gloves",
+              "start": 58.670572,
+              "end": 59.005274
+            },
+            {
+              "text": "and",
+              "start": 59.005274,
+              "end": 59.211306
+            },
+            {
+              "text": "use",
+              "start": 59.211306,
+              "end": 59.417339
+            },
+            {
+              "text": "a",
+              "start": 59.417339,
+              "end": 59.572461
+            },
+            {
+              "text": "voltage",
+              "start": 59.572461,
+              "end": 59.945299
+            },
+            {
+              "text": "tester",
+              "start": 59.945299,
+              "end": 60.28
+            }
+          ]
+        },
+        {
+          "start": 60.28,
+          "end": 63.12,
+          "words": [
+            {
+              "text": "to",
+              "start": 60.4,
+              "end": 60.568588
+            },
+            {
+              "text": "verify",
+              "start": 60.568588,
+              "end": 60.932344
+            },
+            {
+              "text": "absence",
+              "start": 60.932344,
+              "end": 61.337547
+            },
+            {
+              "text": "of",
+              "start": 61.337547,
+              "end": 61.506135
+            },
+            {
+              "text": "voltage",
+              "start": 61.506135,
+              "end": 61.911338
+            },
+            {
+              "text": "before",
+              "start": 61.911338,
+              "end": 62.275095
+            },
+            {
+              "text": "starting.",
+              "start": 62.275095,
+              "end": 62.72
+            }
+          ]
+        }
+      ],
+      "originalDuration": 64.566667,
+      "originalCues": [
+        [
+          0,
+          38037
+        ],
+        [
+          64.566667,
+          102603.667
+        ]
+      ]
+    },
+    {
+      "id": "06-closing",
+      "page": "closing",
+      "index": 0,
+      "start": 269.3666666666667,
+      "duration": 11.5,
+      "end": 280.8666666666667,
+      "chunks": [
+        {
+          "id": "06-closing-00",
+          "cueIndices": [
+            0
+          ],
+          "start": 0,
+          "end": 3.0,
+          "text": "That concludes our introduction to Power TBM.",
+          "speech": "That concludes our introduction to Power T B M.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/06-closing-00.mp3"
+        },
+        {
+          "id": "06-closing-01",
+          "cueIndices": [
+            1,
+            2
+          ],
+          "start": 3.0,
+          "end": 8.98,
+          "text": "For safer worksites and smarter safety briefings, Power TBM is here to help.",
+          "speech": "For safer worksites and smarter safety briefings, Power T B M is here to help.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/06-closing-01.mp3"
+        },
+        {
+          "id": "06-closing-02",
+          "cueIndices": [
+            3
+          ],
+          "start": 9.340000000000002,
+          "end": 10.14,
+          "text": "Thank you.",
+          "speech": "Thank you.",
+          "voice": "sarah",
+          "file": "assets/audio/en-v119/source/06-closing-02.mp3"
+        }
+      ],
+      "originalSubtitles": [
+        {
+          "start": 0,
+          "end": 3.0,
+          "words": [
+            {
+              "text": "That",
+              "start": 0,
+              "end": 0.359642
+            },
+            {
+              "text": "concludes",
+              "start": 0.359642,
+              "end": 0.994093
+            },
+            {
+              "text": "our",
+              "start": 0.994093,
+              "end": 1.288138
+            },
+            {
+              "text": "introduction",
+              "start": 1.288138,
+              "end": 2.064126
+            },
+            {
+              "text": "to",
+              "start": 2.064126,
+              "end": 2.285512
+            },
+            {
+              "text": "Power",
+              "start": 2.285512,
+              "end": 2.705955
+            },
+            {
+              "text": "TBM.",
+              "start": 2.705955,
+              "end": 3.0
+            }
+          ]
+        },
+        {
+          "start": 3.0,
+          "end": 6.86,
+          "words": [
+            {
+              "text": "For",
+              "start": 3.12,
+              "end": 3.440234
+            },
+            {
+              "text": "safer",
+              "start": 3.440234,
+              "end": 3.898125
+            },
+            {
+              "text": "worksites",
+              "start": 3.898125,
+              "end": 4.589085
+            },
+            {
+              "text": "and",
+              "start": 4.589085,
+              "end": 4.90932
+            },
+            {
+              "text": "smarter",
+              "start": 4.90932,
+              "end": 5.488818
+            },
+            {
+              "text": "safety",
+              "start": 5.488818,
+              "end": 6.00904
+            },
+            {
+              "text": "briefings,",
+              "start": 6.00904,
+              "end": 6.7
+            }
+          ]
+        },
+        {
+          "start": 6.86,
+          "end": 8.98,
+          "words": [
+            {
+              "text": "Power",
+              "start": 6.98,
+              "end": 7.338483
+            },
+            {
+              "text": "TBM",
+              "start": 7.338483,
+              "end": 7.589195
+            },
+            {
+              "text": "is",
+              "start": 7.589195,
+              "end": 7.777955
+            },
+            {
+              "text": "here",
+              "start": 7.777955,
+              "end": 8.084597
+            },
+            {
+              "text": "to",
+              "start": 8.084597,
+              "end": 8.273358
+            },
+            {
+              "text": "help.",
+              "start": 8.273358,
+              "end": 8.58
+            }
+          ]
+        },
+        {
+          "start": 9.340000000000002,
+          "end": 10.14,
+          "words": [
+            {
+              "text": "Thank",
+              "start": 9.46,
+              "end": 9.624767
+            },
+            {
+              "text": "you.",
+              "start": 9.624767,
+              "end": 9.74
+            }
+          ]
+        }
+      ],
+      "originalDuration": 11.493878,
+      "originalCues": [
+        [
+          0,
+          0
+        ],
+        [
+          3.246,
+          3246
+        ],
+        [
+          7.021,
+          7021
+        ],
+        [
+          9.555,
+          9555
+        ],
+        [
+          10.373,
+          10373
+        ],
+        [
+          11.493878,
+          11494
+        ]
+      ]
+    }
+  ]
+}

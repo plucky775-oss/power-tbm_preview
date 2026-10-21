@@ -12,7 +12,7 @@ for (const modulePath of [process.env.JSDOM_PATH, 'jsdom', '/tmp/tbm-language-qa
 assert.ok(JSDOM, 'Install jsdom outside the project and set JSDOM_PATH to that installation.');
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const languageKey = 'power-tbm-demo-language';
-const scripts = new Set(['tv-media-timeline.js', 'tv-compat.js', 'demo-translations.js', 'demo-language.js',
+const scripts = new Set(['tv-media-timeline.js', 'english-narration.js', 'tv-compat.js', 'demo-translations.js', 'demo-language.js',
   'safety4cut.js', 'subtitle-data.js', 'subtitle-data.en.js', 'subtitles.js', 'app.js']);
 
 function setup({ savedLanguage, storageUnavailable = false, reducedMotion = false } = {}) {
@@ -179,8 +179,9 @@ const cueText = cue => cue.words.map(word => word.text).join(' ');
 for (const [id, cues] of Object.entries(enData)) {
   assert.equal(cues.length, koData[id].length, `same cue count: ${id}`);
   cues.forEach((cue, index) => {
-    assert.equal(cue.start, koData[id][index].start, `original cue start: ${id}/${index}`);
-    assert.equal(cue.end, koData[id][index].end, `original cue end: ${id}/${index}`);
+    assert.ok(cue.start >= 0 && cue.end > cue.start);
+    assert.ok(cue.end <= window.PowerTBMEnglishNarration.tracks[id].duration, `English cue stays within its audio: ${id}/${index}`);
+    if (index) assert.ok(cue.start >= cues[index - 1].end - 1e-6, `English cues do not overlap: ${id}/${index}`);
     assert.ok(cue.words.length);
     assert.doesNotMatch(cueText(cue), /[가-힣]/);
     let previousEnd = cue.start;
@@ -214,7 +215,7 @@ narration.currentTime = 19;
 narration.dispatchEvent(new window.Event('seeked'));
 assert.equal(caption.textContent, cueText(koData['02-tbm-basic'][6]));
 h.chooseLanguage('en');
-assert.equal(caption.textContent, cueText(enData['02-tbm-basic'][6]), 'English replaces a paused caption immediately');
+assert.equal(caption.textContent, cueText(enData['02-tbm-basic'].find(c => c.start <= 19 && c.end > 19)), 'English replaces a paused caption immediately');
 assert.equal(narration.currentTime, 19);
 assert.ok([...caption.children].some(word => parseFloat(word.style.getPropertyValue('--read')) > 0), 'reading highlight stays at the current media time');
 h.chooseMode('bubble');
@@ -228,7 +229,11 @@ assert.equal(bubble.hidden, true);
 assert.equal(caption.textContent, '');
 h.chooseMode('bubble');
 assert.equal(bubble.textContent, cueText(enData['00-opening'][0]), 'enabling captions uses the latest time and selected language');
-h.render('08-safety4cut-example', 35);
+const englishClock = window.PowerTBMEnglishNarration.tracks['08-safety4cut-example'].clock;
+const silenceIndex = englishClock.findIndex((p, i) => i > 0 && p[1] >= 35);
+const [a, b] = englishClock.slice(silenceIndex - 1, silenceIndex + 1);
+const englishSilence = a[0] + (35 - a[1]) * (b[0] - a[0]) / (b[1] - a[1]);
+h.render('08-safety4cut-example', englishSilence);
 assert.equal(bubble.hidden, true, 'silent intervals stay empty in English');
 const stage = document.getElementById('tourStage');
 const device = stage.querySelector('.tour-device');
@@ -250,7 +255,7 @@ h.render('00-opening', 2);
 assert.equal(bubble.classList.contains('is-stacked'), true, 'language changes preserve responsive bubble placement');
 assert.equal(h.errors.length, 0, h.errors.join('\n'));
 h.close();
-console.log('PASS: English and Korean subtitles for all 9 tracks / 82 cues, exact cue clocks, both display modes, OFF, immediate language changes, paused seek, reading progress, silence and resize branches');
+console.log('PASS: English and Korean subtitles for all 9 tracks / 82 cues, independent English cue clocks, both display modes, OFF, immediate language changes, paused seek, reading progress, silence and resize branches');
 
 for (const options of [{ savedLanguage: 'en' }, { savedLanguage: 'invalid' }, { storageUnavailable: true }]) {
   const reopened = setup(options);
@@ -285,6 +290,8 @@ assert.ok(flow.mediaCalls.slice(startupCalls).some(([, method]) => method === 'p
 assert.equal(flowStage.getAttribute('aria-label'), playingHintEn, 'the live playback hint stays English after starting without a demoToggle element');
 flowDocument.getElementById('weatherDemoPage').click();
 assert.equal(flowStage.dataset.demoPage, 'weather');
+assert.match(flowDocument.getElementById('demoNarration').src, /audio\/en-v119\/01-weather\.m4a$/, 'English selection uses the recorded English voice');
+assert.equal(flowDocument.getElementById('demoNarration').muted, true, 'English narration preserves the explicit silent-playback choice');
 assert.doesNotMatch(flowDocument.querySelector('.tour-copy').textContent, /[가-힣]/);
 assert.equal(flowStage.getAttribute('aria-label'), playingHintEn, 'changing chapters keeps the current English playback hint');
 await Promise.resolve();

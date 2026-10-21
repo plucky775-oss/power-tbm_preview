@@ -7,10 +7,12 @@ const root = path.resolve(__dirname, '..');
 const timelineContext = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(root, 'tv-media-timeline.js'), 'utf8'), timelineContext);
 const timeline = timelineContext.window.PowerTBMTVTimeline;
+vm.runInNewContext(fs.readFileSync(path.join(root, 'english-narration.js'), 'utf8'), timelineContext);
+const english = timelineContext.window.PowerTBMEnglishNarration;
 const tree = JSON.parse(execFileSync('python3',[path.join(__dirname,'export-dom.py')],{encoding:'utf8'}));
 const durations = {'00-opening':8.166667,'01-weather':29.701,'02-tbm-basic':34.3,'03-ai-pdf':40.646,
  '07-safety4cut-intro':38.037,'09-ai-example-v84':64.566667,'04-safety-tools':31.84325,'05-emergency':22,'06-closing':11.5};
-function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true) {
+function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true, selectedLanguage='ko') {
  let now=0, nextId=1, writes=0, mediaPlays=0; const raf=new Map(), timers=new Map(), seen=new Set(), errors=[];
  class Events {
   constructor(){this.listeners={};}
@@ -61,14 +63,16 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   constructor(tag,attrs={}){super(tag,attrs);this.paused=true;this.muted='muted'in attrs;this.ended=false;this._time=0;this.seekCount=0;this.pauseCount=0;this.duration=8;this.volume=1;this.readyState=4;this.seeking=false;this.playCount=0;this.loadCount=0;mediaSet.add(this);}
   get currentTime(){return this._time;}set currentTime(value){this.seekCount++;this._time=value;this.ended=false;}
   get currentSrc(){return this.src;}
-  load(){this.loadCount++;this._time=0;this.ended=false;this.paused=true;const key=Object.keys(durations).find(k=>this.src.includes(k));this.duration=this.src===timeline.src?timeline.duration:durations[key]||8;this.dispatchEvent({type:'emptied'});if(!this.preventMetadata)this.dispatchEvent({type:'loadedmetadata'});}
+  load(){this.loadCount++;this._time=0;this.ended=false;this.paused=true;const key=Object.keys(durations).find(k=>this.src.includes(k));this.duration=this.src===english.tv.src?english.tv.duration:this.src===timeline.src?timeline.duration:Object.values(english.tracks).find(t=>t.src===this.src)?.duration||durations[key]||8;this.dispatchEvent({type:'emptied'});if(!this.preventMetadata)this.dispatchEvent({type:'loadedmetadata'});}
   play(){mediaPlays++;this.playCount++;if(!this.src && !this.querySelector('source'))return Promise.reject(new Error('no source'));this.paused=false;this.ended=false;if(!this.permanentStall)this.stall=false;this.dispatchEvent({type:'play'});return Promise.resolve();}
   pause(){this.pauseCount++;this.paused=true;this.dispatchEvent({type:'pause'});}
  }
  const build=d=>{const n=['audio','video'].includes(d.tag)?new Media(d.tag,d.attrs):new Element(d.tag,d.attrs);n._text=d.text||'';for(const c of d.children||[])n.append(build(c));return n;};
  const document=build(tree);document.documentElement=document.querySelector('html');document.body=document.querySelector('body');document.hidden=false;document.fonts={ready:Promise.resolve()};document.getElementById=id=>document.querySelector('#'+id);
  document.createElement=tag=>['audio','video'].includes(tag)?new Media(tag):new Element(tag);document.createTextNode=text=>{const n=new Element('#text');n._text=text;return n;};
- const window=new Events();const setTimer=(fn,delay,repeat=0)=>{const id=nextId++;timers.set(id,{fn,at:now+delay,repeat});return id;};
+ const window=new Events();
+ window.PowerTBMLanguage={get:()=>selectedLanguage,apply(){},translate:text=>text,set(value){selectedLanguage=value;window.dispatchEvent({type:'power-tbm:languagechange',detail:{language:value}});}};
+ const setTimer=(fn,delay,repeat=0)=>{const id=nextId++;timers.set(id,{fn,at:now+delay,repeat});return id;};
  Object.assign(window,{innerWidth:1920,innerHeight:1080,scrollY:0,location:{search:query},matchMedia:()=>({matches:reduce}),requestAnimationFrame:fn=>{const id=nextId++;raf.set(id,fn);return id;},cancelAnimationFrame:id=>raf.delete(id),setTimeout:(fn,d=0)=>setTimer(fn,d),clearTimeout:id=>timers.delete(id),setInterval:(fn,d)=>setTimer(fn,d,d),clearInterval:id=>timers.delete(id)});
  const ctx=vm.createContext({window,document,location:window.location,navigator:{userAgent:ua},URLSearchParams,Element,
   performance:{now:()=>now},requestAnimationFrame:window.requestAnimationFrame,cancelAnimationFrame:window.cancelAnimationFrame,
@@ -78,7 +82,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
   getComputedStyle:()=>({borderRadius:'20px',getPropertyValue:key=>({'--demo-duration':'40s','--meeting-duration':'96s','--support-duration':'50s','--closing-duration':'11.494s'}[key]||'')}),
   localStorage:{getItem(){return null;},setItem(){}},console:{warn:(...v)=>errors.push(v.map(String).join(' ')),log:()=>{}}
  });
- for(const file of ['tv-media-timeline.js','tv-compat.js','safety4cut.js','subtitle-data.js','subtitles.js','app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
+ for(const file of ['tv-media-timeline.js','english-narration.js','tv-compat.js','safety4cut.js','subtitle-data.js','subtitle-data.en.js','subtitles.js','app.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
  const tick=async(ms,step=50)=>{for(let elapsed=0;elapsed<ms;elapsed+=step){now+=step;
   for(const m of [...mediaSet]){if(!m.parentElement||m.paused||m.ended||m.stall||m.permanentStall||document.hidden||(m.blockedByBackground && document.getElementById('tvBackdrop')?.getAttribute('src')))continue;
    if(m.id==='demoNarration')seen.add(m.getAttribute('src'));m._time=Math.min(m.duration,m.currentTime+step/1000);m.dispatchEvent({type:'timeupdate'});
@@ -244,6 +248,51 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true)
    assert.equal(m.paused,false);
    assert.ok(e.window.PowerTBMTV.localTime(entry)<.4,'subtitle clock must be chapter-local');
   }
+ });
+ await test('English TV uses its own voice/timing and keeps one decoder across all nine chapters', async () => {
+  const e=environment('?tv=1','Chrome',false,true,'en'),m=e.el('demoNarration');
+  assert.equal(m.src,english.tv.src,'stored English must preload the English stream');
+  assert.equal(m.playCount,0,'language selection alone must not autoplay');
+  e.document.querySelector('[data-launch-sound="on"]').click();await e.tick(1000);
+  const counts=()=>[m.loadCount,m.playCount,m.pauseCount,m.seekCount];
+  const initial=counts();
+  for(const entry of english.tv.segments) {
+   const cue=e.window.PowerTBMSubtitleDataEn[entry.id][0];
+   const local=(cue.start+cue.end)/2;
+   await e.tick(Math.max(0,Math.ceil((entry.start+local-m.currentTime)*1000)));
+   assert.equal(m.dataset.segment,entry.id);
+   assert.equal(e.el('tourStage').dataset.demoPage,entry.page);
+   assert.equal(m.src,english.tv.src);
+   assert.deepEqual(counts(),initial,'English decoder restarted at '+entry.id);
+   const toggle=e.el('subtitleToggle');toggle.value='bubble';toggle.dispatchEvent({type:'change'});
+   m.dispatchEvent({type:'timeupdate'});
+   assert.equal(e.el('subtitleBubble').textContent,cue.words.map(w=>w.text).join(' '));
+   if(entry.id==='08-safety4cut-example') assert.equal(m.dataset.surface,'safety');
+  }
+  tap(e);const held=m.currentTime;await e.tick(600);assert.equal(m.currentTime,held);
+  tap(e);await e.tick(500);assert.ok(m.currentTime>held);
+  e.click('demoMute');assert.equal(m.muted,true);
+  e.click('homeReset');e.window.PowerTBMLanguage.set('ko');
+  assert.equal(m.src,timeline.src);assert.equal(m.paused,true);
+  e.click('weatherDemoPage');await e.tick(1000);
+  assert.equal(m.src,timeline.src);assert.equal(m.dataset.segment,'01-weather');
+ });
+ await test('English desktop chapters and safety video use English sources and their native clocks', async () => {
+  const e=environment('?tv=0','Chrome',true,true,'en');
+  for(const [menu,key] of [['weatherDemoPage','01-weather'],['meetingDemoPage','02-tbm-basic'],['supportDemoPage','04-safety-tools'],['safetyDemoPage','07-safety4cut-intro']]) {
+   e.click(menu);await e.tick(200);
+   assert.equal(e.el('demoNarration').src,english.tracks[key].src);
+  }
+  await e.tick(Math.ceil(english.tracks['07-safety4cut-intro'].duration*1000));
+  const video=e.el('safetyExample');
+  assert.equal(video.src,english.tracks['08-safety4cut-example'].src);
+  assert.equal(video.paused,false);assert.equal(e.el('demoNarration').paused,true);
+  const seeks=video.seekCount;await e.tick(5000);assert.equal(video.seekCount,seeks,'English example must not seek itself');
+  tap(e);const held=video.currentTime;await e.tick(1000);assert.equal(video.currentTime,held);
+  tap(e);await e.tick(300);assert.ok(video.currentTime>held);
+  e.click('homeReset');e.window.PowerTBMLanguage.set('ko');
+  e.click('weatherDemoPage');await e.tick(200);
+  assert.match(e.el('demoNarration').src,/01-weather-jisoo-v118/);
  });
  await test('TV media events keep chapter-local captions visible between animation frames', async () => {
   for (const mode of ['karaoke', 'bubble']) {

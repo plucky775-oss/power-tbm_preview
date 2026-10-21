@@ -322,7 +322,7 @@
     safety: 'safety-demo-active',
     closing: 'closing-demo-active'
   };
-  const narrationByPage = {
+  const koreanNarrationByPage = {
     intro: [
       {
         id: '00-opening',
@@ -391,6 +391,12 @@
       }
     ]
   };
+  const narrationForLanguage = () => {
+    const english = language?.get() === 'en' ? window.PowerTBMEnglishNarration?.tracks : null;
+    return Object.fromEntries(Object.entries(koreanNarrationByPage).map(([page, segments]) =>
+      [page, segments.map(segment => ({ ...segment, ...(english?.[segment.id] || {}) }))]));
+  };
+  let narrationByPage = narrationForLanguage();
   let currentGuide = 0;
   let guideChanging = false;
   let demoPaused = false;
@@ -532,6 +538,17 @@
       if (goldenRulesVideo.currentTime > .08 || goldenRulesVideo.ended) {
         try { goldenRulesVideo.currentTime = 0; } catch (_) { /* metadata may still be loading */ }
       }
+    }
+
+    // English passages can be longer. Keep this silent insert on the same
+    // visual clock while the recorded English speech plays at its natural rate.
+    if (narrationRequested) {
+      const clock = narrationByPage.support[narrationSegmentIndex]?.clock;
+      const seconds = demoNarration.currentTime;
+      const index = clock?.findIndex((point, i) => i > 0 && seconds <= point[0]);
+      const rate = index > 0
+        ? (clock[index][1] - clock[index - 1][1]) / (clock[index][0] - clock[index - 1][0]) : 1;
+      goldenRulesVideo.playbackRate = goldenRulesNarrationPlaybackRate * rate;
     }
 
     if (demoPaused || document.hidden) {
@@ -731,7 +748,7 @@
     const base = bgmVolumeByPage[page] || bgmVolumeByPage.weather;
     if (page === 'safety' && safety && demoNarration) {
       if (narrationSegmentIndex > 0) return 0;
-      return base * Math.min(1, Math.max(0, (safety.videoOffset - demoNarration.currentTime) / .65));
+      return base * Math.min(1, Math.max(0, (narrationByPage.safety[0].duration - demoNarration.currentTime) / .65));
     }
     if (page !== 'closing' || !demoNarration) return base;
     const segment = narrationByPage.closing?.[0];
@@ -1072,6 +1089,16 @@
     playNarrationSegment({ token, restartVideo });
     return true;
   };
+
+  window.addEventListener('power-tbm:languagechange', () => {
+    // The normal language chooser is on the stopped launch screen. If a host
+    // changes it during playback, restart this chapter with a matching clock.
+    const restart = narrationRequested;
+    if (restart) stopNarrationPlayback({ keepRequested: true });
+    narrationByPage = narrationForLanguage();
+    if (tvMode) tv.setLanguage(language.get());
+    if (restart) startNarrationForPage(demoPage);
+  });
 
   const clearLaunchFinishTimer = () => {
     if (launchFinishTimer) window.clearTimeout(launchFinishTimer);
