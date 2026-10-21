@@ -1,10 +1,23 @@
 # Power TBM 자동 시연 홈페이지
 
-**현재 코드 버전은 v127입니다.** 아래 항목은 변경 이력입니다.
+**현재 코드 버전은 v128입니다.** 아래 항목은 변경 이력입니다.
 
 배포 주소: [Vercel](https://power-tbm-preview.vercel.app/) · [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/)
 
-최신 수정본은 `index.html`의 `english-narration.js?v=20261021-ai-pronunciation-v127` 참조와 `sw.js`의 `v127-20261021-ai-pronunciation` 캐시 버전으로 확인할 수 있습니다.
+최신 수정본은 `index.html`의 `20261021-balanced-v128` 참조와 `sw.js`의 `v128-20261021-balanced-playback` 캐시 버전으로 확인할 수 있습니다.
+
+## 2026-10-21 음량 통일·기상 멘트·스탠바이미 시작 장면 수정 (v128)
+
+- 한국어·영어 9개 챕터의 음성을 약 -16 LUFS로 맞췄습니다. 일반 재생과 TV 연속 재생에 각각 반영하고 기존 원본은 보관합니다.
+- 기상정보 여성 음성의 “중기예보”를 “일별예보”로, “한곳에서 확인하세요”를 “한 곳에서 확인할 수 있습니다.”로 교정했습니다. 동일한 Jisoo 녹음의 발음을 재사용했으며 자막과 화면 설명도 수정했습니다.
+- TV에서 생략되던 3.5초 손가락·아이콘 시작 영상을 연속 재생 파일 맨 앞에 포함했습니다. 시작 장면에서 본 시연으로 넘어갈 때 플레이어를 교체하거나 다시 로드하지 않습니다. 각 챕터의 내부 화면·자막 시간과 기존 영어 AI 발음 교정을 유지합니다.
+- TV의 챕터 시작·재개 때 음량을 20%로 내리던 0.35초 페이드인을 제거해 첫 음절이 작아지지 않게 했습니다. 기기 이모지 지원에 의존하던 손가락은 TV에서 번들 SVG를 사용합니다.
+- 캐시를 갱신하고 새 한국어·영어 음성, TV 영상, 손가락 이미지를 오프라인 목록에 반영했습니다. 새 서비스워커는 진행 중인 시연을 강제 새로고침하지 않습니다.
+- 재생성: `python3 scripts/build-balanced-playback.py` (numpy, ffmpeg, ffprobe 필요). 원본 목록은 `assets/audio/balanced-v128/sources.json`, 출력·음량 측정 기록은 `playback.json`에 있습니다.
+- 수정 파일: `app.js`, `tv-compat.js/css`, `tv-media-timeline.js`, `english-narration.js`, `subtitle-data.js`, `index.html`, `demo-translations.js`, `demo-hands-v80.css`, `sw.js`, 재생 검사와 미디어 빌드 스크립트, `assets/audio/balanced-v128`, `assets/tv-ko-v128`, `assets/tv-en-v128`, `assets/brand/demo-hand.svg`.
+- 웹 전송 용량에 맞춰 한국어 안전-4컷 예시와 영어 TV 영상만 H.264로 추가 압축했습니다. 해상도와 모든 프레임의 표시 시간을 유지하고, 균일화한 AAC 음성 데이터는 바이트 단위로 그대로 복사했습니다.
+- 검증 완료: TV 시작·재개·전체 반복 모의 검사, 한국어·영어 및 교차 반복 검사, 캐시 갱신·오프라인 범위 응답 검사, 브라우저 TV 시작 영상·손가락·본 시연 전환 확인. 인코딩된 36개 챕터 음량은 -16.43 ~ -15.65 LUFS입니다. 한국어 TV 본문 8,650프레임의 디코딩 해시를 유지하며, 웹 압축 영상의 전체 프레임 SSIM은 한국어 예시 0.996164, 영어 TV 본문 0.999579입니다. 수정한 기상 음성 전체의 로컬 음성인식에서도 두 문구를 확인했습니다.
+- 모의 TV 재생 검사와 브라우저 TV 모드로 확인했으며, LG 스탠바이미 실기기의 디코더·터치·스피커 출력은 별도 확인이 필요합니다.
 
 ## 2026-10-21 안전-4컷 영어 AI 발음 교정 (v127)
 

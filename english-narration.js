@@ -1,9 +1,9 @@
-// Meeting sequence updated by scripts/build-meeting-sequence.py.
+// Balanced English playback.
 window.PowerTBMEnglishNarration = {
   "version": 119,
   "tracks": {
     "00-opening": {
-      "src": "assets/audio/en-v119/00-opening.m4a",
+      "src": "assets/audio/balanced-v128/en-00-opening.m4a",
       "duration": 9.266666666666667,
       "cues": [
         [
@@ -39,7 +39,7 @@ window.PowerTBMEnglishNarration = {
       ]
     },
     "01-weather": {
-      "src": "assets/audio/en-v119/01-weather.m4a",
+      "src": "assets/audio/balanced-v128/en-01-weather.m4a",
       "duration": 33.13333333333333,
       "cues": [
         [
@@ -143,7 +143,7 @@ window.PowerTBMEnglishNarration = {
       ]
     },
     "02-tbm-basic": {
-      "src": "assets/audio/meeting-v126/02-tbm-basic-en.m4a",
+      "src": "assets/audio/balanced-v128/en-02-tbm-basic.m4a",
       "duration": 42.833333333333336,
       "cues": [
         [
@@ -240,7 +240,7 @@ window.PowerTBMEnglishNarration = {
       ]
     },
     "03-ai-pdf": {
-      "src": "assets/audio/en-v119/03-ai-pdf.m4a",
+      "src": "assets/audio/balanced-v128/en-03-ai-pdf.m4a",
       "duration": 40.666666666666664,
       "cues": [
         [
@@ -368,7 +368,7 @@ window.PowerTBMEnglishNarration = {
       ]
     },
     "04-safety-tools": {
-      "src": "assets/audio/en-v119/04-safety-tools.m4a",
+      "src": "assets/audio/balanced-v128/en-04-safety-tools.m4a",
       "duration": 33.333333333333336,
       "cues": [
         [
@@ -472,7 +472,7 @@ window.PowerTBMEnglishNarration = {
       ]
     },
     "05-emergency": {
-      "src": "assets/audio/en-v119/05-emergency.m4a",
+      "src": "assets/audio/balanced-v128/en-05-emergency.m4a",
       "duration": 23.8,
       "cues": [
         [
@@ -556,7 +556,7 @@ window.PowerTBMEnglishNarration = {
       ]
     },
     "07-safety4cut-intro": {
-      "src": "assets/audio/en-v127/07-safety4cut-intro.m4a",
+      "src": "assets/audio/balanced-v128/en-07-safety4cut-intro.m4a",
       "duration": 39.333333333333336,
       "cues": [
         [
@@ -668,7 +668,7 @@ window.PowerTBMEnglishNarration = {
       ]
     },
     "08-safety4cut-example": {
-      "src": "assets/safety4cut/09-ai-example-en-v119.mp4",
+      "src": "assets/audio/balanced-v128/en-08-safety4cut-example.mp4",
       "duration": 76.46666666666667,
       "cues": [
         [
@@ -828,7 +828,7 @@ window.PowerTBMEnglishNarration = {
       ]
     },
     "06-closing": {
-      "src": "assets/audio/en-v119/06-closing.m4a",
+      "src": "assets/audio/balanced-v128/en-06-closing.m4a",
       "duration": 12.066666666666666,
       "cues": [
         [
@@ -901,7 +901,7 @@ window.PowerTBMEnglishNarration = {
     }
   },
   "tv": {
-    "src": "assets/tv-en-v127/tour.mp4",
+    "src": "assets/tv-en-v128/tour.mp4",
     "width": 480,
     "height": 1040,
     "segments": [
@@ -909,75 +909,76 @@ window.PowerTBMEnglishNarration = {
         "id": "00-opening",
         "page": "intro",
         "index": 0,
-        "start": 0.0,
+        "start": 3.5,
         "duration": 9.266666666666667,
-        "end": 9.266667
+        "end": 12.766667
       },
       {
         "id": "01-weather",
         "page": "weather",
         "index": 0,
-        "start": 9.266667,
+        "start": 12.766667,
         "duration": 33.13333333333333,
-        "end": 42.4
+        "end": 45.9
       },
       {
         "id": "02-tbm-basic",
         "page": "meeting",
         "index": 0,
-        "start": 42.4,
+        "start": 45.9,
         "duration": 42.833333333333336,
-        "end": 85.23333333333333
+        "end": 88.73333333333333
       },
       {
         "id": "03-ai-pdf",
         "page": "meeting",
         "index": 1,
-        "start": 85.23333300000002,
+        "start": 88.73333300000002,
         "duration": 40.666666666666664,
-        "end": 125.9
+        "end": 129.4
       },
       {
         "id": "04-safety-tools",
         "page": "support",
         "index": 0,
-        "start": 125.9,
+        "start": 129.4,
         "duration": 33.333333333333336,
-        "end": 159.23333300000002
+        "end": 162.73333300000002
       },
       {
         "id": "05-emergency",
         "page": "support",
         "index": 1,
-        "start": 159.23333300000002,
+        "start": 162.73333300000002,
         "duration": 23.8,
-        "end": 183.033333
+        "end": 186.533333
       },
       {
         "id": "07-safety4cut-intro",
         "page": "safety",
         "index": 0,
-        "start": 183.033333,
+        "start": 186.533333,
         "duration": 39.333333333333336,
-        "end": 222.366667
+        "end": 225.866667
       },
       {
         "id": "08-safety4cut-example",
         "page": "safety",
         "index": 1,
-        "start": 222.366667,
+        "start": 225.866667,
         "duration": 76.46666666666667,
-        "end": 298.83333300000004
+        "end": 302.33333300000004
       },
       {
         "id": "06-closing",
         "page": "closing",
         "index": 0,
-        "start": 298.83333300000004,
+        "start": 302.33333300000004,
         "duration": 12.066666666666666,
-        "end": 310.90000000000003
+        "end": 314.40000000000003
       }
     ],
-    "duration": 310.90000000000003
+    "duration": 314.40000000000003,
+    "preludeDuration": 3.5
   }
 };

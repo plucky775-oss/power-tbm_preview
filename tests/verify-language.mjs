@@ -183,6 +183,8 @@ const enData = window.PowerTBMSubtitleDataEn;
 assert.deepEqual(Object.keys(enData), Object.keys(koData));
 assert.equal(Object.keys(enData).length, 9);
 assert.match(koData['01-weather'][6].words.map(w => w.text).join(' '), /한국의 레이더 영상 및 기상특보를/);
+assert.equal(koData['01-weather'][4].words[0].text, '일별');
+assert.equal(koData['01-weather'][7].words.map(w => w.text).join(' '), '한 곳에서 확인할 수 있습니다.');
 assert.match(enData['01-weather'][6].words.map(w => w.text).join(' '), /radar imagery and weather alerts for Korea/);
 assert.equal(document.querySelector('.typhoon-compare > p').textContent,
   'View typhoon tracks from Korea, the U.S., and Japan, along with radar imagery and weather alerts for Korea—all in one place.');
@@ -314,7 +316,7 @@ assert.ok(flow.mediaCalls.slice(startupCalls).some(([, method]) => method === 'p
 assert.equal(flowStage.getAttribute('aria-label'), playingHintEn, 'the live playback hint stays English after starting without a demoToggle element');
 flowDocument.getElementById('weatherDemoPage').click();
 assert.equal(flowStage.dataset.demoPage, 'weather');
-assert.match(flowDocument.getElementById('demoNarration').src, /audio\/en-v119\/01-weather\.m4a$/, 'English selection uses the recorded English voice');
+assert.match(flowDocument.getElementById('demoNarration').src, /audio\/balanced-v128\/en-01-weather\.m4a$/, 'English selection uses the recorded English voice');
 assert.equal(flowDocument.getElementById('demoNarration').muted, true, 'English narration preserves the explicit silent-playback choice');
 assert.doesNotMatch(flowDocument.querySelector('.tour-copy').textContent, /[가-힣]/);
 assert.equal(flowStage.getAttribute('aria-label'), playingHintEn, 'changing chapters keeps the current English playback hint');
@@ -380,7 +382,7 @@ for (const [mode, sound] of [['ko', 'on'], ['en', 'off'], ['alternate', 'off']])
       assert.equal(lang.get(), currentLanguage, 'keep one language through every chapter and the closing');
       assert.equal(active().dataset.segment, id);
       assert.equal(active().muted, sound === 'off', 'repeating preserves the sound choice');
-      assert.equal(/(?:en-v119|en-v127|02-tbm-basic-en\.m4a)/.test(active().src), currentLanguage === 'en', `${id} uses the current language's audio`);
+      assert.equal(/balanced-v128\/en-/.test(active().src), currentLanguage === 'en', `${id} uses the current language's audio`);
       if (id === '06-closing' && cycle === 2) stopAtEnd = true;
       finish();
     }

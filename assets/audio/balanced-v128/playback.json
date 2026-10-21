@@ -1,0 +1,482 @@
+{
+  "targetLUFS": -16,
+  "peakLimitDBTP": -2,
+  "tracks": {
+    "ko": {
+      "00-opening": "assets/audio/balanced-v128/ko-00-opening.m4a",
+      "01-weather": "assets/audio/balanced-v128/ko-01-weather.m4a",
+      "02-tbm-basic": "assets/audio/balanced-v128/ko-02-tbm-basic.m4a",
+      "03-ai-pdf": "assets/audio/balanced-v128/ko-03-ai-pdf.m4a",
+      "04-safety-tools": "assets/audio/balanced-v128/ko-04-safety-tools.m4a",
+      "05-emergency": "assets/audio/balanced-v128/ko-05-emergency.m4a",
+      "07-safety4cut-intro": "assets/audio/balanced-v128/ko-07-safety4cut-intro.m4a",
+      "08-safety4cut-example": "assets/audio/balanced-v128/ko-08-safety4cut-example.mp4",
+      "06-closing": "assets/audio/balanced-v128/ko-06-closing.m4a"
+    },
+    "en": {
+      "00-opening": "assets/audio/balanced-v128/en-00-opening.m4a",
+      "01-weather": "assets/audio/balanced-v128/en-01-weather.m4a",
+      "02-tbm-basic": "assets/audio/balanced-v128/en-02-tbm-basic.m4a",
+      "03-ai-pdf": "assets/audio/balanced-v128/en-03-ai-pdf.m4a",
+      "04-safety-tools": "assets/audio/balanced-v128/en-04-safety-tools.m4a",
+      "05-emergency": "assets/audio/balanced-v128/en-05-emergency.m4a",
+      "07-safety4cut-intro": "assets/audio/balanced-v128/en-07-safety4cut-intro.m4a",
+      "08-safety4cut-example": "assets/audio/balanced-v128/en-08-safety4cut-example.mp4",
+      "06-closing": "assets/audio/balanced-v128/en-06-closing.m4a"
+    }
+  },
+  "timelines": {
+    "ko": {
+      "src": "assets/tv-ko-v128/tour.mp4",
+      "width": 480,
+      "height": 1040,
+      "duration": 291.83333333333337,
+      "segments": [
+        {
+          "id": "00-opening",
+          "page": "intro",
+          "index": 0,
+          "start": 3.5,
+          "duration": 8.166666666666666,
+          "end": 11.666666666666666
+        },
+        {
+          "id": "01-weather",
+          "page": "weather",
+          "index": 0,
+          "start": 11.666666666666666,
+          "duration": 29.733333333333334,
+          "end": 41.4
+        },
+        {
+          "id": "02-tbm-basic",
+          "page": "meeting",
+          "index": 0,
+          "start": 41.4,
+          "duration": 41.766666666666666,
+          "end": 83.16666666666666
+        },
+        {
+          "id": "03-ai-pdf",
+          "page": "meeting",
+          "index": 1,
+          "start": 83.16666666666667,
+          "duration": 40.666666666666664,
+          "end": 123.83333333333333
+        },
+        {
+          "id": "04-safety-tools",
+          "page": "support",
+          "index": 0,
+          "start": 123.83333333333333,
+          "duration": 31.866666666666667,
+          "end": 155.7
+        },
+        {
+          "id": "05-emergency",
+          "page": "support",
+          "index": 1,
+          "start": 155.7,
+          "duration": 22.0,
+          "end": 177.7
+        },
+        {
+          "id": "07-safety4cut-intro",
+          "page": "safety",
+          "index": 0,
+          "start": 177.7,
+          "duration": 38.06666666666667,
+          "end": 215.76666666666668
+        },
+        {
+          "id": "08-safety4cut-example",
+          "page": "safety",
+          "index": 1,
+          "start": 215.76666666666668,
+          "duration": 64.56666666666666,
+          "end": 280.33333333333337
+        },
+        {
+          "id": "06-closing",
+          "page": "closing",
+          "index": 0,
+          "start": 280.33333333333337,
+          "duration": 11.5,
+          "end": 291.83333333333337
+        }
+      ],
+      "preludeDuration": 3.5
+    },
+    "en": {
+      "src": "assets/tv-en-v128/tour.mp4",
+      "width": 480,
+      "height": 1040,
+      "segments": [
+        {
+          "id": "00-opening",
+          "page": "intro",
+          "index": 0,
+          "start": 3.5,
+          "duration": 9.266666666666667,
+          "end": 12.766667
+        },
+        {
+          "id": "01-weather",
+          "page": "weather",
+          "index": 0,
+          "start": 12.766667,
+          "duration": 33.13333333333333,
+          "end": 45.9
+        },
+        {
+          "id": "02-tbm-basic",
+          "page": "meeting",
+          "index": 0,
+          "start": 45.9,
+          "duration": 42.833333333333336,
+          "end": 88.73333333333333
+        },
+        {
+          "id": "03-ai-pdf",
+          "page": "meeting",
+          "index": 1,
+          "start": 88.73333300000002,
+          "duration": 40.666666666666664,
+          "end": 129.4
+        },
+        {
+          "id": "04-safety-tools",
+          "page": "support",
+          "index": 0,
+          "start": 129.4,
+          "duration": 33.333333333333336,
+          "end": 162.73333300000002
+        },
+        {
+          "id": "05-emergency",
+          "page": "support",
+          "index": 1,
+          "start": 162.73333300000002,
+          "duration": 23.8,
+          "end": 186.533333
+        },
+        {
+          "id": "07-safety4cut-intro",
+          "page": "safety",
+          "index": 0,
+          "start": 186.533333,
+          "duration": 39.333333333333336,
+          "end": 225.866667
+        },
+        {
+          "id": "08-safety4cut-example",
+          "page": "safety",
+          "index": 1,
+          "start": 225.866667,
+          "duration": 76.46666666666667,
+          "end": 302.33333300000004
+        },
+        {
+          "id": "06-closing",
+          "page": "closing",
+          "index": 0,
+          "start": 302.33333300000004,
+          "duration": 12.066666666666666,
+          "end": 314.40000000000003
+        }
+      ],
+      "duration": 314.40000000000003,
+      "preludeDuration": 3.5
+    }
+  },
+  "measurements": [
+    {
+      "kind": "desktop",
+      "language": "ko",
+      "chapter": "00-opening",
+      "beforeLUFS": -16.9,
+      "afterLUFS": -16.35,
+      "truePeakDBTP": -4.75
+    },
+    {
+      "kind": "desktop",
+      "language": "ko",
+      "chapter": "01-weather",
+      "beforeLUFS": -16.87,
+      "afterLUFS": -15.99,
+      "truePeakDBTP": -5.42
+    },
+    {
+      "kind": "desktop",
+      "language": "ko",
+      "chapter": "02-tbm-basic",
+      "beforeLUFS": -16.62,
+      "afterLUFS": -16.01,
+      "truePeakDBTP": -2.14
+    },
+    {
+      "kind": "desktop",
+      "language": "ko",
+      "chapter": "03-ai-pdf",
+      "beforeLUFS": -17.11,
+      "afterLUFS": -16.01,
+      "truePeakDBTP": -5.19
+    },
+    {
+      "kind": "desktop",
+      "language": "ko",
+      "chapter": "04-safety-tools",
+      "beforeLUFS": -17.23,
+      "afterLUFS": -16.09,
+      "truePeakDBTP": -4.9
+    },
+    {
+      "kind": "desktop",
+      "language": "ko",
+      "chapter": "05-emergency",
+      "beforeLUFS": -16.92,
+      "afterLUFS": -16.0,
+      "truePeakDBTP": -5.08
+    },
+    {
+      "kind": "desktop",
+      "language": "ko",
+      "chapter": "07-safety4cut-intro",
+      "beforeLUFS": -17.39,
+      "afterLUFS": -16.01,
+      "truePeakDBTP": -3.28
+    },
+    {
+      "kind": "desktop",
+      "language": "ko",
+      "chapter": "08-safety4cut-example",
+      "beforeLUFS": -12.7,
+      "afterLUFS": -16.01,
+      "truePeakDBTP": -3.3
+    },
+    {
+      "kind": "desktop",
+      "language": "ko",
+      "chapter": "06-closing",
+      "beforeLUFS": -17.38,
+      "afterLUFS": -16.01,
+      "truePeakDBTP": -6.34
+    },
+    {
+      "kind": "desktop",
+      "language": "en",
+      "chapter": "00-opening",
+      "beforeLUFS": -18.41,
+      "afterLUFS": -16.43,
+      "truePeakDBTP": -1.97
+    },
+    {
+      "kind": "desktop",
+      "language": "en",
+      "chapter": "01-weather",
+      "beforeLUFS": -16.3,
+      "afterLUFS": -15.98,
+      "truePeakDBTP": -1.98
+    },
+    {
+      "kind": "desktop",
+      "language": "en",
+      "chapter": "02-tbm-basic",
+      "beforeLUFS": -17.73,
+      "afterLUFS": -16.19,
+      "truePeakDBTP": -1.78
+    },
+    {
+      "kind": "desktop",
+      "language": "en",
+      "chapter": "03-ai-pdf",
+      "beforeLUFS": -15.42,
+      "afterLUFS": -16.13,
+      "truePeakDBTP": -2.01
+    },
+    {
+      "kind": "desktop",
+      "language": "en",
+      "chapter": "04-safety-tools",
+      "beforeLUFS": -16.74,
+      "afterLUFS": -16.04,
+      "truePeakDBTP": -1.93
+    },
+    {
+      "kind": "desktop",
+      "language": "en",
+      "chapter": "05-emergency",
+      "beforeLUFS": -15.41,
+      "afterLUFS": -16.14,
+      "truePeakDBTP": -2.01
+    },
+    {
+      "kind": "desktop",
+      "language": "en",
+      "chapter": "07-safety4cut-intro",
+      "beforeLUFS": -16.28,
+      "afterLUFS": -16.12,
+      "truePeakDBTP": -1.92
+    },
+    {
+      "kind": "desktop",
+      "language": "en",
+      "chapter": "08-safety4cut-example",
+      "beforeLUFS": -17.27,
+      "afterLUFS": -16.07,
+      "truePeakDBTP": -1.71
+    },
+    {
+      "kind": "desktop",
+      "language": "en",
+      "chapter": "06-closing",
+      "beforeLUFS": -16.01,
+      "afterLUFS": -15.95,
+      "truePeakDBTP": -1.99
+    },
+    {
+      "kind": "tv",
+      "language": "ko",
+      "chapter": "00-opening",
+      "beforeLUFS": -17.02,
+      "afterLUFS": -16.0,
+      "truePeakDBTP": -3.53
+    },
+    {
+      "kind": "tv",
+      "language": "ko",
+      "chapter": "01-weather",
+      "beforeLUFS": -16.85,
+      "afterLUFS": -15.99,
+      "truePeakDBTP": -4.94
+    },
+    {
+      "kind": "tv",
+      "language": "ko",
+      "chapter": "02-tbm-basic",
+      "beforeLUFS": -16.6,
+      "afterLUFS": -16.1,
+      "truePeakDBTP": -2.32
+    },
+    {
+      "kind": "tv",
+      "language": "ko",
+      "chapter": "03-ai-pdf",
+      "beforeLUFS": -17.12,
+      "afterLUFS": -16.0,
+      "truePeakDBTP": -5.05
+    },
+    {
+      "kind": "tv",
+      "language": "ko",
+      "chapter": "04-safety-tools",
+      "beforeLUFS": -17.27,
+      "afterLUFS": -16.0,
+      "truePeakDBTP": -2.57
+    },
+    {
+      "kind": "tv",
+      "language": "ko",
+      "chapter": "05-emergency",
+      "beforeLUFS": -16.95,
+      "afterLUFS": -16.0,
+      "truePeakDBTP": -5.02
+    },
+    {
+      "kind": "tv",
+      "language": "ko",
+      "chapter": "07-safety4cut-intro",
+      "beforeLUFS": -17.43,
+      "afterLUFS": -16.0,
+      "truePeakDBTP": -3.31
+    },
+    {
+      "kind": "tv",
+      "language": "ko",
+      "chapter": "08-safety4cut-example",
+      "beforeLUFS": -12.76,
+      "afterLUFS": -16.0,
+      "truePeakDBTP": -3.38
+    },
+    {
+      "kind": "tv",
+      "language": "ko",
+      "chapter": "06-closing",
+      "beforeLUFS": -17.37,
+      "afterLUFS": -16.0,
+      "truePeakDBTP": -5.15
+    },
+    {
+      "kind": "tv",
+      "language": "en",
+      "chapter": "00-opening",
+      "beforeLUFS": -18.37,
+      "afterLUFS": -16.38,
+      "truePeakDBTP": -2.0
+    },
+    {
+      "kind": "tv",
+      "language": "en",
+      "chapter": "01-weather",
+      "beforeLUFS": -16.31,
+      "afterLUFS": -15.99,
+      "truePeakDBTP": -2.0
+    },
+    {
+      "kind": "tv",
+      "language": "en",
+      "chapter": "02-tbm-basic",
+      "beforeLUFS": -17.71,
+      "afterLUFS": -16.15,
+      "truePeakDBTP": -1.99
+    },
+    {
+      "kind": "tv",
+      "language": "en",
+      "chapter": "03-ai-pdf",
+      "beforeLUFS": -15.44,
+      "afterLUFS": -16.09,
+      "truePeakDBTP": -2.0
+    },
+    {
+      "kind": "tv",
+      "language": "en",
+      "chapter": "04-safety-tools",
+      "beforeLUFS": -16.75,
+      "afterLUFS": -16.02,
+      "truePeakDBTP": -2.0
+    },
+    {
+      "kind": "tv",
+      "language": "en",
+      "chapter": "05-emergency",
+      "beforeLUFS": -15.46,
+      "afterLUFS": -16.11,
+      "truePeakDBTP": -2.0
+    },
+    {
+      "kind": "tv",
+      "language": "en",
+      "chapter": "07-safety4cut-intro",
+      "beforeLUFS": -16.35,
+      "afterLUFS": -16.08,
+      "truePeakDBTP": -1.99
+    },
+    {
+      "kind": "tv",
+      "language": "en",
+      "chapter": "08-safety4cut-example",
+      "beforeLUFS": -17.3,
+      "afterLUFS": -16.03,
+      "truePeakDBTP": -1.99
+    },
+    {
+      "kind": "tv",
+      "language": "en",
+      "chapter": "06-closing",
+      "beforeLUFS": -16.01,
+      "afterLUFS": -15.92,
+      "truePeakDBTP": -2.0
+    }
+  ]
+}

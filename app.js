@@ -334,7 +334,7 @@
     intro: [
       {
         id: '00-opening',
-        src: 'assets/audio/00-opening-taehyung.mp3',
+        src: 'assets/audio/balanced-v128/ko-00-opening.m4a',
         duration: 8.150204,
         cues: [[0, 0], [8, 8000], [8.150204, 8000]]
       }
@@ -342,7 +342,7 @@
     weather: [
       {
         id: '01-weather',
-        src: 'assets/audio/01-weather-jisoo-v118.m4a',
+        src: 'assets/audio/balanced-v128/ko-01-weather.m4a',
         duration: 29.701224,
         cues: [[0, 0], [5.42, 4000], [10.28, 9200], [16.44, 19600], [27.16, 36400], [29.701224, 36400]]
       }
@@ -350,13 +350,13 @@
     meeting: [
       {
         id: '02-tbm-basic',
-        src: 'assets/audio/meeting-v126/02-tbm-basic-ko.m4a',
+        src: 'assets/audio/balanced-v128/ko-02-tbm-basic.m4a',
         duration: 41.75875,
         cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [13.08, 20496], [17.98, 25440], [21.368368, 28800], [22.969309, 30336], [25.44, 31104], [30.76, 37056], [36.44, 46176], [41.75875, 55296]]
       },
       {
         id: '03-ai-pdf',
-        src: 'assets/audio/03-ai-pdf-jisoo.mp3',
+        src: 'assets/audio/balanced-v128/ko-03-ai-pdf.m4a',
         duration: 40.646531,
         cues: [[0, 55296], [12.81, 62880], [18.79, 70080], [22.86, 77280], [27.78, 84000], [31.58, 88416], [36.19, 92736], [40.646531, 94944]]
       }
@@ -364,13 +364,13 @@
     support: [
       {
         id: '04-safety-tools',
-        src: 'assets/audio/04-safety-tools-taehyung.mp3?v=20260922-audio-path-v74',
+        src: 'assets/audio/balanced-v128/ko-04-safety-tools.m4a',
         duration: 31.84325,
         cues: [[0, 0], [3.26, 5700], [12.35, 19600], [16.12, 25950], [22.25, 32600], [24.59, 36100], [30.772188, 42250], [31.84325, 42250]]
       },
       {
         id: '05-emergency',
-        src: 'assets/audio/05-emergency-jisoo.mp3',
+        src: 'assets/audio/balanced-v128/ko-05-emergency.m4a',
         duration: 21.995102,
         cues: [[0, 42450], [6.19, 43800], [13.1, 45500], [17.41, 47000], [21.995102, 49000]]
       }
@@ -378,14 +378,14 @@
     safety: [
       {
         id: '07-safety4cut-intro',
-        src: 'assets/audio/07-safety4cut-intro-v97.m4a',
+        src: 'assets/audio/balanced-v128/ko-07-safety4cut-intro.m4a',
         duration: 38.037,
         cues: [[0, 0], [38.037, 38037]]
       },
       {
-        // Play the uploaded MP4's own audio without remixing or re-encoding it.
+        // Preserve the uploaded video frames and match its audio to the other chapters.
         id: '08-safety4cut-example',
-        src: 'assets/safety4cut/09-ai-example-v84.mp4',
+        src: 'assets/audio/balanced-v128/ko-08-safety4cut-example.mp4',
         duration: 64.566667,
         cues: [[0, 38037], [64.566667, 102603.667]]
       }
@@ -393,7 +393,7 @@
     closing: [
       {
         id: '06-closing',
-        src: 'assets/audio/06-closing-jisoo.mp3',
+        src: 'assets/audio/balanced-v128/ko-06-closing.m4a',
         duration: 11.493878,
         cues: [[0, 0], [3.246, 3246], [7.021, 7021], [9.555, 9555], [10.373, 10373], [11.493878, 11494]]
       }
@@ -940,6 +940,12 @@
     const visualFrameInterval = tvMode ? 50 : document.body.classList.contains('demo-recording') ? 32 : coarsePointer ? 30 : 14;
     const tick = (now) => {
       if (token !== narrationRunToken || !narrationRequested || !demoNarration) return;
+      if (tvMode && launchActive && tv.inPrelude()) {
+        tv.presentPrelude();
+        if (!demoPaused && !document.hidden && !demoNarration.ended) narrationFrame = window.requestAnimationFrame(tick);
+        return;
+      }
+      if (tvMode && launchActive) completeLaunchPrelude();
       const entry = tvMode ? tv.segmentAtTime() : null;
       if ((!tvMode || entry) && (!narrationLastVisualUpdate || now - narrationLastVisualUpdate >= visualFrameInterval)) {
         narrationLastVisualUpdate = now;
@@ -1307,6 +1313,14 @@
     document.body.classList.remove('launch-prelude-revealing');
     document.body.classList.add('launch-prelude-active');
     updateLaunchStateData();
+    if (tvMode) {
+      // Play the button gesture and the full tour with one decoder. Completing
+      // the prelude only reveals the UI; it never pauses, seeks or reloads.
+      launchContentStarted = true;
+      startNarrationForPage('intro', { restartVideo: false });
+      tv.presentPrelude();
+      return;
+    }
     if (!launchIntroVideo || reduceMotion) {
       beginLaunchReveal(token);
       completeLaunchPrelude(token);
@@ -1905,7 +1919,7 @@
     demoPaused = !demoPaused;
     guidePhone.classList.toggle('is-paused', demoPaused);
     syncCinematicBackdrop();
-    if (launchActive && !launchRevealStarted) {
+    if (!tvMode && launchActive && !launchRevealStarted) {
       if (demoPaused) {
         cancelLaunchFrame();
         launchIntroVideo?.pause();
@@ -2048,7 +2062,7 @@
       cancelLaunchFrame();
       launchIntroVideo?.pause();
     }
-    if (launchActive && !launchRevealStarted) {
+    if (!tvMode && launchActive && !launchRevealStarted) {
       if (!document.hidden && !demoPaused) playLaunchIntroVideo({ restart: false });
       return;
     }

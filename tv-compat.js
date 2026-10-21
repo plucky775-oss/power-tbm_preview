@@ -126,7 +126,8 @@
   };
   media.addEventListener('loadedmetadata', seekToChapter);
   api.select = segment => {
-    pendingStart = entryFor(segment).start;
+    // The launch gesture is part of the same stream as the opening narration.
+    pendingStart = segment.id === '00-opening' ? 0 : entryFor(segment).start;
     if (media.getAttribute('src') !== timeline.src) {
       media.src = timeline.src;
       media.load();
@@ -137,21 +138,10 @@
     [...timeline.segments].reverse().find(entry => media.currentTime >= entry.start);
   api.localTime = segment => Math.max(0, media.currentTime - entryFor(segment).start);
   api.segmentEnded = id => media.currentTime >= entryFor({ id }).end - .001;
-
-  // Follow media time, not a timer: buffering must not consume the fade before
-  // a word is heard. Keep the beginning audible and preserve the mute choice.
-  let voiceFadeStart = 0;
-  const beginVoiceFade = () => {
-    voiceFadeStart = media.currentTime;
-    media.volume = .2;
-  };
-  media.addEventListener('play', beginVoiceFade);
-  media.addEventListener('playing', beginVoiceFade);
-  const softenVoiceEntry = segment => {
-    const elapsed = Math.max(0, Math.min(api.localTime(segment), media.currentTime - voiceFadeStart));
-    const volume = .2 + .8 * Math.min(1, elapsed / .35);
-    if (Math.abs(media.volume - volume) > .005) media.volume = volume;
-  };
+  api.inPrelude = () => media.currentTime < (timeline.preludeDuration || 0);
+  // Audio is normalized in the media files. A chapter-local volume ramp hid
+  // the first syllable at every boundary and again after buffering/resume.
+  media.volume = 1;
 
   const backgroundSources = {};
   document.querySelectorAll('video').forEach(video => {
@@ -311,6 +301,16 @@
   const layout = () => {
     layoutFrame = 0;
     if (!target) return;
+    if (media.dataset.surface === 'prelude') {
+      // The square button clip sits in the center of the portrait stream.
+      // Keep it square at any TV orientation, without relying on object-fit.
+      const side = Math.min(window.innerWidth, window.innerHeight);
+      const height = side * timeline.height / timeline.width;
+      Object.assign(media.style, { left: `${(window.innerWidth - side) / 2}px`,
+        top: `${(window.innerHeight - height) / 2}px`, width: `${side}px`,
+        height: `${height}px`, borderRadius: '0' });
+      return;
+    }
     const box = target.getBoundingClientRect();
     if (box.width < 1 || box.height < 1) return;
     Object.assign(media.style, {
@@ -321,8 +321,15 @@
   const scheduleLayout = () => {
     if (!layoutFrame) layoutFrame = requestAnimationFrame(layout);
   };
+  api.presentPrelude = () => {
+    if (media.dataset.surface === 'prelude') return;
+    target = document.getElementById('launchIntro');
+    parked = false;
+    media.dataset.surface = 'prelude';
+    media.style.zIndex = '2001';
+    layout();
+  };
   api.present = (page, segment, visualTime) => {
-    softenVoiceEntry(segment);
     // Every embedded clip is precomposed into the same phone-sized frame.
     // Changing source dimensions or resizing the video plane interrupts webOS.
     const next = document.querySelector('.guide-media');

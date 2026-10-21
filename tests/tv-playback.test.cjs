@@ -144,7 +144,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
  await test('Cold splash handoff does not allocate a background decoder until weather playback is stable', async () => {
   const e=environment();e.document.querySelector('[data-launch-sound="on"]').click();
   const m=e.el('demoNarration'),bg=e.el('tvBackdrop');
-  await e.tick(8300);assert.equal(m.dataset.segment,'01-weather');
+  await e.tick(8300 + timeline.preludeDuration * 1000);assert.equal(m.dataset.segment,'01-weather');
   assert.equal(bg.getAttribute('src'),null,'first weather paint must not start another decoder');
   m.readyState=2;m.permanentStall=true;await e.tick(2000);
   assert.equal(bg.getAttribute('src'),null,'buffering must retain priority over background decoding');
@@ -158,16 +158,31 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   tap(e);e.click('meetingDemoPage');await e.tick(1400);
   assert.ok(bg.src.includes('tablet-review'));assert.equal(bg.paused,false);
  });
- await test('TV voice entry and resume ramp gently without changing time or mute choice', async () => {
+ await test('TV preserves the first syllable at every chapter and after resume/buffering', async () => {
   const e=environment();e.click('weatherDemoPage');const m=e.el('demoNarration');
-  await e.tick(50);const first=m.volume;assert.ok(first>0&&first<.6);
-  await e.tick(150);assert.ok(m.volume>first&&m.volume<1);
-  await e.tick(400);assert.equal(m.volume,1);
-  m.dispatchEvent({type:'playing'});await e.tick(50);assert.ok(m.volume<.6);
-  await e.tick(400);assert.equal(m.volume,1);
+  await e.tick(50);assert.equal(m.volume,1);
+  m.dispatchEvent({type:'playing'});await e.tick(50);assert.equal(m.volume,1);
   const time=m.currentTime;tap(e);await e.tick(500);assert.equal(m.currentTime,time);
-  tap(e);await e.tick(50);assert.ok(m.volume<.6);assert.ok(m.currentTime>time);
+  tap(e);await e.tick(50);assert.equal(m.volume,1);assert.ok(m.currentTime>time);
+  for(const entry of timeline.segments.slice(2)) {
+   await e.tick(Math.ceil((entry.start+.05-m.currentTime)*1000));
+   assert.equal(m.volume,1,'chapter faded its first syllable: '+entry.id);
+  }
   e.click('demoMute');await e.tick(500);assert.equal(m.muted,true);
+ });
+ await test('TV launch gesture uses the same media stream and survives pause and hidden-tab resume', async () => {
+  const e=environment(),m=e.el('demoNarration');
+  e.document.querySelector('[data-launch-sound="on"]').click();await e.tick(500);
+  assert.equal(m.dataset.surface,'prelude');assert.equal(m.style.zIndex,'2001');
+  assert.equal(e.el('tourStage').dataset.launchState,'choice');
+  e.document.hidden=true;e.document.dispatchEvent({type:'visibilitychange'});
+  const time=m.currentTime;await e.tick(2000);assert.equal(m.currentTime,time);
+  e.document.hidden=false;e.document.dispatchEvent({type:'visibilitychange'});await e.tick(200);
+  assert.ok(m.currentTime>time);
+  const counts=[m.loadCount,m.playCount,m.pauseCount,m.seekCount];
+  await e.tick(3500);
+  assert.equal(m.dataset.surface,'intro');assert.equal(e.el('tourStage').dataset.launchState,'complete');
+  assert.deepEqual([m.loadCount,m.playCount,m.pauseCount,m.seekCount],counts,'prelude handoff restarted the decoder');
  });
  await test('TV prepares the opening behind the start gate and starts without reloading or seeking', async () => {
   for(const mode of ['on','off']) {
@@ -177,7 +192,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
    await e.tick(1000);
    assert.equal(m.paused,true);assert.equal(m.currentTime,0);assert.equal(m.playCount,0);
    e.document.querySelector(`[data-launch-sound="${mode}"]`).click();
-   await e.tick(9000);
+   await e.tick(9000 + timeline.preludeDuration * 1000);
    assert.equal(m.loadCount,1,'start must reuse the prepared stream');
    assert.equal(m.seekCount,0,'seeking to an already prepared zero discards the first decoded frames');
    assert.equal(m.muted,mode==='off');assert.equal(m.paused,false);
@@ -320,7 +335,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   tap(e);await e.tick(300);assert.ok(video.currentTime>held);
   e.click('homeReset');e.window.PowerTBMLanguage.set('ko');
   e.click('weatherDemoPage');await e.tick(200);
-  assert.match(e.el('demoNarration').src,/01-weather-jisoo-v118/);
+  assert.match(e.el('demoNarration').src,/balanced-v128\/ko-01-weather/);
  });
  await test('TV media events keep chapter-local captions visible between animation frames', async () => {
   for (const mode of ['karaoke', 'bubble']) {

@@ -61,6 +61,7 @@
 .tbm-tv .cinematic-backdrop.tv-background-ready .tv-video-placeholder { opacity: 0 !important; }
 .tbm-tv .cinematic-backdrop-lightning-flash { display: none; }
 .tbm-tv .launch-intro-video { object-fit: cover; }
+.tbm-tv .launch-intro.is-started .launch-start-panel { visibility: hidden; }
 .tbm-tv #demoRecord { display: none !important; }
 /* Promote only the small gesture layers, not full-screen screenshots. */
 .tbm-tv .tour-stage .demo-hand,

@@ -99,7 +99,7 @@ const workerSource = await readFile(path.join(siteRoot, 'sw.js'), 'utf8');
 vm.runInContext(workerSource, context, { filename: 'sw.js' });
 const precacheUrls = vm.runInContext('[...PRECACHE_URLS]', context);
 const standardPrecacheUrls = vm.runInContext('[...ACTIVE_PRECACHE_URLS]', context);
-assert.ok(standardPrecacheUrls.every(url => !/\/tv-(?:v126|en-v127)\//.test(url)), 'desktop must not download the unused TV stream');
+assert.ok(standardPrecacheUrls.every(url => !/\/tv-(?:ko|en)-v128\//.test(url)), 'desktop must not download the unused TV stream');
 const tvHandlers = new Map();
 const tvContext = vm.createContext({ ...context, self: {
   ...workerGlobal, location: { ...workerGlobal.location, search: '?tv=1' },
@@ -112,7 +112,7 @@ for (const url of tvPrecacheUrls) {
   const file = url === './' ? './index.html' : url.split('?')[0];
   tvPrecacheBytes += (await stat(path.join(siteRoot, file))).size;
   assert.doesNotMatch(url, /assets\/audio\//, 'TV must not precache separate narration and BGM');
-  if (/\.mp4$/.test(url)) assert.match(url, /assets\/(?:tv-v126|tv-en-v127|background)\//, 'TV must not precache unused desktop foreground videos');
+  if (/\.mp4$/.test(url)) assert.match(url, /assets\/(?:tv-ko-v128|tv-en-v128|background)\//, 'TV must not precache unused desktop foreground videos');
 }
 assert.equal(tvPrecacheUrls.filter(url => /assets\/background\/.+\.mp4$/.test(url)).length, 5, 'all moving backgrounds must work offline');
 assert.ok(tvPrecacheBytes < 35 * 1024 * 1024, 'TV offline download exceeded its budget');
@@ -154,14 +154,14 @@ const coreUrls = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './english-narration.js?v=20261021-ai-pronunciation-v127',
+  './english-narration.js?v=20261021-balanced-v128',
   './styles.css?v=20261021-meeting-sequence-v126',
-  './app.js?v=20261021-meeting-sequence-v126',
+  './app.js?v=20261021-balanced-v128',
   './pwa.js?v=20261017-tv-startup-v115',
   './subtitles.js?v=20261020-language-v117',
-  './subtitle-data.js?v=20261021-meeting-sequence-v126',
+  './subtitle-data.js?v=20261021-balanced-v128',
   './subtitle-data.en.js?v=20261021-meeting-sequence-v126',
-  './demo-translations.js?v=20261021-meeting-sequence-v126',
+  './demo-translations.js?v=20261021-balanced-v128',
   './demo-language.js?v=20261021-language-menu-v125',
   './demo-language.css?v=20261021-language-menu-v125',
   './subtitles.css?v=20261004-v87'
@@ -266,7 +266,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v127-20261021-ai-pronunciation/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v128-20261021-balanced-playback/);
 assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
