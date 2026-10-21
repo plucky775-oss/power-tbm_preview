@@ -71,7 +71,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
  const document=build(tree);document.documentElement=document.querySelector('html');document.body=document.querySelector('body');document.hidden=false;document.fonts={ready:Promise.resolve()};document.getElementById=id=>document.querySelector('#'+id);
  document.createElement=tag=>['audio','video'].includes(tag)?new Media(tag):new Element(tag);document.createTextNode=text=>{const n=new Element('#text');n._text=text;return n;};
  const window=new Events();
- window.PowerTBMLanguage={get:()=>selectedLanguage,apply(){},translate:text=>text,set(value){selectedLanguage=value;window.dispatchEvent({type:'power-tbm:languagechange',detail:{language:value}});}};
+ window.PowerTBMLanguage={get:()=>selectedLanguage,apply(){},translate:text=>text,set(value,{restartPlayback=true}={}){selectedLanguage=value;window.dispatchEvent({type:'power-tbm:languagechange',detail:{language:value,restartPlayback}});}};
  const setTimer=(fn,delay,repeat=0)=>{const id=nextId++;timers.set(id,{fn,at:now+delay,repeat});return id;};
  Object.assign(window,{innerWidth:1920,innerHeight:1080,scrollY:0,location:{search:query},matchMedia:()=>({matches:reduce}),requestAnimationFrame:fn=>{const id=nextId++;raf.set(id,fn);return id;},cancelAnimationFrame:id=>raf.delete(id),setTimeout:(fn,d=0)=>setTimer(fn,d),clearTimeout:id=>timers.delete(id),setInterval:(fn,d)=>setTimer(fn,d,d),clearInterval:id=>timers.delete(id)});
  const ctx=vm.createContext({window,document,location:window.location,navigator:{userAgent:ua},URLSearchParams,Element,
@@ -184,12 +184,24 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
    assert.equal(m.dataset.segment,'01-weather');
   }
  });
- await test('TV uses one narration player plus at most one muted background through every chapter', async () => {
+ await test('TV keeps one player through every chapter and alternates its source only between full tours', async () => {
   const e = environment();
+  const m = e.el('demoNarration');
   e.document.querySelector('[data-launch-sound="on"]').click();
-  await e.tick(290000);
-  assert.equal(e.seen.size, 1, 'the entire tour must share one continuous source');
-  assert.equal(e.el('demoNarration').loadCount, 1, 'looping must not reload the file');
+  await e.tick(Math.floor((timeline.duration - 1) * 1000));
+  assert.equal(e.seen.size, 1, 'the complete Korean tour shares one continuous source');
+  assert.equal(m.loadCount, 1, 'no source reload within the Korean tour');
+  assert.equal(e.window.PowerTBMLanguage.get(), 'ko', 'the closing must finish in Korean');
+  await e.tick(6000);
+  assert.equal(e.window.PowerTBMLanguage.get(), 'en');
+  assert.equal(m.src, english.tv.src);
+  assert.equal(m.loadCount, 2, 'load the English stream once at the full-tour boundary');
+  assert.equal(e.seen.size, 2);
+  await e.tick(Math.ceil((english.tv.duration + 3) * 1000), 250);
+  assert.equal(e.window.PowerTBMLanguage.get(), 'ko', 'the next complete English tour returns to Korean');
+  assert.equal(m.src, timeline.src);
+  assert.equal(m.loadCount, 3, 'one source change per tour, without replaying the outgoing closing');
+  assert.equal(e.el('demoNarration'), m, 'language alternation reuses the same foreground player');
   assert.equal(e.el('demoNarration').muted, false);
   assert.equal(e.el('tourStage').dataset.narrationState, 'playing');
   assert.equal(e.errors.length, 0);

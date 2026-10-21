@@ -52,7 +52,7 @@
     });
   }
 
-  function set(next, { persist = true } = {}) {
+  function set(next, { persist = true, restartPlayback = true } = {}) {
     if (next !== 'ko' && next !== 'en') return;
     language = next;
     document.documentElement.lang = language;
@@ -62,7 +62,7 @@
     if (persist) {
       try { localStorage.setItem(key, language); } catch (_) { /* No storage required. */ }
     }
-    window.dispatchEvent(new CustomEvent('power-tbm:languagechange', { detail: { language } }));
+    window.dispatchEvent(new CustomEvent('power-tbm:languagechange', { detail: { language, restartPlayback } }));
   }
 
   window.PowerTBMLanguage = { get: () => language, set, apply, translate };

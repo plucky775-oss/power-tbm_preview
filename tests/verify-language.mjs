@@ -336,3 +336,64 @@ await Promise.resolve();
 assert.equal(flow.errors.length, 0, flow.errors.join('\n'));
 flow.close();
 console.log('PASS: actual app flow English selection → explicit muted start → weather → pause/resume → Safety 4-Cut → home → Korean, including dynamic English/Korean accessibility hints and no playback caused by language selection');
+
+// Finish real playback events for whole tours in each starting language. Only
+// native media completion is simulated; language, DOM and transition code are real.
+for (const [startingLanguage, sound] of [['ko', 'on'], ['en', 'off']]) {
+  const loop = setup({ savedLanguage: startingLanguage, reducedMotion: true });
+  const d = loop.document;
+  const lang = loop.window.PowerTBMLanguage;
+  const stage = d.getElementById('tourStage');
+  const order = ['00-opening', '01-weather', '02-tbm-basic', '03-ai-pdf',
+    '04-safety-tools', '05-emergency', '07-safety4cut-intro', '08-safety4cut-example', '06-closing'];
+  const active = () => d.querySelector('audio[data-narration-active="true"], video[data-narration-active="true"]');
+  const finish = () => {
+    const player = active();
+    Object.defineProperty(player, 'duration', { configurable: true, value: 600 });
+    Object.defineProperty(player, 'ended', { configurable: true, value: true });
+    player.currentTime = 600;
+    player.dispatchEvent(new loop.window.Event('ended'));
+  };
+  let stopAtEnd = false;
+  let completed = 0;
+  d.addEventListener('power-tbm:sequence-complete', event => {
+    completed++;
+    if (stopAtEnd) event.preventDefault();
+  });
+  d.querySelector(`[data-launch-sound="${sound}"]`).click();
+  for (let cycle = 0; cycle < 3; cycle++) {
+    const currentLanguage = cycle % 2 ? (startingLanguage === 'ko' ? 'en' : 'ko') : startingLanguage;
+    for (const id of order) {
+      await Promise.resolve();
+      assert.equal(lang.get(), currentLanguage, 'keep one language through every chapter and the closing');
+      assert.equal(active().dataset.segment, id);
+      assert.equal(active().muted, sound === 'off', 'alternation preserves the sound choice');
+      assert.equal(/en-v119/.test(active().src), currentLanguage === 'en', `${id} uses the current language's audio`);
+      if (id === '06-closing' && cycle === 2) stopAtEnd = true;
+      finish();
+    }
+    assert.equal(completed, cycle + 1, 'one completion event per full tour');
+    assert.equal(loop.window.localStorage.getItem(languageKey), startingLanguage, 'automatic loops preserve the saved starting language');
+    if (stopAtEnd) {
+      assert.equal(lang.get(), currentLanguage, 'a canceled repeat, such as recording completion, must not switch language');
+      assert.equal(stage.dataset.demoPage, 'closing');
+    } else {
+      assert.equal(lang.get(), currentLanguage === 'ko' ? 'en' : 'ko');
+      assert.equal(stage.dataset.demoPage, 'intro');
+      assert.equal(active().dataset.segment, '00-opening');
+      assert.equal(d.documentElement.lang, lang.get());
+      assert.equal(d.querySelector('.guide-phone').lang, 'ko', 'the app screen remains Korean after automatic alternation');
+      assert.equal(d.getElementById('safetyCaption').lang, lang.get());
+      const englishCredit = d.querySelector('.demo-only-developer').textContent.startsWith('Developer:');
+      assert.equal(englishCredit, lang.get() === 'en');
+      loop.chooseMode('bubble');
+      const data = lang.get() === 'en' ? loop.window.PowerTBMSubtitleDataEn : loop.window.PowerTBMSubtitleData;
+      const cue = data['00-opening'][0];
+      loop.render('00-opening', (cue.start + cue.end) / 2);
+      assert.equal(d.getElementById('subtitleBubble').textContent, cueText(cue), 'the next opening uses matching subtitles');
+    }
+  }
+  assert.equal(loop.errors.length, 0, loop.errors.join('\n'));
+  loop.close();
+}
+console.log('PASS: full Korean/English/Korean and English/Korean/English tours, paired voices/subtitles/credits, Korean phone screens, mute preservation, saved starting language and canceled recording repeat');

@@ -1089,10 +1089,11 @@
     return true;
   };
 
-  window.addEventListener('power-tbm:languagechange', () => {
+  window.addEventListener('power-tbm:languagechange', (event) => {
     // The normal language chooser is on the stopped launch screen. If a host
     // changes it during playback, restart this chapter with a matching clock.
-    const restart = narrationRequested;
+    // At the end of a full tour, the stage transition starts the new opening.
+    const restart = narrationRequested && event.detail?.restartPlayback !== false;
     if (restart) stopNarrationPlayback({ keepRequested: true });
     narrationByPage = narrationForLanguage();
     if (tvMode) tv.setLanguage(language.get());
@@ -1349,7 +1350,10 @@
     else {
       const completed = new CustomEvent('power-tbm:sequence-complete', { cancelable: true });
       document.dispatchEvent(completed);
-      if (!completed.defaultPrevented) activateIntroPage({ keepMode: true });
+      if (!completed.defaultPrevented) activateIntroPage({
+        keepMode: true,
+        nextLanguage: language?.get() === 'en' ? 'ko' : 'en'
+      });
     }
   };
 
@@ -1632,7 +1636,7 @@
     if (!stageTransitioning && !keepMedia) startCurrentStageClock();
   };
 
-  const switchDemoStage = (page, { keepMode = false, forceRestart = false, immediate = false } = {}) => {
+  const switchDemoStage = (page, { keepMode = false, forceRestart = false, immediate = false, nextLanguage } = {}) => {
     if (!guidePhone || !stageClassByPage[page] || guideChanging || stageTransitioning) return;
     // A menu selection starts the continuous tour at that chapter.
     if (!keepMode) demoMode = 'sequence';
@@ -1650,8 +1654,14 @@
     updateDemoPageButtons();
     const hasVisibleStage = stageActiveClasses.some((className) => guidePhone.classList.contains(className));
     if (tvMode) tv.park();
-    if (tvMode || immediate || reduceMotion || !hasVisibleStage) {
+    const applyNextStage = () => {
+      // Switch after the outgoing scene is covered, without replaying its audio
+      // or overwriting the user's saved starting-language preference.
+      if (nextLanguage) language?.set(nextLanguage, { persist: false, restartPlayback: false });
       applyDemoStage(page);
+    };
+    if (tvMode || immediate || reduceMotion || !hasVisibleStage) {
+      applyNextStage();
       return;
     }
 
@@ -1660,7 +1670,7 @@
     guideStage?.classList.add('stage-transitioning');
 
     const swapTimer = window.setTimeout(() => {
-      applyDemoStage(page);
+      applyNextStage();
     }, stageTransitionTiming.fadeOut);
     const revealTimer = window.setTimeout(() => {
       guidePhone.classList.remove('stage-transitioning');
@@ -1732,9 +1742,9 @@
     switchDemoStage('weather', { keepMode, forceRestart: true, immediate: userInitiated && !narrationUnlocked });
   };
 
-  const activateIntroPage = ({ keepMode = false, userInitiated = false } = {}) => {
+  const activateIntroPage = ({ keepMode = false, userInitiated = false, nextLanguage } = {}) => {
     if (userInitiated) enableNarrationFromGesture();
-    switchDemoStage('intro', { keepMode, forceRestart: true, immediate: userInitiated && !narrationUnlocked });
+    switchDemoStage('intro', { keepMode, forceRestart: true, immediate: userInitiated && !narrationUnlocked, nextLanguage });
   };
 
   const activateMeetingPage = ({ keepMode = false, userInitiated = false } = {}) => {
