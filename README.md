@@ -1,10 +1,19 @@
 # Power TBM 자동 시연 홈페이지
 
-**현재 코드 버전은 v131입니다.** 아래 항목은 변경 이력입니다.
+**현재 코드 버전은 v132입니다.** 아래 항목은 변경 이력입니다.
 
 배포 주소: [Vercel](https://power-tbm-preview.vercel.app/) · [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/)
 
-최신 수정본은 `index.html`의 `tv-compat.css?v=20261021-launch-handoff-v131` 참조와 `sw.js`의 `v131-20261021-launch-handoff` 캐시 버전으로 확인할 수 있습니다.
+최신 수정본은 `index.html`의 `app.js?v=20261022-weather-daily-v132` 참조와 `sw.js`의 `v132-20261022-weather-daily` 캐시 버전으로 확인할 수 있습니다.
+
+## 2026-10-22 일별예보 안내 발음 복원 (v132)
+
+- “일별예보도 함께 확인할 수 있습니다.”의 연결 부분을 조정하고 잘린 문장 끝의 “다” 발음을 복원했습니다. 기존 Jisoo 녹음의 세 구간을 다시 편집한 것으로, 새 문장 전체를 합성한 음성은 아닙니다.
+- 일반 음성 `assets/audio/weather-v132/01-weather.m4a`와 TV 연속 영상 `assets/tv-ko-v132/tour.mp4`에 반영했습니다. 해당 문장의 자막 시간을 조정하고 오프라인 캐시를 갱신했습니다. 미리듣기는 `assets/audio/weather-v132/corrected-phrase.wav`입니다.
+- 약 -16 LUFS 음량과 기존 챕터 길이를 유지합니다. 수정 범위 밖의 AAC 패킷, 모든 영상 패킷, 음성·영상 타임스탬프는 보존합니다. v129의 마지막 문장 교정과 v131의 스플래시 전환 코드도 유지합니다.
+- 재생성: `python3 scripts/build-weather-daily.py`. 원본 편집 위치·음량·미디어 보존 기록은 `assets/audio/weather-v132/repair.json`에 있습니다.
+- 검증: `python3 tests/verify-weather-daily.py`, `node tests/tv-playback.test.cjs`, `node tests/verify-pwa.mjs`, `node tests/verify-language.mjs`, `git diff --check`. 실제 스탠바이미 스피커의 청취 품질은 현장 확인이 필요합니다.
+- 수정 파일: `app.js`, `index.html`, `subtitle-data.js`, `sw.js`, `tv-media-timeline.js`, `tests/tv-playback.test.cjs`, `tests/verify-pwa.mjs`, `README.md`. 추가 파일: `scripts/build-weather-daily.py`, `tests/verify-weather-daily.py`, `assets/audio/weather-v132/`의 음성·미리듣기·기록, `assets/tv-ko-v132/tour.mp4`.
 
 ## 2026-10-21 TV 첫 스플래시 확대 번쩍임 수정 (v131)
 

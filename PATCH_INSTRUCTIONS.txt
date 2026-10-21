@@ -1,0 +1,22 @@
+Power TBM v132 수정 파일
+
+v131 프로젝트 폴더에 압축을 풀어 같은 이름의 파일을 덮어쓰세요.
+전체 앱이 아닌 변경 파일만 포함된 패치입니다.
+일별예보도 함께 확인할 수 있습니다 음성 구간 복원, PC 및 TV 음성 반영, 자막 및 캐시 갱신.
+GitHub 업로드 및 운영 배포 완료 여부는 이 파일 전달에 포함되지 않습니다.
+
+포함 파일:
+README.md
+app.js
+index.html
+subtitle-data.js
+sw.js
+tests/tv-playback.test.cjs
+tests/verify-pwa.mjs
+tv-media-timeline.js
+scripts/build-weather-daily.py
+tests/verify-weather-daily.py
+assets/audio/weather-v132/01-weather.m4a
+assets/audio/weather-v132/repair.json
+assets/audio/weather-v132/corrected-phrase.wav
+assets/tv-ko-v132/tour.mp4
