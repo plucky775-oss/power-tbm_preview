@@ -278,6 +278,14 @@
     setCenter('place', fields[1]);
     setCenter('manager', fields[2]);
     setCenter('next', nextButton);
+    // The supplied long screenshot scrolls at its native aspect ratio. Resolve
+    // tap coordinates from the live phone width, including the bottom button.
+    meetingDemo.style.setProperty('--meeting-trade-view-height', `${rootRect.height}px`);
+    for (const [name, x, y] of [['one', 459, 417], ['two', 459, 533]]) {
+      meetingDemo.style.setProperty(`--meeting-trade-${name}-x`, `${rootRect.width * x / 541}px`);
+      meetingDemo.style.setProperty(`--meeting-trade-${name}-y`, `${rootRect.width * y / 541}px`);
+    }
+    meetingDemo.style.setProperty('--meeting-trade-start-y', `${rootRect.height - rootRect.width * 148 / 541}px`);
   };
   let meetingTargetFrame = 0;
   const scheduleMeetingBasicTargets = () => {
@@ -342,9 +350,9 @@
     meeting: [
       {
         id: '02-tbm-basic',
-        src: 'assets/audio/02-tbm-basic-taehyung.mp3',
-        duration: 34.29875,
-        cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [18.27, 28800], [23.77, 37056], [28.98, 46176], [34.29875, 55296]]
+        src: 'assets/audio/meeting-v126/02-tbm-basic-ko.m4a',
+        duration: 41.75875,
+        cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [13.08, 20496], [17.98, 25440], [21.368368, 28800], [22.969309, 30336], [25.44, 31104], [30.76, 37056], [36.44, 46176], [41.75875, 55296]]
       },
       {
         id: '03-ai-pdf',

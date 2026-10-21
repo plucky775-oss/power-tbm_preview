@@ -2372,10 +2372,10 @@ button { color: inherit; }
 @keyframes meeting-focus-home-card { 0%, 1.2% { opacity: 0; transform: scale(.985); } 1.6%, 5.8% { opacity: 1; transform: scale(1); } 6.3%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes meeting-focus-menu-write { 0%, 6.2% { opacity: 0; transform: scale(.985); } 6.6%, 11.8% { opacity: 1; transform: scale(1); } 12.3%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes meeting-focus-basic-form { 0%, 12.1% { opacity: 0; transform: scale(.985); } 12.6%, 21% { opacity: 1; transform: scale(1); } 21.5%, 100% { opacity: 0; transform: scale(1.01); } }
-@keyframes meeting-focus-worker-form { 0%, 21.2% { opacity: 0; transform: scale(.985); } 21.7%, 27.7% { opacity: 1; transform: scale(1); } 28.1%, 100% { opacity: 0; transform: scale(1.01); } }
-@keyframes meeting-focus-worker-saved { 0%, 27.8% { opacity: 0; transform: scale(.985); } 28.2%, 30% { opacity: 1; transform: scale(1); } 30.5%, 100% { opacity: 0; transform: scale(1.01); } }
-@keyframes meeting-focus-trade-one { 0%, 30.2% { opacity: 0; transform: scale(.985); } 30.7%, 34.6% { opacity: 1; transform: scale(1); } 35.1%, 100% { opacity: 0; transform: scale(1.01); } }
-@keyframes meeting-focus-trade-two { 0%, 34.8% { opacity: 0; transform: scale(.985); } 35.3%, 38.6% { opacity: 1; transform: scale(1); } 39.1%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-worker-form { 0%, 31.3769% { opacity: 0; transform: scale(.985); } 31.7873%, 36.7121% { opacity: 1; transform: scale(1); } 37.0405%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-worker-saved { 0%, 36.7942% { opacity: 0; transform: scale(.985); } 37.1225%, 38.6000% { opacity: 1; transform: scale(1); } 39.0104%, 100% { opacity: 0; transform: scale(1.01); } }
+@keyframes meeting-focus-trade-one { 0%, 21.8% { opacity: 0; } 22.1%, 23.65% { opacity: 1; } 24%, 100% { opacity: 0; } }
+@keyframes meeting-focus-trade-two { 0%, 24% { opacity: 0; } 24.3%, 25.9% { opacity: 1; } 26.2%, 100% { opacity: 0; } }
 @keyframes meeting-focus-health { 0%, 38.8% { opacity: 0; transform: scale(.985); } 39.3%, 43.2% { opacity: 1; transform: scale(1); } 43.7%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes meeting-focus-ppe { 0%, 43.2% { opacity: 0; transform: scale(.985); } 43.7%, 48.1% { opacity: 1; transform: scale(1); } 48.6%, 100% { opacity: 0; transform: scale(1.01); } }
 @keyframes meeting-focus-risk { 0%, 48.3% { opacity: 0; transform: scale(.985); } 48.8%, 57% { opacity: 1; transform: scale(1); } 57.5%, 100% { opacity: 0; transform: scale(1.01); } }
@@ -2750,8 +2750,8 @@ button { color: inherit; }
 @keyframes meeting-slide-home { 0%, 5.9% { opacity: 1; } 6.5%, 100% { opacity: 0; } }
 @keyframes meeting-slide-menu { 0%, 5.9% { opacity: 0; } 6.5%, 11.9% { opacity: 1; } 12.5%, 100% { opacity: 0; } }
 @keyframes meeting-slide-basic { 0%, 11.9% { opacity: 0; } 12.5%, 21.35% { opacity: 1; } 21.75%, 100% { opacity: 0; } }
-@keyframes meeting-slide-workers-v3 { 0%, 21.35% { opacity: 0; } 21.75%, 30% { opacity: 1; } 30.6%, 100% { opacity: 0; } }
-@keyframes meeting-slide-trade-v3 { 0%, 30% { opacity: 0; } 30.6%, 38.6% { opacity: 1; } 39.2%, 100% { opacity: 0; } }
+@keyframes meeting-slide-workers-v3 { 0%, 31.5% { opacity: 0; } 32.1%, 38.6% { opacity: 1; } 39.2%, 100% { opacity: 0; } }
+@keyframes meeting-slide-trade-v3 { 0%, 21.35% { opacity: 0; } 21.75%, 31.5% { opacity: 1; } 32.1%, 100% { opacity: 0; } }
 @keyframes meeting-slide-health-v3 { 0%, 38.6% { opacity: 0; } 39.2%, 48.1% { opacity: 1; } 48.7%, 100% { opacity: 0; } }
 @keyframes meeting-slide-risk-v3 { 0%, 48.1% { opacity: 0; } 48.7%, 57% { opacity: 1; } 57.6%, 100% { opacity: 0; } }
 @keyframes meeting-slide-ai-v3 { 0%, 57% { opacity: 0; } 57.6%, 65.5% { opacity: 1; } 66.1%, 100% { opacity: 0; } }
@@ -2787,18 +2787,18 @@ button { color: inherit; }
 @keyframes meeting-field-focus-place { 0%, 16.5% { box-shadow: none; } 16.6%, 18.2% { border-color: #2d83aa; box-shadow: 0 0 0 3px rgba(45, 131, 170, .14); } 18.45%, 100% { box-shadow: none; } }
 @keyframes meeting-field-focus-manager { 0%, 19% { box-shadow: none; } 19.1%, 20.25% { border-color: #2d83aa; box-shadow: 0 0 0 3px rgba(45, 131, 170, .14); } 20.5%, 100% { box-shadow: none; } }
 
-@keyframes meeting-worker-field-name { 0%, 21.6% { opacity: 0; } 21.9%, 30% { opacity: 1; } 30.3%, 100% { opacity: 0; } }
-@keyframes meeting-worker-field-role { 0%, 24.1% { opacity: 0; } 24.4%, 30% { opacity: 1; } 30.3%, 100% { opacity: 0; } }
-@keyframes meeting-worker-type-name { 0%, 23.1% { clip-path: inset(0 100% 0 0); } 24.2%, 99.7% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 100% 0 0); } }
-@keyframes meeting-worker-type-role { 0%, 25.45% { clip-path: inset(0 100% 0 0); } 26.35%, 99.7% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 100% 0 0); } }
-@keyframes meeting-worker-caret-name { 0%, 23.1% { opacity: 0; } 23.15%, 23.5% { opacity: 1; } 23.51%, 23.85% { opacity: 0; } 23.86%, 24.2% { opacity: 1; } 24.21%, 100% { opacity: 0; } }
-@keyframes meeting-worker-caret-role { 0%, 25.45% { opacity: 0; } 25.5%, 25.8% { opacity: 1; } 25.81%, 26.1% { opacity: 0; } 26.11%, 26.35% { opacity: 1; } 26.36%, 100% { opacity: 0; } }
+@keyframes meeting-worker-field-name { 0%, 31.7052% { opacity: 0; } 31.9514%, 38.6000% { opacity: 1; } 38.8462%, 100% { opacity: 0; } }
+@keyframes meeting-worker-field-role { 0%, 33.7572% { opacity: 0; } 34.0035%, 38.6000% { opacity: 1; } 38.8462%, 100% { opacity: 0; } }
+@keyframes meeting-worker-type-name { 0%, 32.9364% { clip-path: inset(0 100% 0 0); } 33.8393%, 99.7% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 100% 0 0); } }
+@keyframes meeting-worker-type-role { 0%, 34.8653% { clip-path: inset(0 100% 0 0); } 35.6040%, 99.7% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 100% 0 0); } }
+@keyframes meeting-worker-caret-name { 0%, 32.9364% { opacity: 0; } 32.9775%, 33.2647% { opacity: 1; } 33.2729%, 33.5520% { opacity: 0; } 33.5602%, 33.8393% { opacity: 1; } 33.8475%, 100% { opacity: 0; } }
+@keyframes meeting-worker-caret-role { 0%, 34.8653% { opacity: 0; } 34.9064%, 35.1526% { opacity: 1; } 35.1608%, 35.3988% { opacity: 0; } 35.4071%, 35.6040% { opacity: 1; } 35.6123%, 100% { opacity: 0; } }
 @keyframes meeting-worker-empty-state-v19 {
-  0%, 21.5% { opacity: 0; transform: scale(.985); }
-  21.6%, 27.75% { opacity: 1; transform: scale(1); }
-  28.1%, 100% { opacity: 0; transform: scale(.985); }
+  0%, 31.6231% { opacity: 0; transform: scale(.985); }
+  31.7052%, 36.7532% { opacity: 1; transform: scale(1); }
+  37.0405%, 100% { opacity: 0; transform: scale(.985); }
 }
-@keyframes meeting-worker-toast-v3 { 0%, 27.8% { opacity: 0; transform: translate(-50%, 8px); } 28.1%, 29.4% { opacity: 1; transform: translate(-50%, 0); } 29.9%, 100% { opacity: 0; transform: translate(-50%, -7px); } }
+@keyframes meeting-worker-toast-v3 { 0%, 36.7942% { opacity: 0; transform: translate(-50%, 8px); } 37.0405%, 38.1075% { opacity: 1; transform: translate(-50%, 0); } 38.5179%, 100% { opacity: 0; transform: translate(-50%, -7px); } }
 
 @keyframes meeting-choice-trade-1 {
   0%, 30.5% { opacity: 0; }
@@ -2847,8 +2847,8 @@ button { color: inherit; }
   73.4%, 100% { opacity: 0; }
 }
 
-@keyframes meeting-tick-trade-1 { 0%, 33.2% { opacity: 0; transform: rotate(42deg) scale(.45); } 33.45%, 38.6% { opacity: 1; transform: rotate(42deg) scale(1); } 39%, 100% { opacity: 0; } }
-@keyframes meeting-tick-trade-2 { 0%, 36.2% { opacity: 0; transform: rotate(42deg) scale(.45); } 36.45%, 38.6% { opacity: 1; transform: rotate(42deg) scale(1); } 39%, 100% { opacity: 0; } }
+@keyframes meeting-tick-trade-1 { 0%, 23.1% { opacity: 0; transform: rotate(42deg) scale(.45); } 23.3%, 100% { opacity: 1; transform: rotate(42deg) scale(1); } }
+@keyframes meeting-tick-trade-2 { 0%, 25.4% { opacity: 0; transform: rotate(42deg) scale(.45); } 25.599999999999998%, 100% { opacity: 1; transform: rotate(42deg) scale(1); } }
 @keyframes meeting-tick-health-ok { 0%, 41.2% { opacity: 0; transform: rotate(42deg) scale(.45); } 41.45%, 48.1% { opacity: 1; transform: rotate(42deg) scale(1); } 48.5%, 100% { opacity: 0; } }
 @keyframes meeting-tick-helmet { 0%, 43.65% { opacity: 0; transform: rotate(42deg) scale(.45); } 43.9%, 48.1% { opacity: 1; transform: rotate(42deg) scale(1); } 48.5%, 100% { opacity: 0; } }
 @keyframes meeting-tick-shoes { 0%, 45.9% { opacity: 0; transform: rotate(42deg) scale(.45); } 46.15%, 48.1% { opacity: 1; transform: rotate(42deg) scale(1); } 48.5%, 100% { opacity: 0; } }
@@ -2901,25 +2901,37 @@ button { color: inherit; }
   19.25%, 20.2% { opacity: 0; }
   20.45%, 20.9% { left: calc(var(--meeting-basic-next-x, 50%) + 3.6%); top: calc(var(--meeting-basic-next-y, 63.48%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
   21.1% { left: calc(var(--meeting-basic-next-x, 50%) + 3.6%); top: calc(var(--meeting-basic-next-y, 63.48%) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
-  21.35%, 22% { opacity: 0; }
-  22.15%, 22.7% { left: 30%; top: 43.8%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  22.95% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
-  23.2%, 24.35% { opacity: 0; }
-  24.5%, 25.05% { left: 30%; top: 54.4%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  25.3% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
-  25.55%, 27% { opacity: 0; }
-  27.15%, 27.55% { left: 50%; top: 61.2%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  27.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
-  28.05%, 29% { opacity: 0; }
-  29.1%, 29.55% { left: 74%; top: 87.2%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  29.8% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
-  30.1%, 32.25% { opacity: 0; }
-  32.45%, 32.95% { left: 85.1%; top: 24.7%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  33.2% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
-  33.45%, 35.25% { opacity: 0; }
-  35.45%, 35.95% { left: 85.1%; top: 34.6%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
-  36.2% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
-  36.45%, 40.2% { opacity: 0; }
+  21.35% { opacity: 0; }
+  22.400000000000002% { left: calc(var(--meeting-trade-one-x) + 3.6%); top: calc(var(--meeting-trade-one-y) + 2.25%); opacity: 0; }
+  22.6%, 22.900000000000002% { left: calc(var(--meeting-trade-one-x) + 3.6%); top: calc(var(--meeting-trade-one-y) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  23.1% { left: calc(var(--meeting-trade-one-x) + 3.6%); top: calc(var(--meeting-trade-one-y) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  23.35% { opacity: 0; }
+  24.7% { left: calc(var(--meeting-trade-two-x) + 3.6%); top: calc(var(--meeting-trade-two-y) + 2.25%); opacity: 0; }
+  24.9%, 25.2% { left: calc(var(--meeting-trade-two-x) + 3.6%); top: calc(var(--meeting-trade-two-y) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  25.4% { left: calc(var(--meeting-trade-two-x) + 3.6%); top: calc(var(--meeting-trade-two-y) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  25.65% { opacity: 0; }
+  30.3% { left: calc(50% + 3.6%); top: calc(var(--meeting-trade-start-y) + 2.25%); opacity: 0; }
+  30.5%, 30.8% { left: calc(50% + 3.6%); top: calc(var(--meeting-trade-start-y) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  31.0% { left: calc(50% + 3.6%); top: calc(var(--meeting-trade-start-y) + 2.25%); opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  31.25% { opacity: 0; }
+  26.8% { left: 64%; top: 82%; opacity: 0; }
+  27.1% { left: 64%; top: 82%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  28.7% { left: 64%; top: 18%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  28.95%, 30.2% { opacity: 0; }
+  31.5% { opacity: 0; }
+  32.1566%, 32.6081% { left: 30%; top: 43.8%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  32.8133% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  33.0185%, 33.9624% { opacity: 0; }
+  34.0855%, 34.5370% { left: 30%; top: 54.4%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  34.7422% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  34.9474%, 36.1376% { opacity: 0; }
+  36.2607%, 36.5890% { left: 50%; top: 61.2%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  36.7942% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  36.9994%, 37.7792% { opacity: 0; }
+  37.8613%, 38.2306% { left: 74%; top: 87.2%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
+  38.4358% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
+  38.6821% { opacity: 0; }
+  40.2% { opacity: 0; }
   40.4%, 40.95% { left: 16.5%; top: 28.9%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
   41.2% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   41.45%, 42.65% { opacity: 0; }
@@ -2963,7 +2975,7 @@ button { color: inherit; }
   89.85%, 90.35% { left: 75%; top: 89%; opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(1); }
   90.6% { opacity: 1; transform: translate(-42%, -20%) rotate(-8deg) scale(var(--demo-hand-press-scale)); }
   90.85%, 100% { opacity: 0; }
-}
+ }
 
 @keyframes meeting-ripple {
   0%, 4.85% { left: 55%; top: 58%; opacity: 0; transform: translate(-50%, -50%) scale(.35); }
@@ -2983,26 +2995,29 @@ button { color: inherit; }
   19.55% { left: var(--meeting-basic-manager-x, 50%); top: var(--meeting-basic-manager-y, 44.98%); opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   19.56%, 21% { opacity: 0; }
   21.1% { left: var(--meeting-basic-next-x, 50%); top: var(--meeting-basic-next-y, 63.48%); opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  21.7% { left: var(--meeting-basic-next-x, 50%); top: var(--meeting-basic-next-y, 63.48%); opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
-  21.71%, 22.85% { opacity: 0; }
-  22.95% { left: 30%; top: 43.8%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  23.55% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
-  23.56%, 25.2% { opacity: 0; }
-  25.3% { left: 30%; top: 54.4%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  25.9% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
-  25.91%, 27.7% { opacity: 0; }
-  27.8% { left: 50%; top: 61.2%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  28.4% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
-  28.41%, 29.7% { opacity: 0; }
-  29.8% { left: 74%; top: 87.2%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  30.4% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
-  30.41%, 33.1% { opacity: 0; }
-  33.2% { left: 85.1%; top: 24.7%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  33.8% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
-  33.81%, 36.1% { opacity: 0; }
-  36.2% { left: 85.1%; top: 34.6%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
-  36.8% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
-  36.81%, 41.1% { opacity: 0; }
+  21.7%, 22.95% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  23.080000000000002% { left: var(--meeting-trade-one-x); top: var(--meeting-trade-one-y); opacity: 0; transform: translate(-50%, -50%) scale(.35); }
+  23.1% { left: var(--meeting-trade-one-x); top: var(--meeting-trade-one-y); opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  23.6% { left: var(--meeting-trade-one-x); top: var(--meeting-trade-one-y); opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  25.38% { left: var(--meeting-trade-two-x); top: var(--meeting-trade-two-y); opacity: 0; transform: translate(-50%, -50%) scale(.35); }
+  25.4% { left: var(--meeting-trade-two-x); top: var(--meeting-trade-two-y); opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  25.9% { left: var(--meeting-trade-two-x); top: var(--meeting-trade-two-y); opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  30.98% { left: 50%; top: var(--meeting-trade-start-y); opacity: 0; transform: translate(-50%, -50%) scale(.35); }
+  31.0% { left: 50%; top: var(--meeting-trade-start-y); opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  31.5% { left: 50%; top: var(--meeting-trade-start-y); opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  32.7312% { opacity: 0; }
+  32.8133% { left: 30%; top: 43.8%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  33.3058% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  33.3140%, 34.6601% { opacity: 0; }
+  34.7422% { left: 30%; top: 54.4%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  35.2347% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  35.2429%, 36.7121% { opacity: 0; }
+  36.7942% { left: 50%; top: 61.2%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  37.2867% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  37.2949%, 38.3538% { opacity: 0; }
+  38.4358% { left: 74%; top: 87.2%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
+  38.9283% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
+  41.1% { opacity: 0; }
   41.2% { left: 16.5%; top: 28.9%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
   41.8% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   41.81%, 43.55% { opacity: 0; }
@@ -3039,13 +3054,13 @@ button { color: inherit; }
   90.6% { left: 75%; top: 89%; opacity: 1; transform: translate(-50%, -50%) scale(.45); }
   91.2% { opacity: 0; transform: translate(-50%, -50%) scale(1.65); }
   91.21%, 100% { opacity: 0; }
-}
+ }
 
 @keyframes meeting-cap-home { 0%, 1% { opacity: 0; } 1.5%, 5.9% { opacity: 1; } 6.4%, 100% { opacity: 0; } }
 @keyframes meeting-cap-menu { 0%, 6.4% { opacity: 0; } 6.9%, 11.9% { opacity: 1; } 12.4%, 100% { opacity: 0; } }
 @keyframes meeting-cap-basic { 0%, 12.4% { opacity: 0; } 12.9%, 21% { opacity: 1; } 21.5%, 100% { opacity: 0; } }
-@keyframes meeting-cap-workers-v3 { 0%, 21.5% { opacity: 0; } 22%, 30% { opacity: 1; } 30.5%, 100% { opacity: 0; } }
-@keyframes meeting-cap-trade { 0%, 30.5% { opacity: 0; } 31%, 38.6% { opacity: 1; } 39.1%, 100% { opacity: 0; } }
+@keyframes meeting-cap-workers-v3 { 0%, 31.6231% { opacity: 0; } 32.0335%, 38.6000% { opacity: 1; } 39.0104%, 100% { opacity: 0; } }
+@keyframes meeting-cap-trade { 0%, 21.35% { opacity: 0; } 21.75%, 31.5% { opacity: 1; } 32.1%, 100% { opacity: 0; } }
 @keyframes meeting-cap-health-v3 { 0%, 39.1% { opacity: 0; } 39.6%, 48.1% { opacity: 1; } 48.6%, 100% { opacity: 0; } }
 @keyframes meeting-cap-risk-v3 { 0%, 48.6% { opacity: 0; } 49.1%, 57% { opacity: 1; } 57.5%, 100% { opacity: 0; } }
 @keyframes meeting-cap-ai { 0%, 57.5% { opacity: 0; } 58%, 65.5% { opacity: 1; } 66%, 100% { opacity: 0; } }
@@ -3057,8 +3072,8 @@ button { color: inherit; }
 @keyframes meeting-cap-calendar { 0%, 96.5% { opacity: 0; } 97%, 100% { opacity: 1; } }
 
 @keyframes meeting-explain-entry { 0%, 1% { opacity: 0; transform: translateY(18px); } 1.5%, 11.9% { opacity: 1; transform: translateY(0); } 12.5%, 100% { opacity: 0; transform: translateY(-12px); } }
-@keyframes meeting-explain-basic { 0%, 11.9% { opacity: 0; transform: translateY(18px); } 12.5%, 30% { opacity: 1; transform: translateY(0); } 30.6%, 100% { opacity: 0; transform: translateY(-12px); } }
-@keyframes meeting-explain-trade { 0%, 30% { opacity: 0; transform: translateY(18px); } 30.6%, 38.6% { opacity: 1; transform: translateY(0); } 39.2%, 100% { opacity: 0; transform: translateY(-12px); } }
+@keyframes meeting-explain-basic { 0%, 11.9% { opacity: 0; transform: translateY(18px); } 12.5%, 21.35% { opacity: 1; transform: translateY(0); } 21.75%, 100% { opacity: 0; transform: translateY(-12px); } }
+@keyframes meeting-explain-trade { 0%, 21.35% { opacity: 0; transform: translateY(18px); } 21.75%, 31.5% { opacity: 1; transform: translateY(0); } 32.1%, 100% { opacity: 0; transform: translateY(-12px); } }
 @keyframes meeting-explain-check { 0%, 38.6% { opacity: 0; transform: translateY(18px); } 39.2%, 48.1% { opacity: 1; transform: translateY(0); } 48.7%, 100% { opacity: 0; transform: translateY(-12px); } }
 @keyframes meeting-explain-ai { 0%, 48.1% { opacity: 0; transform: translateY(18px); } 48.7%, 65.5% { opacity: 1; transform: translateY(0); } 66.1%, 100% { opacity: 0; transform: translateY(-12px); } }
 @keyframes meeting-explain-focus-v2 { 0%, 65.5% { opacity: 0; transform: translateY(18px); } 66.1%, 73% { opacity: 1; transform: translateY(0); } 73.6%, 100% { opacity: 0; transform: translateY(-12px); } }
@@ -3753,47 +3768,9 @@ button { color: inherit; }
 }
 
 /* 공종 화면은 빈 체크박스로 시작하고 터치 직후에만 체크됩니다. */
-@keyframes meeting-choice-trade-1 {
-  0%, 33.2% {
-    opacity: 1;
-    border-color: #8e9093;
-    background: #fff;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  33.45% {
-    opacity: 1;
-    border-color: #397390;
-    background: #397390;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  33.8%, 100% {
-    opacity: 1;
-    border-color: #397390;
-    background: #397390;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
+@keyframes meeting-choice-trade-1 { 0%, 23.1% { opacity: 1; border-color: #8e9093; background: #fff; transform: translate(-50%, -50%) scale(1); } 23.3% { opacity: 1; border-color: #397390; background: #397390; transform: translate(-50%, -50%) scale(1.15); } 23.6%, 100% { opacity: 1; border-color: #397390; background: #397390; transform: translate(-50%, -50%) scale(1); } }
 
-@keyframes meeting-choice-trade-2 {
-  0%, 36.2% {
-    opacity: 1;
-    border-color: #8e9093;
-    background: #fff;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  36.45% {
-    opacity: 1;
-    border-color: #397390;
-    background: #397390;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-  36.8%, 100% {
-    opacity: 1;
-    border-color: #397390;
-    background: #397390;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
+@keyframes meeting-choice-trade-2 { 0%, 25.4% { opacity: 1; border-color: #8e9093; background: #fff; transform: translate(-50%, -50%) scale(1); } 25.599999999999998% { opacity: 1; border-color: #397390; background: #397390; transform: translate(-50%, -50%) scale(1.15); } 25.9%, 100% { opacity: 1; border-color: #397390; background: #397390; transform: translate(-50%, -50%) scale(1); } }
 
 /* 건강상태와 보호구도 장면 진입 때 빈 칸을 먼저 보여줍니다. */
 @keyframes meeting-choice-health-ok {
@@ -6650,4 +6627,38 @@ body { background: #fff; }
 /* Final v51 cascade guard: QR appears before either responsibility signature. */
 .guide-phone.meeting-demo-active .meeting-slide-qr-signature {
   animation: meeting-slide-qr-signature-v51 var(--meeting-duration) ease infinite;
+}
+
+/* v126: supplied long screenshot, selection → upward swipe → start → workers.
+   All animations use the same audio-driven meeting clock, including pause/seek. */
+.meeting-slide-trade { overflow: hidden; }
+.meeting-trade-scroll { position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: 1141 / 4323; }
+.meeting-trade-scroll > img { display: block; width: 100%; height: 100%; }
+.meeting-trade-scroll:not(.demo-image-ready) { visibility: hidden; }
+.meeting-trade-scroll .meeting-choice { left: 84.843%; width: 6.15%; }
+.meeting-trade-scroll .meeting-choice-trade-1 { top: 20.3613%; }
+.meeting-trade-scroll .meeting-choice-trade-2 { top: 26.0254%; }
+.meeting-trade-scroll .meeting-focus { left: 9.24%; width: 81.52%; height: 4.98%; }
+.meeting-trade-scroll .meeting-focus-trade-one { top: 17.82%; }
+.meeting-trade-scroll .meeting-focus-trade-two { top: 23.54%; }
+.meeting-trade-scroll .meeting-focus-trade-start { left: 10.35%; top: 89.75%; width: 79.12%; height: 5.96%; }
+.guide-phone.meeting-demo-active .meeting-trade-scroll { animation: meeting-trade-scroll var(--meeting-duration) ease-in-out infinite; }
+.guide-phone.meeting-demo-active .meeting-focus-trade-start { animation: meeting-focus-trade-start var(--meeting-duration) ease infinite; }
+.tour-stage.meeting-page .meeting-explain-workers { animation: meeting-explain-workers var(--meeting-duration) ease infinite; }
+.guide-phone.meeting-demo-active.is-paused .meeting-trade-scroll,
+.guide-phone.meeting-demo-active.is-paused .meeting-trade-scroll *,
+.guide-phone.meeting-demo-active.is-paused .meeting-trade-scroll *::after { animation-play-state: paused; }
+@keyframes meeting-trade-scroll {
+  0%, 27.1% { transform: translateY(0); }
+  29.3%, 100% { transform: translateY(calc(var(--meeting-trade-view-height, 100vh) - 100%)); }
+}
+@keyframes meeting-focus-trade-start {
+  0%, 29.3% { opacity: 0; }
+  29.6%, 31.5% { opacity: 1; }
+  32.1%, 100% { opacity: 0; }
+}
+@keyframes meeting-explain-workers {
+  0%, 31.5% { opacity: 0; transform: translateY(18px); }
+  32.1%, 38.6% { opacity: 1; transform: translateY(0); }
+  39.2%, 100% { opacity: 0; transform: translateY(-12px); }
 }

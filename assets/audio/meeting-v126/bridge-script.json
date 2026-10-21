@@ -1,0 +1,16 @@
+[
+  {
+    "language": "ko",
+    "preset": "taehyung",
+    "voiceId": null,
+    "text": "공종 선택을 마친 뒤 화면을 위로 올려 회의진행 시작을 누르면, 작업자 명단 화면으로 이동합니다.",
+    "file": "bridge-ko.mp3"
+  },
+  {
+    "language": "en",
+    "preset": "will",
+    "voiceId": "bIHbv24MWmeRgasZH58o",
+    "text": "After selecting the work types, swipe up and tap Start Briefing to open the worker list.",
+    "file": "bridge-en.mp3"
+  }
+]

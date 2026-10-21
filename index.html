@@ -23,23 +23,23 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/video-demo-icon-32-v1.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/video-demo-icon-192-v1.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/video-demo-icon-180-v1.png">
-  <link rel="stylesheet" href="styles.css?v=20261016-support-reveal-v109">
+  <link rel="stylesheet" href="styles.css?v=20261021-meeting-sequence-v126">
   <link rel="stylesheet" href="safety4cut.css?v=20261016-safety-reveal-v107">
   <link rel="stylesheet" href="demo-hands-v80.css?v=20261006-windows-hand-v93">
   <link rel="stylesheet" href="demo-recorder-v81.css?v=20261017-recording-start-v113">
   <link rel="stylesheet" href="tv-compat.css?v=20261017-tv-recovery-v114">
-  <script src="tv-media-timeline.js?v=20261021-weather-sources-v118" defer></script>
-  <script src="english-narration.js?v=20261021-english-audio-v119" defer></script>
-  <script src="demo-translations.js?v=20261021-language-menu-v125" defer></script>
+  <script src="tv-media-timeline.js?v=20261021-meeting-sequence-v126" defer></script>
+  <script src="english-narration.js?v=20261021-meeting-sequence-v126" defer></script>
+  <script src="demo-translations.js?v=20261021-meeting-sequence-v126" defer></script>
   <script src="demo-language.js?v=20261021-language-menu-v125" defer></script>
   <script src="tv-compat.js?v=20261021-english-audio-v119" defer></script>
   <script src="safety4cut.js?v=20261021-safety-caption-v121" defer></script>
   <link rel="stylesheet" href="subtitles.css?v=20261004-v87">
   <link rel="stylesheet" href="demo-language.css?v=20261021-language-menu-v125">
-  <script src="subtitle-data.js?v=20261021-weather-sources-v118" defer></script>
-  <script src="subtitle-data.en.js?v=20261021-english-audio-v119" defer></script>
+  <script src="subtitle-data.js?v=20261021-meeting-sequence-v126" defer></script>
+  <script src="subtitle-data.en.js?v=20261021-meeting-sequence-v126" defer></script>
   <script src="subtitles.js?v=20261020-language-v117" defer></script>
-  <script src="app.js?v=20261021-language-menu-v125" defer></script>
+  <script src="app.js?v=20261021-meeting-sequence-v126" defer></script>
   <script src="demo-recorder-v81.js?v=20261020-language-v117" defer></script>
   <script src="pwa.js?v=20261017-tv-startup-v115" defer></script>
   <noscript>
@@ -260,6 +260,17 @@
                     </div>
                   </section>
 
+                  <div class="meeting-slide meeting-scene meeting-slide-trade" aria-hidden="true">
+                    <div class="meeting-trade-scroll" data-demo-image="meeting-trade-long">
+                      <img data-demo-src="assets/screens/guide/meeting-trade-long-v126.png" data-demo-image="meeting-trade-long" alt="" width="1141" height="4323">
+                      <span class="meeting-choice meeting-choice-trade-1"></span>
+                      <span class="meeting-choice meeting-choice-trade-2"></span>
+                      <span class="meeting-focus demo-highlight-box meeting-focus-trade-one"></span>
+                      <span class="meeting-focus demo-highlight-box meeting-focus-trade-two"></span>
+                      <span class="meeting-focus demo-highlight-box meeting-focus-trade-start"></span>
+                    </div>
+                  </div>
+
                   <div class="meeting-slide meeting-scene meeting-slide-workers" aria-hidden="true">
                     <img data-demo-src="assets/screens/guide/meeting-workers-v2.png" alt="" width="1179" height="2556">
                     <div class="meeting-scene-state">
@@ -271,14 +282,6 @@
                         <small>이름과 임무를 입력하면 이곳에 카드가 추가됩니다</small>
                       </span>
                       <span class="meeting-worker-toast">일용원 카드가 명단에 추가되었습니다</span>
-                    </div>
-                  </div>
-
-                  <div class="meeting-slide meeting-scene meeting-slide-trade" aria-hidden="true">
-                    <img data-demo-src="assets/screens/guide/meeting-trade-v2.png" alt="" width="1179" height="2556">
-                    <div class="meeting-scene-state">
-                      <span class="meeting-choice meeting-choice-trade-1"></span>
-                      <span class="meeting-choice meeting-choice-trade-2"></span>
                     </div>
                   </div>
 
@@ -375,8 +378,6 @@
                     <span class="meeting-focus demo-highlight-box meeting-focus-basic-form"></span>
                     <span class="meeting-focus demo-highlight-box meeting-focus-worker-form"></span>
                     <span class="meeting-focus demo-highlight-box meeting-focus-worker-saved"></span>
-                    <span class="meeting-focus demo-highlight-box meeting-focus-trade-one"></span>
-                    <span class="meeting-focus demo-highlight-box meeting-focus-trade-two"></span>
                     <span class="meeting-focus demo-highlight-box meeting-focus-health"></span>
                     <span class="meeting-focus demo-highlight-box meeting-focus-ppe"></span>
                     <span class="meeting-focus demo-highlight-box demo-highlight-critical meeting-focus-risk"></span>
@@ -578,48 +579,54 @@
 
             <aside class="meeting-explanations" aria-label="현재 진행 중인 TBM 회의록 작성 단계 설명">
               <article class="meeting-explain meeting-explain-entry">
-                <span><i></i> 1 / 8 · 시작</span>
+                <span><i></i> 1 / 9 · 시작</span>
                 <h3>TBM 회의록을 열고<br><em>새 회의를 시작</em></h3>
                 <p>홈에서 TBM 회의록을 누른 뒤 ‘회의록 작성’을 선택합니다. 기존 원본 조회는 회의록 캘린더에서 따로 관리됩니다.</p>
               </article>
               <article class="meeting-explain meeting-explain-basic">
-                <span><i></i> 2 / 8 · 기본정보·명단</span>
+                <span><i></i> 2 / 9 · 기본정보</span>
                 <h3>공사·장소·책임자를<br><em>직접 입력</em></h3>
-                <p>공사명과 작업장소, 시공관리책임자를 차례로 입력하고 일용원 이름과 임무를 입력해 당일 명단에 추가합니다.</p>
-                <div class="demo-explain-points"><b>공사명</b><b>작업장소</b><b>참석자</b></div>
+                <p>공사명과 작업장소, 시공관리책임자 등 기본정보를 차례로 입력한 뒤 공종 선택 화면으로 이동합니다.</p>
+                <div class="demo-explain-points"><b>공사명</b><b>작업장소</b><b>시공관리책임자</b></div>
               </article>
               <article class="meeting-explain meeting-explain-trade">
-                <span><i></i> 3 / 8 · 공종선택</span>
+                <span><i></i> 3 / 9 · 공종선택</span>
                 <h3>실제 작업 공종을<br><em>복수 선택</em></h3>
-                <p>가공·지중·내선에서 당일 수행하는 공종을 누르면 체크가 즉시 표시되고, 관련 위험요인과 안전대책이 자동으로 구성됩니다.</p>
+                <p>가공·지중·내선에서 실제 수행할 공종을 선택합니다. 화면을 위로 올려 ‘회의진행 시작’을 누르면 작업자 명단으로 이동합니다.</p>
                 <div class="demo-explain-points"><b>가공</b><b>지중</b><b>내선</b></div>
               </article>
+              <article class="meeting-explain meeting-explain-workers">
+                <span><i></i> 4 / 9 · 작업자 명단</span>
+                <h3>당일 작업자의 이름과 임무를<br><em>명단에 추가</em></h3>
+                <p>회의진행 시작 후 작업자 명단을 확인합니다. 당일 투입되는 일용원은 이름과 임무를 입력하고 ‘일용원 추가 및 카드저장’을 눌러 참석자 명단에 추가합니다.</p>
+                <div class="demo-explain-points"><b>이름</b><b>임무</b><b>참석자</b></div>
+              </article>
               <article class="meeting-explain meeting-explain-check">
-                <span><i></i> 4 / 8 · 건강·보호구</span>
+                <span><i></i> 5 / 9 · 건강·보호구</span>
                 <h3>건강·보호구·위험을<br><em>순서대로 확인</em></h3>
                 <p>작업자 건강상태와 보호구를 점검하고 위험요인별 현장조치를 선택해 회의내용을 확정합니다.</p>
                 <div class="demo-explain-points"><b>건강상태</b><b>보호구</b><b>현장조치</b></div>
               </article>
               <article class="meeting-explain meeting-explain-ai">
-                <span><i></i> 5 / 8 · 위험요인·AI</span>
+                <span><i></i> 6 / 9 · 위험요인·AI</span>
                 <h3>공종·기상·사고사례를<br><em>종합 검토</em></h3>
                 <p>AI가 제안한 추가 위험요인과 유사사고를 확인하고, 현장 책임자가 적용 여부를 최종 결정합니다.</p>
                 <div class="demo-explain-points"><b>위험요인</b><b>유사사고</b><b>최종 판단</b></div>
               </article>
               <article class="meeting-explain meeting-explain-focus">
-                <span><i></i> 6 / 8 · 중점위험</span>
+                <span><i></i> 7 / 9 · 중점위험</span>
                 <h3>오늘의 핵심 위험을<br><em>최종 선택</em></h3>
                 <p>AI 검토와 현장 확인을 바탕으로 감전·추락·끼임 등 당일 중점 관리할 위험을 확정합니다.</p>
                 <div class="demo-explain-points"><b>추천 위험</b><b>현장 판단</b><b>회의록 반영</b></div>
               </article>
               <article class="meeting-explain meeting-explain-sign">
-                <span><i></i> 7 / 8 · 전자서명</span>
+                <span><i></i> 8 / 9 · 전자서명</span>
                 <h3>책임자와 작업자의<br><em>참석 서명</em></h3>
                 <p>현장에서는 직접 서명하고, 떨어져 있는 작업자는 전용 QR·링크로 원격서명할 수 있습니다. 저장된 서명은 회의록에 바로 반영됩니다.</p>
                 <div class="demo-explain-points"><b>직접서명</b><b>QR</b><b>원격서명</b></div>
               </article>
               <article class="meeting-explain meeting-explain-save">
-                <span><i></i> 8 / 8 · PDF·보관</span>
+                <span><i></i> 9 / 9 · PDF·보관</span>
                 <h3>PDF를 확정하면<br><em>캘린더에 자동 저장</em></h3>
                 <p>서명과 회의내용을 PDF로 저장하고, 회의록 캘린더에서 날짜별 원본을 열거나 공유·기기저장할 수 있습니다.</p>
                 <div class="demo-explain-points"><b>PDF 원본</b><b>날짜별 보관</b><b>기간 ZIP</b></div>

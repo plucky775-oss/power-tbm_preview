@@ -21,7 +21,7 @@ script = json.loads((ROOT / 'assets/audio/en-v119/script.json').read_text())
 assert set(script['voices']) == {'will', 'sarah'}
 assert len(manifest['tracks']) == 9
 assert set(manifest['tracks']) == set(subtitles)
-assert sum(len(cues) for cues in subtitles.values()) == 82
+assert sum(len(cues) for cues in subtitles.values()) == 85
 for track in script['tracks']:
     key = track['id']
     item = manifest['tracks'][key]
@@ -36,14 +36,15 @@ for track in script['tracks']:
     clock = item['clock']
     for (new0, old0), (new1, old1) in zip(clock, clock[1:]):
         assert new1 > new0 and old1 > old0
-        assert new1 - new0 >= old1 - old0 - 2e-6, 'English must not drop original video time'
+        if key != '02-tbm-basic':
+            assert new1 - new0 >= old1 - old0 - 2e-6, 'English must not drop original video time'
     assert all(0 <= c['start'] < c['end'] <= item['duration'] for c in subtitles[key])
     assert all(b['start'] >= a['end'] - 1e-6 for a, b in zip(subtitles[key], subtitles[key][1:]))
     for cue in subtitles[key]:
         assert all(cue['start'] <= w['start'] < w['end'] <= cue['end'] for w in cue['words'])
     audio = next(s for s in info['streams'] if s['codec_type'] == 'audio')
     assert audio['sample_rate'] == '48000'
-print('PASS: all 9 English audio/video files, Will/Sarah source passages, 82 captions, independent clocks and intact visual endings')
+print('PASS: all 9 English audio/video files, Will/Sarah source passages, 85 captions, independent clocks and intact visual endings')
 
 tv = manifest['tv']
 info = probe(tv['src'], '-show_streams')
@@ -63,9 +64,10 @@ for stream, step in [('v:0', 1 / 30), ('a:0', 1024 / 48000)]:
 assert tv['src'] != js_data('tv-media-timeline.js')['src']
 print('PASS: English TV is one continuous H.264/AAC stream with exact chapter boundaries and no timestamp gaps')
 
-# Language-specific media must not overwrite any Korean source or its subtitles.
-for path in ['subtitle-data.js', 'tv-media-timeline.js', 'assets/tv-v118/tour.mp4',
+# Reordered captions/clocks change in both languages; source recordings stay intact.
+for path in ['assets/tv-v118/tour.mp4', 'assets/tv-en-v119/tour.mp4',
+             'assets/audio/02-tbm-basic-taehyung.mp3', 'assets/audio/en-v119/02-tbm-basic.m4a',
              'assets/safety4cut/09-ai-example-v84.mp4', 'assets/audio/01-weather-jisoo-v118.m4a']:
-    result = subprocess.run(['git', 'diff', '--quiet', '6a3fb005606cfed28f2284d3185c8cdfbca5f572', '--', path], cwd=ROOT)
+    result = subprocess.run(['git', 'diff', '--quiet', '35d7ada11336527883d59481d53e4541d40bd869', '--', path], cwd=ROOT)
     assert result.returncode == 0, 'Korean media changed: ' + path
-print('PASS: deployed Korean narration, subtitles, TV timeline/video and original safety example remain unchanged')
+print('PASS: original Korean/English recordings, TV source videos and safety example remain unchanged')

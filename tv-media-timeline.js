@@ -1,9 +1,9 @@
-// Updated by scripts/build-weather-narration.py; times are in seconds.
+// Meeting sequence updated by scripts/build-meeting-sequence.py.
 window.PowerTBMTVTimeline = {
-  "src": "assets/tv-v118/tour.mp4",
+  "src": "assets/tv-v126/tour.mp4",
   "width": 480,
   "height": 1040,
-  "duration": 280.8666666666667,
+  "duration": 288.33333333333337,
   "segments": [
     {
       "id": "00-opening",
@@ -26,56 +26,56 @@ window.PowerTBMTVTimeline = {
       "page": "meeting",
       "index": 0,
       "start": 37.9,
-      "duration": 34.3,
-      "end": 72.2
+      "duration": 41.766666666666666,
+      "end": 79.66666666666666
     },
     {
       "id": "03-ai-pdf",
       "page": "meeting",
       "index": 1,
-      "start": 72.2,
+      "start": 79.66666666666667,
       "duration": 40.666666666666664,
-      "end": 112.86666666666666
+      "end": 120.33333333333333
     },
     {
       "id": "04-safety-tools",
       "page": "support",
       "index": 0,
-      "start": 112.86666666666666,
+      "start": 120.33333333333333,
       "duration": 31.866666666666667,
-      "end": 144.73333333333332
+      "end": 152.2
     },
     {
       "id": "05-emergency",
       "page": "support",
       "index": 1,
-      "start": 144.73333333333332,
+      "start": 152.2,
       "duration": 22.0,
-      "end": 166.73333333333332
+      "end": 174.2
     },
     {
       "id": "07-safety4cut-intro",
       "page": "safety",
       "index": 0,
-      "start": 166.73333333333332,
+      "start": 174.2,
       "duration": 38.06666666666667,
-      "end": 204.8
+      "end": 212.26666666666668
     },
     {
       "id": "08-safety4cut-example",
       "page": "safety",
       "index": 1,
-      "start": 204.8,
+      "start": 212.26666666666668,
       "duration": 64.56666666666666,
-      "end": 269.3666666666667
+      "end": 276.83333333333337
     },
     {
       "id": "06-closing",
       "page": "closing",
       "index": 0,
-      "start": 269.3666666666667,
+      "start": 276.83333333333337,
       "duration": 11.5,
-      "end": 280.8666666666667
+      "end": 288.33333333333337
     }
   ]
 };

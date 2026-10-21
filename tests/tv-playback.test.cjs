@@ -10,7 +10,7 @@ const timeline = timelineContext.window.PowerTBMTVTimeline;
 vm.runInNewContext(fs.readFileSync(path.join(root, 'english-narration.js'), 'utf8'), timelineContext);
 const english = timelineContext.window.PowerTBMEnglishNarration;
 const tree = JSON.parse(execFileSync('python3',[path.join(__dirname,'export-dom.py')],{encoding:'utf8'}));
-const durations = {'00-opening':8.166667,'01-weather':29.701,'02-tbm-basic':34.3,'03-ai-pdf':40.646,
+const durations = {'00-opening':8.166667,'01-weather':29.701,'02-tbm-basic':41.75875,'03-ai-pdf':40.646,
  '07-safety4cut-intro':38.037,'09-ai-example-v84':64.566667,'04-safety-tools':31.84325,'05-emergency':22,'06-closing':11.5};
 function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true, selectedLanguage='ko', selectedMode=selectedLanguage) {
  let now=0, nextId=1, writes=0, mediaPlays=0; const raf=new Map(), timers=new Map(), seen=new Set(), errors=[];
