@@ -4,6 +4,7 @@ window.PowerTBMEnglish = {
   // Navigation, playback and subtitles.
   "영상 시연": "Video Demo",
   "영상 시연 | Power TBM · Safety 4-Cut": "Video Demo | Power TBM · Safety 4-Cut",
+  "개발자 : 안산지사 최재혁 차장": "Developer: Jaehyeok Choi, Senior Manager (Ansan Branch)",
   "본문으로 바로가기": "Skip to content",
   "자동시연을 시작합니다": "Start the demonstration",
   "원하는 재생 모드를 한 번 눌러 시작하세요.": "Choose a playback mode to begin.",

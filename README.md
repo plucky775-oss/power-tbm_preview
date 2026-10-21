@@ -1,10 +1,15 @@
 # Power TBM 자동 시연 홈페이지
 
-**현재 코드 버전은 v121입니다.** 아래 v120 이하 항목은 이전 변경 이력입니다.
+**현재 코드 버전은 v122입니다.** 아래 v121 이하 항목은 이전 변경 이력입니다.
 
 배포 주소: [Vercel](https://power-tbm-preview.vercel.app/) · [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/)
 
-최신 수정본은 `index.html`의 `safety4cut.js?v=20261021-safety-caption-v121` 참조와 `sw.js`의 `v121-20261021-safety-caption` 캐시 버전으로 확인할 수 있습니다.
+최신 수정본은 `index.html`의 `demo-translations.js?v=20261021-developer-label-v122` 참조와 `sw.js`의 `v122-20261021-developer-label` 캐시 버전으로 확인할 수 있습니다.
+
+## 2026-10-21 영어 개발자 표기 (v122)
+
+- 영어 모드의 개발자 표기를 `Developer: Jaehyeok Choi, Senior Manager (Ansan Branch)`로 표시합니다. 차장은 Senior Manager로 표기하며, 한국어 모드의 기존 문구는 유지합니다.
+- 오프라인 캐시를 v122로 갱신합니다.
 
 ## 2026-10-21 안전-4컷 하단 설명 언어 적용 (v121)
 
