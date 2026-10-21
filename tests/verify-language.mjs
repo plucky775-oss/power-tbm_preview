@@ -167,6 +167,10 @@ const koData = window.PowerTBMSubtitleData;
 const enData = window.PowerTBMSubtitleDataEn;
 assert.deepEqual(Object.keys(enData), Object.keys(koData));
 assert.equal(Object.keys(enData).length, 9);
+assert.match(koData['01-weather'][6].words.map(w => w.text).join(' '), /한국의 레이더 영상 및 기상특보를/);
+assert.match(enData['01-weather'][6].words.map(w => w.text).join(' '), /radar imagery and weather alerts for Korea/);
+assert.equal(document.querySelector('.typhoon-compare > p').textContent,
+  'View typhoon tracks from Korea, the U.S., and Japan, along with radar imagery and weather alerts for Korea—all in one place.');
 assert.equal(Object.values(enData).reduce((count, cues) => count + cues.length, 0), 82);
 const caption = document.getElementById('subtitleLine');
 const bubble = document.getElementById('subtitleBubble');

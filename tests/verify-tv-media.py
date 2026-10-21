@@ -40,9 +40,14 @@ for packet in opening_packets:
 assert max(per_second.values()) * 8 < 1_200_000, 'opening bitrate burst exceeds its startup budget'
 print(f'PASS opening retains 245 frames; largest one-second video payload {max(per_second.values()) * 8 / 1000:.0f} kbps')
 
-# This release changes only the opening. Protect later clips, their precomposed
-# Korean labels, and the continuous audio against accidental rebuild changes.
+# Protect the v112 opening optimization and every later video packet. v118
+# changes only the weather sentence's AAC frames, retaining all other audio.
 base = ROOT / 'assets/tv-v104/tour.mp4'
+audio_patch = json.loads((ROOT / 'assets/tv-v118/narration-update.json').read_text())
+first_changed, last_changed = audio_patch['replacedAACFrames']
+weather = next(entry for entry in timeline['segments'] if entry['id'] == '01-weather')
+assert weather['start'] + 16.5 < (first_changed - 1) * 1024 / 48000
+assert (last_changed - 1) * 1024 / 48000 < weather['start'] + 27.2
 for stream in ['v:0', 'a:0']:
     tracks = []
     for file in [base, movie]:
@@ -54,9 +59,14 @@ for stream in ['v:0', 'a:0']:
             packets = [packet for packet in packets if float(packet['pts_time']) >= opening['end']]
         tracks.append(packets)
     assert len(tracks[0]) == len(tracks[1]), stream + ' lost packets'
-    assert all(a['data_hash'] == b['data_hash'] and abs(float(a['pts_time']) - float(b['pts_time'])) < .001
-               for a, b in zip(*tracks)), stream + ' changed outside the opening'
-print('PASS every later video packet and the complete AAC track are unchanged')
+    assert all(abs(float(a['pts_time']) - float(b['pts_time'])) < .001
+               for a, b in zip(*tracks)), stream + ' timestamps changed'
+    changed = [i for i, (a, b) in enumerate(zip(*tracks)) if a['data_hash'] != b['data_hash']]
+    if stream == 'a:0':
+        assert changed == list(range(first_changed, last_changed)), 'audio changed beyond the corrected weather sentence'
+    else:
+        assert not changed, 'later video packets changed'
+print('PASS later video and all AAC packets outside the corrected weather sentence are unchanged')
 
 assert hashlib.sha256(original.read_bytes()).hexdigest() == '981c8cf85a52abab0bc976528c7675026582762f506d0e4aa2cd0740a5c05509'
 example = next(entry for entry in timeline['segments'] if entry['id'] == '08-safety4cut-example')

@@ -1,33 +1,33 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v117-20261020-language-a11y`;
+const CACHE_VERSION = `${CACHE_PREFIX}v118-20261021-weather-sources`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './tv-media-timeline.js?v=20261017-opening-ready-v112',
+  './tv-media-timeline.js?v=20261021-weather-sources-v118',
   './tv-compat.js?v=20261017-tv-startup-v115',
   './tv-compat.css?v=20261017-tv-recovery-v114',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261020-language-v117',
-  './subtitle-data.js?v=20261013-safety-title-v97',
-  './subtitle-data.en.js?v=20261020-language-v117',
-  './demo-translations.js?v=20261020-language-v117',
+  './subtitle-data.js?v=20261021-weather-sources-v118',
+  './subtitle-data.en.js?v=20261021-weather-sources-v118',
+  './demo-translations.js?v=20261021-weather-sources-v118',
   './demo-language.js?v=20261020-language-v117',
   './demo-language.css?v=20261020-language-v117',
   './manifest.webmanifest',
   './styles.css?v=20261016-support-reveal-v109',
-  './app.js?v=20261020-language-v117a',
+  './app.js?v=20261021-weather-sources-v118',
   './safety4cut.css?v=20261016-safety-reveal-v107',
   './demo-hands-v80.css?v=20261006-windows-hand-v93',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',
   './demo-recorder-v81.js?v=20261020-language-v117',
   './safety4cut.js?v=20261020-language-v117',
   './pwa.js?v=20261017-tv-startup-v115',
-  './assets/tv-v112/tour.mp4',
+  './assets/tv-v118/tour.mp4',
   './assets/audio/07-safety4cut-intro-v97.m4a',
   './assets/safety4cut/01-main-menu-v97.png',
   './assets/safety4cut/02-upload-v75.png',
@@ -36,7 +36,7 @@ const PRECACHE_URLS = [
   './assets/safety4cut/09-ai-example-v79-poster.jpg',
   './assets/safety4cut/09-ai-example-v84.mp4',
   './assets/audio/00-opening-taehyung.mp3',
-  './assets/audio/01-weather-jisoo.mp3',
+  './assets/audio/01-weather-jisoo-v118.m4a',
   './assets/audio/02-tbm-basic-taehyung.mp3',
   './assets/audio/03-ai-pdf-jisoo.mp3',
   './assets/audio/04-safety-tools-taehyung.mp3?v=20260922-audio-path-v74',
@@ -118,10 +118,10 @@ const PRECACHE_URLS = [
 // Separate desktop narration, BGM and foreground clips remain unused on TV.
 const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
   .filter(path => !path.startsWith('./assets/audio/') &&
-    (!/\.mp4(?:\?|$)/.test(path) || path.includes('/tv-v112/') || path.startsWith('./assets/background/')))
+    (!/\.mp4(?:\?|$)/.test(path) || path.includes('/tv-v118/') || path.startsWith('./assets/background/')))
   .map(path => /^\.\/assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(path)
     ? path.replace('./assets/', './assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : path)
-  : PRECACHE_URLS.filter(path => !path.includes('/tv-v112/'));
+  : PRECACHE_URLS.filter(path => !path.includes('/tv-v118/'));
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
 const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data(?:\.en)?\.js|demo-translations\.js|demo-language\.(?:js|css)|tv-compat\.(?:js|css)|tv-media-timeline\.js)(?:\?|$)/.test(path) || path === './';
