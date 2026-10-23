@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v134-20261023-touch-resume`;
+const CACHE_VERSION = `${CACHE_PREFIX}v135-20261023-tv-weather-recovery`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -10,7 +10,7 @@ const PRECACHE_URLS = [
   './index.html',
   './tv-media-timeline.js?v=20261022-weather-daily-v132',
   './english-narration.js?v=20261021-balanced-v128',
-  './tv-compat.js?v=20261023-touch-resume-v134',
+  './tv-compat.js?v=20261023-tv-weather-recovery-v135',
   './tv-compat.css?v=20261021-launch-handoff-v131',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261020-language-v117',
@@ -22,7 +22,7 @@ const PRECACHE_URLS = [
   './manifest.webmanifest',
   './assets/brand/demo-hand.svg',
   './styles.css?v=20261023-touch-resume-v134',
-  './app.js?v=20261023-touch-resume-v134',
+  './app.js?v=20261023-tv-weather-recovery-v135',
   './safety4cut.css?v=20261016-safety-reveal-v107',
   './demo-hands-v80.css?v=20261021-balanced-v128',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',

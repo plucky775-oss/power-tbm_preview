@@ -63,6 +63,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   constructor(tag,attrs={}){super(tag,attrs);this.paused=true;this.muted='muted'in attrs;this.ended=false;this._time=0;this.seekCount=0;this.pauseCount=0;this.duration=8;this.volume=1;this.readyState=4;this.seeking=false;this.playCount=0;this.loadCount=0;mediaSet.add(this);}
   get currentTime(){return this._time;}set currentTime(value){this.seekCount++;this._time=value;this.ended=false;}
   get currentSrc(){return this.src;}
+  get buffered(){const ranges=this.bufferedRanges||[[0,this.duration]];return {length:ranges.length,start:i=>ranges[i][0],end:i=>ranges[i][1]};}
   load(){this.loadCount++;this._time=0;this.ended=false;this.paused=true;const key=Object.keys(durations).find(k=>this.src.includes(k));this.duration=this.src===english.tv.src?english.tv.duration:this.src===timeline.src?timeline.duration:Object.values(english.tracks).find(t=>t.src===this.src)?.duration||durations[key]||8;this.dispatchEvent({type:'emptied'});if(!this.preventMetadata)this.dispatchEvent({type:'loadedmetadata'});}
   play(){mediaPlays++;this.playCount++;if(!this.src && !this.querySelector('source'))return Promise.reject(new Error('no source'));this.paused=false;this.ended=false;if(!this.permanentStall)this.stall=false;this.dispatchEvent({type:'play'});return Promise.resolve();}
   pause(){this.pauseCount++;this.paused=true;this.dispatchEvent({type:'pause'});}
@@ -636,12 +637,82 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
  await test('Slow buffering keeps the current request and resumes without resetting the chapter', async () => {
   const e=environment();e.click('weatherDemoPage');await e.tick(2000);
   const m=e.el('demoNarration'), loads=m.loadCount, time=m.currentTime, plays=m.playCount;
-  m.permanentStall=true;m.readyState=2;await e.tick(40000);
+  m.permanentStall=true;m.readyState=2;m.bufferedRanges=[[0,time]];await e.tick(40000);
   assert.equal(m.loadCount,loads,'buffering must not abort and reload the download');
   assert.equal(m.playCount,plays,'do not pile play promises onto a buffering request');
   assert.equal(m.currentTime,time);assert.equal(e.el('tourStage').dataset.demoPage,'weather');
   assert.notEqual(e.el('tourStage').dataset.narrationState,'error');
   m.permanentStall=false;m.readyState=4;await e.tick(1000);assert.ok(m.currentTime>time);
+ });
+ await test('Both languages wait for contiguous narration data before starting the weather background', async () => {
+  for(const lang of ['ko','en']) {
+   const e=environment('?tv=1','Web0S',false,true,lang),m=e.el('demoNarration'),bg=e.el('tvBackdrop');
+   const weather=(lang==='en'?english.tv:timeline).segments.find(s=>s.id==='01-weather');
+   m.bufferedRanges=[[0,weather.start+2.5],[weather.start+10,weather.start+20]];
+   e.click('weatherDemoPage');await e.tick(2000);
+   assert.equal(bg.getAttribute('src'),null,'readyState alone must not start a competing decoder');
+   m.bufferedRanges=[[0,weather.start+12]];await e.tick(300);
+   assert.ok(bg.src.includes('weather-powerlines'));
+  }
+ });
+ await test('Buffered low-readyState freezes recover in Korean and English without reloading or seeking', async () => {
+  for(const lang of ['ko','en']) {
+   const e=environment('?tv=1','Web0S',false,true,lang);e.click('weatherDemoPage');await e.tick(2000);
+   const m=e.el('demoNarration'),time=m.currentTime,counts=[m.loadCount,m.seekCount],plays=m.playCount;
+   m.readyState=2;m.stall=true;await e.tick(11000);
+   assert.ok(m.currentTime>time,'buffered media must not wait forever on HAVE_CURRENT_DATA');
+   assert.ok(m.playCount>plays);assert.deepEqual([m.loadCount,m.seekCount],counts);
+  }
+ });
+ await test('Releasing a deferred background prevents it from starting after narration resumes', async () => {
+  const e=environment();e.click('weatherDemoPage');await e.tick(300);
+  e.window.PowerTBMTV.releaseBackground();await e.tick(2000);
+  assert.equal(e.el('tvBackdrop').getAttribute('src'),null);
+ });
+ await test('A download with no buffer progress ends in a resumable error instead of infinite waiting', async () => {
+  const e=environment();e.click('weatherDemoPage');await e.tick(2000);
+  const m=e.el('demoNarration'),time=m.currentTime,counts=[m.loadCount,m.seekCount,m.playCount];
+  m.permanentStall=true;m.readyState=2;m.bufferedRanges=[[0,time]];await e.tick(50000);
+  assert.equal(e.el('tourStage').dataset.narrationState,'error');
+  assert.equal(m.currentTime,time);assert.deepEqual([m.loadCount,m.seekCount,m.playCount],counts);
+  m.permanentStall=false;m.readyState=4;m.bufferedRanges=null;tap(e);await e.tick(1000);
+  assert.ok(m.currentTime>time,'surface touch must resume from the same scene');
+ });
+ await test('A pending recovery play promise times out instead of blocking every later retry', async () => {
+  const e=environment();e.click('weatherDemoPage');await e.tick(2000);
+  const m=e.el('demoNarration');m.stall=true;
+  m.play=function(){this.playCount++;return new Promise(()=>{});};
+  await e.tick(23000);
+  assert.equal(e.el('tourStage').dataset.narrationState,'error');
+  const plays=m.playCount;await e.tick(20000);assert.equal(m.playCount,plays);
+ });
+ await test('Slow downloads with new buffered data keep their request even after 45 seconds', async () => {
+  const e=environment();e.click('weatherDemoPage');await e.tick(2000);
+  const m=e.el('demoNarration'),time=m.currentTime,counts=[m.loadCount,m.seekCount,m.playCount];
+  m.permanentStall=true;m.readyState=2;m.bufferedRanges=[[0,time]];
+  for(let i=1;i<=6;i++) {await e.tick(10000);m.bufferedRanges=[[0,time+i*.06]];}
+  assert.notEqual(e.el('tourStage').dataset.narrationState,'error');
+  assert.deepEqual([m.loadCount,m.seekCount,m.playCount],counts);
+ });
+ await test('Late recovery rejections do not turn a user pause or a language change into an error', async () => {
+  for(const change of ['pause','language']) {
+   const e=environment();e.click('weatherDemoPage');await e.tick(2000);
+   const m=e.el('demoNarration'),play=m.play;let reject;
+   m.stall=true;m.play=function(){this.playCount++;return new Promise((_,fail)=>{reject=fail;});};
+   await e.tick(10000);assert.ok(reject);m.play=play;
+   if(change==='pause') tap(e);else e.window.PowerTBMLanguage.set('en');
+   await e.tick(1000);reject(new Error('late native decoder failure'));await e.tick(1000);
+   assert.notEqual(e.el('tourStage').dataset.narrationState,'error');
+   if(change==='pause') assert.equal(m.paused,true);else assert.equal(m.src,english.tv.src);
+  }
+ });
+ await test('Actual media progress completes recovery even if the native play promise settles late', async () => {
+  const e=environment();e.click('weatherDemoPage');await e.tick(2000);
+  const m=e.el('demoNarration');let reject;
+  m.stall=true;m.play=function(){this.playCount++;this.paused=false;this.stall=false;return new Promise((_,fail)=>{reject=fail;});};
+  await e.tick(11000);assert.ok(reject);
+  reject(new Error('late native result after playback resumed'));await e.tick(1000);
+  assert.notEqual(e.el('tourStage').dataset.narrationState,'error');assert.equal(m.paused,false);
  });
  await test('TV limits images to the active chapter and its two prepared entry screens', async () => {
   const e=environment();

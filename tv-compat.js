@@ -145,6 +145,14 @@
   api.localTime = segment => Math.max(0, media.currentTime - entryFor(segment).start);
   api.segmentEnded = id => media.currentTime >= entryFor({ id }).end - .001;
   api.inPrelude = () => media.currentTime < (timeline.preludeDuration || 0);
+  api.bufferedAhead = () => {
+    const time = media.currentTime;
+    const ranges = media.buffered;
+    for (let i = 0; i < ranges.length; i++) {
+      if (ranges.start(i) <= time + .05 && ranges.end(i) > time) return ranges.end(i) - time;
+    }
+    return 0;
+  };
   // Audio is normalized in the media files. A chapter-local volume ramp hid
   // the first syllable at every boundary and again after buffering/resume.
   media.volume = 1;
@@ -216,14 +224,16 @@
   // stops; chapter changes must not immediately allocate it again.
   let backgroundReleased = false;
   api.releaseBackground = () => {
-    if (backgroundReleased || !background.getAttribute('src')) return;
+    if (backgroundReleased) return;
     backgroundReleased = true;
     window.clearTimeout(backgroundStartTimer);
     backgroundRequest++;
     backgroundPlayPending = false;
-    background.pause();
-    background.removeAttribute('src');
-    background.load();
+    if (background.getAttribute('src')) {
+      background.pause();
+      background.removeAttribute('src');
+      background.load();
+    }
     background.hidden = true;
     backdrop.classList.remove('tv-background-ready');
     backdrop.classList.add('tv-background-fallback');
@@ -239,9 +249,11 @@
     const source = backgroundSources[key] || '';
     // First paint, screenshot decode, native video-plane change and a second
     // decoder used to happen together at the splash boundary. Let the main
-    // clock advance for one second before loading the optional background.
+    // clock advance first, with three seconds of contiguous narration ready.
+    // HAVE_FUTURE_DATA alone can mean only a few frames on webOS.
     const entry = api.segmentAtTime();
     const canStart = entry && entry.page === page && media.currentTime - entry.start >= 1
+      && api.bufferedAhead() >= Math.min(3, media.duration - media.currentTime)
       && media.readyState >= 3 && !media.paused && !document.hidden;
     if (source && (background.getAttribute('src') || '') !== source && (paused || !canStart)) {
       if (background.getAttribute('src')) {

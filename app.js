@@ -2298,26 +2298,44 @@
     let recoveries = 0;
     let recoveredAt = -Infinity;
     let retryPending = false;
+    let retryId = 0;
+    let watchedToken = -1;
+    let bufferedEnd = 0;
+    let bufferProgressAt = performance.now();
     window.setInterval(() => {
       const now = performance.now();
       const source = demoNarration.getAttribute('src') || '';
       const time = demoNarration.currentTime;
-      if (source !== watchedSource || time < lastTime - .2) {
+      const ahead = tv.bufferedAhead();
+      const nextBufferedEnd = time + ahead;
+      if (source !== watchedSource || narrationRunToken !== watchedToken || time < lastTime - .2) {
         watchedSource = source;
+        watchedToken = narrationRunToken;
         recoveries = 0;
         recoveredAt = -Infinity;
         progressAt = now;
         retryPending = false;
+        retryId++;
+        bufferedEnd = nextBufferedEnd;
+        bufferProgressAt = now;
       }
+      if (nextBufferedEnd > bufferedEnd + .03) bufferProgressAt = now;
+      bufferedEnd = nextBufferedEnd;
       if (!source || !narrationRequested || demoPaused || document.hidden || stageTransitioning ||
           demoNarration.ended || demoNarration.seeking || ['blocked', 'error', 'complete'].includes(narrationState)) {
         progressAt = now;
         lastTime = time;
+        bufferProgressAt = now;
+        retryPending = false;
+        retryId++;
+        recoveries = 0;
         return;
       }
       if (Math.abs(time - lastTime) > .03) {
         progressAt = now;
         lastTime = time;
+        bufferProgressAt = now;
+        if (retryPending) { retryPending = false; retryId++; }
         // A later independent stall gets a fresh retry budget after stable play.
         if (now - recoveredAt > 30000) recoveries = 0;
         return;
@@ -2326,10 +2344,25 @@
       // paused=false only describes intent: a decoder can be frozen while
       // reporting playback. Free the optional background before retrying.
       if (stalledFor >= 4000) tv.releaseBackground();
-      // Keep the in-flight download and buffered bytes on a slow connection.
-      // Do not queue play promises or reload/seek while waiting for data.
-      if (demoNarration.readyState < 3 || retryPending || stalledFor < 8000) return;
       const token = narrationRunToken;
+      // A webOS decoder can report HAVE_CURRENT_DATA even with seconds of
+      // buffered media. Retry that state; do not confuse it with downloading.
+      // Preserve slow downloads while their buffer grows, but never wait
+      // indefinitely on a dead request or a play() promise that never settles.
+      if (retryPending) {
+        if (now - recoveredAt >= 12000) {
+          retryId++;
+          retryPending = false;
+          handleNarrationFailure(new Error('TV media recovery timed out'), token);
+        }
+        return;
+      }
+      if (demoNarration.readyState < 3 && ahead < .5) {
+        if (stalledFor >= 45000 && now - bufferProgressAt >= 45000)
+          handleNarrationFailure(new Error('TV media download made no progress'), token);
+        return;
+      }
+      if (stalledFor < 8000) return;
       progressAt = now;
       recoveredAt = now;
       if (recoveries >= 2) {
@@ -2339,9 +2372,11 @@
       recoveries += 1;
       guideStage.dataset.mediaRecoveries = String(recoveries);
       retryPending = true;
+      const attempt = ++retryId;
       if (!demoNarration.paused) demoNarration.pause();
-      demoNarration.play().catch(error => handleNarrationFailure(error, token))
-        .finally(() => { if (token === narrationRunToken) retryPending = false; });
+      demoNarration.play().catch(error => {
+        if (attempt === retryId && !demoPaused && !document.hidden) handleNarrationFailure(error, token);
+      }).finally(() => { if (attempt === retryId && token === narrationRunToken) retryPending = false; });
     }, 1000);
   }
 
