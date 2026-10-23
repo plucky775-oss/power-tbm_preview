@@ -158,13 +158,13 @@ const coreUrls = [
   './index.html',
   './manifest.webmanifest',
   './english-narration.js?v=20261021-balanced-v128',
-  './styles.css?v=20261023-review-v133',
-  './app.js?v=20261023-review-v133',
+  './styles.css?v=20261023-touch-resume-v134',
+  './app.js?v=20261023-touch-resume-v134',
   './pwa.js?v=20261017-tv-startup-v115',
   './subtitles.js?v=20261020-language-v117',
   './subtitle-data.js?v=20261022-weather-daily-v132',
   './subtitle-data.en.js?v=20261021-meeting-sequence-v126',
-  './demo-translations.js?v=20261023-review-v133',
+  './demo-translations.js?v=20261023-touch-resume-v134',
   './demo-language.js?v=20261021-language-menu-v125',
   './demo-language.css?v=20261021-language-menu-v125',
   './subtitles.css?v=20261004-v87'
@@ -269,7 +269,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v133-20261023-review/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v134-20261023-touch-resume/);
 assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);

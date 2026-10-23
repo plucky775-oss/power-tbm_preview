@@ -131,12 +131,13 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
    assert.equal(e.errors.length,0);
   }
  });
- await test('Review controls: photo-by-photo back, ten seconds, cross-page and explicit resume in both languages', async () => {
+ await test('Review controls: photo-by-photo back, ten seconds, cross-page and touch resume in both languages', async () => {
   for (const mode of ['?tv=1','?tv=0']) for (const lang of ['ko','en']) {
    const e=environment(mode,'Chrome',false,true,lang);e.click('meetingDemoPage');await e.tick(24000);
    tap(e);const m=e.el('demoNarration');const held=m.currentTime;
    assert.equal(e.el('demoPauseControls').hidden,false);
-   tap(e);await e.tick(200);assert.equal(m.currentTime,held,'second surface tap must not resume');
+   tap(e);await e.tick(200);assert.ok(m.currentTime>held,'second surface tap must resume');
+   tap(e);assert.ok(m.paused,'another tap pauses again');
    const loads=m.loadCount, plays=m.playCount;
    e.click('demoPreviousScene');const back=m.currentTime;
    assert.ok(back<held,'previous photo must move backwards');assert.ok(m.paused);
@@ -144,7 +145,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
    assert.equal(m.loadCount,loads,'same track review must not reload');assert.equal(m.playCount,plays,'review must not play');
    const before=m.currentTime;e.click('demoBackTen');assert.ok(m.paused);
    if(before>10 && mode==='?tv=1')assert.ok(Math.abs(m.currentTime-(before-10))<.01, JSON.stringify({mode,lang,before,after:m.currentTime}));
-   e.click('demoResume');await e.tick(1000);assert.equal(e.el('demoPauseControls').hidden,true);
+   tap(e);await e.tick(1000);assert.equal(e.el('demoPauseControls').hidden,true);
    assert.ok(!e.el('demoNarration').paused);
    e.click('safetyDemoPage');await e.tick(2000);tap(e);
    e.click('demoPreviousScene');assert.equal(e.el('tourStage').dataset.demoPage,'support');

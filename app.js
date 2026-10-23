@@ -1432,7 +1432,7 @@
     if ($('#demoPreviousScene')) $('#demoPreviousScene').disabled = !canSeek;
     if ($('#demoBackTen')) $('#demoBackTen').disabled = !canSeek;
     guideStage?.setAttribute('aria-label', demoPaused
-      ? '시연 일시정지 중. 계속 재생 버튼을 누르면 재생합니다.'
+      ? '시연 일시정지 중. 화면을 터치하거나 스페이스 키를 누르면 계속 재생합니다.'
       : '자동 시연. 터치하거나 스페이스 키를 누르면 일시정지합니다.');
     language?.apply(guideStage);
     if (!demoToggle) return;
@@ -1931,6 +1931,7 @@
   const toggleDemoPlayback = () => {
     if (demoPaused && pendingReviewCleanup && (demoNarration?.seeking || demoNarration?.readyState < 1)) return;
     if (stageTransitioning || guideChanging) return;
+    if (demoPaused) pendingReviewCleanup?.();
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'safety' && demoPage !== 'closing' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
     guidePhone.classList.toggle('is-paused', demoPaused);
@@ -2104,7 +2105,7 @@
   });
 
   const playbackControlSelector = 'button, a, input, select, textarea, summary, [role="button"], [role="tab"], [role="slider"], [contenteditable="true"], video[controls], audio[controls]';
-  const isPlaybackSurface = (target) => Boolean(target?.closest?.('#tour, #narrationSubtitles, #subtitleBubble'))
+  const isPlaybackSurface = (target) => Boolean(target?.closest?.('#tour, #narrationSubtitles, #subtitleBubble, #demoPauseControls'))
     && !target.closest(playbackControlSelector);
   let surfacePointer = null;
   let surfaceDragged = false;
@@ -2118,12 +2119,12 @@
   document.addEventListener('pointercancel', () => { surfacePointer = null; surfaceDragged = true; });
   document.addEventListener('click', (event) => {
     if (!isPlaybackSurface(event.target) || event.defaultPrevented || surfaceDragged
-      || demoPaused || (!narrationRequested && !launchChoiceMade) || window.getSelection?.()?.isCollapsed === false) return;
+      || (!narrationRequested && !launchChoiceMade) || window.getSelection?.()?.isCollapsed === false) return;
     toggleDemoPlayback();
   });
   guideStage?.addEventListener('keydown', (event) => {
     if ((event.key !== ' ' && event.key !== 'Enter') || event.repeat
-      || demoPaused || event.target?.closest?.(playbackControlSelector) || (!narrationRequested && !launchChoiceMade)) return;
+      || event.target?.closest?.(playbackControlSelector) || (!narrationRequested && !launchChoiceMade)) return;
     event.preventDefault();
     toggleDemoPlayback();
   });
