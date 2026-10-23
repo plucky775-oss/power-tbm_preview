@@ -134,6 +134,12 @@
     }
     if (media.readyState >= 1) seekToChapter();
   };
+  // User-requested review only: reuse the continuous stream and native decoder.
+  api.chapter = segment => entryFor(segment);
+  api.seek = (segment, seconds) => {
+    pendingStart = entryFor(segment).start + seconds;
+    if (media.readyState >= 1) seekToChapter();
+  };
   api.segmentAtTime = () => pendingStart !== null || media.seeking ? null :
     [...timeline.segments].reverse().find(entry => media.currentTime >= entry.start);
   api.localTime = segment => Math.max(0, media.currentTime - entryFor(segment).start);

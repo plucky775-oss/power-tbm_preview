@@ -1,6 +1,12 @@
 // English display text for the Power TBM demonstration.
 // Keys match trimmed Korean text nodes or complete dynamic strings.
 window.PowerTBMEnglish = {
+  "◀ 이전 장면": "◀ Previous scene",
+  "↶ 10초 뒤로": "↶ Back 10s",
+  "▶ 계속 재생": "▶ Resume",
+  "일시정지 화면 이동": "Paused playback controls",
+  "Ⅱ 일시정지 · 계속 재생 버튼을 눌러 주세요": "Ⅱ Paused · Press Resume to continue",
+  "시연 일시정지 중. 계속 재생 버튼을 누르면 재생합니다.": "Demo paused. Press Resume to continue.",
   "이름": "Name",
   "임무": "Role",
   "4 / 9 · 작업자 명단": "4 / 9 · Worker list",

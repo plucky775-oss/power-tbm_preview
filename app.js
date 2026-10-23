@@ -427,6 +427,7 @@
   let narrationRequested = false;
   let narrationMuted = false;
   let narrationUnlocked = false;
+  let pendingReviewCleanup = null;
   let narrationState = 'ready';
   let narrationSegmentIndex = 0;
   let narrationRunToken = 0;
@@ -983,6 +984,7 @@
   };
 
   const stopNarrationPlayback = ({ reset = true, keepRequested = true } = {}) => {
+    pendingReviewCleanup?.();
     foregroundVideoActive = false;
     narrationRunToken += 1;
     cancelNarrationFrame();
@@ -1416,8 +1418,21 @@
   const updateDemoButton = () => {
     const pauseHint = $('#demoPauseHint');
     if (pauseHint) pauseHint.hidden = !demoPaused;
+    const pauseControls = $('#demoPauseControls');
+    if (pauseControls) {
+      pauseControls.hidden = !demoPaused;
+      if (demoPaused) {
+        const captions = $('#narrationSubtitles');
+        const height = captions && !captions.hidden ? captions.getBoundingClientRect().height : 0;
+        pauseControls.style.setProperty('--review-caption-height', `${height}px`);
+      }
+    }
+    if ($('#demoResume')) $('#demoResume').disabled = Boolean(pendingReviewCleanup && (demoNarration?.readyState < 1 || demoNarration?.seeking));
+    const canSeek = demoPaused && narrationRequested && !launchActive && demoPage !== 'manual' && demoNarration?.readyState >= 1 && !demoNarration?.seeking;
+    if ($('#demoPreviousScene')) $('#demoPreviousScene').disabled = !canSeek;
+    if ($('#demoBackTen')) $('#demoBackTen').disabled = !canSeek;
     guideStage?.setAttribute('aria-label', demoPaused
-      ? '시연 일시정지 중. 터치하거나 스페이스 키를 누르면 계속 재생합니다.'
+      ? '시연 일시정지 중. 계속 재생 버튼을 누르면 재생합니다.'
       : '자동 시연. 터치하거나 스페이스 키를 누르면 일시정지합니다.');
     language?.apply(guideStage);
     if (!demoToggle) return;
@@ -1914,6 +1929,7 @@
     }
   });
   const toggleDemoPlayback = () => {
+    if (demoPaused && pendingReviewCleanup && (demoNarration?.seeking || demoNarration?.readyState < 1)) return;
     if (stageTransitioning || guideChanging) return;
     if (!guidePhone || (demoPage !== 'meeting' && demoPage !== 'support' && demoPage !== 'safety' && demoPage !== 'closing' && currentGuide !== 0)) return;
     demoPaused = !demoPaused;
@@ -1970,6 +1986,123 @@
   };
   demoToggle?.addEventListener('click', toggleDemoPlayback);
 
+  // Screenshot entry times on the existing CSS visual clocks (milliseconds).
+  // Use fully visible frames, never an opacity-zero transition frame. Scrolling
+  // within a photo is not a new scene. Safety uses its existing scene table.
+  const photoSceneTimes = {
+    intro: [0], weather: [0, 3120, 6160],
+    meeting: [0, 6240, 12000, 20880, 30816, 37632, 46752, 55296,
+      63456, 67656, 73152, 77184, 82944, 88416, 92736],
+    support: [0, 6050, 11950, 19950, 25950, 32950, 36450, 42950, 47000],
+    safety: (safety?.scenes || []).map(scene => scene.at * 1000), closing: [0]
+  };
+  const tourEntries = () => {
+    let start = 0;
+    return Object.entries(narrationByPage).flatMap(([page, segments]) =>
+      segments.map((segment, index) => {
+        const entry = { page, segment, index, start: tvMode ? tv.chapter(segment).start : start };
+        start += segment.duration;
+        return entry;
+      }));
+  };
+  const currentTourTime = entries => {
+    const entry = entries.find(item => item.page === demoPage && item.index === narrationSegmentIndex);
+    return entry ? entry.start + Math.min(entry.segment.duration,
+      tvMode ? tv.localTime(entry.segment) : demoNarration.currentTime) : 0;
+  };
+  const sceneTourTimes = entries => {
+    const result = [];
+    for (const [page, points] of Object.entries(photoSceneTimes)) {
+      for (const visual of points) {
+        for (const entry of entries.filter(item => item.page === page).reverse()) {
+          const cues = entry.segment.cues;
+          if (visual < cues[0][1] || visual > cues[cues.length - 1][1]) continue;
+          let local = cues[0][0];
+          for (let i = 1; i < cues.length; i++) {
+            if (visual > cues[i][1]) continue;
+            const [a, b] = [cues[i - 1], cues[i]];
+            local = a[0] + (visual - a[1]) / Math.max(.001, b[1] - a[1]) * (b[0] - a[0]);
+            break;
+          }
+          result.push(entry.start + local);
+          break;
+        }
+      }
+    }
+    return result.sort((a, b) => a - b);
+  };
+  const seekReviewTime = target => {
+    if (!demoPaused || !narrationRequested || launchActive) return;
+    pendingReviewCleanup?.();
+    const entries = tourEntries();
+    target = Math.max(entries[0].start, target);
+    const entry = [...entries].reverse().find(item => target >= item.start) || entries[0];
+    const seconds = Math.min(entry.segment.duration - .025, target - entry.start);
+    const oldSegment = demoNarration.dataset.segment;
+    const token = ++narrationRunToken;
+    cancelNarrationFrame();
+    clearSequenceTimer();
+    demoNarration.pause();
+    pauseDemoBgm();
+    if (demoPage !== entry.page) applyDemoStage(entry.page, { keepMedia: true });
+    narrationSegmentIndex = entry.index;
+    if (!tvMode && oldSegment !== entry.segment.id) loadNarrationSegment(entry.segment, token);
+    demoNarration.dataset.segment = entry.segment.id;
+    demoNarration.dataset.runToken = String(token);
+    const player = demoNarration;
+    releaseSyncedAnimations();
+    collectNarrationAnimations(entry.page);
+    const render = () => {
+      if (token !== narrationRunToken) return;
+      const resume = $('#demoResume');
+      if (resume) resume.disabled = player.readyState < 1 || player.seeking;
+      updateDemoButton();
+      applyNarrationVisualTime(entry.segment, seconds);
+      // Embedded silent videos are only repositioned on an explicit review seek.
+      if (!tvMode && entry.page === 'intro' && openingDemoVideo.readyState >= 1)
+        openingDemoVideo.currentTime = Math.min(seconds, openingDemoVideo.duration || seconds);
+      if (!tvMode && entry.page === 'support' && goldenRulesVideo.readyState >= 1) {
+        const visual = mapNarrationTimeToVisual(entry.segment, seconds);
+        if (visual >= goldenRulesTimeline.start && visual < goldenRulesTimeline.end)
+          goldenRulesVideo.currentTime = (visual - goldenRulesTimeline.start) / 1000;
+      }
+    };
+    const cleanup = () => {
+      player.removeEventListener('loadedmetadata', applySeek);
+      player.removeEventListener('seeked', render);
+      pendingReviewCleanup = null;
+    };
+    const applySeek = () => {
+      if (token !== narrationRunToken) { cleanup(); return; }
+      if (player.readyState < 1) return;
+      if (tvMode) tv.seek(entry.segment, seconds);
+      else player.currentTime = seconds;
+      render();
+    };
+    pendingReviewCleanup = cleanup;
+    player.addEventListener('loadedmetadata', applySeek);
+    player.addEventListener('seeked', render);
+    applySeek();
+    render();
+    setNarrationState('paused');
+    updateDemoStateData();
+    updateDemoButton();
+  };
+  $('#demoPreviousScene')?.addEventListener('click', () => {
+    const entries = tourEntries();
+    const now = currentTourTime(entries);
+    const points = sceneTourTimes(entries);
+    let current = 0;
+    points.forEach((time, index) => { if (time <= now + .001) current = index; });
+    seekReviewTime(points[Math.max(0, current - 1)] || 0);
+  });
+  $('#demoBackTen')?.addEventListener('click', () => seekReviewTime(currentTourTime(tourEntries()) - 10));
+  $('#demoResume')?.addEventListener('click', () => {
+    if (!demoPaused || (pendingReviewCleanup && (demoNarration?.seeking || demoNarration?.readyState < 1))) return;
+    pendingReviewCleanup?.();
+    toggleDemoPlayback();
+  });
+
   const playbackControlSelector = 'button, a, input, select, textarea, summary, [role="button"], [role="tab"], [role="slider"], [contenteditable="true"], video[controls], audio[controls]';
   const isPlaybackSurface = (target) => Boolean(target?.closest?.('#tour, #narrationSubtitles, #subtitleBubble'))
     && !target.closest(playbackControlSelector);
@@ -1985,12 +2118,12 @@
   document.addEventListener('pointercancel', () => { surfacePointer = null; surfaceDragged = true; });
   document.addEventListener('click', (event) => {
     if (!isPlaybackSurface(event.target) || event.defaultPrevented || surfaceDragged
-      || (!narrationRequested && !launchChoiceMade) || window.getSelection?.()?.isCollapsed === false) return;
+      || demoPaused || (!narrationRequested && !launchChoiceMade) || window.getSelection?.()?.isCollapsed === false) return;
     toggleDemoPlayback();
   });
   guideStage?.addEventListener('keydown', (event) => {
     if ((event.key !== ' ' && event.key !== 'Enter') || event.repeat
-      || event.target?.closest?.(playbackControlSelector) || (!narrationRequested && !launchChoiceMade)) return;
+      || demoPaused || event.target?.closest?.(playbackControlSelector) || (!narrationRequested && !launchChoiceMade)) return;
     event.preventDefault();
     toggleDemoPlayback();
   });

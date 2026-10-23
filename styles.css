@@ -6662,3 +6662,27 @@ body { background: #fff; }
   32.1%, 38.6% { opacity: 1; transform: translateY(0); }
   39.2%, 100% { opacity: 0; transform: translateY(-12px); }
 }
+
+/* Paused Q&A controls: opaque, large touch targets; no animation/blur on TV. */
+#demoPauseControls[hidden] { display: none !important; }
+#demoPauseControls {
+  position: fixed; z-index: 3000; left: 50%; bottom: max(calc(var(--review-caption-height, 0px) + 8px), env(safe-area-inset-bottom));
+  transform: translateX(-50%); display: flex; gap: 8px; padding: 10px;
+  max-width: calc(100vw - 16px); border: 1px solid #557589; border-radius: 16px;
+  background: #102c3d; box-shadow: 0 4px 18px #0006;
+}
+#demoPauseControls button {
+  min-height: 48px; padding: 10px 16px; border: 1px solid #7792a2;
+  border-radius: 10px; background: #214457; color: white; font: inherit;
+  font-weight: 700; white-space: nowrap; cursor: pointer;
+}
+#demoPauseControls #demoResume { background: #097955; }
+#demoPauseControls button:disabled { opacity: .45; cursor: default; }
+#demoPauseControls button:focus-visible { outline: 3px solid #ffdb59; outline-offset: 2px; }
+@media (max-width: 520px) {
+  #demoPauseControls { gap: 5px; padding: 7px; width: max-content; }
+  #demoPauseControls button { padding: 9px 8px; font-size: 12px; }
+}
+
+/* The controls themselves communicate pause; keep the old hint out of their way. */
+#demoPauseHint { display: none; }
