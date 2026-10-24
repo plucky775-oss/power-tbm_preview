@@ -1,0 +1,9 @@
+{
+  "provider": "ElevenLabs",
+  "voiceId": "iWLjl1zCuqXRkW6494ve",
+  "text": "일별 예보도 함께 확인할 수 있습니다.",
+  "model": "eleven_v4_turbo",
+  "route": "existing XENO room speech",
+  "unit": "one complete sentence",
+  "bytes": 48526
+}

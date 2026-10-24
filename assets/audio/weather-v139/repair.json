@@ -1,0 +1,41 @@
+{
+  "text": "일별 예보도 함께 확인할 수 있습니다.",
+  "voice": "Jisoo",
+  "voiceId": "iWLjl1zCuqXRkW6494ve",
+  "provider": "ElevenLabs",
+  "model": "eleven_v4_turbo",
+  "sourceSHA256": "a695e14367b95b35b5ef270937e6928f9273bb296a1c138cb49dd0b39a3c0b8b",
+  "synthesisUnit": "complete sentence",
+  "phraseStart": 13.78,
+  "patch": [
+    13.75,
+    16.72
+  ],
+  "sourceTrimSamples": [
+    0,
+    131040
+  ],
+  "gain": 0.9944145965841199,
+  "edgeFade": 0.005,
+  "timeStretch": 1.0,
+  "phraseDuration": 2.73,
+  "tvSourceResidual": 0.014138883434104507,
+  "desktopBase": "assets/audio/weather-v132/01-weather.m4a",
+  "desktop": "assets/audio/weather-v139/01-weather.m4a",
+  "desktopPackets": {
+    "replacedAACFrames": [
+      642,
+      787
+    ],
+    "aacFrameCount": 1394
+  },
+  "tvBase": "assets/tv-ko-v136/tour.mp4",
+  "tv": "assets/tv-ko-v139/tour.mp4",
+  "tvPackets": {
+    "replacedAACFrames": [
+      1189,
+      1334
+    ],
+    "aacFrameCount": 13681
+  }
+}
