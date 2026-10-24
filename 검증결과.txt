@@ -1,0 +1,42 @@
+검증 결과 · 2026-10-24 UTC
+
+생성
+- ElevenLabs Jisoo / iWLjl1zCuqXRkW6494ve / eleven_v4_turbo
+- 문장 전체 1회 합성: 일별 예보도 함께 확인할 수 있습니다.
+- 기존 XENO의 번역 1회와 음성 생성 1회만 사용했습니다.
+- 생성용 임시 대화는 삭제 완료 응답 ended:true를 확인했습니다.
+
+음성 및 미디어 검사: 통과
+- 음절 이어붙이기 없음. 원본 발화 속도 1.0배 유지.
+- 바깥 무음 정리 후 2.730초. 일반 챕터 13.780–16.510초.
+- TV 시각 25.446667–28.176667초. 전체 챕터 길이와 뒤 장면 시간 유지.
+- 적용된 문장과 전체 생성 원본의 파형 상관계수 0.9999888676.
+- 일반 기상 음성 -15.99 LUFS, -3.43 dBTP.
+- TV 기상 음성 -16.01 LUFS, -3.31 dBTP.
+- 수정 범위 밖 AAC 패킷, 모든 영상 패킷, 모든 음성·영상 타임스탬프 동일.
+- 전체 TV 파일 디코딩 오류 없음.
+- 너무 긴 문장은 임의 가속·잘라내기 대신 거부하는 검사 통과.
+
+실행한 회귀 검사: 통과
+- python3 tests/verify-weather-sentence.py
+- node tests/tv-playback.test.cjs: 51개
+- node tests/verify-pwa.mjs: 123개 캐시 URL, 오프라인 미디어 27개, TV 캐시 31.8 MiB
+- node tests/verify-streaming.mjs
+- node tests/verify-subtitle-modes.mjs
+- node tests/verify-tv-startup.mjs
+- node tests/verify-recorder.mjs
+- JSDOM_PATH=<별도 jsdom 설치 위치> node tests/verify-language.mjs
+  한국어·영어·교차 전체 반복 및 음성/자막 연계 확인
+- 변경된 JavaScript 4개 구문 검사
+
+검증 한계
+- 브라우저가 이 실행 환경의 localhost에 접속할 수 없어 실제 로컬 브라우저 검증은 수행하지 못했습니다.
+- 테스트는 미디어 파일 분석 및 모의 DOM/재생 검사이며 실제 청취를 했다는 의미가 아닙니다.
+- 실제 스탠바이미/webOS 및 스피커에서의 발음·출력은 미확인입니다.
+- 새 문장의 자막 단어 강조는 길이에 비례한 읽기 안내이며 단어별 강제 정렬 결과가 아닙니다.
+
+게시 상태
+- 두 차례 GitHub blob 업로드 승인 대기가 취소되어 성공 응답이 없었습니다.
+- 2026-10-24 04:39 UTC 재조회: main은 기준 커밋 91d37799c08076ce397ac412abbc94649db17964 그대로.
+- 예정된 새 TV blob ebe31d6924981f20215d69b7f962fe8419488621 조회는 404.
+- Git tree 생성, commit 생성, branch ref 수정, 운영 배포는 실행하지 않았습니다.

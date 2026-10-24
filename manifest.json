@@ -1,0 +1,144 @@
+{
+  "repository": "plucky775-oss/power-tbm_preview",
+  "base_commit": "91d37799c08076ce397ac412abbc94649db17964",
+  "version": 139,
+  "published": false,
+  "files": [
+    {
+      "path": "app.js",
+      "action": "modify",
+      "bytes": 105785,
+      "sha256": "36c4dc2a7d618e0909a2445dc5f291038e26f52ed11f821c6142103cf4cf76f3",
+      "git_blob_sha": "664ff7914c2e465ff86afcc09cb53aa6153c5b29",
+      "base_git_blob_sha": "4993fe4db628c8170a06fb9afa1b9174727eb65c"
+    },
+    {
+      "path": "index.html",
+      "action": "modify",
+      "bytes": 62062,
+      "sha256": "4123cff9ee471d73eedb276ffe0adc50bcf20645fa7602a79f82172b5a68f05c",
+      "git_blob_sha": "6f6dbcec017f6a7d6200f4a6dd97f35bbf6ec09e",
+      "base_git_blob_sha": "94293724c7883a5eea45a2018736af3038288a66"
+    },
+    {
+      "path": "subtitle-data.js",
+      "action": "modify",
+      "bytes": 25197,
+      "sha256": "a526648f691be74090e09348a18ee7245185b2799fb330d536c6aab181401f7a",
+      "git_blob_sha": "421948e8222eda384d25c5f9833c78047bd55a28",
+      "base_git_blob_sha": "2d42072e8f0a8b4e632f91502ee413b5a4c64255"
+    },
+    {
+      "path": "sw.js",
+      "action": "modify",
+      "bytes": 12716,
+      "sha256": "93a5205963b81ba4df2caabfc8ff2a49f941be977e433baaf78d9d3f7f504635",
+      "git_blob_sha": "d43dfac23f6ee1e92c012fe32772ace25b4563f2",
+      "base_git_blob_sha": "67f410a2b8904406740de1c77383dbca770ad462"
+    },
+    {
+      "path": "tv-media-timeline.js",
+      "action": "modify",
+      "bytes": 1838,
+      "sha256": "7aa52bb2905c0245bf6016d0febd6433cc4a11f8167872a13474b85e8f37ac50",
+      "git_blob_sha": "2a66f9a110c558b9e72ea1eb80e0430a128bd82f",
+      "base_git_blob_sha": "bdbce018618b30477f068232973d1092918a2510"
+    },
+    {
+      "path": "tests/tv-playback.test.cjs",
+      "action": "modify",
+      "bytes": 63521,
+      "sha256": "40cacd6922c2816c444606503aab85e0dbf12397871b74c7a9715acba2305f90",
+      "git_blob_sha": "33a2f8fc54ba1252f85323de5893a3cd4bd251b5",
+      "base_git_blob_sha": "d4c1366507c28818295ec50034e5993ae989c772"
+    },
+    {
+      "path": "tests/verify-pwa.mjs",
+      "action": "modify",
+      "bytes": 18904,
+      "sha256": "62d6e9ff77ccbb459bff906abc3ed9c8bac1b65bc8e15bb707c13efd6ab79c5e",
+      "git_blob_sha": "4ff0f65d1f6abcd96d9506b0151e7ea841b124c2",
+      "base_git_blob_sha": "e1a4286e0480e7f5e480965cdf138d4c4d29ca96"
+    },
+    {
+      "path": "tests/verify-recorder.mjs",
+      "action": "modify",
+      "bytes": 18832,
+      "sha256": "e68f4097e33a2555b7308a898d96707053145eeac96c272a180a4bb84be5f634",
+      "git_blob_sha": "973112d723a77b1473c9380b086b43b4d99fe900",
+      "base_git_blob_sha": "77e3b6531d6519cdf6840237a757350c93510dcb"
+    },
+    {
+      "path": "README.md",
+      "action": "modify",
+      "bytes": 68859,
+      "sha256": "5d441052987882690a00a60103cd90cd061b8c617a803f9fc84e5083f98a7eb2",
+      "git_blob_sha": "e6e228b4eeb75a1a0746481471aa463b79b4ab5f",
+      "base_git_blob_sha": "67a635a507450052a8c0e4c504ffbfd9008724a6"
+    },
+    {
+      "path": "scripts/build-weather-sentence.py",
+      "action": "add",
+      "bytes": 6050,
+      "sha256": "a5dfe4f05729c306deac44c2bd1fac22d7586a058dcdb3bfaa0a658351b7d8bc",
+      "git_blob_sha": "a1912dd5057d94677a623fec7e58d8c58c571d91",
+      "base_git_blob_sha": null
+    },
+    {
+      "path": "tests/verify-weather-sentence.py",
+      "action": "add",
+      "bytes": 3720,
+      "sha256": "987696190aafb392d3fe74441a82aed0db34fe4214c7d3bc5773cf2c02ba4542",
+      "git_blob_sha": "790636b885604b7c7525dee0bd477068a6bfc5a6",
+      "base_git_blob_sha": null
+    },
+    {
+      "path": "assets/audio/weather-v139/daily-sentence-jisoo.mp3",
+      "action": "add",
+      "bytes": 48526,
+      "sha256": "a695e14367b95b35b5ef270937e6928f9273bb296a1c138cb49dd0b39a3c0b8b",
+      "git_blob_sha": "fa4ba69f06bef532a3fec1b081e42a88f8d9ce39",
+      "base_git_blob_sha": null
+    },
+    {
+      "path": "assets/audio/weather-v139/synthesis.json",
+      "action": "add",
+      "bytes": 256,
+      "sha256": "3d453c6222072544db9e0a48f037c283026e67e43aedd9735d29d11b1a858336",
+      "git_blob_sha": "12404e54cf1469fb7b2237d9ec9275d45a12cb26",
+      "base_git_blob_sha": null
+    },
+    {
+      "path": "assets/audio/weather-v139/repair.json",
+      "action": "add",
+      "bytes": 975,
+      "sha256": "85c303bacf5759fb02c64e451584f2f00180e136642764567290d38e53a70bf9",
+      "git_blob_sha": "60ee5fc530f70cb8aaed84549aec8922de35855d",
+      "base_git_blob_sha": null
+    },
+    {
+      "path": "assets/audio/weather-v139/corrected-phrase.wav",
+      "action": "add",
+      "bytes": 524238,
+      "sha256": "299fc088221a1bf02c6e2ce4b74a39713b0050089e78b660c2c0859e055b4767",
+      "git_blob_sha": "f116f9d8b131bbd90277ae9169accc8a93363363",
+      "base_git_blob_sha": null
+    },
+    {
+      "path": "assets/audio/weather-v139/01-weather.m4a",
+      "action": "add",
+      "bytes": 713528,
+      "sha256": "0f911c04cffdad24e790925434c2d06eeb70b5708c8113a37ecd8f7f9338a422",
+      "git_blob_sha": "7fb5f027ddab90e663159cf69a437e0c03be7b02",
+      "base_git_blob_sha": null
+    },
+    {
+      "path": "assets/tv-ko-v139/tour.mp4",
+      "action": "add",
+      "bytes": 12208448,
+      "sha256": "f2624d82bffd29f247aaa14e5443bdfa6fcd6c6677f2ec7e1924834c12f0d082",
+      "git_blob_sha": "ebe31d6924981f20215d69b7f962fe8419488621",
+      "base_git_blob_sha": null
+    }
+  ]
+}
