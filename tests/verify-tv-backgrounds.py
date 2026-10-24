@@ -3,22 +3,21 @@ from pathlib import Path
 from PIL import Image
 
 root = Path(__file__).resolve().parents[1]
-folder = root / 'assets/tv-background-v137'
-expected = {
+names = {
     'weather-powerlines-v60.webp', 'tablet-review-v63.webp',
     'field-tools-kepco-v68.webp', 'emergency-response-changwon119-v66.webp',
-    'tbm-guide-closing-v69.webp',
 }
-assert {p.name for p in folder.iterdir()} == expected
+paths = [root / 'assets/tv-background-v137' / name for name in names]
+paths.append(root / 'assets/tv-background-v138/tbm-guide-closing-v138.webp')
 total_bytes = 0
-for name in sorted(expected):
-    path = folder / name
+for path in sorted(paths):
+    name = path.name
     total_bytes += path.stat().st_size
     with Image.open(path) as image:
         assert image.format == 'WEBP' and image.is_animated, name
         assert image.size == (320, 180), name
         assert 2 <= image.n_frames <= 64, name
-        assert image.info['loop'] == 0, name
+        assert image.info['loop'] == (1 if 'closing' in name else 0), name
         frames, duration = set(), 0
         for i in range(image.n_frames):
             image.seek(i)

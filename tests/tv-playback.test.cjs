@@ -61,7 +61,11 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
  const mediaSet=new Set();
  class Media extends Element {
   constructor(tag,attrs={}){super(tag,attrs);this.paused=true;this.muted='muted'in attrs;this.ended=false;this._time=0;this.seekCount=0;this.pauseCount=0;this.duration=8;this.volume=1;this.readyState=4;this.seeking=false;this.playCount=0;this.loadCount=0;mediaSet.add(this);}
-  get currentTime(){return this._time;}set currentTime(value){this.seekCount++;this._time=value;this.ended=false;}
+  get currentTime(){return this._time;}set currentTime(value){
+   this.seekCount++;this.seekTarget=value;this.ended=false;this.seeking=true;this.dispatchEvent({type:'seeking'});
+   if(!this.deferSeek)this.finishSeek();
+  }
+  finishSeek(value=this.seekTarget){this._time=value;this.seeking=false;this.dispatchEvent({type:'seeked'});}
   get currentSrc(){return this.src;}
   get buffered(){const ranges=this.bufferedRanges||[[0,this.duration]];return {length:ranges.length,start:i=>ranges[i][0],end:i=>ranges[i][1]};}
   load(){this.loadCount++;this._time=0;this.ended=false;this.paused=true;const key=Object.keys(durations).find(k=>this.src.includes(k));this.duration=this.src===english.tv.src?english.tv.duration:this.src===timeline.src?timeline.duration:Object.values(english.tracks).find(t=>t.src===this.src)?.duration||durations[key]||8;this.dispatchEvent({type:'emptied'});if(!this.preventMetadata)this.dispatchEvent({type:'loadedmetadata'});}
@@ -106,6 +110,54 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   e.document.dispatchEvent({type:'pointerdown',target,clientX:500,clientY:300});
   e.document.dispatchEvent({type:'click',target});
  };
+ await test('TV menu selections wait for the requested seek before playing any sound or outgoing frames', async () => {
+  for(const lang of ['ko','en']) {
+   const e=environment('?tv=1','Web0S',false,true,lang),m=e.el('demoNarration');
+   const entries=lang==='en'?english.tv.segments:timeline.segments;
+   e.document.querySelector('[data-launch-sound="on"]').click();await e.tick(5000);
+   m.deferSeek=true;
+   for(const page of ['weather','meeting','support','safety']) {
+    const entry=entries.find(s=>s.page===page),plays=m.playCount,loads=m.loadCount;
+    m._time=entry.start-.2;
+    e.click(page+'DemoPage');
+    assert.equal(m.paused,true,'menu selection must not play the previous chapter while seeking');
+    assert.equal(m.playCount,plays);assert.equal(m.seekTarget,entry.start);
+    await e.tick(500);assert.equal(e.el('tourStage').dataset.demoPage,page);
+    assert.equal(m.playCount,plays);assert.equal(m.dataset.surface,'audio');
+    m.finishSeek();await e.tick(200);
+    assert.equal(m.paused,false);assert.equal(m.dataset.segment,entry.id);
+    assert.equal(m.playCount,plays+1);assert.equal(m.loadCount,loads);
+    assert.ok(m.currentTime>=entry.start && m.currentTime<entry.start+.3);
+   }
+  }
+ });
+ await test('Rapid TV menu changes, pause and visibility loss cancel obsolete pending playback', async () => {
+  const e=environment(),m=e.el('demoNarration');
+  e.click('weatherDemoPage');await e.tick(500);m.deferSeek=true;
+  const plays=m.playCount;
+  e.click('meetingDemoPage');const old=m.seekTarget;
+  e.click('supportDemoPage');const latest=m.seekTarget;
+  m.finishSeek(old);await e.tick(100);
+  assert.equal(m.playCount,plays);assert.equal(e.el('tourStage').dataset.demoPage,'support');
+  m.finishSeek(latest);await e.tick(200);
+  assert.equal(m.playCount,plays+1);assert.equal(m.dataset.segment,'04-safety-tools');
+  e.click('safetyDemoPage');tap(e);m.finishSeek();await e.tick(200);
+  assert.equal(m.paused,true,'completing a seek must respect user pause');
+  e.click('demoResume');await e.tick(200);assert.equal(m.paused,false);
+  e.click('meetingDemoPage');e.document.hidden=true;e.document.dispatchEvent({type:'visibilitychange'});
+  m.finishSeek();await e.tick(200);assert.equal(m.paused,true);
+  e.document.hidden=false;e.document.dispatchEvent({type:'visibilitychange'});await e.tick(200);
+  assert.equal(m.paused,false);assert.equal(m.dataset.segment,'02-tbm-basic');
+ });
+ await test('Rounded TV seek clocks cannot flash the previous chapter at a menu boundary', async () => {
+  for(const rounding of [.0000001,.05,.2]) {
+   const e=environment(),m=e.el('demoNarration');m.deferSeek=true;
+   e.click('meetingDemoPage');m.finishSeek(m.seekTarget-rounding);
+   assert.equal(e.window.PowerTBMTV.segmentAtTime()?.id,'02-tbm-basic');
+   await e.tick(100);assert.equal(e.el('tourStage').dataset.demoPage,'meeting');
+   await e.tick(300);assert.equal(m.dataset.segment,'02-tbm-basic');
+  }
+ });
  await test('A single-video TV crosses the first weather boundary without freezing, including after waiting and on repeat', async () => {
   for(const lang of ['ko','en']) for(const wait of [0,30000]) {
    const e=environment('?tv=1','Web0S',false,true,lang),m=e.el('demoNarration');

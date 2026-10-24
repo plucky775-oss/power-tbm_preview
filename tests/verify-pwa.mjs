@@ -100,7 +100,7 @@ vm.runInContext(workerSource, context, { filename: 'sw.js' });
 const precacheUrls = vm.runInContext('[...PRECACHE_URLS]', context);
 const standardPrecacheUrls = vm.runInContext('[...ACTIVE_PRECACHE_URLS]', context);
 assert.ok(standardPrecacheUrls.every(url => !/\/tv-(?:ko|en)-v\d+\//.test(url)), 'desktop must not download the unused TV stream');
-assert.ok(standardPrecacheUrls.every(url => !url.includes('/tv-background-v137/')), 'desktop must not download TV-only image animations');
+assert.ok(standardPrecacheUrls.every(url => !/\/tv-background-v\d+\//.test(url)), 'desktop must not download TV-only image animations');
 const tvHandlers = new Map();
 const tvContext = vm.createContext({ ...context, self: {
   ...workerGlobal, location: { ...workerGlobal.location, search: '?tv=1' },
@@ -118,7 +118,9 @@ for (const url of tvPrecacheUrls) {
   assert.doesNotMatch(url, /assets\/audio\//, 'TV must not precache separate narration and BGM');
   if (/\.mp4$/.test(url)) assert.match(url, /assets\/(?:tv-ko-v136|tv-en-v128)\//, 'TV must not precache any second video stream');
 }
-assert.equal(tvPrecacheUrls.filter(url => /assets\/tv-background-v137\/.+\.webp$/.test(url)).length, 5, 'all animated image backgrounds must work offline');
+assert.equal(tvPrecacheUrls.filter(url => /assets\/tv-background-v\d+\/.+\.webp$/.test(url)).length, 5, 'all animated image backgrounds must work offline');
+assert.ok(tvPrecacheUrls.includes('./assets/tv-background-v138/tbm-guide-closing-v138.webp'));
+assert.ok(!precacheUrls.includes('./assets/tv-background-v137/tbm-guide-closing-v69.webp'), 'the retired looping ending must not be precached');
 assert.ok(tvPrecacheBytes < 35 * 1024 * 1024, 'TV offline download exceeded its budget');
 
 const expectedBackgroundFiles = [
@@ -132,6 +134,7 @@ const expectedBackgroundFiles = [
   'tablet-review-v63.mp4',
   'tbm-guide-closing-v69-poster.jpg',
   'tbm-guide-closing-v69.mp4',
+  'tbm-guide-closing-v138.mp4',
   'weather-powerlines-v60-poster.jpg',
   'weather-powerlines-v60.mp4'
 ].sort();
@@ -160,7 +163,7 @@ const coreUrls = [
   './manifest.webmanifest',
   './english-narration.js?v=20261021-balanced-v128',
   './styles.css?v=20261023-touch-resume-v134',
-  './app.js?v=20261023-tv-weather-recovery-v135',
+  './app.js?v=20261024-menu-closing-v138',
   './pwa.js?v=20261017-tv-startup-v115',
   './subtitles.js?v=20261020-language-v117',
   './subtitle-data.js?v=20261022-weather-daily-v132',
@@ -215,7 +218,7 @@ assert.match(indexSource, /assets\/background\/field-tools-kepco-v68-poster\.jpg
 assert.doesNotMatch(indexSource, /assets\/background\/field-tools-kepco-v6[67](?:-poster)?\.(?:mp4|jpg)/);
 assert.match(indexSource, /assets\/background\/emergency-response-changwon119-v66\.mp4/);
 assert.match(indexSource, /assets\/background\/emergency-response-changwon119-v66-poster\.jpg/);
-assert.match(indexSource, /assets\/background\/tbm-guide-closing-v69\.mp4/);
+assert.match(indexSource, /assets\/background\/tbm-guide-closing-v138\.mp4/);
 assert.match(indexSource, /assets\/background\/tbm-guide-closing-v69-poster\.jpg/);
 assert.doesNotMatch(indexSource, /assets\/background\/tbm-guide-closing-v6[67](?:-poster)?\.(?:mp4|jpg)/);
 const closingBackdropTag = indexSource.match(/<video class="[^"]*cinematic-backdrop-closing[^"]*"[^>]*>/)?.[0] || '';
@@ -270,7 +273,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v137-20261024-tv-single-video/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v138-20261024-menu-closing/);
 assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);

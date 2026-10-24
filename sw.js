@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v137-20261024-tv-single-video`;
+const CACHE_VERSION = `${CACHE_PREFIX}v138-20261024-menu-closing`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -10,7 +10,7 @@ const PRECACHE_URLS = [
   './index.html',
   './tv-media-timeline.js?v=20261023-tv-korean-uniform-v136',
   './english-narration.js?v=20261021-balanced-v128',
-  './tv-compat.js?v=20261024-tv-single-video-v137',
+  './tv-compat.js?v=20261024-menu-closing-v138',
   './tv-compat.css?v=20261021-launch-handoff-v131',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261020-language-v117',
@@ -22,7 +22,7 @@ const PRECACHE_URLS = [
   './manifest.webmanifest',
   './assets/brand/demo-hand.svg',
   './styles.css?v=20261023-touch-resume-v134',
-  './app.js?v=20261023-tv-weather-recovery-v135',
+  './app.js?v=20261024-menu-closing-v138',
   './safety4cut.css?v=20261016-safety-reveal-v107',
   './demo-hands-v80.css?v=20261021-balanced-v128',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',
@@ -35,7 +35,7 @@ const PRECACHE_URLS = [
   './assets/tv-background-v137/tablet-review-v63.webp',
   './assets/tv-background-v137/field-tools-kepco-v68.webp',
   './assets/tv-background-v137/emergency-response-changwon119-v66.webp',
-  './assets/tv-background-v137/tbm-guide-closing-v69.webp',
+  './assets/tv-background-v138/tbm-guide-closing-v138.webp',
   './assets/audio/balanced-v128/en-00-opening.m4a',
   './assets/audio/balanced-v128/en-01-weather.m4a',
   './assets/audio/balanced-v128/en-02-tbm-basic.m4a',
@@ -65,7 +65,7 @@ const PRECACHE_URLS = [
   './assets/background/field-tools-kepco-v68-poster.jpg',
   './assets/background/field-tools-kepco-v68.mp4',
   './assets/background/tbm-guide-closing-v69-poster.jpg',
-  './assets/background/tbm-guide-closing-v69.mp4',
+  './assets/background/tbm-guide-closing-v138.mp4',
   './assets/background/power-tbm-lightning-opening-v62.webp',
   './assets/background/tablet-review-v63-poster.jpg',
   './assets/background/tablet-review-v63.mp4',
@@ -138,7 +138,7 @@ const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
     (!/\.mp4(?:\?|$)/.test(path) || /\/(?:tv-ko-v136|tv-en-v128)\//.test(path)))
   .map(path => /^\.\/assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(path)
     ? path.replace('./assets/', './assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : path)
-  : PRECACHE_URLS.filter(path => !/\/(?:tv-ko-v136|tv-en-v128|tv-background-v137)\//.test(path));
+  : PRECACHE_URLS.filter(path => !/\/(?:tv-ko-v136|tv-en-v128|tv-background-v\d+)\//.test(path));
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
 const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data(?:\.en)?\.js|demo-translations\.js|demo-language\.(?:js|css)|english-narration\.js|tv-compat\.(?:js|css)|tv-media-timeline\.js)(?:\?|$)/.test(path) || path === './';

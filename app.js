@@ -941,6 +941,10 @@
     const visualFrameInterval = tvMode ? 50 : document.body.classList.contains('demo-recording') ? 32 : coarsePointer ? 30 : 14;
     const tick = (now) => {
       if (token !== narrationRunToken || !narrationRequested || !demoNarration) return;
+      if (tvMode && tv.isSeeking()) {
+        if (!demoPaused && !document.hidden) narrationFrame = window.requestAnimationFrame(tick);
+        return;
+      }
       if (tvMode && launchActive && tv.inPrelude()) {
         tv.presentPrelude();
         if (!demoPaused && !document.hidden && !demoNarration.ended) narrationFrame = window.requestAnimationFrame(tick);
@@ -985,6 +989,7 @@
 
   const stopNarrationPlayback = ({ reset = true, keepRequested = true } = {}) => {
     pendingReviewCleanup?.();
+    tv?.cancelPendingPlay?.();
     foregroundVideoActive = false;
     narrationRunToken += 1;
     cancelNarrationFrame();
@@ -1065,6 +1070,10 @@
     updateDemoStateData();
   };
 
+  const playNarrationMedia = token => tvMode
+    ? tv.playWhenReady(() => token === narrationRunToken && narrationRequested && !demoPaused && !document.hidden)
+    : demoNarration.play();
+
   const playNarrationSegment = ({ token, restartVideo = false } = {}) => {
     if (!demoNarration || token !== narrationRunToken || !narrationRequested) return;
     const segment = narrationByPage[demoPage]?.[narrationSegmentIndex];
@@ -1079,7 +1088,7 @@
       return;
     }
     setNarrationState('loading');
-    const playAttempt = demoNarration.play();
+    const playAttempt = playNarrationMedia(token);
     runNarrationVisualClock(token);
     if (!playAttempt?.then) {
       narrationUnlocked = true;
@@ -1087,7 +1096,7 @@
       return;
     }
     playAttempt.then(() => {
-      if (token !== narrationRunToken) return;
+      if (token !== narrationRunToken || demoPaused || document.hidden || demoNarration.paused) return;
       narrationUnlocked = true;
       setNarrationState('playing');
     }).catch((error) => handleNarrationFailure(error, token));
@@ -1970,11 +1979,11 @@
         resumeDemoBgm();
         setNarrationState('loading');
         const token = narrationRunToken;
-        const playAttempt = demoNarration.play();
+        const playAttempt = playNarrationMedia(token);
         runNarrationVisualClock(token);
         if (playAttempt?.then) {
           playAttempt.then(() => {
-            if (token === narrationRunToken) setNarrationState('playing');
+            if (token === narrationRunToken && !demoPaused && !document.hidden && !demoNarration.paused) setNarrationState('playing');
           }).catch((error) => handleNarrationFailure(error, token));
         } else setNarrationState('playing');
       }
@@ -2222,11 +2231,11 @@
         resumeDemoBgm();
         const token = narrationRunToken;
         setNarrationState('loading');
-        const playAttempt = demoNarration.play();
+        const playAttempt = playNarrationMedia(token);
         runNarrationVisualClock(token);
         if (playAttempt?.then) {
           playAttempt.then(() => {
-            if (token === narrationRunToken) setNarrationState('playing');
+            if (token === narrationRunToken && !demoPaused && !document.hidden && !demoNarration.paused) setNarrationState('playing');
           }).catch((error) => handleNarrationFailure(error, token));
         } else setNarrationState('playing');
       }
@@ -2374,7 +2383,7 @@
       retryPending = true;
       const attempt = ++retryId;
       if (!demoNarration.paused) demoNarration.pause();
-      demoNarration.play().catch(error => {
+      playNarrationMedia(token).catch(error => {
         if (attempt === retryId && !demoPaused && !document.hidden) handleNarrationFailure(error, token);
       }).finally(() => { if (attempt === retryId && token === narrationRunToken) retryPending = false; });
     }, 1000);

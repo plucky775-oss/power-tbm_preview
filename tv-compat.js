@@ -105,27 +105,47 @@
   let timeline = timelineForLanguage(window.PowerTBMLanguage?.get());
   const entryFor = segment => timeline.segments.find(entry => entry.id === segment.id);
   let pendingStart = null;
+  let awaitingSeek = false;
+  let selectedChapter = null;
   api.setLanguage = language => {
     const next = timelineForLanguage(language);
     if (next === timeline) return;
     media.pause();
+    api.cancelPendingPlay?.();
     timeline = next;
     pendingStart = null;
+    awaitingSeek = false;
+    selectedChapter = null;
     media.dataset.segment = '';
     media.src = timeline.src;
     media.load();
   };
   const seekToChapter = () => {
-    if (pendingStart === null) return;
+    if (pendingStart === null || awaitingSeek) return;
     try {
       // Keep the first decoded frames when the prepared opening is already at
       // zero. An unnecessary seek can flush the native TV decoder's queue.
-      if (Math.abs(media.currentTime - pendingStart) > .001) media.currentTime = pendingStart;
-      pendingStart = null;
-    } catch (_) { /* loadedmetadata will retry on older TV engines */ }
+      if (!media.seeking && Math.abs(media.currentTime - pendingStart) <= .001) {
+        pendingStart = null;
+        return;
+      }
+      awaitingSeek = true;
+      media.currentTime = pendingStart;
+    } catch (_) { awaitingSeek = false; /* loadedmetadata will retry on older TV engines */ }
   };
   media.addEventListener('loadedmetadata', seekToChapter);
+  media.addEventListener('seeked', () => {
+    // currentTime can still describe the outgoing frame until seeked. Ignore
+    // late events from a superseded menu request; allow coarse TV clock values.
+    if (pendingStart !== null && !media.seeking && Math.abs(media.currentTime - pendingStart) < .25) {
+      pendingStart = null;
+      awaitingSeek = false;
+    }
+  });
   api.select = segment => {
+    api.cancelPendingPlay?.();
+    awaitingSeek = false;
+    selectedChapter = entryFor(segment);
     // The launch gesture is part of the same stream as the opening narration.
     pendingStart = segment.id === '00-opening' ? 0 : entryFor(segment).start;
     if (media.getAttribute('src') !== timeline.src) {
@@ -137,11 +157,55 @@
   // User-requested review only: reuse the continuous stream and native decoder.
   api.chapter = segment => entryFor(segment);
   api.seek = (segment, seconds) => {
+    api.cancelPendingPlay?.();
+    awaitingSeek = false;
+    selectedChapter = entryFor(segment);
     pendingStart = entryFor(segment).start + seconds;
     if (media.readyState >= 1) seekToChapter();
   };
-  api.segmentAtTime = () => pendingStart !== null || media.seeking ? null :
-    [...timeline.segments].reverse().find(entry => media.currentTime >= entry.start);
+  api.isSeeking = () => pendingStart !== null || media.seeking;
+  api.segmentAtTime = () => {
+    if (api.isSeeking()) return null;
+    // A completed seek may report a rounded time just before the boundary.
+    // Keep the explicitly selected chapter until that coarse clock catches up.
+    if (selectedChapter && media.currentTime < selectedChapter.start &&
+        media.currentTime >= selectedChapter.start - .25) return selectedChapter;
+    selectedChapter = null;
+    return [...timeline.segments].reverse().find(entry => media.currentTime + .001 >= entry.start);
+  };
+  let pendingPlayCleanup = null;
+  api.cancelPendingPlay = () => pendingPlayCleanup?.();
+  api.playWhenReady = isCurrent => {
+    api.cancelPendingPlay();
+    if (!isCurrent()) return Promise.resolve();
+    if (!api.isSeeking()) return media.play();
+    // The first launch at zero still plays within its user gesture. Menu and
+    // review seeks reuse that unlocked player, after its new position is ready.
+    return new Promise((resolve, reject) => {
+      let settled = false;
+      const cleanup = () => {
+        settled = true;
+        ['loadedmetadata', 'seeked', 'canplay'].forEach(type => media.removeEventListener(type, start));
+        media.removeEventListener('error', fail);
+        pendingPlayCleanup = null;
+      };
+      const cancel = () => { cleanup(); resolve(); };
+      const start = () => {
+        if (settled) return;
+        if (!isCurrent()) { cancel(); return; }
+        if (api.isSeeking()) return;
+        cleanup();
+        resolve(media.play());
+      };
+      const fail = () => {
+        if (settled) return;
+        cleanup(); reject(media.error || new Error('TV chapter seek failed'));
+      };
+      pendingPlayCleanup = cancel;
+      ['loadedmetadata', 'seeked', 'canplay'].forEach(type => media.addEventListener(type, start));
+      media.addEventListener('error', fail);
+    });
+  };
   api.localTime = segment => Math.max(0, media.currentTime - entryFor(segment).start);
   api.segmentEnded = id => media.currentTime >= entryFor({ id }).end - .001;
   api.inPrelude = () => media.currentTime < (timeline.preludeDuration || 0);
@@ -163,7 +227,8 @@
     if (video.dataset.cinematicPage) {
       const key = video.classList.contains('cinematic-backdrop-emergency') ? 'emergency' : video.dataset.cinematicPage;
       const source = video.getAttribute('src') || video.querySelector('source')?.getAttribute('src');
-      backgroundSources[key] = source?.replace('assets/background/', 'assets/tv-background-v137/').replace(/\.mp4$/, '.webp');
+      backgroundSources[key] = key === 'closing' ? 'assets/tv-background-v138/tbm-guide-closing-v138.webp'
+        : source?.replace('assets/background/', 'assets/tv-background-v137/').replace(/\.mp4$/, '.webp');
     }
     const id = video.id;
     const placeholder = document.createElement('img');
@@ -305,6 +370,7 @@
     if (!layoutFrame) layoutFrame = requestAnimationFrame(layout);
   };
   api.presentPrelude = () => {
+    if (api.isSeeking()) { park(); return; }
     // The native decoder can present the 3.5s splash frame before the next JS
     // callback. Fade the button and resize UNDER the opaque gate 400ms early;
     // never wait for the first splash frame to shrink the full-screen plane.
@@ -324,6 +390,7 @@
     if (media.style.opacity !== opacity) media.style.opacity = opacity;
   };
   api.present = (page, segment, visualTime) => {
+    if (api.isSeeking()) { park(); return; }
     // Every embedded clip is precomposed into the same phone-sized frame.
     // Changing source dimensions or resizing the video plane interrupts webOS.
     const next = document.querySelector('.guide-media');

@@ -1,5 +1,14 @@
 # Power TBM 자동 시연 홈페이지
 
+## v138 · 메뉴 즉시 이동과 인사 배경 정리 (2026-10-24)
+
+- 상단 메뉴에서 구간을 고르면 기존 음성을 멈추고 선택한 구간의 시작 화면을 표시합니다. TV의 실제 탐색 완료(`seeked`)를 확인한 뒤 같은 동영상 재생기를 이어서 재생합니다. 탐색 중 이전 영상 프레임을 노출하지 않고, 반올림된 TV 시간이 잠깐 이전 구간을 가리켜도 메뉴를 되돌리지 않습니다. 앞 음성을 자르기 위한 임의 시간 건너뛰기는 추가하지 않습니다.
+- 메뉴를 연속해서 누르면 마지막 선택만 재생하며, 이동 중 일시정지·화면 숨김·언어 변경은 예약된 재생에 우선합니다. 첫 시작 버튼은 기존처럼 사용자 동작 안에서 재생하고, 자동 구간 전환은 계속 같은 미디어 시계를 사용합니다. v137의 동영상 하나만 쓰는 구조를 유지합니다.
+- 인사 배경의 마지막 0.2초(6프레임)에 잠깐 나타나는 별도 단체 장면을 제거했습니다. 앞의 185프레임(6.1667초)은 보존합니다. 일반 브라우저는 새 MP4를 사용하며, TV의 새 WebP는 한 번 재생한 뒤 마지막 화면을 유지해 인사 중 다시 처음으로 돌아가지 않습니다. 인사 음성·스마트폰 화면·자막 길이는 유지합니다.
+- 새 배경: `assets/background/tbm-guide-closing-v138.mp4`, `assets/tv-background-v138/tbm-guide-closing-v138.webp`. 재생성은 `python3 scripts/build-closing-background.py`입니다. 원본 v69는 재생성용으로 보존하며 활성 캐시에서는 새 파일만 사용합니다. 캐시 버전은 `v138-20261024-menu-closing`입니다.
+- 검증: 탐색 완료 전 재생되는 기존 실패를 모의 환경에서 재현한 뒤 지연 탐색, 빠른 메뉴 변경, 이전 탐색 이벤트, 일시정지·숨김, 시간 반올림을 포함한 재생 검사 51개를 통과했습니다. 언어·자막·녹화·TV 시작·스트리밍·PWA 오프라인/캐시 갱신/Range 검사도 통과했습니다. 실파일 검사에서 185프레임 보존·SSIM 0.995524·TV 배경 1회 재생(6.125초)을 확인했습니다. Chromium TV 모드에서 한국어·영어 메뉴 4개의 시작 위치, 새 인사 배경 표시와 다음 반복의 오프닝 재생을 확인했습니다. 실제 스탠바이미의 터치·스피커·네이티브 탐색은 직접 확인하지 못했습니다.
+- 수정: `app.js`, `tv-compat.js`, `index.html`, `sw.js`, `tests/tv-playback.test.cjs`, `tests/verify-pwa.mjs`, `tests/verify-recorder.mjs`, `tests/verify-tv-backgrounds.py`, `assets/background/ATTRIBUTION.md`, `README.md`. 추가: 위 배경 파일 2개, `scripts/build-closing-background.py`, `tests/verify-closing-background.py`.
+
 ## v137 · 스탠바이미에서 동영상 재생기를 하나만 사용 (2026-10-24)
 
 - 스탠바이미에서 한국어 첫 기상정보 진입 시 화면과 소리가 함께 멎고, 다음 반복은 정상이며 시작 전 기다려도 동일하다는 보고에 대응합니다. [LG webOS 개발자 답변](https://forum.webostv.developer.lge.com/t/how-to-achieve-simultaneous-dual-video-playback-dash-hls-on-webos/28170)은 동영상 하나만 재생할 수 있다고 안내합니다. 기존 TV 모드는 연속 시연 영상과 배경영상을 동시에 재생했습니다. 정체 감지 후 배경을 해제하는 기존 코드가 다음 반복부터 정상인 현상과도 부합합니다. 실제 기기의 원인 확정은 별도입니다.
@@ -48,11 +57,11 @@
 - GitHub 최신 v132의 기상 음성·스플래시 전환 수정과 이전 TV 영상 정리를 보존한 통합본입니다.
 
 
-**현재 코드 버전은 v137입니다.** 아래 항목은 변경 이력입니다.
+**현재 코드 버전은 v138입니다.** 아래 항목은 변경 이력입니다.
 
 배포 주소: [Vercel](https://power-tbm-preview.vercel.app/) · [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/)
 
-최신 수정본은 `index.html`의 `tv-compat.js?v=20261024-tv-single-video-v137` 참조와 `sw.js`의 `v137-20261024-tv-single-video` 캐시 버전으로 확인할 수 있습니다.
+최신 수정본은 `index.html`의 `tv-compat.js?v=20261024-menu-closing-v138` 참조와 `sw.js`의 `v138-20261024-menu-closing` 캐시 버전으로 확인할 수 있습니다.
 
 ## 2026-10-22 이전 TV 영상 정리
 
