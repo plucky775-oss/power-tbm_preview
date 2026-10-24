@@ -1,4 +1,4 @@
-// v141 single-page female-first narration.
+// v141 voice guidance demo.
 window.PowerTBMEnglishNarration = {
   "version": 119,
   "tracks": {
@@ -143,8 +143,8 @@ window.PowerTBMEnglishNarration = {
       ]
     },
     "02-tbm-basic": {
-      "src": "assets/audio/narration-demo-v141/02-tbm-basic-en.m4a",
-      "duration": 67.4874375,
+      "src": "assets/audio/narration-demo-v142/02-tbm-basic-en.m4a",
+      "duration": 68.8458125,
       "cues": [
         [
           0.0,
@@ -211,7 +211,7 @@ window.PowerTBMEnglishNarration = {
           51000
         ],
         [
-          67.4874375,
+          68.8458125,
           51000
         ]
       ],
@@ -219,12 +219,12 @@ window.PowerTBMEnglishNarration = {
         "start": 43.083333333333336,
         "sampleStart": 54.236812500000006,
         "measureStart": 60.02620833333334,
-        "sampleEnd": 66.6874375,
-        "confirmPress": 66.9874375,
+        "sampleEnd": 68.04581250000001,
+        "confirmPress": 68.34581250000001,
         "sceneStart": 37.506667,
-        "end": 67.4874375
+        "end": 68.8458125
       },
-      "clockReference": "meeting-ko-v141",
+      "clockReference": "meeting-ko-v142",
       "clock": [
         [
           0,
@@ -251,8 +251,8 @@ window.PowerTBMEnglishNarration = {
           41.75875
         ],
         [
-          67.4874375,
-          66.98754166666667
+          68.8458125,
+          68.34591666666667
         ]
       ]
     },
@@ -918,7 +918,7 @@ window.PowerTBMEnglishNarration = {
     }
   },
   "tv": {
-    "src": "assets/tv-en-v141/tour.mp4",
+    "src": "assets/tv-en-v142/tour.mp4",
     "width": 480,
     "height": 1040,
     "segments": [
@@ -943,59 +943,59 @@ window.PowerTBMEnglishNarration = {
         "page": "meeting",
         "index": 0,
         "start": 45.9,
-        "duration": 67.5,
-        "end": 113.4
+        "duration": 68.86666666666666,
+        "end": 114.76666666666665
       },
       {
         "id": "03-ai-pdf",
         "page": "meeting",
         "index": 1,
-        "start": 113.39999966666667,
+        "start": 114.76666633333335,
         "duration": 40.666666666666664,
-        "end": 154.06666666666666
+        "end": 155.43333333333334
       },
       {
         "id": "04-safety-tools",
         "page": "support",
         "index": 0,
-        "start": 154.06666666666666,
+        "start": 155.43333333333334,
         "duration": 33.333333333333336,
-        "end": 187.39999966666667
+        "end": 188.76666633333335
       },
       {
         "id": "05-emergency",
         "page": "support",
         "index": 1,
-        "start": 187.39999966666667,
+        "start": 188.76666633333335,
         "duration": 23.8,
-        "end": 211.19999966666666
+        "end": 212.56666633333333
       },
       {
         "id": "07-safety4cut-intro",
         "page": "safety",
         "index": 0,
-        "start": 211.19999966666666,
+        "start": 212.56666633333333,
         "duration": 39.333333333333336,
-        "end": 250.53333366666666
+        "end": 251.90000033333334
       },
       {
         "id": "08-safety4cut-example",
         "page": "safety",
         "index": 1,
-        "start": 250.53333366666666,
+        "start": 251.90000033333334,
         "duration": 76.46666666666667,
-        "end": 326.9999996666667
+        "end": 328.36666633333334
       },
       {
         "id": "06-closing",
         "page": "closing",
         "index": 0,
-        "start": 326.9999996666667,
+        "start": 328.36666633333334,
         "duration": 12.066666666666666,
-        "end": 339.0666666666667
+        "end": 340.43333333333334
       }
     ],
-    "duration": 339.0666666666667,
+    "duration": 340.43333333333334,
     "preludeDuration": 3.5
   }
 };

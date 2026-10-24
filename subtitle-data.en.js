@@ -1302,77 +1302,107 @@ window.PowerTBMSubtitleDataEn = {
     },
     {
       "start": 60.026208,
-      "end": 66.687438,
+      "end": 68.045813,
       "words": [
         {
-          "text": "For",
+          "text": "Check",
           "start": 60.026208,
-          "end": 60.285737
-        },
-        {
-          "text": "wiring",
-          "start": 60.285737,
-          "end": 60.804794
-        },
-        {
-          "text": "and",
-          "start": 60.804794,
-          "end": 61.064322
-        },
-        {
-          "text": "switching,",
-          "start": 61.064322,
-          "end": 61.929417
-        },
-        {
-          "text": "at",
-          "start": 61.929417,
-          "end": 62.102436
-        },
-        {
-          "text": "least",
-          "start": 62.102436,
-          "end": 62.534983
-        },
-        {
-          "text": "two",
-          "start": 62.534983,
-          "end": 62.794511
-        },
-        {
-          "text": "people",
-          "start": 62.794511,
-          "end": 63.313568
-        },
-        {
-          "text": "cross-check",
-          "start": 63.313568,
-          "end": 64.265172
+          "end": 60.3323
         },
         {
           "text": "the",
-          "start": 64.265172,
-          "end": 64.524701
+          "start": 60.3323,
+          "end": 60.515955
         },
         {
-          "text": "drawings",
-          "start": 64.524701,
-          "end": 65.216777
+          "text": "scope",
+          "start": 60.515955,
+          "end": 60.822047
+        },
+        {
+          "text": "of",
+          "start": 60.822047,
+          "end": 60.944484
+        },
+        {
+          "text": "power",
+          "start": 60.944484,
+          "end": 61.250575
+        },
+        {
+          "text": "isolation,",
+          "start": 61.250575,
+          "end": 61.862759
+        },
+        {
+          "text": "absence-of-voltage",
+          "start": 61.862759,
+          "end": 62.964689
+        },
+        {
+          "text": "testing,",
+          "start": 62.964689,
+          "end": 63.454436
+        },
+        {
+          "text": "grounding",
+          "start": 63.454436,
+          "end": 64.005401
+        },
+        {
+          "text": "or",
+          "start": 64.005401,
+          "end": 64.127838
+        },
+        {
+          "text": "live-work",
+          "start": 64.127838,
+          "end": 64.678803
+        },
+        {
+          "text": "protection,",
+          "start": 64.678803,
+          "end": 65.352205
         },
         {
           "text": "and",
-          "start": 65.216777,
-          "end": 65.476305
+          "start": 65.352205,
+          "end": 65.53586
         },
         {
-          "text": "phase",
-          "start": 65.476305,
-          "end": 65.908852
+          "text": "maintain",
+          "start": 65.53586,
+          "end": 66.025607
         },
         {
-          "text": "markings.",
-          "start": 65.908852,
-          "end": 66.687437
+          "text": "the",
+          "start": 66.025607,
+          "end": 66.209262
+        },
+        {
+          "text": "approach",
+          "start": 66.209262,
+          "end": 66.699009
+        },
+        {
+          "text": "distance",
+          "start": 66.699009,
+          "end": 67.188756
+        },
+        {
+          "text": "from",
+          "start": 67.188756,
+          "end": 67.433629
+        },
+        {
+          "text": "live",
+          "start": 67.433629,
+          "end": 67.678502
+        },
+        {
+          "text": "parts.",
+          "start": 67.678502,
+          "end": 68.045813
         }
       ]
     }

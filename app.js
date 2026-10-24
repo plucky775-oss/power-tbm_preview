@@ -350,10 +350,10 @@
     meeting: [
       {
         id: '02-tbm-basic',
-        src: 'assets/audio/narration-demo-v141/02-tbm-basic-ko.m4a',
-        duration: 66.98754166666667,
-        cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [13.08, 20496], [17.98, 25440], [21.368368, 28800], [22.969309, 30336], [25.44, 31104], [30.76, 37056], [36.44, 46176], [41.75875, 51000], [66.98754166666667, 51000]],
-        voiceDemo: {"start": 42.00875, "sampleStart": 53.736916666666666, "measureStart": 59.526312499999996, "sampleEnd": 66.18754166666666, "confirmPress": 66.48754166666666, "sceneStart": 36.44, "end": 66.98754166666667}
+        src: 'assets/audio/narration-demo-v142/02-tbm-basic-ko.m4a',
+        duration: 68.34591666666667,
+        cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [13.08, 20496], [17.98, 25440], [21.368368, 28800], [22.969309, 30336], [25.44, 31104], [30.76, 37056], [36.44, 46176], [41.75875, 51000], [68.34591666666667, 51000]],
+        voiceDemo: {"start": 42.00875, "sampleStart": 53.736916666666666, "measureStart": 59.526312499999996, "sampleEnd": 67.54591666666667, "confirmPress": 67.84591666666667, "sceneStart": 36.44, "end": 68.34591666666667}
       },
       {
         id: '03-ai-pdf',
@@ -938,11 +938,11 @@
     if (label) label.textContent = english ? 'Actual voice guidance example' : '실제 음성 안내 시연';
     if (title) title.textContent = english ? 'Listen and check together' : '함께 듣고 확인하는 안전';
     if (copy) copy.textContent = english
-      ? 'Selected hazards and safety measures are read aloud by alternating female and male voices. This short example uses the Korean app audio.'
-      : '선택한 위험요인과 안전대책을 여성과 남성 목소리로 번갈아 안내합니다. 위험요인 한 항목과 안전대책 한 문장을 잠시 들어보겠습니다.';
+      ? 'Selected hazards and safety measures are read aloud by alternating male and female voices, so workers can listen and check them together. Let\'s listen to a short example.'
+      : '선택한 위험요인과 안전대책은 남녀 목소리로 번갈아 안내하여, 작업자들이 함께 듣고 확인할 수 있습니다. 실제 안내 음성을 잠시 들어보겠습니다.';
     const status = $('.meeting-voice-status', panel);
     if (status) status.textContent = !playing ? '선택한 위험요인과 안전대책을 들어보세요.' : confirming ? '음성 안내 완료' : measure
-      ? '안전대책 · 태형(남성) · 결선 및 전환 작업'
+      ? '안전대책 · 태형(남성) · 정전·검전·접지 및 접근한계거리'
       : '위험요인 · 지수(여성) · 감전 및 아크';
     const progress = $('.meeting-voice-progress i', panel);
     if (progress) progress.style.width = (100 * Math.min(1, Math.max(0, (seconds - timing.sampleStart) / (sampleEnd - timing.sampleStart)))) + '%';
