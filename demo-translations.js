@@ -1,6 +1,9 @@
 // English display text for the Power TBM demonstration.
 // Keys match trimmed Korean text nodes or complete dynamic strings.
 window.PowerTBMEnglish = {
+  "실제 음성 안내 시연": "Actual voice guidance example",
+  "함께 듣고 확인하는 안전": "Listen and check together",
+  "선택한 위험요인과 안전대책을 남녀 목소리로 번갈아 안내합니다.": "Selected hazards and safety measures are read aloud by alternating male and female voices.",
   "◀ 이전 장면": "◀ Previous scene",
   "↶ 10초 뒤로": "↶ Back 10s",
   "▶ 계속 재생": "▶ Resume",

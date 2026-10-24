@@ -23,23 +23,23 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/video-demo-icon-32-v1.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/video-demo-icon-192-v1.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/video-demo-icon-180-v1.png">
-  <link rel="stylesheet" href="styles.css?v=20261023-touch-resume-v134">
+  <link rel="stylesheet" href="styles.css?v=20261024-voice-demo-v140">
   <link rel="stylesheet" href="safety4cut.css?v=20261016-safety-reveal-v107">
   <link rel="stylesheet" href="demo-hands-v80.css?v=20261021-balanced-v128">
   <link rel="stylesheet" href="demo-recorder-v81.css?v=20261017-recording-start-v113">
   <link rel="stylesheet" href="tv-compat.css?v=20261021-launch-handoff-v131">
-  <script src="tv-media-timeline.js?v=20261024-weather-sentence-v139" defer></script>
-  <script src="english-narration.js?v=20261021-balanced-v128" defer></script>
-  <script src="demo-translations.js?v=20261023-touch-resume-v134" defer></script>
+  <script src="tv-media-timeline.js?v=20261024-voice-demo-v140" defer></script>
+  <script src="english-narration.js?v=20261024-voice-demo-v140" defer></script>
+  <script src="demo-translations.js?v=20261024-voice-demo-v140" defer></script>
   <script src="demo-language.js?v=20261021-language-menu-v125" defer></script>
   <script src="tv-compat.js?v=20261024-menu-closing-v138" defer></script>
   <script src="safety4cut.js?v=20261021-safety-caption-v121" defer></script>
   <link rel="stylesheet" href="subtitles.css?v=20261004-v87">
   <link rel="stylesheet" href="demo-language.css?v=20261021-language-menu-v125">
-  <script src="subtitle-data.js?v=20261024-weather-sentence-v139" defer></script>
-  <script src="subtitle-data.en.js?v=20261021-meeting-sequence-v126" defer></script>
+  <script src="subtitle-data.js?v=20261024-voice-demo-v140" defer></script>
+  <script src="subtitle-data.en.js?v=20261024-voice-demo-v140" defer></script>
   <script src="subtitles.js?v=20261020-language-v117" defer></script>
-  <script src="app.js?v=20261024-weather-sentence-v139" defer></script>
+  <script src="app.js?v=20261024-voice-demo-v140" defer></script>
   <script src="demo-recorder-v81.js?v=20261020-language-v117" defer></script>
   <script src="pwa.js?v=20261017-tv-startup-v115" defer></script>
   <noscript>
@@ -300,6 +300,15 @@
                       <span class="meeting-choice meeting-choice-risk"></span>
                       <span class="meeting-count meeting-risk-count">회의록 반영: 3개 선택</span>
                     </div>
+                  </div>
+
+                  <div id="meetingVoiceDemo" class="meeting-voice-demo" hidden aria-hidden="true">
+                    <img class="meeting-voice-idle" data-demo-image="voice-demo-idle" data-demo-src="assets/screens/guide/narration-idle-v140.png" alt="" width="945" height="2048">
+                    <img class="meeting-voice-playing" data-demo-image="voice-demo-playing" data-demo-src="assets/screens/guide/narration-playing-v140.png" alt="" width="945" height="2048">
+                    <span class="meeting-voice-badge"></span>
+                    <span class="meeting-voice-focus demo-highlight-box"></span>
+                    <span class="meeting-voice-hand" aria-hidden="true">👆</span>
+                    <span class="meeting-voice-status"></span>
                   </div>
 
                   <div class="meeting-slide meeting-scene meeting-slide-ai" aria-hidden="true">
@@ -578,6 +587,11 @@
             </aside>
 
             <aside class="meeting-explanations" aria-label="현재 진행 중인 TBM 회의록 작성 단계 설명">
+              <article class="meeting-explain meeting-voice-explain">
+                <span class="voice-explain-label">실제 음성 안내 시연</span>
+                <h3 class="voice-explain-title">함께 듣고 확인하는 안전</h3>
+                <p class="voice-explain-copy">선택한 위험요인과 안전대책을 남녀 목소리로 번갈아 안내합니다.</p>
+              </article>
               <article class="meeting-explain meeting-explain-entry">
                 <span><i></i> 1 / 9 · 시작</span>
                 <h3>TBM 회의록을 열고<br><em>새 회의를 시작</em></h3>

@@ -350,9 +350,10 @@
     meeting: [
       {
         id: '02-tbm-basic',
-        src: 'assets/audio/balanced-v128/ko-02-tbm-basic.m4a',
-        duration: 41.75875,
-        cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [13.08, 20496], [17.98, 25440], [21.368368, 28800], [22.969309, 30336], [25.44, 31104], [30.76, 37056], [36.44, 46176], [41.75875, 55296]]
+        src: 'assets/audio/narration-demo-v140/02-tbm-basic-ko.m4a',
+        duration: 66.4069375,
+        cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [13.08, 20496], [17.98, 25440], [21.368368, 28800], [22.969309, 30336], [25.44, 31104], [30.76, 37056], [36.44, 46176], [41.75875, 54800], [66.4069375, 55296]],
+        voiceDemo: {"start": 42.00875, "sampleStart": 53.736916666666666, "measureStart": 59.36958333333333, "end": 66.4069375}
       },
       {
         id: '03-ai-pdf',
@@ -683,6 +684,7 @@
     if (!guideStage) return;
     guideStage.dataset.playbackMode = tvMode ? 'tv-continuous-background' : 'standard';
     guideStage.dataset.demoPage = demoPage;
+    if (demoPage !== 'meeting') { const panel = $('#meetingVoiceDemo'); if (panel) panel.hidden = true; guideStage.dataset.voiceDemo = 'false'; }
     tv?.setPage(demoPage);
     guideStage.dataset.demoMode = demoMode;
     guideStage.dataset.narrationState = narrationState;
@@ -896,9 +898,42 @@
     return cues[cues.length - 1][1];
   };
 
+  const syncMeetingVoiceDemo = (segment, seconds) => {
+    const panel = $('#meetingVoiceDemo');
+    if (!panel) return;
+    const timing = segment?.voiceDemo;
+    const visible = demoPage === 'meeting' && timing && seconds >= timing.start && seconds < timing.end;
+    panel.hidden = !visible;
+    if (guideStage) guideStage.dataset.voiceDemo = String(Boolean(visible));
+    if (!visible) return;
+    const playing = seconds >= timing.sampleStart;
+    const female = seconds >= timing.measureStart;
+    const english = language?.get() === 'en';
+    panel.dataset.playing = String(playing);
+    const picture = $(playing ? '.meeting-voice-playing' : '.meeting-voice-idle', panel);
+    panel.dataset.ready = String(Boolean(picture?.classList.contains('demo-image-ready')));
+    panel.dataset.pointing = String(seconds >= timing.sampleStart - .8);
+    panel.dataset.pressing = String(seconds >= timing.sampleStart - .25);
+    const badge = $('.meeting-voice-badge', panel);
+    if (badge) badge.textContent = '실제 음성 안내 시연';
+    const label = $('.voice-explain-label');
+    const title = $('.voice-explain-title');
+    const copy = $('.voice-explain-copy');
+    if (label) label.textContent = english ? 'Actual voice guidance example' : '실제 음성 안내 시연';
+    if (title) title.textContent = english ? 'Listen and check together' : '함께 듣고 확인하는 안전';
+    if (copy) copy.textContent = english
+      ? 'Selected hazards and safety measures are read aloud by alternating male and female voices. This short example uses the Korean app audio.'
+      : '선택한 위험요인과 안전대책을 남녀 목소리로 번갈아 안내합니다. 위험요인 한 항목과 안전대책 한 문장을 잠시 들어보겠습니다.';
+    const status = $('.meeting-voice-status', panel);
+    if (status) status.textContent = female
+      ? '안전대책 · 지수(여성) · 결선 및 전환 작업'
+      : '위험요인 · 태형(남성) · 감전 및 아크';
+  };
+
   const applyNarrationVisualTime = (segment, seconds) => {
     if (!segment) return;
     window.PowerTBMSubtitles?.render(segment.id, seconds);
+    syncMeetingVoiceDemo(segment, seconds);
     if (demoPage === 'intro') {
       if (tvMode) tv.present(demoPage, segment, 0);
       // Audio and video start, pause and resume together. Let the hardware
@@ -2037,6 +2072,12 @@
           result.push(entry.start + local);
           break;
         }
+      }
+    }
+    for (const entry of entries) {
+      if (entry.segment.voiceDemo) {
+        result.push(entry.start + entry.segment.voiceDemo.start);
+        result.push(entry.start + entry.segment.voiceDemo.sampleStart);
       }
     }
     return result.sort((a, b) => a - b);

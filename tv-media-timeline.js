@@ -1,9 +1,9 @@
-// Balanced playback; 3.5-second launch gesture before the first chapter.
+// v140 voice guidance demo.
 window.PowerTBMTVTimeline = {
-  "src": "assets/tv-ko-v139/tour.mp4",
+  "src": "assets/tv-ko-v140/tour.mp4",
   "width": 480,
   "height": 1040,
-  "duration": 291.83333333333337,
+  "duration": 316.50000000000006,
   "segments": [
     {
       "id": "00-opening",
@@ -26,56 +26,56 @@ window.PowerTBMTVTimeline = {
       "page": "meeting",
       "index": 0,
       "start": 41.4,
-      "duration": 41.766666666666666,
-      "end": 83.16666666666666
+      "duration": 66.43333333333334,
+      "end": 107.83333333333334
     },
     {
       "id": "03-ai-pdf",
       "page": "meeting",
       "index": 1,
-      "start": 83.16666666666667,
+      "start": 107.83333333333334,
       "duration": 40.666666666666664,
-      "end": 123.83333333333333
+      "end": 148.5
     },
     {
       "id": "04-safety-tools",
       "page": "support",
       "index": 0,
-      "start": 123.83333333333333,
+      "start": 148.5,
       "duration": 31.866666666666667,
-      "end": 155.7
+      "end": 180.36666666666667
     },
     {
       "id": "05-emergency",
       "page": "support",
       "index": 1,
-      "start": 155.7,
+      "start": 180.36666666666667,
       "duration": 22.0,
-      "end": 177.7
+      "end": 202.36666666666667
     },
     {
       "id": "07-safety4cut-intro",
       "page": "safety",
       "index": 0,
-      "start": 177.7,
+      "start": 202.36666666666667,
       "duration": 38.06666666666667,
-      "end": 215.76666666666668
+      "end": 240.43333333333334
     },
     {
       "id": "08-safety4cut-example",
       "page": "safety",
       "index": 1,
-      "start": 215.76666666666668,
+      "start": 240.43333333333334,
       "duration": 64.56666666666666,
-      "end": 280.33333333333337
+      "end": 305.00000000000006
     },
     {
       "id": "06-closing",
       "page": "closing",
       "index": 0,
-      "start": 280.33333333333337,
+      "start": 305.00000000000006,
       "duration": 11.5,
-      "end": 291.83333333333337
+      "end": 316.50000000000006
     }
   ],
   "preludeDuration": 3.5
