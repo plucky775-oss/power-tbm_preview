@@ -350,10 +350,10 @@
     meeting: [
       {
         id: '02-tbm-basic',
-        src: 'assets/audio/narration-demo-v140/02-tbm-basic-ko.m4a',
-        duration: 66.4069375,
-        cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [13.08, 20496], [17.98, 25440], [21.368368, 28800], [22.969309, 30336], [25.44, 31104], [30.76, 37056], [36.44, 46176], [41.75875, 54800], [66.4069375, 55296]],
-        voiceDemo: {"start": 42.00875, "sampleStart": 53.736916666666666, "measureStart": 59.36958333333333, "end": 66.4069375}
+        src: 'assets/audio/narration-demo-v141/02-tbm-basic-ko.m4a',
+        duration: 66.98754166666667,
+        cues: [[0, 0], [2.57, 5664], [6.99, 11424], [12.67, 20160], [13.08, 20496], [17.98, 25440], [21.368368, 28800], [22.969309, 30336], [25.44, 31104], [30.76, 37056], [36.44, 46176], [41.75875, 51000], [66.98754166666667, 51000]],
+        voiceDemo: {"start": 42.00875, "sampleStart": 53.736916666666666, "measureStart": 59.526312499999996, "sampleEnd": 66.18754166666666, "confirmPress": 66.48754166666666, "sceneStart": 36.44, "end": 66.98754166666667}
       },
       {
         id: '03-ai-pdf',
@@ -902,32 +902,50 @@
     const panel = $('#meetingVoiceDemo');
     if (!panel) return;
     const timing = segment?.voiceDemo;
-    const visible = demoPage === 'meeting' && timing && seconds >= timing.start && seconds < timing.end;
+    const visible = demoPage === 'meeting' && timing && seconds >= timing.sceneStart && seconds < timing.end;
     panel.hidden = !visible;
     if (guideStage) guideStage.dataset.voiceDemo = String(Boolean(visible));
     if (!visible) return;
     const playing = seconds >= timing.sampleStart;
-    const female = seconds >= timing.measureStart;
-    const english = language?.get() === 'en';
+    const measure = seconds >= timing.measureStart;
+    const sampleEnd = timing.sampleEnd;
+    const confirming = seconds >= sampleEnd;
     panel.dataset.playing = String(playing);
-    const picture = $(playing ? '.meeting-voice-playing' : '.meeting-voice-idle', panel);
-    panel.dataset.ready = String(Boolean(picture?.classList.contains('demo-image-ready')));
+    panel.dataset.confirming = String(confirming);
+    panel.dataset.confirmPointing = String(seconds >= sampleEnd - .5);
+    panel.dataset.confirmPressing = String(seconds >= timing.confirmPress);
     panel.dataset.pointing = String(seconds >= timing.sampleStart - .8);
     panel.dataset.pressing = String(seconds >= timing.sampleStart - .25);
-    const badge = $('.meeting-voice-badge', panel);
-    if (badge) badge.textContent = '실제 음성 안내 시연';
+    const picture = $('.meeting-voice-picture', panel);
+    panel.dataset.ready = String($$('img', panel).every(image => image.classList.contains('demo-image-ready')));
+    // Scroll the body only; header/footer remain fixed. All positions derive from the media clock.
+    const scroll = $('.meeting-voice-scroll', panel);
+    const rect = panel.getBoundingClientRect();
+    const unit = rect.width > 0 ? rect.width / 100 : 3;
+    if (panel.dataset.unitPx !== String(unit)) {
+      panel.style.setProperty('--voice-unit', unit + 'px');
+      panel.dataset.unitPx = String(unit);
+    }
+    const ratio = rect.width > 0 && rect.height > 0 ? rect.height / rect.width : 2048 / 945;
+    const maxScroll = Math.max(0, 1970 / 685 * 100 - ratio * 100);
+    const fraction = Math.min(1, Math.max(0, (seconds - timing.start + .9) / 1.15));
+    const eased = fraction * fraction * (3 - 2 * fraction);
+    if (scroll) scroll.style.transform = 'translateY(' + (-maxScroll * unit * (1 - eased)) + 'px)';
+    const english = language?.get() === 'en';
     const label = $('.voice-explain-label');
     const title = $('.voice-explain-title');
     const copy = $('.voice-explain-copy');
     if (label) label.textContent = english ? 'Actual voice guidance example' : '실제 음성 안내 시연';
     if (title) title.textContent = english ? 'Listen and check together' : '함께 듣고 확인하는 안전';
     if (copy) copy.textContent = english
-      ? 'Selected hazards and safety measures are read aloud by alternating male and female voices. This short example uses the Korean app audio.'
-      : '선택한 위험요인과 안전대책을 남녀 목소리로 번갈아 안내합니다. 위험요인 한 항목과 안전대책 한 문장을 잠시 들어보겠습니다.';
+      ? 'Selected hazards and safety measures are read aloud by alternating female and male voices. This short example uses the Korean app audio.'
+      : '선택한 위험요인과 안전대책을 여성과 남성 목소리로 번갈아 안내합니다. 위험요인 한 항목과 안전대책 한 문장을 잠시 들어보겠습니다.';
     const status = $('.meeting-voice-status', panel);
-    if (status) status.textContent = female
-      ? '안전대책 · 지수(여성) · 결선 및 전환 작업'
-      : '위험요인 · 태형(남성) · 감전 및 아크';
+    if (status) status.textContent = !playing ? '선택한 위험요인과 안전대책을 들어보세요.' : confirming ? '음성 안내 완료' : measure
+      ? '안전대책 · 태형(남성) · 결선 및 전환 작업'
+      : '위험요인 · 지수(여성) · 감전 및 아크';
+    const progress = $('.meeting-voice-progress i', panel);
+    if (progress) progress.style.width = (100 * Math.min(1, Math.max(0, (seconds - timing.sampleStart) / (sampleEnd - timing.sampleStart)))) + '%';
   };
 
   const applyNarrationVisualTime = (segment, seconds) => {
@@ -1471,10 +1489,10 @@
         pauseControls.style.setProperty('--review-caption-height', `${height}px`);
       }
     }
-    if ($('#demoResume')) $('#demoResume').disabled = Boolean(pendingReviewCleanup && (demoNarration?.readyState < 1 || demoNarration?.seeking));
     const canSeek = demoPaused && narrationRequested && !launchActive && demoPage !== 'manual' && demoNarration?.readyState >= 1 && !demoNarration?.seeking;
     if ($('#demoPreviousScene')) $('#demoPreviousScene').disabled = !canSeek;
     if ($('#demoBackTen')) $('#demoBackTen').disabled = !canSeek;
+    if ($('#demoNextScene')) $('#demoNextScene').disabled = !canSeek || nextReviewSceneTime() === null;
     guideStage?.setAttribute('aria-label', demoPaused
       ? '시연 일시정지 중. 화면을 터치하거나 스페이스 키를 누르면 계속 재생합니다.'
       : '자동 시연. 터치하거나 스페이스 키를 누르면 일시정지합니다.');
@@ -2105,8 +2123,6 @@
     collectNarrationAnimations(entry.page);
     const render = () => {
       if (token !== narrationRunToken) return;
-      const resume = $('#demoResume');
-      if (resume) resume.disabled = player.readyState < 1 || player.seeking;
       updateDemoButton();
       applyNarrationVisualTime(entry.segment, seconds);
       // Embedded silent videos are only repositioned on an explicit review seek.
@@ -2148,10 +2164,16 @@
     seekReviewTime(points[Math.max(0, current - 1)] || 0);
   });
   $('#demoBackTen')?.addEventListener('click', () => seekReviewTime(currentTourTime(tourEntries()) - 10));
-  $('#demoResume')?.addEventListener('click', () => {
-    if (!demoPaused || (pendingReviewCleanup && (demoNarration?.seeking || demoNarration?.readyState < 1))) return;
-    pendingReviewCleanup?.();
-    toggleDemoPlayback();
+  function nextReviewSceneTime() {
+    const entries = tourEntries();
+    const now = currentTourTime(entries);
+    return sceneTourTimes(entries).find(time => time > now + .05) ?? null;
+  }
+  $('#demoNextScene')?.addEventListener('click', () => {
+    if (!demoPaused || !narrationRequested || launchActive || demoNarration?.seeking || demoNarration?.readyState < 1) return;
+    const next = nextReviewSceneTime();
+    if (next !== null) seekReviewTime(next);
+    // Like Previous Scene, remain paused; tapping the display resumes.
   });
 
   const playbackControlSelector = 'button, a, input, select, textarea, summary, [role="button"], [role="tab"], [role="slider"], [contenteditable="true"], video[controls], audio[controls]';

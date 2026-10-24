@@ -23,23 +23,23 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/video-demo-icon-32-v1.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/video-demo-icon-192-v1.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/brand/video-demo-icon-180-v1.png">
-  <link rel="stylesheet" href="styles.css?v=20261024-voice-demo-v140">
+  <link rel="stylesheet" href="styles.css?v=20261024-voice-flow-v141">
   <link rel="stylesheet" href="safety4cut.css?v=20261016-safety-reveal-v107">
   <link rel="stylesheet" href="demo-hands-v80.css?v=20261021-balanced-v128">
   <link rel="stylesheet" href="demo-recorder-v81.css?v=20261017-recording-start-v113">
   <link rel="stylesheet" href="tv-compat.css?v=20261021-launch-handoff-v131">
-  <script src="tv-media-timeline.js?v=20261024-voice-demo-v140" defer></script>
-  <script src="english-narration.js?v=20261024-voice-demo-v140" defer></script>
-  <script src="demo-translations.js?v=20261024-voice-demo-v140" defer></script>
+  <script src="tv-media-timeline.js?v=20261024-voice-flow-v141" defer></script>
+  <script src="english-narration.js?v=20261024-voice-flow-v141" defer></script>
+  <script src="demo-translations.js?v=20261024-voice-flow-v141" defer></script>
   <script src="demo-language.js?v=20261021-language-menu-v125" defer></script>
   <script src="tv-compat.js?v=20261024-menu-closing-v138" defer></script>
   <script src="safety4cut.js?v=20261021-safety-caption-v121" defer></script>
   <link rel="stylesheet" href="subtitles.css?v=20261004-v87">
   <link rel="stylesheet" href="demo-language.css?v=20261021-language-menu-v125">
-  <script src="subtitle-data.js?v=20261024-voice-demo-v140" defer></script>
-  <script src="subtitle-data.en.js?v=20261024-voice-demo-v140" defer></script>
+  <script src="subtitle-data.js?v=20261024-voice-flow-v141" defer></script>
+  <script src="subtitle-data.en.js?v=20261024-voice-flow-v141" defer></script>
   <script src="subtitles.js?v=20261020-language-v117" defer></script>
-  <script src="app.js?v=20261024-voice-demo-v140" defer></script>
+  <script src="app.js?v=20261024-voice-flow-v141" defer></script>
   <script src="demo-recorder-v81.js?v=20261020-language-v117" defer></script>
   <script src="pwa.js?v=20261017-tv-startup-v115" defer></script>
   <noscript>
@@ -294,21 +294,21 @@
                     </div>
                   </div>
 
-                  <div class="meeting-slide meeting-scene meeting-slide-risk" aria-hidden="true">
-                    <img data-demo-src="assets/screens/guide/meeting-risk-v2.png" alt="" width="1179" height="2556">
-                    <div class="meeting-scene-state">
-                      <span class="meeting-choice meeting-choice-risk"></span>
-                      <span class="meeting-count meeting-risk-count">회의록 반영: 3개 선택</span>
-                    </div>
-                  </div>
-
                   <div id="meetingVoiceDemo" class="meeting-voice-demo" hidden aria-hidden="true">
-                    <img class="meeting-voice-idle" data-demo-image="voice-demo-idle" data-demo-src="assets/screens/guide/narration-idle-v140.png" alt="" width="945" height="2048">
-                    <img class="meeting-voice-playing" data-demo-image="voice-demo-playing" data-demo-src="assets/screens/guide/narration-playing-v140.png" alt="" width="945" height="2048">
-                    <span class="meeting-voice-badge"></span>
-                    <span class="meeting-voice-focus demo-highlight-box"></span>
-                    <span class="meeting-voice-hand" aria-hidden="true">👆</span>
-                    <span class="meeting-voice-status"></span>
+                    <div class="meeting-voice-header"><img data-demo-image="voice-demo-header" data-demo-src="assets/screens/guide/narration-long-v141.jpeg" alt="" width="685" height="1970"></div>
+                    <div class="meeting-voice-body">
+                      <div class="meeting-voice-scroll">
+                        <img class="meeting-voice-picture" data-demo-image="voice-demo-picture" data-demo-src="assets/screens/guide/narration-long-v141.jpeg" alt="" width="685" height="1970">
+                        <span class="meeting-voice-playback-controls"><b>선택한 부분 듣기</b><b>일시정지</b><b>중지</b></span>
+                        <span class="meeting-voice-progress"><i></i></span>
+                        <span class="meeting-voice-focus"></span>
+                        <span class="meeting-voice-hand" aria-hidden="true">👆</span>
+                        <span class="meeting-voice-status"></span>
+                      </div>
+                    </div>
+                    <div class="meeting-voice-footer"><img data-demo-image="voice-demo-footer" data-demo-src="assets/screens/guide/narration-long-v141.jpeg" alt="" width="685" height="1970"></div>
+                    <span class="meeting-voice-confirm-focus"></span>
+                    <span class="meeting-voice-confirm-hand" aria-hidden="true">👆</span>
                   </div>
 
                   <div class="meeting-slide meeting-scene meeting-slide-ai" aria-hidden="true">
@@ -772,7 +772,7 @@
   <nav id="demoPauseControls" aria-label="일시정지 화면 이동" hidden>
     <button id="demoPreviousScene" type="button">◀ 이전 장면</button>
     <button id="demoBackTen" type="button">↶ 10초 뒤로</button>
-    <button id="demoResume" type="button">▶ 계속 재생</button>
+    <button id="demoNextScene" type="button">다음 장면 ▶</button>
   </nav>
   <aside class="narration-subtitles" id="narrationSubtitles" aria-label="음성 자막">
     <p class="subtitle-line" id="subtitleLine"></p>

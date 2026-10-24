@@ -1,4 +1,4 @@
-// v140 voice guidance demo.
+// v141 voice guidance demo.
 window.PowerTBMSubtitleDataEn = {
   "00-opening": [
     {
@@ -1251,128 +1251,128 @@ window.PowerTBMSubtitleDataEn = {
     },
     {
       "start": 54.236813,
-      "end": 59.469479,
+      "end": 59.626208,
       "words": [
         {
           "text": "Electrical",
           "start": 54.236813,
-          "end": 55.350146
+          "end": 55.383492
         },
         {
           "text": "shock",
-          "start": 55.350146,
-          "end": 55.906813
+          "start": 55.383492,
+          "end": 55.956832
         },
         {
           "text": "and",
-          "start": 55.906813,
-          "end": 56.240813
+          "start": 55.956832,
+          "end": 56.300836
         },
         {
           "text": "arc:",
-          "start": 56.240813,
-          "end": 56.686146
+          "start": 56.300836,
+          "end": 56.759508
         },
         {
           "text": "nearby",
-          "start": 56.686146,
-          "end": 57.354146
+          "start": 56.759508,
+          "end": 57.447516
         },
         {
           "text": "live",
-          "start": 57.354146,
-          "end": 57.799479
+          "start": 57.447516,
+          "end": 57.906188
         },
         {
           "text": "parts",
-          "start": 57.799479,
-          "end": 58.356146
+          "start": 57.906188,
+          "end": 58.479528
         },
         {
           "text": "and",
-          "start": 58.356146,
-          "end": 58.690146
+          "start": 58.479528,
+          "end": 58.823532
         },
         {
           "text": "wiring.",
-          "start": 58.690146,
-          "end": 59.469479
+          "start": 58.823532,
+          "end": 59.626208
         }
       ]
     },
     {
-      "start": 59.869479,
-      "end": 66.556833,
+      "start": 60.026208,
+      "end": 66.687438,
       "words": [
         {
           "text": "For",
-          "start": 59.869479,
-          "end": 60.130025
+          "start": 60.026208,
+          "end": 60.285737
         },
         {
           "text": "wiring",
-          "start": 60.130025,
-          "end": 60.651118
+          "start": 60.285737,
+          "end": 60.804794
         },
         {
           "text": "and",
-          "start": 60.651118,
-          "end": 60.911664
+          "start": 60.804794,
+          "end": 61.064322
         },
         {
           "text": "switching,",
-          "start": 60.911664,
-          "end": 61.780152
+          "start": 61.064322,
+          "end": 61.929417
         },
         {
           "text": "at",
-          "start": 61.780152,
-          "end": 61.953849
+          "start": 61.929417,
+          "end": 62.102436
         },
         {
           "text": "least",
-          "start": 61.953849,
-          "end": 62.388093
+          "start": 62.102436,
+          "end": 62.534983
         },
         {
           "text": "two",
-          "start": 62.388093,
-          "end": 62.648639
+          "start": 62.534983,
+          "end": 62.794511
         },
         {
           "text": "people",
-          "start": 62.648639,
-          "end": 63.169732
+          "start": 62.794511,
+          "end": 63.313568
         },
         {
           "text": "cross-check",
-          "start": 63.169732,
-          "end": 64.125068
+          "start": 63.313568,
+          "end": 64.265172
         },
         {
           "text": "the",
-          "start": 64.125068,
-          "end": 64.385614
+          "start": 64.265172,
+          "end": 64.524701
         },
         {
           "text": "drawings",
-          "start": 64.385614,
-          "end": 65.080404
+          "start": 64.524701,
+          "end": 65.216777
         },
         {
           "text": "and",
-          "start": 65.080404,
-          "end": 65.340951
+          "start": 65.216777,
+          "end": 65.476305
         },
         {
           "text": "phase",
-          "start": 65.340951,
-          "end": 65.775195
+          "start": 65.476305,
+          "end": 65.908852
         },
         {
           "text": "markings.",
-          "start": 65.775195,
-          "end": 66.556833
+          "start": 65.908852,
+          "end": 66.687437
         }
       ]
     }

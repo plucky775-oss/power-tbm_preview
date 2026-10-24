@@ -1,9 +1,9 @@
-// v140 voice guidance demo.
+// v141 voice guidance demo.
 window.PowerTBMTVTimeline = {
-  "src": "assets/tv-ko-v140/tour.mp4",
+  "src": "assets/tv-ko-v141/tour.mp4",
   "width": 480,
   "height": 1040,
-  "duration": 316.50000000000006,
+  "duration": 317.0666666666667,
   "segments": [
     {
       "id": "00-opening",
@@ -26,56 +26,56 @@ window.PowerTBMTVTimeline = {
       "page": "meeting",
       "index": 0,
       "start": 41.4,
-      "duration": 66.43333333333334,
-      "end": 107.83333333333334
+      "duration": 67.0,
+      "end": 108.4
     },
     {
       "id": "03-ai-pdf",
       "page": "meeting",
       "index": 1,
-      "start": 107.83333333333334,
+      "start": 108.4,
       "duration": 40.666666666666664,
-      "end": 148.5
+      "end": 149.06666666666666
     },
     {
       "id": "04-safety-tools",
       "page": "support",
       "index": 0,
-      "start": 148.5,
+      "start": 149.06666666666666,
       "duration": 31.866666666666667,
-      "end": 180.36666666666667
+      "end": 180.93333333333334
     },
     {
       "id": "05-emergency",
       "page": "support",
       "index": 1,
-      "start": 180.36666666666667,
+      "start": 180.93333333333334,
       "duration": 22.0,
-      "end": 202.36666666666667
+      "end": 202.93333333333334
     },
     {
       "id": "07-safety4cut-intro",
       "page": "safety",
       "index": 0,
-      "start": 202.36666666666667,
+      "start": 202.93333333333334,
       "duration": 38.06666666666667,
-      "end": 240.43333333333334
+      "end": 241.0
     },
     {
       "id": "08-safety4cut-example",
       "page": "safety",
       "index": 1,
-      "start": 240.43333333333334,
+      "start": 241.0,
       "duration": 64.56666666666666,
-      "end": 305.00000000000006
+      "end": 305.5666666666667
     },
     {
       "id": "06-closing",
       "page": "closing",
       "index": 0,
-      "start": 305.00000000000006,
+      "start": 305.5666666666667,
       "duration": 11.5,
-      "end": 316.50000000000006
+      "end": 317.0666666666667
     }
   ],
   "preludeDuration": 3.5
