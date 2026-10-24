@@ -1,5 +1,5 @@
-/* Narration and foreground clips share one continuous file; one muted video
-   supplies the current chapter's lightweight moving background. */
+/* Narration and foreground clips share one continuous video. Animated images
+   keep the TV background moving without a second native video decoder. */
 (() => {
   'use strict';
   const params = new URLSearchParams(location.search);
@@ -162,7 +162,8 @@
     if (video === media || video.id === 'demoRecordPreview') return;
     if (video.dataset.cinematicPage) {
       const key = video.classList.contains('cinematic-backdrop-emergency') ? 'emergency' : video.dataset.cinematicPage;
-      backgroundSources[key] = video.getAttribute('src') || video.querySelector('source')?.getAttribute('src');
+      const source = video.getAttribute('src') || video.querySelector('source')?.getAttribute('src');
+      backgroundSources[key] = source?.replace('assets/background/', 'assets/tv-background-v137/').replace(/\.mp4$/, '.webp');
     }
     const id = video.id;
     const placeholder = document.createElement('img');
@@ -187,56 +188,47 @@
   bgm.load();
   bgm.remove();
 
-  // Reuse a single background element. Inactive chapters keep only posters,
-  // so their original video elements cannot retain additional decoders.
+  // webOS supports only one video at a time. Even a muted background can
+  // interrupt the tour/audio. Keep exactly one active, bounded image animation.
   const backdrop = document.getElementById('cinematicBackdrop');
-  const background = document.createElement('video');
+  const background = document.createElement('img');
   background.id = 'tvBackdrop';
   background.className = 'cinematic-backdrop-video';
-  background.muted = background.defaultMuted = true;
-  background.loop = true;
-  background.playsInline = true;
-  background.setAttribute('playsinline', '');
-  background.setAttribute('webkit-playsinline', '');
+  background.alt = '';
+  background.decoding = 'async';
   background.setAttribute('aria-hidden', 'true');
-  background.preload = 'none';
-  background.tabIndex = -1;
   background.hidden = true;
   backdrop.append(background);
-  let backgroundRequest = 0;
-  let backgroundPlayPending = false;
   let backgroundStartTimer = 0;
+  let failedBackgroundSource = '';
   const showBackground = () => {
-    if (background.getAttribute('src') && background.readyState >= 2 && !background.error) {
+    if (!background.hidden && background.getAttribute('src') && background.complete && background.naturalWidth) {
+      background.dataset.state = 'playing';
       backdrop.classList.remove('tv-background-fallback');
       backdrop.classList.add('tv-background-ready');
     }
   };
-  const failBackground = () => {
-    background.dataset.playbackFailed = 'true';
-    background.pause();
+  const clearBackground = state => {
+    // Hiding an animated image alone may leave it decoding. Detach its source
+    // on pause, page changes, visibility loss and errors; keep the page poster.
+    background.removeAttribute('src');
+    background.hidden = true;
+    background.dataset.state = state;
     backdrop.classList.remove('tv-background-ready');
+    backdrop.classList.add('tv-background-fallback');
   };
-  background.addEventListener('loadeddata', showBackground);
-  background.addEventListener('error', failBackground);
-  // Some TVs cannot keep both video decoders advancing even though play()
-  // succeeds. Release the optional decoder for this session if the main clock
-  // stops; chapter changes must not immediately allocate it again.
+  background.addEventListener('load', showBackground);
+  background.addEventListener('error', () => {
+    failedBackgroundSource = background.getAttribute('src') || '';
+    clearBackground('error');
+  });
+  // The watchdog can still release optional image work if the tour stalls.
   let backgroundReleased = false;
   api.releaseBackground = () => {
     if (backgroundReleased) return;
     backgroundReleased = true;
     window.clearTimeout(backgroundStartTimer);
-    backgroundRequest++;
-    backgroundPlayPending = false;
-    if (background.getAttribute('src')) {
-      background.pause();
-      background.removeAttribute('src');
-      background.load();
-    }
-    background.hidden = true;
-    backdrop.classList.remove('tv-background-ready');
-    backdrop.classList.add('tv-background-fallback');
+    clearBackground('released');
   };
   api.syncBackground = (page, { paused, emergency = false }) => {
     window.clearTimeout(backgroundStartTimer);
@@ -247,60 +239,32 @@
     });
     if (backgroundReleased) return;
     const source = backgroundSources[key] || '';
-    // First paint, screenshot decode, native video-plane change and a second
-    // decoder used to happen together at the splash boundary. Let the main
-    // clock advance first, with three seconds of contiguous narration ready.
-    // HAVE_FUTURE_DATA alone can mean only a few frames on webOS.
+    if (!source || paused || document.hidden) {
+      clearBackground('paused');
+      return;
+    }
+    if (source === failedBackgroundSource) {
+      clearBackground('error');
+      return;
+    }
+    // Let the first scene paint and narration buffering take priority over
+    // loading a decorative image. The tour remains the only video decoder.
     const entry = api.segmentAtTime();
     const canStart = entry && entry.page === page && media.currentTime - entry.start >= 1
       && api.bufferedAhead() >= Math.min(3, media.duration - media.currentTime)
       && media.readyState >= 3 && !media.paused && !document.hidden;
-    if (source && (background.getAttribute('src') || '') !== source && (paused || !canStart)) {
-      if (background.getAttribute('src')) {
-        backgroundRequest++;
-        backgroundPlayPending = false;
-        background.pause();
-        background.removeAttribute('src');
-        background.load();
-      }
-      background.hidden = true;
-      backdrop.classList.remove('tv-background-ready');
-      backdrop.classList.add('tv-background-fallback');
-      if (!paused && !document.hidden) {
-        backgroundStartTimer = window.setTimeout(() => api.syncBackground(page, { paused, emergency }), 200);
-      }
+    if ((background.getAttribute('src') || '') !== source && !canStart) {
+      clearBackground('waiting');
+      backgroundStartTimer = window.setTimeout(() => api.syncBackground(page, { paused, emergency }), 200);
       return;
     }
 
     if ((background.getAttribute('src') || '') !== source) {
-      backgroundRequest++;
-      backgroundPlayPending = false;
-      background.pause();
-      backdrop.classList.remove('tv-background-ready');
-      background.dataset.playbackFailed = 'false';
-      if (source) background.src = source;
-      else background.removeAttribute('src');
-      background.load();
+      clearBackground('loading');
+      background.src = source;
     }
-    background.hidden = !source;
-    if (!source || paused) {
-      if (backgroundPlayPending || !background.paused) {
-        backgroundRequest++;
-        backgroundPlayPending = false;
-        background.pause();
-      }
-      return;
-    }
-    if (background.error || background.dataset.playbackFailed === 'true') return;
+    background.hidden = false;
     showBackground();
-    if (!background.paused || backgroundPlayPending) return;
-    const token = backgroundRequest;
-    backgroundPlayPending = true;
-    background.play().catch(error => {
-      if (token !== backgroundRequest || error?.name === 'AbortError') return;
-      failBackground();
-      console.warn('배경영상 재생을 시작하지 못했습니다.', error);
-    }).finally(() => { if (token === backgroundRequest) backgroundPlayPending = false; });
   };
 
   let target = null;

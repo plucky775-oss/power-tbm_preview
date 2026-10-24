@@ -100,6 +100,7 @@ vm.runInContext(workerSource, context, { filename: 'sw.js' });
 const precacheUrls = vm.runInContext('[...PRECACHE_URLS]', context);
 const standardPrecacheUrls = vm.runInContext('[...ACTIVE_PRECACHE_URLS]', context);
 assert.ok(standardPrecacheUrls.every(url => !/\/tv-(?:ko|en)-v\d+\//.test(url)), 'desktop must not download the unused TV stream');
+assert.ok(standardPrecacheUrls.every(url => !url.includes('/tv-background-v137/')), 'desktop must not download TV-only image animations');
 const tvHandlers = new Map();
 const tvContext = vm.createContext({ ...context, self: {
   ...workerGlobal, location: { ...workerGlobal.location, search: '?tv=1' },
@@ -115,9 +116,9 @@ for (const url of tvPrecacheUrls) {
   const file = url === './' ? './index.html' : url.split('?')[0];
   tvPrecacheBytes += (await stat(path.join(siteRoot, file))).size;
   assert.doesNotMatch(url, /assets\/audio\//, 'TV must not precache separate narration and BGM');
-  if (/\.mp4$/.test(url)) assert.match(url, /assets\/(?:tv-ko-v136|tv-en-v128|background)\//, 'TV must not precache unused desktop foreground videos');
+  if (/\.mp4$/.test(url)) assert.match(url, /assets\/(?:tv-ko-v136|tv-en-v128)\//, 'TV must not precache any second video stream');
 }
-assert.equal(tvPrecacheUrls.filter(url => /assets\/background\/.+\.mp4$/.test(url)).length, 5, 'all moving backgrounds must work offline');
+assert.equal(tvPrecacheUrls.filter(url => /assets\/tv-background-v137\/.+\.webp$/.test(url)).length, 5, 'all animated image backgrounds must work offline');
 assert.ok(tvPrecacheBytes < 35 * 1024 * 1024, 'TV offline download exceeded its budget');
 
 const expectedBackgroundFiles = [
@@ -269,7 +270,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v136-20261023-tv-korean-uniform/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v137-20261024-tv-single-video/);
 assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);

@@ -1,5 +1,15 @@
 # Power TBM 자동 시연 홈페이지
 
+## v137 · 스탠바이미에서 동영상 재생기를 하나만 사용 (2026-10-24)
+
+- 스탠바이미에서 한국어 첫 기상정보 진입 시 화면과 소리가 함께 멎고, 다음 반복은 정상이며 시작 전 기다려도 동일하다는 보고에 대응합니다. [LG webOS 개발자 답변](https://forum.webostv.developer.lge.com/t/how-to-achieve-simultaneous-dual-video-playback-dash-hls-on-webos/28170)은 동영상 하나만 재생할 수 있다고 안내합니다. 기존 TV 모드는 연속 시연 영상과 배경영상을 동시에 재생했습니다. 정체 감지 후 배경을 해제하는 기존 코드가 다음 반복부터 정상인 현상과도 부합합니다. 실제 기기의 원인 확정은 별도입니다.
+- TV 모드의 배경만 애니메이션 WebP 이미지로 교체했습니다. 배경 움직임을 유지하면서 본 시연 영상 하나만 네이티브 동영상 재생기를 사용합니다. 각 배경은 원본 앞부분 최대 8초를 320×180·8fps로 반복하며 5개 합계 1,614,894바이트입니다. 원본 영상보다 해상도와 프레임 수를 줄인 TV 전용 배경입니다. 일반 브라우저의 원본 배경, 한국어·영어 음성과 본 시연 영상은 유지합니다.
+- 한 번에 배경 이미지 하나만 연결합니다. 일시정지·화면 숨김 시 포스터를 보여주고 애니메이션 소스를 해제합니다. 재개 시 배경의 짧은 반복은 처음부터 시작하고, 본 시연·음성은 멈춘 위치에서 이어집니다. 이미지 오류는 음성 재생에 영향을 주지 않으며 다른 장면의 배경이 남지 않도록 처리합니다.
+- 캐시를 `v137-20261024-tv-single-video`로 갱신했습니다. TV는 배경 MP4를 저장하지 않고 새 이미지 5개를 저장하며, 일반 브라우저는 TV 전용 이미지를 미리 내려받지 않습니다. TV 오프라인 저장 대상은 96개, 약 31.8MiB입니다. 출처·이용 조건은 원본의 `assets/background/ATTRIBUTION.md`를 따릅니다.
+- 재생성: `python3 scripts/build-tv-backgrounds.py`. 실파일 검사: `python3 tests/verify-tv-backgrounds.py`(Pillow 필요). 모든 파일의 움직이는 프레임·크기·재생시간·무한 반복·합계 용량을 검사합니다. 이미지 하나의 전체 프레임을 RGBA로 펼친 상한은 약 14.1MiB이며 실제 기기 메모리 측정값은 아닙니다.
+- 검증: 기존 코드에 동영상 하나만 지원하는 조건을 넣으면 첫 실행 12.7초에서 정지하는 모의 재현을 확인했습니다. 수정 후 48개 재생 검사(한국어·영어의 즉시 시작/30초 대기/재반복, 정지·재개·뒤로 이동, 이미지 실패, 언어 교차 반복 포함), 실파일 검사, TV 시작·스트리밍·언어·자막·녹화·PWA 오프라인/캐시 갱신/Range 검사를 통과했습니다. Chromium TV 모드에서 한국어·영어 모두 첫 시작→기상정보→회의록 연속 진행, 동영상 소스 하나와 새 배경 이미지 표시, 정지·10초 뒤로·화면 터치 재개를 확인했습니다. 실제 스탠바이미/webOS 하드웨어와 스피커, 장시간 반복은 직접 검증하지 못했습니다.
+- 수정: `tv-compat.js`, `index.html`, `sw.js`, `tests/tv-playback.test.cjs`, `tests/verify-pwa.mjs`, `tests/verify-recorder.mjs`, `README.md`. 추가: `assets/tv-background-v137/`의 WebP 5개, `scripts/build-tv-backgrounds.py`, `tests/verify-tv-backgrounds.py`.
+
 ## v136 · 한국어 TV 영상의 인코딩 설정 통일 (2026-10-23)
 
 - v135 적용 후에도 실제 스탠바이미의 한국어 기상정보 진입 정지가 보고되었습니다. 코드 모의 검사와 Chromium 재생만으로 실기기 해결을 확정할 수 없습니다.
@@ -38,11 +48,11 @@
 - GitHub 최신 v132의 기상 음성·스플래시 전환 수정과 이전 TV 영상 정리를 보존한 통합본입니다.
 
 
-**현재 코드 버전은 v135입니다.** 아래 항목은 변경 이력입니다.
+**현재 코드 버전은 v137입니다.** 아래 항목은 변경 이력입니다.
 
 배포 주소: [Vercel](https://power-tbm-preview.vercel.app/) · [GitHub Pages](https://plucky775-oss.github.io/power-tbm_preview/)
 
-최신 수정본은 `index.html`의 `tv-media-timeline.js?v=20261023-tv-korean-uniform-v136` 참조와 `sw.js`의 `v136-20261023-tv-korean-uniform` 캐시 버전으로 확인할 수 있습니다.
+최신 수정본은 `index.html`의 `tv-compat.js?v=20261024-tv-single-video-v137` 참조와 `sw.js`의 `v137-20261024-tv-single-video` 캐시 버전으로 확인할 수 있습니다.
 
 ## 2026-10-22 이전 TV 영상 정리
 
