@@ -2,7 +2,7 @@
 import json, re, struct, subprocess
 from pathlib import Path
 R=Path(__file__).resolve().parents[1]
-records=json.loads((R/'assets/audio/narration-demo-v140/timing.json').read_text())
+records=json.loads((R/'assets/audio/narration-demo-v141/timing.json').read_text())
 for lang,record in records.items():
  t=record['tv'];p=R/t['src']
  probe=lambda args:json.loads(subprocess.check_output(['ffprobe','-v','error',*args,'-of','json',str(p)]))

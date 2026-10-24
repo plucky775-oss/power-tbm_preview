@@ -143,7 +143,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   assert.equal(m.playCount,plays+1);assert.equal(m.dataset.segment,'04-safety-tools');
   e.click('safetyDemoPage');tap(e);m.finishSeek();await e.tick(200);
   assert.equal(m.paused,true,'completing a seek must respect user pause');
-  e.click('demoResume');await e.tick(200);assert.equal(m.paused,false);
+  tap(e);await e.tick(200);assert.equal(m.paused,false);
   e.click('meetingDemoPage');e.document.hidden=true;e.document.dispatchEvent({type:'visibilitychange'});
   m.finishSeek();await e.tick(200);assert.equal(m.paused,true);
   e.document.hidden=false;e.document.dispatchEvent({type:'visibilitychange'});await e.tick(200);
@@ -218,7 +218,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
    assert.ok(!e.el('demoNarration').paused);
    e.click('safetyDemoPage');await e.tick(2000);tap(e);
    e.click('demoPreviousScene');assert.equal(e.el('tourStage').dataset.demoPage,'support');
-   assert.ok(e.el('demoNarration').paused);e.click('demoResume');await e.tick(200);
+   assert.ok(e.el('demoNarration').paused);tap(e);await e.tick(200);
    assert.ok(!e.el('demoNarration').paused);
   }
  });
@@ -289,7 +289,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   await e.tick(50);assert.equal(m.volume,1);
   m.dispatchEvent({type:'playing'});await e.tick(50);assert.equal(m.volume,1);
   const time=m.currentTime;tap(e);await e.tick(500);assert.equal(m.currentTime,time);
-  e.click('demoResume');await e.tick(50);assert.equal(m.volume,1);assert.ok(m.currentTime>time);
+  tap(e);await e.tick(50);assert.equal(m.volume,1);assert.ok(m.currentTime>time);
   for(const entry of timeline.segments.slice(2)) {
    await e.tick(Math.ceil((entry.start+.05-m.currentTime)*1000));
    assert.equal(m.volume,1,'chapter faded its first syllable: '+entry.id);
@@ -380,7 +380,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
    const m=e.el('demoNarration'),loads=m.loadCount,play=m.playCount,seek=m.seekCount;
    tap(e);await e.tick(500);assert.equal(bg.getAttribute('src'),null,'pause must stop image decoding');
    assert.equal(bg.hidden,true,'pause shows the chapter poster');
-   e.click('demoResume');await e.tick(500);assert.equal(bg.dataset.state,'playing');
+   tap(e);await e.tick(500);assert.equal(bg.dataset.state,'playing');
    assert.equal(m.loadCount,loads);assert.equal(m.seekCount,seek);assert.equal(m.playCount,play+1);
    e.document.hidden=true;e.document.dispatchEvent({type:'visibilitychange'});
    assert.equal(bg.getAttribute('src'),null);e.document.hidden=false;e.document.dispatchEvent({type:'visibilitychange'});
@@ -443,7 +443,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
    if(entry.id==='08-safety4cut-example') assert.equal(m.dataset.surface,'safety');
   }
   tap(e);const held=m.currentTime;await e.tick(600);assert.equal(m.currentTime,held);
-  e.click('demoResume');await e.tick(500);assert.ok(m.currentTime>held);
+  tap(e);await e.tick(500);assert.ok(m.currentTime>held);
   e.click('demoMute');assert.equal(m.muted,true);
   e.click('homeReset');e.window.PowerTBMLanguage.set('ko');
   assert.equal(m.src,timeline.src);assert.equal(m.paused,true);
@@ -462,7 +462,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   assert.equal(video.paused,false);assert.equal(e.el('demoNarration').paused,true);
   const seeks=video.seekCount;await e.tick(5000);assert.equal(video.seekCount,seeks,'English example must not seek itself');
   tap(e);const held=video.currentTime;await e.tick(1000);assert.equal(video.currentTime,held);
-  e.click('demoResume');await e.tick(300);assert.ok(video.currentTime>held);
+  tap(e);await e.tick(300);assert.ok(video.currentTime>held);
   e.click('homeReset');e.window.PowerTBMLanguage.set('ko');
   e.click('weatherDemoPage');await e.tick(200);
   assert.match(e.el('demoNarration').src,/weather-v139\/01-weather/);
@@ -656,7 +656,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   const tap = () => { e.document.dispatchEvent({type:'pointerdown',target,clientX:500,clientY:300}); e.document.dispatchEvent({type:'click',target}); };
   tap(); const time = e.el('demoNarration').currentTime; await e.tick(9000);
   assert.equal(e.el('demoNarration').currentTime, time);
-  e.click('demoResume'); await e.tick(1000); assert.ok(e.el('demoNarration').currentTime > time);
+  tap(e); await e.tick(1000); assert.ok(e.el('demoNarration').currentTime > time);
   e.document.dispatchEvent({type:'pointerdown',target,clientX:500,clientY:300});
   e.document.dispatchEvent({type:'pointermove',target,clientX:580,clientY:300});
   e.document.dispatchEvent({type:'click',target}); assert.equal(e.el('demoNarration').paused, false);
@@ -841,7 +841,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
    assert.equal(hand.currentTime,held,'unfinished seeks must not move the hand');
    m.seeking=false;m.stall=false;
    tap(e);const writes=hand.values.length;await e.tick(160,16);assert.equal(hand.values.length,writes);
-   e.click('demoResume');await e.tick(160,16);assert.ok(hand.values.length>writes,'resume must restart the gesture clock');
+   tap(e);await e.tick(160,16);assert.ok(hand.values.length>writes,'resume must restart the gesture clock');
    e.document.hidden=true;e.document.dispatchEvent({type:'visibilitychange'});
    const hidden=hand.values.length;await e.tick(160,16);assert.equal(hand.values.length,hidden);
   }

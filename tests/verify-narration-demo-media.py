@@ -1,6 +1,6 @@
 from pathlib import Path
 import json, subprocess, numpy as np
-R=Path(__file__).resolve().parents[1];O=R/'assets/audio/narration-demo-v140';B=json.loads((O/'baseline.json').read_text());T=json.loads((O/'timing.json').read_text());RATE=48000
+R=Path(__file__).resolve().parents[1];O=R/'assets/audio/narration-demo-v141';B=json.loads((O/'baseline.json').read_text());T=json.loads((O/'timing.json').read_text());RATE=48000
 def read(p):return np.frombuffer(subprocess.check_output(['ffmpeg','-v','error','-i',str(p),'-ar',str(RATE),'-ac','1','-f','f32le','-']),dtype='<f4').copy()
 def corr(a,b):
  n=min(len(a),len(b));return float(np.corrcoef(a[:n],b[:n])[0,1])
@@ -20,4 +20,4 @@ for lang in ['ko','en']:
  for p in [R/T[lang]['tv']['src'],O/f'02-tbm-basic-{lang}.m4a']:
   q=subprocess.run(['ffmpeg','-v','error','-i',str(p),'-f','null','-'],capture_output=True,check=True);assert not q.stderr,q.stderr.decode()
  report[lang]=records
-print(json.dumps(report,indent=2));(R/'review/unchanged-audio-verification.json').write_text(json.dumps(report,indent=2))
+print(json.dumps(report,indent=2));(R/'review-v141/unchanged-audio-verification.json').write_text(json.dumps(report,indent=2))
