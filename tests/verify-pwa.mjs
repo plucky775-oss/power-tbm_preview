@@ -108,7 +108,7 @@ const tvContext = vm.createContext({ ...context, self: {
 } });
 vm.runInContext(workerSource, tvContext, { filename: 'sw.js?tv=1' });
 const tvPrecacheUrls = vm.runInContext('[...ACTIVE_PRECACHE_URLS]', tvContext);
-for (const stream of ['./assets/tv-ko-v136/tour.mp4', './assets/tv-en-v128/tour.mp4']) {
+for (const stream of ['./assets/tv-ko-v139/tour.mp4', './assets/tv-en-v128/tour.mp4']) {
   assert.ok(tvPrecacheUrls.includes(stream), `active TV narration must work offline: ${stream}`);
 }
 let tvPrecacheBytes = 0;
@@ -116,7 +116,7 @@ for (const url of tvPrecacheUrls) {
   const file = url === './' ? './index.html' : url.split('?')[0];
   tvPrecacheBytes += (await stat(path.join(siteRoot, file))).size;
   assert.doesNotMatch(url, /assets\/audio\//, 'TV must not precache separate narration and BGM');
-  if (/\.mp4$/.test(url)) assert.match(url, /assets\/(?:tv-ko-v136|tv-en-v128)\//, 'TV must not precache any second video stream');
+  if (/\.mp4$/.test(url)) assert.match(url, /assets\/(?:tv-ko-v139|tv-en-v128)\//, 'TV must not precache any second video stream');
 }
 assert.equal(tvPrecacheUrls.filter(url => /assets\/tv-background-v\d+\/.+\.webp$/.test(url)).length, 5, 'all animated image backgrounds must work offline');
 assert.ok(tvPrecacheUrls.includes('./assets/tv-background-v138/tbm-guide-closing-v138.webp'));
@@ -163,10 +163,10 @@ const coreUrls = [
   './manifest.webmanifest',
   './english-narration.js?v=20261021-balanced-v128',
   './styles.css?v=20261023-touch-resume-v134',
-  './app.js?v=20261024-menu-closing-v138',
+  './app.js?v=20261024-weather-sentence-v139',
   './pwa.js?v=20261017-tv-startup-v115',
   './subtitles.js?v=20261020-language-v117',
-  './subtitle-data.js?v=20261022-weather-daily-v132',
+  './subtitle-data.js?v=20261024-weather-sentence-v139',
   './subtitle-data.en.js?v=20261021-meeting-sequence-v126',
   './demo-translations.js?v=20261023-touch-resume-v134',
   './demo-language.js?v=20261021-language-menu-v125',
@@ -273,7 +273,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v138-20261024-menu-closing/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v139-20261024-weather-sentence/);
 assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);

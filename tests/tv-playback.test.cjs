@@ -465,7 +465,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   e.click('demoResume');await e.tick(300);assert.ok(video.currentTime>held);
   e.click('homeReset');e.window.PowerTBMLanguage.set('ko');
   e.click('weatherDemoPage');await e.tick(200);
-  assert.match(e.el('demoNarration').src,/weather-v132\/01-weather/);
+  assert.match(e.el('demoNarration').src,/weather-v139\/01-weather/);
  });
  await test('TV media events keep chapter-local captions visible between animation frames', async () => {
   for (const mode of ['karaoke', 'bubble']) {

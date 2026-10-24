@@ -350,7 +350,7 @@ for (const options of [{ withAudio: false }, { failVideo: true }, { cancel: true
     assert(precache.includes('./' + url), `${name} entry point must match the offline cache`);
     assert.ok(url.endsWith(name.endsWith('.js') ? '20261020-language-v117' : '20261017-recording-start-v113'));
   }
-  assert.match(vm.runInContext('CACHE_NAME', context), /v138-20261024-menu-closing-standard$/);
+  assert.match(vm.runInContext('CACHE_NAME', context), /v139-20261024-weather-sentence-standard$/);
   assert.match(index, /<option value="4:3" selected>/);
   assert.match(index, /<option value="16:9">/);
 }
