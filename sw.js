@@ -1,14 +1,14 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v135-20261023-tv-weather-recovery`;
+const CACHE_VERSION = `${CACHE_PREFIX}v136-20261023-tv-korean-uniform`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './tv-media-timeline.js?v=20261022-weather-daily-v132',
+  './tv-media-timeline.js?v=20261023-tv-korean-uniform-v136',
   './english-narration.js?v=20261021-balanced-v128',
   './tv-compat.js?v=20261023-tv-weather-recovery-v135',
   './tv-compat.css?v=20261021-launch-handoff-v131',
@@ -29,7 +29,7 @@ const PRECACHE_URLS = [
   './demo-recorder-v81.js?v=20261020-language-v117',
   './safety4cut.js?v=20261021-safety-caption-v121',
   './pwa.js?v=20261017-tv-startup-v115',
-  './assets/tv-ko-v132/tour.mp4',
+  './assets/tv-ko-v136/tour.mp4',
   './assets/tv-en-v128/tour.mp4',
   './assets/audio/balanced-v128/en-00-opening.m4a',
   './assets/audio/balanced-v128/en-01-weather.m4a',
@@ -130,10 +130,10 @@ const PRECACHE_URLS = [
 // Separate desktop narration, BGM and foreground clips remain unused on TV.
 const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
   .filter(path => !path.startsWith('./assets/audio/') &&
-    (!/\.mp4(?:\?|$)/.test(path) || /\/(?:tv-ko-v132|tv-en-v128)\//.test(path) || path.startsWith('./assets/background/')))
+    (!/\.mp4(?:\?|$)/.test(path) || /\/(?:tv-ko-v136|tv-en-v128)\//.test(path) || path.startsWith('./assets/background/')))
   .map(path => /^\.\/assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(path)
     ? path.replace('./assets/', './assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : path)
-  : PRECACHE_URLS.filter(path => !/\/(?:tv-ko-v132|tv-en-v128)\//.test(path));
+  : PRECACHE_URLS.filter(path => !/\/(?:tv-ko-v136|tv-en-v128)\//.test(path));
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
 const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data(?:\.en)?\.js|demo-translations\.js|demo-language\.(?:js|css)|english-narration\.js|tv-compat\.(?:js|css)|tv-media-timeline\.js)(?:\?|$)/.test(path) || path === './';
