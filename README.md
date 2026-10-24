@@ -1,3 +1,11 @@
+## 2026-10-24 일별 예보 문장 전체 재생성 (v139)
+
+- “일별 예보도 함께 확인할 수 있습니다.” 전체를 기존 ElevenLabs Jisoo (`iWLjl1zCuqXRkW6494ve`) 목소리로 한 번에 생성했습니다. 이전처럼 음절을 연결하지 않습니다. 원본 MP3와 비밀정보 없는 생성 기록은 `assets/audio/weather-v139/`에 보관합니다.
+- 자연스러운 발화 속도를 그대로 유지하고 바깥 무음만 정리했습니다. 문장은 기상 챕터 13.780–16.510초에 들어가며 이후 장면과 전체 시연 길이는 바뀌지 않습니다. 해당 문장 자막의 단어 강조는 길이에 비례한 읽기 안내이며 강제 정렬 결과는 아닙니다.
+- 일반 음성 `assets/audio/weather-v139/01-weather.m4a`, TV `assets/tv-ko-v139/tour.mp4`에 반영합니다. 영상 패킷 전체, 모든 미디어 타임스탬프, 교체 범위 밖 AAC 패킷을 보존하며 영어와 교차 반복 코드는 수정하지 않습니다. 오프라인 캐시와 변경 파일 참조는 v139입니다.
+- 재현: `python3 scripts/build-weather-sentence.py assets/audio/weather-v139/daily-sentence-jisoo.mp3 --provenance assets/audio/weather-v139/synthesis.json`. API 호출 없이 저장된 전체 문장을 사용합니다. 너무 긴 문장은 임의 가속하거나 끝을 자르지 않고 실패합니다.
+- 미디어 검사: `python3 tests/verify-weather-sentence.py` 통과. 전체 문장 상관계수 0.999989, 일반 -15.99 LUFS / TV -16.01 LUFS, 수정 범위 밖 AAC·영상 패킷·타임스탬프 보존 및 전체 디코딩 확인. 실제 청취와 스탠바이미 스피커 발음 평가는 아직 확인하지 못했습니다. 전체 TV 재생 모의 검사, 한영·교차 반복, PWA 오프라인·갱신·Range, 스트리밍, 자막 모드, TV 시작, 녹화 회귀 검사도 통과했습니다.
+
 # Power TBM 자동 시연 홈페이지
 
 ## v138 · 메뉴 즉시 이동과 인사 배경 정리 (2026-10-24)

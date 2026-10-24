@@ -342,7 +342,7 @@
     weather: [
       {
         id: '01-weather',
-        src: 'assets/audio/weather-v132/01-weather.m4a',
+        src: 'assets/audio/weather-v139/01-weather.m4a',
         duration: 29.701224,
         cues: [[0, 0], [5.42, 4000], [10.28, 9200], [16.44, 19600], [27.16, 36400], [29.701224, 36400]]
       }

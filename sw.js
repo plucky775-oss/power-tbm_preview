@@ -1,20 +1,20 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v138-20261024-menu-closing`;
+const CACHE_VERSION = `${CACHE_PREFIX}v139-20261024-weather-sentence`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './tv-media-timeline.js?v=20261023-tv-korean-uniform-v136',
+  './tv-media-timeline.js?v=20261024-weather-sentence-v139',
   './english-narration.js?v=20261021-balanced-v128',
   './tv-compat.js?v=20261024-menu-closing-v138',
   './tv-compat.css?v=20261021-launch-handoff-v131',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261020-language-v117',
-  './subtitle-data.js?v=20261022-weather-daily-v132',
+  './subtitle-data.js?v=20261024-weather-sentence-v139',
   './subtitle-data.en.js?v=20261021-meeting-sequence-v126',
   './demo-translations.js?v=20261023-touch-resume-v134',
   './demo-language.js?v=20261021-language-menu-v125',
@@ -22,14 +22,14 @@ const PRECACHE_URLS = [
   './manifest.webmanifest',
   './assets/brand/demo-hand.svg',
   './styles.css?v=20261023-touch-resume-v134',
-  './app.js?v=20261024-menu-closing-v138',
+  './app.js?v=20261024-weather-sentence-v139',
   './safety4cut.css?v=20261016-safety-reveal-v107',
   './demo-hands-v80.css?v=20261021-balanced-v128',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',
   './demo-recorder-v81.js?v=20261020-language-v117',
   './safety4cut.js?v=20261021-safety-caption-v121',
   './pwa.js?v=20261017-tv-startup-v115',
-  './assets/tv-ko-v136/tour.mp4',
+  './assets/tv-ko-v139/tour.mp4',
   './assets/tv-en-v128/tour.mp4',
   './assets/tv-background-v137/weather-powerlines-v60.webp',
   './assets/tv-background-v137/tablet-review-v63.webp',
@@ -53,7 +53,7 @@ const PRECACHE_URLS = [
   './assets/safety4cut/09-ai-example-v79-poster.jpg',
   './assets/audio/balanced-v128/ko-08-safety4cut-example.mp4',
   './assets/audio/balanced-v128/ko-00-opening.m4a',
-  './assets/audio/weather-v132/01-weather.m4a',
+  './assets/audio/weather-v139/01-weather.m4a',
   './assets/audio/balanced-v128/ko-02-tbm-basic.m4a',
   './assets/audio/balanced-v128/ko-03-ai-pdf.m4a',
   './assets/audio/balanced-v128/ko-04-safety-tools.m4a',
@@ -135,10 +135,10 @@ const PRECACHE_URLS = [
 // TV never downloads separate narration, BGM or a second video stream.
 const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
   .filter(path => !path.startsWith('./assets/audio/') &&
-    (!/\.mp4(?:\?|$)/.test(path) || /\/(?:tv-ko-v136|tv-en-v128)\//.test(path)))
+    (!/\.mp4(?:\?|$)/.test(path) || /\/(?:tv-ko-v139|tv-en-v128)\//.test(path)))
   .map(path => /^\.\/assets\/(?:screens\/guide|safety4cut|background|video|closing)\/.+\.(?:png|jpe?g|webp)$/i.test(path)
     ? path.replace('./assets/', './assets/tv-v100/images/').replace(/\.[^.]+$/, '.webp') : path)
-  : PRECACHE_URLS.filter(path => !/\/(?:tv-ko-v136|tv-en-v128|tv-background-v\d+)\//.test(path));
+  : PRECACHE_URLS.filter(path => !/\/(?:tv-ko-v139|tv-en-v128|tv-background-v\d+)\//.test(path));
 
 const scopedUrl = (path) => new URL(path, self.registration.scope).toString();
 const isVersionedShellPath = (path) => /^(?:\.\/)?(?:index\.html|manifest\.webmanifest|styles\.css|app\.js|pwa\.js|safety4cut\.(?:js|css)|subtitles\.(?:js|css)|subtitle-data(?:\.en)?\.js|demo-translations\.js|demo-language\.(?:js|css)|english-narration\.js|tv-compat\.(?:js|css)|tv-media-timeline\.js)(?:\?|$)/.test(path) || path === './';
