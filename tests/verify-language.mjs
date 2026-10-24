@@ -188,7 +188,7 @@ assert.equal(koData['01-weather'][7].words.map(w => w.text).join(' '), '한 곳�
 assert.match(enData['01-weather'][6].words.map(w => w.text).join(' '), /radar imagery and weather alerts for Korea/);
 assert.equal(document.querySelector('.typhoon-compare > p').textContent,
   'View typhoon tracks from Korea, the U.S., and Japan, along with radar imagery and weather alerts for Korea—all in one place.');
-assert.equal(Object.values(enData).reduce((count, cues) => count + cues.length, 0), 85);
+assert.equal(Object.values(enData).reduce((count, cues) => count + cues.length, 0), 85 + 4 + 2, '85 retained cues + 4 introduction phrases + 2 complete sample sentences');
 const caption = document.getElementById('subtitleLine');
 const bubble = document.getElementById('subtitleBubble');
 const panel = document.getElementById('narrationSubtitles');
@@ -272,7 +272,7 @@ h.render('00-opening', 2);
 assert.equal(bubble.classList.contains('is-stacked'), true, 'language changes preserve responsive bubble placement');
 assert.equal(h.errors.length, 0, h.errors.join('\n'));
 h.close();
-console.log('PASS: English and Korean subtitles for all 9 tracks / 85 cues, independent English cue clocks, both display modes, OFF, immediate language changes, paused seek, reading progress, silence and resize branches');
+console.log('PASS: English and Korean subtitles for all 9 tracks / 91 cues, independent English cue clocks, both display modes, OFF, immediate language changes, paused seek, reading progress, silence and resize branches');
 
 for (const options of [{ savedLanguage: 'ko' }, { savedLanguage: 'en' }, { savedLanguage: 'alternate' }, { savedLanguage: 'invalid' }, { storageUnavailable: true }]) {
   const reopened = setup(options);
@@ -382,7 +382,7 @@ for (const [mode, sound] of [['ko', 'on'], ['en', 'off'], ['alternate', 'off']])
       assert.equal(lang.get(), currentLanguage, 'keep one language through every chapter and the closing');
       assert.equal(active().dataset.segment, id);
       assert.equal(active().muted, sound === 'off', 'repeating preserves the sound choice');
-      assert.equal(/balanced-v128\/en-/.test(active().src), currentLanguage === 'en', `${id} uses the current language's audio`);
+      assert.equal(active().src.endsWith('/' + loop.window.PowerTBMEnglishNarration.tracks[id].src), currentLanguage === 'en', `${id} uses the current language's audio`);
       if (id === '06-closing' && cycle === 2) stopAtEnd = true;
       finish();
     }

@@ -94,7 +94,7 @@ const finishMedia = h => {
 {
   const h = harness(); h.api.prepare(1);
   const source = h.video.querySelector('source');
-  source.src = 'assets/safety4cut/09-ai-example-v84.mp4';
+  source.src = 'assets/audio/balanced-v128/ko-08-safety4cut-example.mp4';
   let reloads = 0; h.video.load = () => reloads++;
   h.api.start(); await settle();
   assert.equal(reloads, 0, 'switching to a preloaded <source> must retain the prepared decoder');
@@ -177,11 +177,11 @@ console.log('PASS: central tap, resume position, controls excluded, drag/cancel 
 
 {
   const h = harness(); h.api.prepare(0); h.api.start();
-  assert.match(h.audio.src, /intro-v97\.m4a$/);
+  assert.match(h.audio.src, /ko-07-safety4cut-intro\.m4a$/);
   finishMedia(h);
   assert.equal(h.api.state().index, 1);
   assert.equal(h.media, h.video, 'visible video must own both picture and original audio');
-  assert.equal(h.video.src, 'assets/safety4cut/09-ai-example-v84.mp4');
+  assert.equal(h.video.src, 'assets/audio/balanced-v128/ko-08-safety4cut-example.mp4');
   assert.equal(h.audio.paused, true, 'no duplicate audio decoder');
   assert.equal(h.video.muted, false);
   h.video.dispatchEvent(new Event('loadedmetadata'));
@@ -290,11 +290,11 @@ assert.equal(createHash('sha256').update(original).digest('hex'),
 const cacheContext = vm.createContext({ self: { addEventListener() {}, location: { search: "" } }, URL, URLSearchParams, Map });
 vm.runInContext(read('sw.js'), cacheContext);
 const cached = vm.runInContext('PRECACHE_URLS', cacheContext);
-assert(cached.includes('./assets/safety4cut/09-ai-example-v84.mp4'));
-assert(cached.includes('./assets/audio/07-safety4cut-intro-v97.m4a'));
-assert(cached.includes('./app.js?v=20261021-meeting-sequence-v126'));
+assert(cached.includes('./assets/audio/balanced-v128/ko-08-safety4cut-example.mp4'));
+assert(cached.includes('./assets/audio/balanced-v128/ko-07-safety4cut-intro.m4a'));
+assert(cached.includes('./app.js?v=20261024-voice-demo-v140'));
 assert(cached.includes('./subtitles.js?v=20261020-language-v117'));
 assert(cached.includes('./subtitles.css?v=20261004-v87'));
-assert(cached.includes('./subtitle-data.js?v=20261021-meeting-sequence-v126'));
+assert(cached.includes('./subtitle-data.js?v=20261024-voice-demo-v140'));
 assert(cached.includes('./safety4cut.js?v=20261021-safety-caption-v121'));
 console.log('PASS: original bytes, single video/audio clock, intro handoff, no rewind on error, stale events, mute, pause/resume, hidden tab, fallback, recording motion, Golden Rules retry, cache paths');
