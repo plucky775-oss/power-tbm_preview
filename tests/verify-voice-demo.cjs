@@ -39,7 +39,8 @@ const checks = `
   await advance(timing.sampleStart+.1);
   assert.equal(p.dataset.playing,'true');assert.match(p.querySelector('.meeting-voice-status').textContent,/지수/);
   await advance(timing.measureStart+.1);
-  assert.match(p.querySelector('.meeting-voice-status').textContent,/태형/);
+  assert.match(p.querySelector('.meeting-voice-status').textContent,/태형.*정전.*검전.*접지.*접근한계거리/);
+  assert.equal(e.document.querySelector('.voice-explain-copy').textContent,JSON.parse(fs.readFileSync(path.join(root,'assets/audio/narration-demo-v142/source.json'),'utf8')).clips.find(c=>c.language===lang).text,'visible introduction equals recorded paragraph');
   e.document.dispatchEvent({type:'pointerdown',target:e.el('tourStage'),clientX:500,clientY:300});e.document.dispatchEvent({type:'click',target:e.el('tourStage')});
   assert.equal(m.paused,true);
   const counts=[m.loadCount,m.seekCount];
