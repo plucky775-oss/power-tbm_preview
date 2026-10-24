@@ -107,7 +107,7 @@ const tvContext = vm.createContext({ ...context, self: {
 } });
 vm.runInContext(workerSource, tvContext, { filename: 'sw.js?tv=1' });
 const tvPrecacheUrls = vm.runInContext('[...ACTIVE_PRECACHE_URLS]', tvContext);
-for (const stream of ['./assets/tv-ko-v132/tour.mp4', './assets/tv-en-v128/tour.mp4']) {
+for (const stream of ['./assets/tv-ko-v136/tour.mp4', './assets/tv-en-v128/tour.mp4']) {
   assert.ok(tvPrecacheUrls.includes(stream), `active TV narration must work offline: ${stream}`);
 }
 let tvPrecacheBytes = 0;
@@ -115,7 +115,7 @@ for (const url of tvPrecacheUrls) {
   const file = url === './' ? './index.html' : url.split('?')[0];
   tvPrecacheBytes += (await stat(path.join(siteRoot, file))).size;
   assert.doesNotMatch(url, /assets\/audio\//, 'TV must not precache separate narration and BGM');
-  if (/\.mp4$/.test(url)) assert.match(url, /assets\/(?:tv-ko-v132|tv-en-v128|background)\//, 'TV must not precache unused desktop foreground videos');
+  if (/\.mp4$/.test(url)) assert.match(url, /assets\/(?:tv-ko-v136|tv-en-v128|background)\//, 'TV must not precache unused desktop foreground videos');
 }
 assert.equal(tvPrecacheUrls.filter(url => /assets\/background\/.+\.mp4$/.test(url)).length, 5, 'all moving backgrounds must work offline');
 assert.ok(tvPrecacheBytes < 35 * 1024 * 1024, 'TV offline download exceeded its budget');
@@ -269,7 +269,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v135-20261023-tv-weather-recovery/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v136-20261023-tv-korean-uniform/);
 assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
