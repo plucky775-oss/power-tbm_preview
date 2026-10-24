@@ -5,7 +5,7 @@ import copy, json, math, re, subprocess, tempfile
 from pathlib import Path
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'assets/audio/narration-demo-v141'
+OUT=ROOT/'assets/audio/narration-demo-v142'
 RATE=48000
 
 def run(args): subprocess.run(['ffmpeg','-hide_banner','-loglevel','error','-y','-filter_complex_threads','1',*map(str,args)],check=True)
@@ -14,7 +14,7 @@ def wav(p,a):
  subprocess.run(['ffmpeg','-v','error','-y','-f','f32le','-ar',str(RATE),'-ac','2','-i','-','-c:a','pcm_f32le',str(p)],input=a.astype('<f4').tobytes(),check=True)
 def silence(t):return np.zeros((round(t*RATE),2),dtype=np.float32)
 def js(n):return json.loads((ROOT/n).read_text().split(' = ',1)[1].rstrip(';\n'))
-def write(n,var,d): (ROOT/n).write_text('// v141 voice guidance demo.\n'+var+' = '+json.dumps(d,ensure_ascii=False,indent=2)+';\n')
+def write(n,var,d): (ROOT/n).write_text('// v142 voice guidance demo.\n'+var+' = '+json.dumps(d,ensure_ascii=False,indent=2)+';\n')
 def caption(text,start,end):
  words=text.split();weights=[max(1,len(x)) for x in words];pos=start; out=[]
  for word,weight in zip(words,weights):
@@ -27,7 +27,7 @@ def normalize(src,dst):
 def main():
  base=json.loads((OUT/'baseline.json').read_text());en=js('english-narration.js');report={}
  music=read(ROOT/'assets/audio/bgm-starcourt-mall-cc0.mp3')
- with tempfile.TemporaryDirectory(prefix='tbm-v141-') as tmp:
+ with tempfile.TemporaryDirectory(prefix='tbm-v142-') as tmp:
   temp=Path(tmp)
   for key in ['sample-hazard','sample-measure','intro-ko','intro-en']:normalize(OUT/(key+'.mp3'),temp/(key+'.wav'))
   hazard=read(temp/'sample-hazard.wav');measure=read(temp/'sample-measure.wav')
@@ -36,7 +36,7 @@ def main():
    start=len(speech)/RATE+.25; sample=start+len(intro)/RATE+.6; female=sample+len(hazard)/RATE+.4
    result=np.concatenate([speech,silence(.25),intro,silence(.6),hazard,silence(.4),measure,silence(.8)])
    duration=len(result)/RATE; config={'start':start,'sampleStart':sample,'measureStart':female,'sampleEnd':female+len(measure)/RATE,'confirmPress':female+len(measure)/RATE+.3,'sceneStart':original['cues'][-2][0],'end':duration}
-   out=f'assets/audio/narration-demo-v141/02-tbm-basic-{lang}.m4a'
+   out=f'assets/audio/narration-demo-v142/02-tbm-basic-{lang}.m4a'
    wav(temp/f'{lang}.wav',result);run(['-i',temp/f'{lang}.wav','-c:a','aac','-b:a','160k','-movflags','+faststart',ROOT/out])
    cues=copy.deepcopy(original['cues']);cues[-1]=[original['duration'],51000];cues.append([duration,51000])
    track={'src':out,'duration':duration,'cues':cues,'voiceDemo':config}
@@ -46,19 +46,19 @@ def main():
    total=sum(len(x) for x in sentences)
    for phrase in sentences:
     end=at+len(intro)/RATE*len(phrase)/total;caps.append(caption(phrase,at,end));at=end
-   labels=['감전 아크, 충전부 인접 및 결선.','결선 전환 작업은 도면과 상표시를 기준으로 2인 이상 교차 확인해 주세요.'] if lang=='ko' else ['Electrical shock and arc: nearby live parts and wiring.','For wiring and switching, at least two people cross-check the drawings and phase markings.']
+   labels=['감전 아크, 충전부 인접 및 결선.','정전 검전 접지 또는 활선방호 범위를 확인하고 충전부 접근한계거리를 유지해 주세요.'] if lang=='ko' else ['Electrical shock and arc: nearby live parts and wiring.','Check the scope of power isolation, absence-of-voltage testing, grounding or live-work protection, and maintain the approach distance from live parts.']
    caps += [caption(labels[0],sample,sample+len(hazard)/RATE),caption(labels[1],female,female+len(measure)/RATE)]
    sn='subtitle-data.js' if lang=='ko' else 'subtitle-data.en.js';subs=js(sn);subs['02-tbm-basic']=caps;write(sn,'window.PowerTBMSubtitleData'+('En' if lang=='en' else ''),subs)
    timeline=copy.deepcopy(original['tv']);old=next(x for x in timeline['segments'] if x['id']=='02-tbm-basic'); oldstart,oldend=old['start'],old['end'];tv_duration=math.ceil(duration*30)/30;delta=tv_duration-old['duration']
    for seg in timeline['segments']:
     if seg['id']=='02-tbm-basic':seg['duration']=tv_duration;seg['end']=seg['start']+tv_duration
     elif seg['start']>=oldend-.00001:seg['start']+=delta;seg['end']+=delta
-   timeline['duration']+=delta;timeline['src']=f'assets/tv-{lang}-v141/tour.mp4'
+   timeline['duration']+=delta;timeline['src']=f'assets/tv-{lang}-v142/tour.mp4'
    if lang=='ko':
     app=(ROOT/'app.js').read_text();replacement="id: '02-tbm-basic',\n        src: '"+out+"',\n        duration: "+str(duration)+",\n        cues: "+json.dumps(cues)+",\n        voiceDemo: "+json.dumps(config)
     app,count=re.subn(r"id: '02-tbm-basic',\s*src: '[^']+',\s*duration: [\d.]+,\s*cues: \[.*?\]\](?:,\s*voiceDemo: \{[^}]+\})?",lambda m:replacement,app,count=1);assert count==1;(ROOT/'app.js').write_text(app);write('tv-media-timeline.js','window.PowerTBMTVTimeline',timeline)
    else:
-    track['clockReference']='meeting-ko-v141'; track['clock']=copy.deepcopy(original['clock'])+[[duration,report['ko']['duration']]]
+    track['clockReference']='meeting-ko-v142'; track['clock']=copy.deepcopy(original['clock'])+[[duration,report['ko']['duration']]]
     en['tracks']['02-tbm-basic']=track;en['tv']=timeline;write('english-narration.js','window.PowerTBMEnglishNarration',en)
    tour=read(ROOT/original['tv']['src']);before=tour[:round(oldstart*RATE)];after=tour[round(oldend*RATE):round(original['tv']['duration']*RATE)]
    mix=np.zeros((round(tv_duration*RATE),2),dtype=np.float32);mix[:len(result)]=result;mix+=music[(np.arange(len(mix))+len(before))%len(music)]*.065
