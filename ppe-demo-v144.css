@@ -1,0 +1,29 @@
+/* Visual-only health/PPE selection: four PPE checks; face shield stays as pictured. */
+#meetingDemo[data-ppe-active="true"] > .meeting-hand,
+#meetingDemo[data-ppe-active="true"] > .meeting-touch-ripple,
+#meetingDemo[data-ppe-active="true"] .meeting-slide-health > .meeting-scene-state {
+  visibility: hidden !important;
+}
+.ppe-demo-layer { position: absolute; inset: 0; z-index: 8; pointer-events: none; }
+.ppe-demo-layer[hidden], .ppe-demo-hand[hidden], .ppe-demo-ripple[hidden] { display: none !important; }
+.ppe-demo-check {
+  position: absolute; width: 6.35%; height: 2.93%; box-sizing: border-box;
+  border: 1.5px solid #8e9093; border-radius: 30%; background: #fff;
+  transform: translate(-50%, -50%);
+}
+.ppe-demo-health { border-radius: 50%; }
+.ppe-demo-check[data-checked="true"] { background: #397390; border-color: #397390; }
+.ppe-demo-check[data-checked="true"]::after {
+  content: ''; position: absolute; left: 28%; top: 12%; width: 29%; height: 52%;
+  border-right: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(42deg);
+}
+.guide-phone .ppe-demo-hand {
+  position: absolute; z-index: 10; width: var(--demo-hand-size, 124px); height: var(--demo-hand-size, 124px);
+  transform-origin: 42% 20%; line-height: 1;
+  filter: drop-shadow(0 9px 12px rgba(0, 0, 0, .25));
+}
+.guide-phone .ppe-demo-hand .demo-hand-glyph { left: -5.1029%; top: 14.5964%; }
+.ppe-demo-ripple {
+  position: absolute; z-index: 9; width: 34px; height: 34px; box-sizing: border-box;
+  border: 3px solid #ffd348; border-radius: 50%; transform-origin: 50% 50%;
+}

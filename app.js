@@ -930,6 +930,14 @@
     const maxScroll = Math.max(0, 1970 / 685 * 100 - ratio * 100);
     const fraction = Math.min(1, Math.max(0, (seconds - timing.start + .9) / 1.15));
     const eased = fraction * fraction * (3 - 2 * fraction);
+    panel.dataset.swiping = String(seconds >= timing.start - 1.05 && seconds <= timing.start + .4);
+    const swipeHand = $('.meeting-voice-scroll-hand', panel);
+    if (swipeHand) {
+      swipeHand.style.top = 'calc(40% + ' + (maxScroll * unit * eased) + 'px)';
+      const released = seconds > timing.start + .25;
+      swipeHand.style.transform = 'translate(-52%, -12%) rotate(-12deg) scale(' + (released ? 1 : .88) + ')';
+      swipeHand.style.opacity = String(released ? Math.max(0, 1 - (seconds - timing.start - .25) / .15) : 1);
+    }
     if (scroll) scroll.style.transform = 'translateY(' + (-maxScroll * unit * (1 - eased)) + 'px)';
     const english = language?.get() === 'en';
     const label = $('.voice-explain-label');
@@ -952,6 +960,7 @@
     if (!segment) return;
     window.PowerTBMSubtitles?.render(segment.id, seconds);
     syncMeetingVoiceDemo(segment, seconds);
+    if (demoPage !== 'meeting') window.PowerTBMPPEDemo?.render(demoPage, 0);
     if (demoPage === 'intro') {
       if (tvMode) tv.present(demoPage, segment, 0);
       // Audio and video start, pause and resume together. Let the hardware
@@ -979,6 +988,7 @@
       return;
     }
     const visualTime = mapNarrationTimeToVisual(segment, seconds);
+    window.PowerTBMPPEDemo?.render(demoPage, visualTime);
     if (!syncedAnimations.length) collectNarrationAnimations(demoPage);
     syncedAnimations.forEach((animation) => {
       try {
@@ -1160,6 +1170,7 @@
     if (page === 'support') stopGoldenRulesClock({ reset: true });
     stopNarrationPlayback({ keepRequested: true });
     demoPage = page;
+    window.PowerTBMPPEDemo?.render(page, 0);
     narrationSegmentIndex = 0;
     const token = narrationRunToken;
     startDemoBgmForPage(page, { restart: page === 'intro' });
@@ -1692,6 +1703,7 @@
     if (demoPage === 'intro' && page !== 'intro') openingDemoVideo?.pause();
     safety?.reset();
     demoPage = page;
+    window.PowerTBMPPEDemo?.render(page, 0);
     if (page === 'weather') syncWeatherGuide();
 
     stageActiveClasses.forEach((className) => guidePhone.classList.remove(className));
