@@ -208,6 +208,19 @@
 
   const guideImage = $('#guideImage');
   const guidePhone = $('.guide-phone');
+  // Existing maximum was max(124px, 20% of the phone content width).
+  // Pixel fallback avoids requiring container units on older webOS.
+  const syncDemoHandSize = (knownWidth) => {
+    const width = knownWidth || $('.guide-media', guidePhone)?.getBoundingClientRect().width || 0;
+    const size = Math.max(124, width * .2);
+    if (guidePhone && guidePhone.dataset.handSize !== String(size)) {
+      guidePhone.style.setProperty('--demo-hand-size', size + 'px');
+      guidePhone.dataset.handSize = String(size);
+    }
+    return size;
+  };
+  syncDemoHandSize();
+  window.addEventListener('resize', () => syncDemoHandSize(), { passive: true });
   const guideIndex = $('#guideIndex');
   const guideCategory = $('#guideCategory');
   const guideTitle = $('#guideTitle');
@@ -922,6 +935,7 @@
     const scroll = $('.meeting-voice-scroll', panel);
     const rect = panel.getBoundingClientRect();
     const unit = rect.width > 0 ? rect.width / 100 : 3;
+    const handSize = syncDemoHandSize(rect.width);
     if (panel.dataset.unitPx !== String(unit)) {
       panel.style.setProperty('--voice-unit', unit + 'px');
       panel.dataset.unitPx = String(unit);
@@ -933,9 +947,16 @@
     panel.dataset.swiping = String(seconds >= timing.start - 1.05 && seconds <= timing.start + .4);
     const swipeHand = $('.meeting-voice-scroll-hand', panel);
     if (swipeHand) {
-      swipeHand.style.top = 'calc(40% + ' + (maxScroll * unit * eased) + 'px)';
+      // Keep the enlarged hand inside the body while dragging exactly the
+      // same distance as the content. Coordinates are free-drag, not a button.
+      const bodyTop = 30.657 * unit;
+      const bodyBottom = (rect.height || ratio * unit * 100) - 29.781 * unit;
+      const travel = maxScroll * unit;
+      const startY = Math.max(bodyTop + 8, Math.min((rect.height || ratio * unit * 100) * .4, bodyBottom - travel - handSize * .94 - 8));
+      swipeHand.style.left = Math.min(70 * unit, 100 * unit - handSize * .49 - 8) + 'px';
+      swipeHand.style.top = (startY + travel * eased) + 'px';
       const released = seconds > timing.start + .25;
-      swipeHand.style.transform = 'translate(-52%, -12%) rotate(-12deg) scale(' + (released ? 1 : .88) + ')';
+      swipeHand.style.transform = 'translate(-52%, -12%) rotate(-12deg) scale(' + (released ? 1 : .74) + ')';
       swipeHand.style.opacity = String(released ? Math.max(0, 1 - (seconds - timing.start - .25) / .15) : 1);
     }
     if (scroll) scroll.style.transform = 'translateY(' + (-maxScroll * unit * (1 - eased)) + 'px)';
@@ -1170,6 +1191,7 @@
     if (page === 'support') stopGoldenRulesClock({ reset: true });
     stopNarrationPlayback({ keepRequested: true });
     demoPage = page;
+    syncDemoHandSize();
     window.PowerTBMPPEDemo?.render(page, 0);
     narrationSegmentIndex = 0;
     const token = narrationRunToken;
@@ -1703,6 +1725,7 @@
     if (demoPage === 'intro' && page !== 'intro') openingDemoVideo?.pause();
     safety?.reset();
     demoPage = page;
+    syncDemoHandSize();
     window.PowerTBMPPEDemo?.render(page, 0);
     if (page === 'weather') syncWeatherGuide();
 

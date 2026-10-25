@@ -1,15 +1,15 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v144-20261025-touch`;
+const CACHE_VERSION = `${CACHE_PREFIX}v145-20261025-hand-size`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './ppe-demo-v144.css?v=20261025-touch-v144',
-  './ppe-demo-v144.js?v=20261025-touch-v144',
+  './ppe-demo-v144.css?v=20261025-hand-size-v145',
+  './ppe-demo-v144.js?v=20261025-hand-size-v145',
   './tv-media-timeline.js?v=20261024-voice-alignment-v142',
   './english-narration.js?v=20261024-voice-alignment-v142',
   './tv-compat.js?v=20261024-menu-closing-v138',
@@ -23,10 +23,10 @@ const PRECACHE_URLS = [
   './demo-language.css?v=20261021-language-menu-v125',
   './manifest.webmanifest',
   './assets/brand/demo-hand-clay-v143.png',
-  './styles.css?v=20261025-touch-v144',
-  './app.js?v=20261025-touch-v144',
+  './styles.css?v=20261025-hand-size-v145',
+  './app.js?v=20261025-hand-size-v145',
   './safety4cut.css?v=20261016-safety-reveal-v107',
-  './demo-hands-v80.css?v=20261025-clay-pointer-v143',
+  './demo-hands-v80.css?v=20261025-hand-size-v145',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',
   './demo-recorder-v81.js?v=20261020-language-v117',
   './safety4cut.js?v=20261021-safety-caption-v121',

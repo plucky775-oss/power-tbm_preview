@@ -9,11 +9,13 @@
   height: var(--demo-hand-size);
   line-height: 1;
 }
-/* Voice-demo hands remain small, relative to the screenshot, not 124px. */
+/* v145: use the largest existing base size at this same phone viewport. */
 .guide-phone .meeting-voice-hand,
-.guide-phone .meeting-voice-confirm-hand {
-  width: calc(12 * var(--voice-unit, 3px));
-  height: calc(12 * var(--voice-unit, 3px));
+.guide-phone .meeting-voice-confirm-hand,
+.guide-phone .meeting-voice-scroll-hand,
+.guide-phone .safety-demo[data-scene="0"] .safety-hand {
+  width: var(--demo-hand-size);
+  height: var(--demo-hand-size);
   line-height: 1;
 }
 .guide-phone .demo-hand-glyph {
