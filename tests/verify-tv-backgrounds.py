@@ -8,7 +8,8 @@ names = {
     'field-tools-kepco-v68.webp', 'emergency-response-changwon119-v66.webp',
 }
 paths = [root / 'assets/tv-background-v137' / name for name in names]
-paths.extend((root / 'assets/tv-background-v146').glob('*.webp'))
+paths.append(root / 'assets/tv-background-v146/tbm-guide-closing-v146.webp')
+paths.extend((root / 'assets/tv-background-v147').glob('*.webp'))
 assert len(paths) == 7
 total_bytes = 0
 for path in sorted(paths):
@@ -17,7 +18,8 @@ for path in sorted(paths):
     with Image.open(path) as image:
         assert image.format == 'WEBP' and image.is_animated, name
         assert image.size == (320, 180), name
-        assert 2 <= image.n_frames <= 64, name
+        long_loop = 'v147' in name
+        assert 2 <= image.n_frames <= (120 if long_loop else 64), name
         assert image.info['loop'] == (1 if 'closing' in name else 0), name
         frames, duration = set(), 0
         for i in range(image.n_frames):
@@ -26,8 +28,8 @@ for path in sorted(paths):
             assert image.info['duration'] >= 125, name
             duration += image.info['duration']
         assert len(frames) > 1, f'{name} must visibly move'
-        assert duration <= 8000, (name, duration)
-        assert image.n_frames * 320 * 180 * 4 < 15 * 1024 * 1024
+        assert (19998 <= duration <= 20001) if long_loop else duration <= 8000, (name, duration)
+        assert image.n_frames * 320 * 180 * 4 < (27 if long_loop else 15) * 1024 * 1024
         print(f'PASS {name}: {image.n_frames} frames, {duration} ms, {path.stat().st_size:,} bytes')
-assert total_bytes < 3 * 1024 * 1024, total_bytes
+assert total_bytes < 4 * 1024 * 1024, total_bytes
 print(f'PASS all seven TV backgrounds: {total_bytes:,} bytes')
