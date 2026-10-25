@@ -38,7 +38,7 @@
     imageReadiness.set(image, { clear, prepare });
   });
   const pageFor = image => {
-    if (image.dataset.cinematicPage) return image.dataset.cinematicPage === 'meeting' ? ['meeting', 'safety'] : [image.dataset.cinematicPage];
+    if (image.dataset.cinematicPage) return [image.dataset.cinematicPage];
     if (image.id === 'guideImage') return ['weather', 'manual'];
     if (image.closest('#weatherDemo, .demo-explanations, .typhoon-compare')) return ['weather'];
     if (image.closest('#meetingDemo, .meeting-explanations')) return ['meeting'];
@@ -225,10 +225,10 @@
   document.querySelectorAll('video').forEach(video => {
     if (video === media || video.id === 'demoRecordPreview') return;
     if (video.dataset.cinematicPage) {
-      const key = video.classList.contains('cinematic-backdrop-emergency') ? 'emergency' : video.dataset.cinematicPage;
+      const key = video.dataset.cinematicKey || (video.classList.contains('cinematic-backdrop-emergency') ? 'emergency' : video.dataset.cinematicPage);
       const source = video.getAttribute('src') || video.querySelector('source')?.getAttribute('src');
-      backgroundSources[key] = key === 'closing' ? 'assets/tv-background-v138/tbm-guide-closing-v138.webp'
-        : source?.replace('assets/background/', 'assets/tv-background-v137/').replace(/\.mp4$/, '.webp');
+      backgroundSources[key] = video.dataset.tvBackground
+        || source?.replace('assets/background/', 'assets/tv-background-v137/').replace(/\.mp4$/, '.webp');
     }
     const id = video.id;
     const placeholder = document.createElement('img');
@@ -238,6 +238,7 @@
     placeholder.dataset.demoSrc = poster;
     placeholder.setAttribute('data-demo-src', poster);
     if (video.dataset.cinematicPage) placeholder.dataset.cinematicPage = video.dataset.cinematicPage;
+    if (video.dataset.cinematicKey) placeholder.dataset.cinematicKey = video.dataset.cinematicKey;
     placeholder.alt = '';
     video.pause();
     video.removeAttribute('src');
@@ -295,11 +296,11 @@
     window.clearTimeout(backgroundStartTimer);
     clearBackground('released');
   };
-  api.syncBackground = (page, { paused, emergency = false }) => {
+  api.syncBackground = (page, { paused, emergency = false, guide = false }) => {
     window.clearTimeout(backgroundStartTimer);
-    const key = page === 'safety' ? 'meeting' : page === 'support' && emergency ? 'emergency' : page;
+    const key = page === 'support' ? (emergency ? 'emergency' : guide ? 'guide' : page) : page;
     images.filter(image => image.dataset.cinematicPage).forEach(image => {
-      const imageKey = image.classList.contains('cinematic-backdrop-emergency') ? 'emergency' : image.dataset.cinematicPage;
+      const imageKey = image.dataset.cinematicKey || (image.classList.contains('cinematic-backdrop-emergency') ? 'emergency' : image.dataset.cinematicPage);
       image.classList.toggle('tv-fallback-active', imageKey === key);
     });
     if (backgroundReleased) return;
@@ -320,7 +321,7 @@
       && media.readyState >= 3 && !media.paused && !document.hidden;
     if ((background.getAttribute('src') || '') !== source && !canStart) {
       clearBackground('waiting');
-      backgroundStartTimer = window.setTimeout(() => api.syncBackground(page, { paused, emergency }), 200);
+      backgroundStartTimer = window.setTimeout(() => api.syncBackground(page, { paused, emergency, guide }), 200);
       return;
     }
 

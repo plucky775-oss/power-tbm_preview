@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v145-20261025-hand-size`;
+const CACHE_VERSION = `${CACHE_PREFIX}v146-20261025-sector-backgrounds`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   './ppe-demo-v144.js?v=20261025-hand-size-v145',
   './tv-media-timeline.js?v=20261024-voice-alignment-v142',
   './english-narration.js?v=20261024-voice-alignment-v142',
-  './tv-compat.js?v=20261024-menu-closing-v138',
+  './tv-compat.js?v=20261025-sector-backgrounds-v146',
   './tv-compat.css?v=20261021-launch-handoff-v131',
   './subtitles.css?v=20261004-v87',
   './subtitles.js?v=20261020-language-v117',
@@ -23,9 +23,9 @@ const PRECACHE_URLS = [
   './demo-language.css?v=20261021-language-menu-v125',
   './manifest.webmanifest',
   './assets/brand/demo-hand-clay-v143.png',
-  './styles.css?v=20261025-hand-size-v145',
-  './app.js?v=20261025-hand-size-v145',
-  './safety4cut.css?v=20261016-safety-reveal-v107',
+  './styles.css?v=20261025-sector-backgrounds-v146',
+  './app.js?v=20261025-sector-backgrounds-v146',
+  './safety4cut.css?v=20261025-sector-backgrounds-v146',
   './demo-hands-v80.css?v=20261025-hand-size-v145',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',
   './demo-recorder-v81.js?v=20261020-language-v117',
@@ -37,7 +37,9 @@ const PRECACHE_URLS = [
   './assets/tv-background-v137/tablet-review-v63.webp',
   './assets/tv-background-v137/field-tools-kepco-v68.webp',
   './assets/tv-background-v137/emergency-response-changwon119-v66.webp',
-  './assets/tv-background-v138/tbm-guide-closing-v138.webp',
+  './assets/tv-background-v146/kepco-meeting-v146.webp',
+  './assets/tv-background-v146/kepco-ppe-v146.webp',
+  './assets/tv-background-v146/tbm-guide-closing-v146.webp',
   './assets/audio/balanced-v128/en-00-opening.m4a',
   './assets/audio/balanced-v128/en-01-weather.m4a',
   './assets/audio/narration-demo-v142/02-tbm-basic-en.m4a',
@@ -66,8 +68,12 @@ const PRECACHE_URLS = [
   './assets/background/emergency-response-changwon119-v66.mp4',
   './assets/background/field-tools-kepco-v68-poster.jpg',
   './assets/background/field-tools-kepco-v68.mp4',
-  './assets/background/tbm-guide-closing-v69-poster.jpg',
-  './assets/background/tbm-guide-closing-v138.mp4',
+  './assets/background/tbm-guide-closing-v146-poster.jpg',
+  './assets/background/tbm-guide-closing-v146.mp4',
+  './assets/background/kepco-meeting-v146-poster.jpg',
+  './assets/background/kepco-meeting-v146.mp4',
+  './assets/background/kepco-ppe-v146-poster.jpg',
+  './assets/background/kepco-ppe-v146.mp4',
   './assets/background/power-tbm-lightning-opening-v62.webp',
   './assets/background/tablet-review-v63-poster.jpg',
   './assets/background/tablet-review-v63.mp4',
@@ -134,7 +140,7 @@ const PRECACHE_URLS = [
   './assets/video/power-tbm-opening-ansan-v77.mp4'
 ];
 
-// Keep the continuous narration and the five small animated-image backgrounds.
+// Keep the continuous narration and the seven small animated-image backgrounds.
 // TV never downloads separate narration, BGM or a second video stream.
 const ACTIVE_PRECACHE_URLS = TV_CACHE ? PRECACHE_URLS
   .filter(path => !path.startsWith('./assets/audio/') &&

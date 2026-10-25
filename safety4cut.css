@@ -99,7 +99,7 @@
 .safety-showing-video .safety-screen-viewport { display: none; }
 .safety-showing-video .safety-video-shell { display: flex; }
 /* Reuse the existing field-review backdrop without changing earlier chapters. */
-.cinematic-backdrop[data-demo-page="safety"] .cinematic-backdrop-meeting { opacity: .36; }
+.cinematic-backdrop[data-demo-page="safety"] .cinematic-backdrop-safety { opacity: .36; }
 @media (max-width: 760px) {
   .safety-explain > span { align-self: center; }
   .safety-explain .demo-explain-points { justify-content: center; }

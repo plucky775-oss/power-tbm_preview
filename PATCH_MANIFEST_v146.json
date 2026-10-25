@@ -1,0 +1,135 @@
+{
+  "base_commit": "9854bb6aac17a37d02c0606a4eb7729064ba1354",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 75971,
+      "sha256": "43be9a9d6ca85317c812f808e8cc742baca805d6209c30cf1c7caedfc973c914"
+    },
+    {
+      "path": "app.js",
+      "bytes": 112633,
+      "sha256": "fd66ba80970fd2f4e5285b1d96380d4826695b7261567565c78e0272c12a4001"
+    },
+    {
+      "path": "assets/background/ATTRIBUTION.md",
+      "bytes": 2984,
+      "sha256": "712f5e17d96fc122ad0574079a28c0567c0165aa24255e08614d03aaee7d16ac"
+    },
+    {
+      "path": "assets/background/kepco-meeting-v146-poster.jpg",
+      "bytes": 108295,
+      "sha256": "0f7a48eb647bcc75f0d0d7b8cb8e389181ebc5ab72fd2ae56abd6f9baaeb047c"
+    },
+    {
+      "path": "assets/background/kepco-meeting-v146.mp4",
+      "bytes": 14592341,
+      "sha256": "3385240662dbb9ad8d1f727ace0fbf61bbcb0c576ac8f4da3e59aea60def86ef"
+    },
+    {
+      "path": "assets/background/kepco-ppe-v146-poster.jpg",
+      "bytes": 47065,
+      "sha256": "06d599a0017272bff768d09b1c9b20952ba10b0e2111e116d34dd97c1104ef9d"
+    },
+    {
+      "path": "assets/background/kepco-ppe-v146.mp4",
+      "bytes": 5488707,
+      "sha256": "b7a2ed8b2b238adbb732176d9e86c6e963b76b4b873b944daba2b293c3b3985d"
+    },
+    {
+      "path": "assets/background/sector-backgrounds-v146.json",
+      "bytes": 868,
+      "sha256": "87d97940768b7c60059dc8576c55942c4fa80e959517075cd713e600df3059a9"
+    },
+    {
+      "path": "assets/background/tbm-guide-closing-v146-poster.jpg",
+      "bytes": 86088,
+      "sha256": "2d382abf664a89b98add4acf27fae929bd0917e346fc54a40a87636cef3bae0f"
+    },
+    {
+      "path": "assets/background/tbm-guide-closing-v146.mp4",
+      "bytes": 1099839,
+      "sha256": "14493ad7be27f61225aa4a9f9d3dc35d4658d1b7c0c7785f3850df01fa707459"
+    },
+    {
+      "path": "assets/tv-background-v146/kepco-meeting-v146.webp",
+      "bytes": 583662,
+      "sha256": "6a6066395d43bb21c357e9ceaf7bbcab9f0a03ab3ab790b102b2a124307a5c24"
+    },
+    {
+      "path": "assets/tv-background-v146/kepco-ppe-v146.webp",
+      "bytes": 346392,
+      "sha256": "5e6cbaa10b10c292f56ad0ee63bb7e49112a8b97f317ce9b7c9ab5939e5405f8"
+    },
+    {
+      "path": "assets/tv-background-v146/tbm-guide-closing-v146.webp",
+      "bytes": 483138,
+      "sha256": "8b189f04e3d4139557a85439a752ada2b9600b95cea2d57bcdf33c6999bb2cb9"
+    },
+    {
+      "path": "assets/tv-v100/images/background/kepco-meeting-v146-poster.webp",
+      "bytes": 82502,
+      "sha256": "fdba5ebbc1509ab61662aba8d555d06957bfa438e3f525c35a5cdfc007c5d0bc"
+    },
+    {
+      "path": "assets/tv-v100/images/background/kepco-ppe-v146-poster.webp",
+      "bytes": 30586,
+      "sha256": "2948d328e041b23aa714b2daee28ac0ef1d28438ecb7d206157d3bc3c13fe95c"
+    },
+    {
+      "path": "assets/tv-v100/images/background/tbm-guide-closing-v146-poster.webp",
+      "bytes": 63256,
+      "sha256": "3ed1e2377ddd7a51114a379f7436839dfe526bb8f649c3970cb31f7ea40ac53c"
+    },
+    {
+      "path": "index.html",
+      "bytes": 64613,
+      "sha256": "8b45572e1c1424298ce7381c6550c2fe5aa8f37b8103d26e666807de77905341"
+    },
+    {
+      "path": "safety4cut.css",
+      "bytes": 4477,
+      "sha256": "1417594cf41a0ad1d025fd80e343629d8a19427775a148051bb0df0bd5bcf28d"
+    },
+    {
+      "path": "scripts/build-sector-backgrounds.py",
+      "bytes": 5036,
+      "sha256": "c443763a075e77957807660b0c62152cab8ccb69ddd2d6c79c5c21e48cdc85d5"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 287697,
+      "sha256": "ac7e62f51e9abd5f2c406cafbe2a5c159b7e43dae5b9697b8ea0b654f47bc25a"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 13233,
+      "sha256": "8e78f104bdb5a8ac5cbfd1a6b54270400eb8517285ca1fd3a0285e7404a0f52a"
+    },
+    {
+      "path": "tests/tv-playback.test.cjs",
+      "bytes": 65043,
+      "sha256": "5c2f6fb3700780a969327c357d11b6400ed166868264053d44f76ba6667b701f"
+    },
+    {
+      "path": "tests/verify-pwa.mjs",
+      "bytes": 19146,
+      "sha256": "641096f10c56bc49813903b349097cbe545f8648e4f271d814580e8e89389e80"
+    },
+    {
+      "path": "tests/verify-recorder.mjs",
+      "bytes": 18834,
+      "sha256": "1186ef84b1c9e14f7ca09bce196d831b95ac0b7676b2fdbed58077e7cb87c91e"
+    },
+    {
+      "path": "tests/verify-tv-backgrounds.py",
+      "bytes": 1502,
+      "sha256": "2fc2253f749b932f7e669110bec98d4623a2e638c686418618a874f108809d62"
+    },
+    {
+      "path": "tv-compat.js",
+      "bytes": 19085,
+      "sha256": "082c06069f0172161328ca3af3db9bdee2b8c6cb93a2d9dc194dacdf8447782c"
+    }
+  ]
+}

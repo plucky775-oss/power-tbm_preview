@@ -6810,3 +6810,31 @@ body { background: #fff; }
 .meeting-voice-demo[data-pressing="true"] .meeting-voice-hand { transform:translate(-52%,-12%) rotate(-12deg) scale(var(--demo-hand-press-scale)); }
 .meeting-voice-confirm-hand { left:74.4%; bottom:auto; top:calc(100% - 18.35 * var(--voice-unit, 3px)); transform:translate(-52%,-12%) rotate(-12deg); transform-origin:52% 12%; }
 .meeting-voice-demo[data-confirm-pressing="true"] .meeting-voice-confirm-hand { transform:translate(-52%,-12%) rotate(-12deg) scale(var(--demo-hand-press-scale)); }
+
+/* v146: field footage follows the existing narration cue clock. Intro rules stay unchanged. */
+.cinematic-backdrop[data-demo-page="support"][data-support-scene] .cinematic-backdrop-tools,
+.cinematic-backdrop[data-demo-page="support"][data-support-scene] .cinematic-backdrop-emergency {
+  animation: none;
+  opacity: 0;
+}
+.cinematic-backdrop[data-demo-page="support"][data-support-scene="guide"] .cinematic-backdrop-guide,
+.cinematic-backdrop[data-demo-page="support"][data-support-scene="tools"] .cinematic-backdrop-tools,
+.cinematic-backdrop[data-demo-page="support"][data-support-scene="emergency"] .cinematic-backdrop-emergency {
+  opacity: .62;
+}
+.cinematic-backdrop[data-demo-page="meeting"] .cinematic-backdrop-meeting { opacity: .66; }
+.cinematic-backdrop[data-demo-page="closing"] .cinematic-backdrop-closing { opacity: .64; }
+.cinematic-backdrop[data-demo-page="meeting"] .cinematic-backdrop-shade,
+.cinematic-backdrop[data-demo-page="support"][data-support-scene="guide"] .cinematic-backdrop-shade,
+.cinematic-backdrop[data-demo-page="closing"] .cinematic-backdrop-shade {
+  background:
+    linear-gradient(90deg, rgba(3, 17, 26, .24), rgba(4, 21, 31, .42) 48%, rgba(4, 20, 30, .64)),
+    linear-gradient(180deg, rgba(3, 17, 26, .16), rgba(3, 16, 25, .46));
+}
+@media (max-width: 760px) {
+  .cinematic-backdrop[data-demo-page="meeting"] .cinematic-backdrop-shade,
+  .cinematic-backdrop[data-demo-page="support"][data-support-scene="guide"] .cinematic-backdrop-shade,
+  .cinematic-backdrop[data-demo-page="closing"] .cinematic-backdrop-shade {
+    background: linear-gradient(180deg, rgba(3, 17, 26, .36), rgba(3, 16, 25, .66));
+  }
+}

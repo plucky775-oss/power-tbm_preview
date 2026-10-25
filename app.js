@@ -629,7 +629,10 @@
       if (now - lastCheck >= 50) {
         lastCheck = now;
         const visualTime = getGoldenRulesVisualTime();
-        if (Number.isFinite(visualTime)) syncGoldenRulesVideo(visualTime);
+        if (Number.isFinite(visualTime)) {
+          syncSupportBackdrop(visualTime);
+          syncGoldenRulesVideo(visualTime);
+        }
       }
       goldenRulesClockFrame = window.requestAnimationFrame(tick);
     };
@@ -644,6 +647,7 @@
       || (!reduceMotion && !navigator.connection?.saveData);
     const previousPage = cinematicBackdrop.dataset.demoPage;
     const pageChanged = previousPage !== demoPage;
+    if (pageChanged && demoPage === 'support') cinematicBackdrop.dataset.supportScene = 'guide';
     const playbackPaused = demoPaused || document.hidden || (!tvMode && foregroundVideoActive);
     cinematicBackdrop.dataset.demoPage = demoPage;
     cinematicBackdrop.dataset.demoMode = demoMode;
@@ -653,17 +657,17 @@
     if (tvMode) {
       tv.syncBackground(demoPage, {
         paused: playbackPaused || !narrationRequested || ['blocked', 'error', 'complete'].includes(narrationState),
-        emergency: narrationByPage.support[narrationSegmentIndex]?.id === '05-emergency'
+        emergency: narrationByPage.support[narrationSegmentIndex]?.id === '05-emergency',
+        guide: cinematicBackdrop.dataset.supportScene === 'guide'
       });
       return;
     }
 
     cinematicVideos.forEach((video) => {
-      let active = video.dataset.cinematicPage === demoPage
-        || (demoPage === 'safety' && video.classList.contains('cinematic-backdrop-meeting'));
-      if (active && demoPage === 'support' && narrationRequested) {
-        const emergency = narrationByPage.support[narrationSegmentIndex]?.id === '05-emergency';
-        active = video.classList.contains(emergency ? 'cinematic-backdrop-emergency' : 'cinematic-backdrop-tools');
+      let active = video.dataset.cinematicPage === demoPage;
+      if (active && demoPage === 'support') {
+        const scene = cinematicBackdrop.dataset.supportScene || 'guide';
+        active = video.classList.contains('cinematic-backdrop-' + scene);
       }
       video.muted = true;
       video.defaultMuted = true;
@@ -691,6 +695,17 @@
         console.warn('배경영상 대신 정지 화면을 유지합니다.', error);
       });
     });
+  };
+
+  const syncSupportBackdrop = (visualTime) => {
+    if (demoPage !== 'support' || !cinematicBackdrop) return;
+    // Use the existing visual cue clock so Korean, English, seeks and replay
+    // all switch at the actual guide → tools → emergency screen boundaries.
+    const scene = visualTime < 32600 ? 'guide' : visualTime < 42450 ? 'tools' : 'emergency';
+    if (cinematicBackdrop.dataset.supportScene !== scene) {
+      cinematicBackdrop.dataset.supportScene = scene;
+      syncCinematicBackdrop();
+    }
   };
 
   const updateDemoStateData = () => {
@@ -1009,6 +1024,7 @@
       return;
     }
     const visualTime = mapNarrationTimeToVisual(segment, seconds);
+    syncSupportBackdrop(visualTime);
     window.PowerTBMPPEDemo?.render(demoPage, visualTime);
     if (!syncedAnimations.length) collectNarrationAnimations(demoPage);
     syncedAnimations.forEach((animation) => {
