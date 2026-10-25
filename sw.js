@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v146-20261025-sector-backgrounds`;
+const CACHE_VERSION = `${CACHE_PREFIX}v147-20261025-tv-backgrounds`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -23,7 +23,7 @@ const PRECACHE_URLS = [
   './demo-language.css?v=20261021-language-menu-v125',
   './manifest.webmanifest',
   './assets/brand/demo-hand-clay-v143.png',
-  './styles.css?v=20261025-sector-backgrounds-v146',
+  './styles.css?v=20261025-tv-backgrounds-v147',
   './app.js?v=20261025-sector-backgrounds-v146',
   './safety4cut.css?v=20261025-sector-backgrounds-v146',
   './demo-hands-v80.css?v=20261025-hand-size-v145',
@@ -37,8 +37,8 @@ const PRECACHE_URLS = [
   './assets/tv-background-v137/tablet-review-v63.webp',
   './assets/tv-background-v137/field-tools-kepco-v68.webp',
   './assets/tv-background-v137/emergency-response-changwon119-v66.webp',
-  './assets/tv-background-v146/kepco-meeting-v146.webp',
-  './assets/tv-background-v146/kepco-ppe-v146.webp',
+  './assets/tv-background-v147/kepco-meeting-v147.webp',
+  './assets/tv-background-v147/kepco-ppe-v147.webp',
   './assets/tv-background-v146/tbm-guide-closing-v146.webp',
   './assets/audio/balanced-v128/en-00-opening.m4a',
   './assets/audio/balanced-v128/en-01-weather.m4a',

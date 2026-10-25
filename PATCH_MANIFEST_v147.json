@@ -1,0 +1,66 @@
+{
+  "baseline": "v146 patch; relevant remote index/styles/sw verified equal except newline at 2026-10-25T14:47Z",
+  "source_library_file_id": "libfile_fd4a46b2db8481918cbf992564a2e493",
+  "source_shots": [
+    {
+      "name": "meeting",
+      "start": 412.3,
+      "duration": 20,
+      "crop": "520:292:30:78"
+    },
+    {
+      "name": "ppe",
+      "start": 338,
+      "duration": 20,
+      "crop": "384:216:180:122"
+    }
+  ],
+  "fps": 6,
+  "normal_speed": true,
+  "resolution": [
+    320,
+    180
+  ],
+  "loop_end_crossfade_seconds": 0.5,
+  "frames": 120,
+  "decoded_rgba_bytes_per_background": 27648000,
+  "additional_black_overlay_opacity": 0.18,
+  "files": [
+    {
+      "path": "index.html",
+      "sha256": "7103883b85c4b45d2fc29ce40c50780ccc67c3c9fd35310d6dc19983d37c4288"
+    },
+    {
+      "path": "styles.css",
+      "sha256": "e4308faecd7a8af5e76a35edc1d98323019c5f442d72b5c7e6dc78a3540d734e"
+    },
+    {
+      "path": "sw.js",
+      "sha256": "06a18911c53ac35091fc64528cdc3a80d5ea1ee6e47fa348228f627c68bb5e7a"
+    },
+    {
+      "path": "assets/tv-background-v147/kepco-meeting-v147.webp",
+      "sha256": "a70d0f8b9031b97f2de15f5bad907a8491e6f727b1e52b4cbcebbbbbaf7c42cc"
+    },
+    {
+      "path": "assets/tv-background-v147/kepco-ppe-v147.webp",
+      "sha256": "2f450fd05d3f5bfe6bd95b6a3eee14e67ca4840bc4871d4ff817c9790104e4a9"
+    },
+    {
+      "path": "scripts/build-tv-backgrounds-v147.py",
+      "sha256": "f9f2fc12e281cee2e8c881b86bdcee5af778e780c225b35ceb13341725bd7fec"
+    },
+    {
+      "path": "tests/verify-tv-backgrounds.py",
+      "sha256": "98befe76a3c099dc11782eae180c44b0789677a355d11afbb70228d3f6d02dcb"
+    },
+    {
+      "path": "tests/verify-pwa.mjs",
+      "sha256": "e6690edeac7fa5b44be265c410173063c133f49acee44d6ad3eabe4930e31226"
+    },
+    {
+      "path": "APPLY_v147.txt",
+      "sha256": "3a7bc8e3480a2d7f7ac5f1e22961cc8dfddacc5c76453ec0ecaaa7c2eaaeb989"
+    }
+  ]
+}
