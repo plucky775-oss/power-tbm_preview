@@ -8,7 +8,8 @@ names = {
     'field-tools-kepco-v68.webp', 'emergency-response-changwon119-v66.webp',
 }
 paths = [root / 'assets/tv-background-v137' / name for name in names]
-paths.append(root / 'assets/tv-background-v138/tbm-guide-closing-v138.webp')
+paths.extend((root / 'assets/tv-background-v146').glob('*.webp'))
+assert len(paths) == 7
 total_bytes = 0
 for path in sorted(paths):
     name = path.name
@@ -28,5 +29,5 @@ for path in sorted(paths):
         assert duration <= 8000, (name, duration)
         assert image.n_frames * 320 * 180 * 4 < 15 * 1024 * 1024
         print(f'PASS {name}: {image.n_frames} frames, {duration} ms, {path.stat().st_size:,} bytes')
-assert total_bytes < 2 * 1024 * 1024, total_bytes
-print(f'PASS all five TV backgrounds: {total_bytes:,} bytes')
+assert total_bytes < 3 * 1024 * 1024, total_bytes
+print(f'PASS all seven TV backgrounds: {total_bytes:,} bytes')

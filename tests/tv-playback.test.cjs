@@ -110,6 +110,31 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   e.document.dispatchEvent({type:'pointerdown',target,clientX:500,clientY:300});
   e.document.dispatchEvent({type:'click',target});
  };
+ await test('Sector footage follows guide, tools and emergency cues in Korean and English', async () => {
+  for(const lang of ['ko','en']) {
+   const e=environment('?tv=1','Web0S',false,true,lang),m=e.el('demoNarration'),bg=e.el('tvBackdrop');
+   const entries=lang==='en'?english.tv.segments:timeline.segments;
+   const segment=entries.find(v=>v.id==='04-safety-tools');
+   const switchTime=lang==='en'?english.tracks['04-safety-tools'].cues.find(v=>v[1]===32600)[0]:22.25;
+   e.click('supportDemoPage');await e.tick(1500);
+   assert.ok(bg.src.includes('kepco-ppe'));
+   const loads=m.loadCount,plays=m.playCount,seeks=m.seekCount;
+   m._time=segment.start+switchTime+.1;await e.tick(100);
+   assert.equal(e.el('cinematicBackdrop').dataset.supportScene,'tools');
+   assert.ok(bg.src.includes('field-tools'));
+   assert.equal(m.loadCount,loads);assert.equal(m.playCount,plays);assert.equal(m.seekCount,seeks);
+   m._time=entries.find(v=>v.id==='05-emergency').start+1.1;await e.tick(100);
+   assert.ok(bg.src.includes('emergency-response'));
+   m._time=segment.start+2;await e.tick(100);
+   assert.equal(e.el('cinematicBackdrop').dataset.supportScene,'guide');
+   assert.ok(bg.src.includes('kepco-ppe'),'returning to an earlier scene must restore its footage');
+   tap(e);assert.equal(bg.getAttribute('src'),null);
+   const placeholder=e.document.querySelector('.cinematic-backdrop-guide');
+   assert.ok(placeholder.classList.contains('tv-fallback-active'),'pause must show the PPE poster');
+   tap(e);await e.tick(200);assert.ok(bg.src.includes('kepco-ppe'));
+   assert.equal(e.el('demoNarration'),m);assert.equal(e.errors.length,0);
+  }
+ });
  await test('TV menu selections wait for the requested seek before playing any sound or outgoing frames', async () => {
   for(const lang of ['ko','en']) {
    const e=environment('?tv=1','Web0S',false,true,lang),m=e.el('demoNarration');
@@ -282,7 +307,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   const e=environment(),bg=e.el('tvBackdrop');e.click('weatherDemoPage');await e.tick(200);
   tap(e);await e.tick(2000);assert.equal(bg.getAttribute('src'),null);
   tap(e);e.click('meetingDemoPage');await e.tick(1400);
-  assert.ok(bg.src.includes('tablet-review'));assert.equal(bg.dataset.state,'playing');
+  assert.ok(bg.src.includes('kepco-meeting'));assert.equal(bg.dataset.state,'playing');
  });
  await test('TV preserves the first syllable at every chapter and after resume/buffering', async () => {
   const e=environment();e.click('weatherDemoPage');const m=e.el('demoNarration');
@@ -372,7 +397,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   assert.ok(bg,'TV must retain a moving image background');
   assert.equal(bg.tagName,'IMG');
   assert.equal(bg.getAttribute('src'),null,'background must not download before starting');
-  const expected={weather:'weather-powerlines',meeting:'tablet-review',support:'field-tools',safety:'tablet-review'};
+  const expected={weather:'weather-powerlines',meeting:'kepco-meeting',support:'kepco-ppe',safety:'tablet-review'};
   for(const [page,source] of Object.entries(expected)) {
    e.click(page+'DemoPage');await e.tick(1400);
    assert.ok(bg.src.includes(source),page+' selected the wrong background');
@@ -403,7 +428,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
   assert.equal(bg.getAttribute('src'),null);assert.equal(bg.dataset.state,'error');assert.equal(e.el('cinematicBackdrop').classList.contains('tv-background-ready'),false);
   const healthy=m.currentTime;await e.tick(1000);assert.ok(m.currentTime>healthy);assert.equal(m.paused,false);
   assert.equal(m.loadCount,loads);assert.notEqual(e.el('tourStage').dataset.narrationState,'error');
-  e.click('meetingDemoPage');await e.tick(1400);assert.ok(bg.src.includes('tablet-review'));
+  e.click('meetingDemoPage');await e.tick(1400);assert.ok(bg.src.includes('kepco-meeting'));
   e.click('weatherDemoPage');await e.tick(1400);
   assert.equal(bg.getAttribute('src'),null,'a failed image must not leave a different chapter background visible');
   assert.equal(bg.dataset.state,'error');

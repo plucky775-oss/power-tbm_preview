@@ -118,13 +118,20 @@ for (const url of tvPrecacheUrls) {
   assert.doesNotMatch(url, /assets\/audio\//, 'TV must not precache separate narration and BGM');
   if (/\.mp4$/.test(url)) assert.match(url, /assets\/(?:tv-ko-v142|tv-en-v142)\//, 'TV must not precache any second video stream');
 }
-assert.equal(tvPrecacheUrls.filter(url => /assets\/tv-background-v\d+\/.+\.webp$/.test(url)).length, 5, 'all animated image backgrounds must work offline');
-assert.ok(tvPrecacheUrls.includes('./assets/tv-background-v138/tbm-guide-closing-v138.webp'));
+assert.equal(tvPrecacheUrls.filter(url => /assets\/tv-background-v\d+\/.+\.webp$/.test(url)).length, 7, 'all animated image backgrounds must work offline');
+assert.ok(tvPrecacheUrls.includes('./assets/tv-background-v146/tbm-guide-closing-v146.webp'));
 assert.ok(!precacheUrls.includes('./assets/tv-background-v137/tbm-guide-closing-v69.webp'), 'the retired looping ending must not be precached');
 assert.ok(tvPrecacheBytes < 35 * 1024 * 1024, 'TV offline download exceeded its budget');
 
 const expectedBackgroundFiles = [
   'ATTRIBUTION.md',
+  'sector-backgrounds-v146.json',
+  'kepco-meeting-v146.mp4',
+  'kepco-meeting-v146-poster.jpg',
+  'kepco-ppe-v146.mp4',
+  'kepco-ppe-v146-poster.jpg',
+  'tbm-guide-closing-v146.mp4',
+  'tbm-guide-closing-v146-poster.jpg',
   'emergency-response-changwon119-v66-poster.jpg',
   'emergency-response-changwon119-v66.mp4',
   'field-tools-kepco-v68-poster.jpg',
@@ -162,8 +169,8 @@ const coreUrls = [
   './index.html',
   './manifest.webmanifest',
   './english-narration.js?v=20261024-voice-alignment-v142',
-  './styles.css?v=20261024-voice-alignment-v142',
-  './app.js?v=20261024-voice-alignment-v142',
+  './styles.css?v=20261025-sector-backgrounds-v146',
+  './app.js?v=20261025-sector-backgrounds-v146',
   './pwa.js?v=20261017-tv-startup-v115',
   './subtitles.js?v=20261020-language-v117',
   './subtitle-data.js?v=20261024-voice-alignment-v142',
@@ -218,8 +225,8 @@ assert.match(indexSource, /assets\/background\/field-tools-kepco-v68-poster\.jpg
 assert.doesNotMatch(indexSource, /assets\/background\/field-tools-kepco-v6[67](?:-poster)?\.(?:mp4|jpg)/);
 assert.match(indexSource, /assets\/background\/emergency-response-changwon119-v66\.mp4/);
 assert.match(indexSource, /assets\/background\/emergency-response-changwon119-v66-poster\.jpg/);
-assert.match(indexSource, /assets\/background\/tbm-guide-closing-v138\.mp4/);
-assert.match(indexSource, /assets\/background\/tbm-guide-closing-v69-poster\.jpg/);
+assert.match(indexSource, /assets\/background\/tbm-guide-closing-v146\.mp4/);
+assert.match(indexSource, /assets\/background\/tbm-guide-closing-v146-poster\.jpg/);
 assert.doesNotMatch(indexSource, /assets\/background\/tbm-guide-closing-v6[67](?:-poster)?\.(?:mp4|jpg)/);
 const closingBackdropTag = indexSource.match(/<video class="[^"]*cinematic-backdrop-closing[^"]*"[^>]*>/)?.[0] || '';
 assert.notEqual(closingBackdropTag, '', 'closing backdrop video tag missing');
@@ -273,7 +280,7 @@ assert.doesNotMatch(appSource, /launchStartButton/);
 assert.match(appSource, /showLaunchGate\(\{ resetVideo: restart \}\)/);
 assert.match(appSource, /syncCinematicBackdrop/);
 assert.match(appSource, /video\.ended\s*&&\s*!pageChanged/);
-assert.match(workerSource, /power-tbm-offline-[\s\S]*?v142-20261024-voice-alignment/);
+assert.match(workerSource, /power-tbm-offline-[\s\S]*?v146-20261025-sector-backgrounds/);
 assert.match(pwaSource, /serviceWorker\.register\(workerUrl/);
 assert.doesNotMatch(appSource, /Math\.abs\(goldenRulesVideo\.currentTime\s*-\s*desiredTime\)/);
 assert.match(appSource, /goldenRulesNarrationPlaybackRate\s*=\s*1\.08/);
