@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v142-20261024-voice-alignment`;
+const CACHE_VERSION = `${CACHE_PREFIX}v143-20261025-clay-pointer`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -20,11 +20,11 @@ const PRECACHE_URLS = [
   './demo-language.js?v=20261021-language-menu-v125',
   './demo-language.css?v=20261021-language-menu-v125',
   './manifest.webmanifest',
-  './assets/brand/demo-hand.svg',
+  './assets/brand/demo-hand-clay-v143.png',
   './styles.css?v=20261024-voice-alignment-v142',
   './app.js?v=20261024-voice-alignment-v142',
   './safety4cut.css?v=20261016-safety-reveal-v107',
-  './demo-hands-v80.css?v=20261021-balanced-v128',
+  './demo-hands-v80.css?v=20261025-clay-pointer-v143',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',
   './demo-recorder-v81.js?v=20261020-language-v117',
   './safety4cut.js?v=20261021-safety-caption-v121',
@@ -284,3 +284,4 @@ self.addEventListener('fetch', (event) => {
     }
   })());
 });
+

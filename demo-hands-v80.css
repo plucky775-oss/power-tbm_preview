@@ -1,36 +1,45 @@
-/* Loaded last: every chapter uses the weather-alert hand's dimensions. */
+/* v143: one approved clay pointer on phones, desktop and webOS.
+   Preserve the parent gesture's coordinates, rotation and press clocks. */
 .guide-phone {
   --demo-hand-size: 124px;
   --demo-hand-press-scale: .74;
 }
-
 .guide-phone :is(.demo-hand, .meeting-hand, .meeting-ai-swipe-hand, .support-hand, .safety-hand) {
   width: var(--demo-hand-size);
   height: var(--demo-hand-size);
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-  font-size: var(--demo-hand-size);
   line-height: 1;
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
 }
-
-/* Adjust only the Windows glyph; the parent keeps its tap/swipe coordinates,
-   timing and press scale. Apple and Android retain their original rendering. */
-.windows-hands .guide-phone .demo-hand-glyph {
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-  transform: scaleX(.70);
-  transform-origin: 52% 12%;
+/* Voice-demo hands remain small, relative to the screenshot, not 124px. */
+.guide-phone .meeting-voice-hand,
+.guide-phone .meeting-voice-confirm-hand {
+  width: calc(12 * var(--voice-unit, 3px));
+  height: calc(12 * var(--voice-unit, 3px));
+  line-height: 1;
 }
-
-/* webOS may have no color-emoji glyph. Keep the existing gesture clocks and
-   coordinates, but render a bundled vector instead of a system font. */
-.tbm-tv .guide-phone .demo-hand-glyph {
+.guide-phone .demo-hand-glyph {
   display: block;
   width: 100%;
   height: 100%;
   font-size: 0;
-  background: url('assets/brand/demo-hand.svg') center / contain no-repeat;
+  line-height: 0;
+  color: transparent;
+  pointer-events: none;
+  /* PNG tip (467.5,83) on 1024x1536: contain in a square then
+     align to the existing 52%/12% gesture anchor. */
+  position: relative;
+  left: 4.8971%;
+  top: 6.5964%;
+  background: url('assets/brand/demo-hand-clay-v143.png') center / contain no-repeat;
   transform: none;
+}
+/* These existing gesture parents translate by their own fingertip anchor. */
+.guide-phone .meeting-hand .demo-hand-glyph,
+.guide-phone .meeting-ai-swipe-hand .demo-hand-glyph,
+.guide-phone .support-hand .demo-hand-glyph {
+  left: -5.1029%;
+  top: 14.5964%;
+}
+.guide-phone .safety-hand .demo-hand-glyph {
+  left: 2.8971%;
+  top: 4.5964%;
 }
