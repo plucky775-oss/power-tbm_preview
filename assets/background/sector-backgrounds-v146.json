@@ -1,0 +1,36 @@
+{
+  "source": "TBM_Guide_1080p.mp4",
+  "sha256": "945181c6e695bac2dd8ecbc2574898beb42ba4919aef36952be132e8d4da0536",
+  "source_width": 910,
+  "source_height": 512,
+  "note": "User-provided KEPCO TBM guide. Cropped and muted; output scaling is not new source detail.",
+  "shots": [
+    {
+      "name": "kepco-meeting-v146",
+      "start": 412.3,
+      "length": 42,
+      "crop": "520:292:30:78",
+      "repeats": 3,
+      "overlap": 1.2,
+      "output_duration": 120
+    },
+    {
+      "name": "kepco-ppe-v146",
+      "start": 353.4,
+      "length": 6.6,
+      "crop": "440:248:180:122",
+      "repeats": 5,
+      "overlap": 0.7,
+      "output_duration": 30.2
+    },
+    {
+      "name": "tbm-guide-closing-v146",
+      "start": 541.9,
+      "length": 6.8,
+      "crop": "720:404:94:30",
+      "repeats": 1,
+      "overlap": 0,
+      "output_duration": 6.8
+    }
+  ]
+}
