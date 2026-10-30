@@ -254,7 +254,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
    e.click('demoBackTen');assert.equal(e.el('tourStage').dataset.demoPage,'safety');
    if(mode==='?tv=1')assert.equal(m.loadCount,loads);
    e.click('demoPreviousScene');assert.ok(e.el('demoNarration').paused);
-   assert.equal(e.el('safetyDemo').dataset.scene,'2');
+   assert.equal(e.el('safetyDemo').dataset.scene,'3');
   }
  });
  await test('Recording prepares a paused button clip from any scene, then resumes without seeking', async () => {
@@ -589,7 +589,7 @@ function environment(query='?tv=1', ua='Chrome', reduce=false, imagesReady=true,
    assert.equal(p.getAttribute('src'),first,'first click must reuse the prepared image');
    assert.equal(e.el('safetyDemo').classList.contains('safety-image-ready'),true,'a cached menu must remain ready');
    e.window.PowerTBMSafety.render(9,{paused:true});
-   assert.ok(p.getAttribute('src').includes('02-upload-v75'));
+   assert.ok(p.getAttribute('src').includes('02-upload-empty-v148'));
    e.click('weatherDemoPage');await e.tick(500);
    assert.equal(p.getAttribute('src'),first,'leaving safety must release the later scene and prepare the menu');
    assert.ok(e.el('supportDemo').querySelectorAll('img').every(i=>!i.getAttribute('src')));

@@ -1,7 +1,7 @@
 'use strict';
 
 const CACHE_PREFIX = 'power-tbm-offline-';
-const CACHE_VERSION = `${CACHE_PREFIX}v147-20261025-tv-backgrounds`;
+const CACHE_VERSION = `${CACHE_PREFIX}v148-20261030-safety-upload`;
 const TV_CACHE = new URLSearchParams(self.location.search).get('tv') === '1';
 const CACHE_NAME = `${CACHE_VERSION}-${TV_CACHE ? 'tv' : 'standard'}`;
 const PRECACHE_CONCURRENCY = 1;
@@ -29,7 +29,7 @@ const PRECACHE_URLS = [
   './demo-hands-v80.css?v=20261025-hand-size-v145',
   './demo-recorder-v81.css?v=20261017-recording-start-v113',
   './demo-recorder-v81.js?v=20261020-language-v117',
-  './safety4cut.js?v=20261021-safety-caption-v121',
+  './safety4cut.js?v=20261030-safety-upload-v148',
   './pwa.js?v=20261017-tv-startup-v115',
   './assets/tv-ko-v142/tour.mp4',
   './assets/tv-en-v142/tour.mp4',
@@ -51,7 +51,8 @@ const PRECACHE_URLS = [
   './assets/audio/balanced-v128/en-08-safety4cut-example.mp4',
   './assets/audio/balanced-v128/ko-07-safety4cut-intro.m4a',
   './assets/safety4cut/01-main-menu-v97.png',
-  './assets/safety4cut/02-upload-v75.png',
+  './assets/safety4cut/02-upload-empty-v148.png',
+  './assets/safety4cut/02-upload-selected-v148.png',
   './assets/safety4cut/06-cartoon.jpg',
   './assets/safety4cut/07-realistic.jpg',
   './assets/safety4cut/09-ai-example-v79-poster.jpg',
@@ -292,5 +293,6 @@ self.addEventListener('fetch', (event) => {
     }
   })());
 });
+
 
 
